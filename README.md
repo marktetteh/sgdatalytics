@@ -18,3 +18,6 @@ This project is a data-driven platform designed to support analytics, reporting,
 ```bash
 git clone https://github.com/marktetteh/sgdatalytics.git
 cd sgdatalytics
+## Author
+Mark Tetteh  
+SG Datalytics – Empowering you with data
