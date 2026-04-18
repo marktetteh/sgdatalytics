@@ -1,4 +1,0 @@
-[deploy]
-startCommand = "/opt/venv/bin/gunicorn -w 2 -b 0.0.0.0:$PORT backend.api:app"
-restartPolicyType = "on_failure"
-restartPolicyMaxRetries = 3
