@@ -615,7 +615,7 @@ footer{
 
 <!-- NAV -->
 <nav>
-  <a href="#" class="nav-brand">
+  <a href="marketplace.html" class="nav-brand">
     <div class="nav-mark">
       <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
         <rect x="1" y="8" width="2.5" height="7" rx="1" fill="#080f1e"/>
@@ -1113,17 +1113,17 @@ footer{
           </div>
         </div>
       </div>
-      <div class="contact-form rev d1">
+      <form class="contact-form rev d1" id="contact-form">
         <h3>SEND A MESSAGE</h3>
         <div class="form-row2">
-          <div class="fg"><label>First name</label><input type="text" placeholder="Kwame"/></div>
-          <div class="fg"><label>Last name</label><input type="text" placeholder="Asante"/></div>
+          <div class="fg"><label>First name</label><input type="text" name="first_name" placeholder="Kwame" required/></div>
+          <div class="fg"><label>Last name</label><input type="text" name="last_name" placeholder="Asante" required/></div>
         </div>
-        <div class="fg"><label>Email</label><input type="email" placeholder="you@organisation.com"/></div>
-        <div class="fg"><label>Organisation</label><input type="text" placeholder="University, company or agency"/></div>
+        <div class="fg"><label>Email</label><input type="email" name="email" placeholder="you@organisation.com" required/></div>
+        <div class="fg"><label>Organisation</label><input type="text" name="organisation" placeholder="University, company or agency"/></div>
         <div class="fg">
           <label>I am a…</label>
-          <select>
+          <select name="role">
             <option value="">Select your role</option>
             <option>Researcher / Academic</option>
             <option>Business Analyst</option>
@@ -1135,7 +1135,7 @@ footer{
         </div>
         <div class="fg">
           <label>Interested in</label>
-          <select>
+          <select name="interest">
             <option value="">Select a plan or query</option>
             <option>Starter Plan</option>
             <option>Pro Plan</option>
@@ -1145,9 +1145,10 @@ footer{
             <option>Other</option>
           </select>
         </div>
-        <div class="fg"><label>Message</label><textarea placeholder="Tell us about the data you need or your research…"></textarea></div>
-        <button class="btn btn-teal" style="width:100%;justify-content:center;font-size:14px;padding:13px;" onclick="this.textContent='Message sent ✓';this.style.opacity='0.7';this.disabled=true;">Send message →</button>
-      </div>
+        <div class="fg"><label>Message</label><textarea name="message" placeholder="Tell us about the data you need or your research…" required></textarea></div>
+        <button type="submit" class="btn btn-teal" id="contact-btn" style="width:100%;justify-content:center;font-size:14px;padding:13px;">Send message →</button>
+        <div id="form-status" style="text-align:center;margin-top:12px;font-family:var(--font-m);font-size:12px;display:none;"></div>
+      </form>
     </div>
   </div>
 </section>
@@ -1217,6 +1218,76 @@ document.querySelectorAll('.filter-pill').forEach(p=>{
     this.classList.add('on');
   });
 });
+
+/* ─── EmailJS Contact Form ─── */
+(function(){
+  // Load EmailJS SDK
+  const script = document.createElement('script');
+  script.src = 'https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js';
+  script.onload = function(){
+    // TODO: Replace these with your actual EmailJS credentials
+    // 1. Sign up free at https://www.emailjs.com
+    // 2. Add an email service (Gmail, Outlook, etc.) → copy the Service ID
+    // 3. Create an email template with variables: {{first_name}}, {{last_name}}, {{email}}, {{organisation}}, {{role}}, {{interest}}, {{message}}
+    // 4. Copy your Public Key from Account > API Keys
+    emailjs.init('mwXgfvHdnvyeW4FnT');
+  };
+  document.head.appendChild(script);
+
+  const form = document.getElementById('contact-form');
+  const btn = document.getElementById('contact-btn');
+  const status = document.getElementById('form-status');
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+
+    // Validate required fields
+    const email = form.querySelector('[name="email"]').value;
+    const firstName = form.querySelector('[name="first_name"]').value;
+    const message = form.querySelector('[name="message"]').value;
+    if(!email || !firstName || !message){
+      status.style.display = 'block';
+      status.style.color = '#ef4444';
+      status.textContent = 'Please fill in all required fields.';
+      return;
+    }
+
+    // Disable button while sending
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+    status.style.display = 'none';
+
+    // Collect form data
+    const params = {
+      first_name: form.querySelector('[name="first_name"]').value,
+      last_name: form.querySelector('[name="last_name"]').value,
+      email: email,
+      organisation: form.querySelector('[name="organisation"]').value,
+      role: form.querySelector('[name="role"]').value,
+      interest: form.querySelector('[name="interest"]').value,
+      message: message
+    };
+
+    // TODO: Replace 'YOUR_SERVICE_ID' and 'YOUR_TEMPLATE_ID' with your actual EmailJS IDs
+    emailjs.send('service_ed15ytl', 'template_f4h4lyz', params)
+      .then(function(){
+        btn.textContent = 'Message sent ✓';
+        btn.style.opacity = '0.7';
+        status.style.display = 'block';
+        status.style.color = '#00c9a7';
+        status.textContent = 'Thank you! We\'ll respond within 24 hours.';
+        form.reset();
+      })
+      .catch(function(err){
+        btn.disabled = false;
+        btn.textContent = 'Send message →';
+        status.style.display = 'block';
+        status.style.color = '#ef4444';
+        status.textContent = 'Something went wrong. Please email us at info@sgdatalytics.org';
+        console.error('EmailJS error:', err);
+      });
+  });
+})();
 </script>
 </body>
 </html>
