@@ -766,7 +766,7 @@ footer{
     </div>
     <div class="datasets-grid" id="ds-grid">
 
-      <div class="ds-card rev" data-cat="edu">
+      <div class="ds-card rev" data-cat="edu" data-access="free" data-new="false" data-pop="true">
         <div class="ds-card-top">
           <div class="ds-cat-badge badge-edu">🏫 Education</div>
           <h3>Student Attendance Anomalies by Term — Ghana 2024</h3>
@@ -784,11 +784,11 @@ footer{
         </div>
         <div class="ds-card-bottom">
           <div class="ds-access free"><div class="ds-access-icon">👁</div> Free preview</div>
-          <div class="ds-action">Access →</div>
+          <a class="ds-action" href="#contact" onclick="prefillContact('Student Attendance Anomalies by Term — Ghana 2024')">Access →</a>
         </div>
       </div>
 
-      <div class="ds-card rev d1" data-cat="biz">
+      <div class="ds-card rev d1" data-cat="biz" data-access="premium" data-new="true" data-pop="true">
         <div class="ds-card-top">
           <div class="ds-cat-badge badge-biz">📊 Business</div>
           <h3>Ghana SME Performance & Revenue Index 2026</h3>
@@ -806,11 +806,11 @@ footer{
         </div>
         <div class="ds-card-bottom">
           <div class="ds-access premium"><div class="ds-access-icon">⭐</div> Pro & Enterprise</div>
-          <div class="ds-action">Access →</div>
+          <a class="ds-action" href="#contact" onclick="prefillContact('Ghana SME Performance & Revenue Index 2026')">Access →</a>
         </div>
       </div>
 
-      <div class="ds-card rev d2" data-cat="health">
+      <div class="ds-card rev d2" data-cat="health" data-access="locked" data-new="false" data-pop="true">
         <div class="ds-card-top">
           <div class="ds-cat-badge badge-health">🏥 Health</div>
           <h3>Regional Health Demographics — Accra & Northern Regions</h3>
@@ -828,11 +828,11 @@ footer{
         </div>
         <div class="ds-card-bottom">
           <div class="ds-access locked"><div class="ds-access-icon">🔒</div> Starter & above</div>
-          <div class="ds-action">Access →</div>
+          <a class="ds-action" href="#contact" onclick="prefillContact('Regional Health Demographics — Accra & Northern Regions')">Access →</a>
         </div>
       </div>
 
-      <div class="ds-card rev d1" data-cat="env">
+      <div class="ds-card rev d1" data-cat="env" data-access="free" data-new="false" data-pop="false">
         <div class="ds-card-top">
           <div class="ds-cat-badge badge-env">🌿 Sustainability</div>
           <h3>Ghana Sustainability Indicators Dataset — 24 Variables</h3>
@@ -850,11 +850,11 @@ footer{
         </div>
         <div class="ds-card-bottom">
           <div class="ds-access free"><div class="ds-access-icon">👁</div> Free preview</div>
-          <div class="ds-action">Access →</div>
+          <a class="ds-action" href="#contact" onclick="prefillContact('Ghana Sustainability Indicators Dataset — 24 Variables')">Access →</a>
         </div>
       </div>
 
-      <div class="ds-card rev d2" data-cat="agri">
+      <div class="ds-card rev d2" data-cat="agri" data-access="premium" data-new="true" data-pop="false">
         <div class="ds-card-top">
           <div class="ds-cat-badge badge-agri">🌾 Agriculture</div>
           <h3>Crop Yield & Rainfall Correlation — Northern Ghana Q1 2026</h3>
@@ -872,11 +872,11 @@ footer{
         </div>
         <div class="ds-card-bottom">
           <div class="ds-access premium"><div class="ds-access-icon">⭐</div> Pro & Enterprise</div>
-          <div class="ds-action">Access →</div>
+          <a class="ds-action" href="#contact" onclick="prefillContact('Crop Yield & Rainfall Correlation — Northern Ghana Q1 2026')">Access →</a>
         </div>
       </div>
 
-      <div class="ds-card rev d3" data-cat="econ">
+      <div class="ds-card rev d3" data-cat="econ" data-access="locked" data-new="true" data-pop="true">
         <div class="ds-card-top">
           <div class="ds-cat-badge badge-econ">💹 Economy</div>
           <h3>Ghana Consumer Price Index & Inflation Tracker 2020–2026</h3>
@@ -894,13 +894,13 @@ footer{
         </div>
         <div class="ds-card-bottom">
           <div class="ds-access locked"><div class="ds-access-icon">🔒</div> Starter & above</div>
-          <div class="ds-action">Access →</div>
+          <a class="ds-action" href="#contact" onclick="prefillContact('Ghana Consumer Price Index & Inflation Tracker 2020–2026')">Access →</a>
         </div>
       </div>
 
     </div>
     <div style="text-align:center;margin-top:40px;">
-      <a href="#" class="btn btn-ghost" style="font-size:14px;padding:12px 32px;">View all 560+ datasets →</a>
+      <a href="#contact" class="btn btn-ghost" style="font-size:14px;padding:12px 32px;" onclick="prefillContact('Full dataset catalog access')">View all 560+ datasets →</a>
     </div>
   </div>
 </section>
@@ -1200,15 +1200,25 @@ footer{
 const obs = new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');});},{threshold:0.1,rootMargin:'0px 0px -40px 0px'});
 document.querySelectorAll('.rev').forEach(el=>obs.observe(el));
 
+/* ─── Active filter state ─── */
+let activeCat = 'all';
+let activePill = 'all';
+
 function filterCat(tab, cat){
   document.querySelectorAll('.cat-tab').forEach(t=>t.classList.remove('active'));
   tab.classList.add('active');
+  activeCat = cat;
+  applyFilters();
+}
+
+function applyFilters(){
   document.querySelectorAll('.ds-card').forEach(card=>{
-    if(cat==='all'||card.dataset.cat===cat){
-      card.style.display='flex';
-    } else {
-      card.style.display='none';
-    }
+    const catMatch = activeCat==='all' || card.dataset.cat===activeCat;
+    let pillMatch = true;
+    if(activePill==='free') pillMatch = card.dataset.access==='free';
+    else if(activePill==='new') pillMatch = card.dataset.new==='true';
+    else if(activePill==='popular') pillMatch = card.dataset.pop==='true';
+    card.style.display = (catMatch && pillMatch) ? 'flex' : 'none';
   });
 }
 
@@ -1216,8 +1226,25 @@ document.querySelectorAll('.filter-pill').forEach(p=>{
   p.addEventListener('click',function(){
     document.querySelectorAll('.filter-pill').forEach(x=>x.classList.remove('on'));
     this.classList.add('on');
+    const text = this.textContent.trim().toLowerCase();
+    if(text.includes('free')) activePill = 'free';
+    else if(text.includes('new')) activePill = 'new';
+    else if(text.includes('most')) activePill = 'popular';
+    else activePill = 'all';
+    applyFilters();
   });
 });
+
+/* ─── Prefill contact form from Access buttons ─── */
+function prefillContact(datasetName){
+  setTimeout(function(){
+    const msgField = document.querySelector('#contact-form [name="message"]');
+    if(msgField){
+      msgField.value = 'I am interested in accessing the dataset: ' + datasetName;
+      msgField.focus();
+    }
+  }, 400);
+}
 
 /* ─── EmailJS Contact Form ─── */
 (function(){
