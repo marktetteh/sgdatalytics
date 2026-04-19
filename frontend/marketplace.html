@@ -3,1220 +3,767 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>SG Datalytics — Ghana's Data Marketplace</title>
+<title>SG Datalytics — Ghana Data Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --navy:#080f1e;
-  --navy2:#0d1829;
-  --navy3:#111f35;
-  --navy4:#162440;
-  --panel:#0f1c30;
-  --teal:#00c9a7;
-  --teal-dim:rgba(0,201,167,0.12);
-  --teal-dim2:rgba(0,201,167,0.06);
-  --amber:#f59e0b;
-  --amber-dim:rgba(245,158,11,0.12);
-  --red:#ef4444;
-  --red-dim:rgba(239,68,68,0.12);
-  --blue:#3b82f6;
-  --blue-dim:rgba(59,130,246,0.12);
-  --white:#ffffff;
-  --grey1:rgba(255,255,255,0.85);
-  --grey2:rgba(255,255,255,0.55);
-  --grey3:rgba(255,255,255,0.28);
-  --grey4:rgba(255,255,255,0.09);
-  --grey5:rgba(255,255,255,0.05);
-  --border:rgba(255,255,255,0.07);
-  --border2:rgba(255,255,255,0.12);
-  --border-teal:rgba(0,201,167,0.25);
-  --r:8px;
-  --r-lg:14px;
-  --r-xl:20px;
-  --nav-h:64px;
-  --font-d:'Bebas Neue',sans-serif;
-  --font-b:'IBM Plex Sans',sans-serif;
-  --font-m:'IBM Plex Mono',monospace;
-  --ease:0.22s cubic-bezier(0.4,0,0.2,1);
+  --bg:#070d1a;--bg2:#0b1220;--bg3:#0f1829;--panel:#111f35;--panel2:#162240;
+  --teal:#00c9a7;--teal-d:rgba(0,201,167,0.1);--teal-b:rgba(0,201,167,0.22);
+  --amber:#f59e0b;--red:#ef4444;--blue:#3b82f6;--green:#10b981;--purple:#8b5cf6;--pink:#ec4899;--orange:#f97316;--cyan:#06b6d4;
+  --w:#fff;--g1:rgba(255,255,255,0.88);--g2:rgba(255,255,255,0.55);--g3:rgba(255,255,255,0.28);--g4:rgba(255,255,255,0.09);--g5:rgba(255,255,255,0.04);
+  --bdr:rgba(255,255,255,0.07);--bdr2:rgba(255,255,255,0.13);
+  --r:8px;--r2:14px;--r3:20px;
+  --fd:'Bebas Neue',sans-serif;--fb:'IBM Plex Sans',sans-serif;--fm:'IBM Plex Mono',monospace;
 }
 html{scroll-behavior:smooth;}
-body{font-family:var(--font-b);background:var(--navy);color:var(--grey1);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+body{font-family:var(--fb);background:var(--bg);color:var(--g1);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;}
+::-webkit-scrollbar{width:4px;height:4px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:var(--panel2);border-radius:4px;}
 
-/* ─── scrollbar ─── */
-::-webkit-scrollbar{width:5px;}
-::-webkit-scrollbar-track{background:var(--navy);}
-::-webkit-scrollbar-thumb{background:var(--navy4);border-radius:4px;}
-
-/* ─── NAV ─── */
-nav{
-  position:fixed;top:0;left:0;right:0;z-index:200;
-  height:var(--nav-h);
-  background:rgba(8,15,30,0.92);
-  backdrop-filter:blur(20px);
-  -webkit-backdrop-filter:blur(20px);
-  border-bottom:1px solid var(--border);
-  display:flex;align-items:center;
-  padding:0 4vw;gap:0;
-}
-.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;margin-right:auto;}
-.nav-mark{
-  width:32px;height:32px;border-radius:6px;
-  background:var(--teal);
-  display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;
-}
-.nav-mark svg{width:16px;height:16px;}
-.nav-name{font-family:var(--font-d);font-size:18px;letter-spacing:0.08em;color:var(--white);}
-.nav-name span{color:var(--teal);}
-.nav-links{display:flex;list-style:none;gap:2px;margin-right:28px;}
-.nav-links a{
-  font-size:13px;font-weight:400;color:var(--grey2);
-  text-decoration:none;padding:5px 13px;border-radius:5px;
-  transition:color var(--ease),background var(--ease);
-}
-.nav-links a:hover{color:var(--white);background:var(--grey4);}
-.nav-actions{display:flex;gap:8px;align-items:center;}
-.btn{
-  display:inline-flex;align-items:center;gap:6px;
-  font-family:var(--font-b);font-size:13px;font-weight:500;
-  padding:8px 18px;border-radius:var(--r);cursor:pointer;
-  text-decoration:none;border:none;transition:all var(--ease);
-}
-.btn-ghost{background:transparent;color:var(--grey2);border:1px solid var(--border2);}
-.btn-ghost:hover{color:var(--white);border-color:var(--grey3);}
-.btn-teal{background:var(--teal);color:var(--navy);font-weight:600;}
-.btn-teal:hover{filter:brightness(1.08);transform:translateY(-1px);}
-.btn-navy{background:var(--navy4);color:var(--white);border:1px solid var(--border2);}
-.btn-navy:hover{background:var(--navy3);border-color:var(--border-teal);}
-.btn-lg{padding:12px 28px;font-size:15px;}
-
-/* ─── TICKER ─── */
-.ticker{
-  background:var(--teal);
-  height:36px;display:flex;align-items:center;
-  overflow:hidden;margin-top:var(--nav-h);
-}
-.ticker-inner{
-  display:flex;gap:0;white-space:nowrap;
-  animation:ticker-scroll 28s linear infinite;
-}
-@keyframes ticker-scroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
-.ticker-item{
-  font-family:var(--font-m);font-size:11px;font-weight:500;
-  color:var(--navy);padding:0 32px;
-  display:flex;align-items:center;gap:10px;
-  border-right:1px solid rgba(8,15,30,0.15);
-}
-.ticker-dot{width:5px;height:5px;border-radius:50%;background:var(--navy);opacity:0.4;}
-
-/* ─── HERO ─── */
-.hero{
-  min-height:92vh;
-  display:grid;grid-template-columns:1fr 1fr;
-  align-items:center;gap:0;
-  padding:80px 4vw 80px 5vw;
-  position:relative;overflow:hidden;
-}
-.hero-grid-bg{
-  position:absolute;inset:0;pointer-events:none;
-  background-image:
-    linear-gradient(rgba(0,201,167,0.035) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(0,201,167,0.035) 1px,transparent 1px);
-  background-size:48px 48px;
-  mask-image:radial-gradient(ellipse 80% 80% at 60% 50%,rgba(0,0,0,0.6) 0%,transparent 100%);
-}
-.hero-glow{
-  position:absolute;top:-200px;right:-100px;
-  width:700px;height:700px;border-radius:50%;
-  background:radial-gradient(circle,rgba(0,201,167,0.07) 0%,transparent 65%);
-  pointer-events:none;
-}
-.hero-left{position:relative;z-index:1;}
-.hero-kicker{
-  font-family:var(--font-m);font-size:11px;font-weight:500;
-  color:var(--teal);letter-spacing:0.12em;text-transform:uppercase;
-  margin-bottom:20px;display:flex;align-items:center;gap:10px;
-}
-.hero-kicker::before{content:'';width:28px;height:1px;background:var(--teal);}
-.hero h1{
-  font-family:var(--font-d);
-  font-size:clamp(3.2rem,5.5vw,5.2rem);
-  line-height:0.95;letter-spacing:0.02em;
-  color:var(--white);margin-bottom:28px;
-}
-.hero h1 .hl{color:var(--teal);}
-.hero-sub{
-  font-size:1rem;color:var(--grey2);
-  max-width:440px;line-height:1.75;
-  margin-bottom:36px;font-weight:300;
-}
-.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:48px;}
-.hero-trust{
-  display:flex;align-items:center;gap:16px;flex-wrap:wrap;
-}
-.hero-trust-item{
-  font-family:var(--font-m);font-size:11px;color:var(--grey3);
-  display:flex;align-items:center;gap:6px;
-}
-.hero-trust-item::before{content:'✓';color:var(--teal);font-size:10px;}
-
-/* hero right — live stats panel */
-.hero-right{position:relative;z-index:1;padding-left:40px;}
-.data-panel{
-  background:var(--panel);
-  border:1px solid var(--border2);
-  border-radius:var(--r-xl);
-  overflow:hidden;
-  box-shadow:0 32px 80px rgba(0,0,0,0.5);
-}
-.data-panel-header{
-  background:var(--navy3);
-  padding:14px 20px;
-  display:flex;align-items:center;justify-content:space-between;
-  border-bottom:1px solid var(--border);
-}
-.data-panel-title{
-  font-family:var(--font-m);font-size:11px;color:var(--teal);
-  letter-spacing:0.1em;text-transform:uppercase;
-  display:flex;align-items:center;gap:8px;
-}
-.live-dot{
-  width:6px;height:6px;border-radius:50%;
-  background:var(--teal);animation:blink 1.8s infinite;
-}
+/* ── TOPBAR ── */
+.topbar{position:sticky;top:0;z-index:200;height:52px;background:rgba(7,13,26,0.97);border-bottom:1px solid var(--bdr);display:flex;align-items:center;padding:0 24px;gap:16px;}
+.tb-brand{display:flex;align-items:center;gap:8px;text-decoration:none;}
+.tb-mark{width:28px;height:28px;border-radius:6px;background:var(--teal);display:flex;align-items:center;justify-content:center;}
+.tb-mark svg{width:13px;height:13px;}
+.tb-name{font-family:var(--fd);font-size:16px;letter-spacing:0.08em;color:var(--w);}
+.tb-name span{color:var(--teal);}
+.tb-sep{width:1px;height:16px;background:var(--bdr2);}
+.tb-title{font-family:var(--fm);font-size:10px;color:var(--g3);letter-spacing:0.1em;text-transform:uppercase;}
+.tb-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
+.live-pill{display:flex;align-items:center;gap:5px;font-family:var(--fm);font-size:10px;color:var(--teal);background:var(--teal-d);border:1px solid var(--teal-b);padding:3px 10px;border-radius:100px;}
+.live-dot{width:5px;height:5px;border-radius:50%;background:var(--teal);animation:blink 1.8s infinite;}
 @keyframes blink{0%,100%{opacity:1;}50%{opacity:0.2;}}
-.data-panel-meta{font-family:var(--font-m);font-size:10px;color:var(--grey3);}
-.data-panel-body{padding:20px;}
-.panel-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:16px;}
-.panel-stat{background:var(--navy2);padding:16px 14px;text-align:center;}
-.panel-stat-num{
-  font-family:var(--font-d);font-size:2rem;
-  color:var(--white);letter-spacing:0.05em;line-height:1;margin-bottom:4px;
-}
-.panel-stat-num.t{color:var(--teal);}
-.panel-stat-num.a{color:var(--amber);}
-.panel-stat-label{font-family:var(--font-m);font-size:9.5px;color:var(--grey3);letter-spacing:0.08em;text-transform:uppercase;}
-.panel-cats{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
-.panel-cat{
-  display:flex;align-items:center;gap:10px;
-  background:var(--grey5);border-radius:var(--r);
-  padding:10px 14px;border:1px solid var(--border);
-  transition:border-color var(--ease);cursor:default;
-}
-.panel-cat:hover{border-color:var(--border-teal);}
-.panel-cat-icon{font-size:14px;flex-shrink:0;}
-.panel-cat-name{font-size:12px;font-weight:500;color:var(--grey1);flex:1;}
-.panel-cat-count{font-family:var(--font-m);font-size:11px;color:var(--grey3);}
-.panel-cat-bar{width:60px;height:3px;background:var(--grey4);border-radius:2px;overflow:hidden;}
-.panel-cat-fill{height:100%;border-radius:2px;background:var(--teal);}
-.panel-featured{
-  background:var(--teal-dim);
-  border:1px solid var(--border-teal);
-  border-radius:var(--r);
-  padding:14px;
-  display:flex;align-items:center;gap:12px;
-}
-.panel-feat-badge{
-  background:var(--teal);color:var(--navy);
-  font-family:var(--font-m);font-size:9px;font-weight:500;
-  padding:3px 8px;border-radius:4px;letter-spacing:0.06em;
-  flex-shrink:0;
-}
-.panel-feat-text{font-size:12px;color:var(--grey2);line-height:1.4;}
-.panel-feat-text strong{color:var(--white);font-weight:500;}
+.tb-stat{font-family:var(--fm);font-size:10px;color:var(--g3);border:1px solid var(--bdr);padding:3px 10px;border-radius:100px;}
+.tb-time{font-family:var(--fm);font-size:10px;color:var(--g3);}
+.btn-access{font-family:var(--fm);font-size:11px;font-weight:500;padding:6px 14px;border-radius:var(--r);background:var(--teal);color:var(--bg);border:none;cursor:pointer;text-decoration:none;}
+.btn-access:hover{filter:brightness(1.08);}
 
-/* ─── SECTION COMMONS ─── */
-section.pad{padding:96px 5vw;}
-.inner{max-width:1160px;margin:0 auto;}
-.sec-label{
-  font-family:var(--font-m);font-size:10.5px;font-weight:500;
-  letter-spacing:0.14em;text-transform:uppercase;
-  color:var(--teal);margin-bottom:12px;
-  display:flex;align-items:center;gap:8px;
-}
-.sec-label::before{content:'';width:20px;height:1px;background:var(--teal);}
-.sec-title{
-  font-family:var(--font-d);
-  font-size:clamp(2rem,3.5vw,3rem);
-  letter-spacing:0.04em;color:var(--white);
-  line-height:1.05;margin-bottom:12px;
-}
-.sec-sub{font-size:0.95rem;color:var(--grey2);max-width:500px;line-height:1.75;margin-bottom:48px;font-weight:300;}
+/* ── TICKER ── */
+.ticker{background:var(--teal);height:30px;display:flex;align-items:center;overflow:hidden;}
+.ticker-inner{display:flex;white-space:nowrap;animation:tick 32s linear infinite;}
+@keyframes tick{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+.ti{font-family:var(--fm);font-size:10.5px;color:var(--bg);padding:0 24px;display:flex;align-items:center;gap:8px;border-right:1px solid rgba(7,13,26,0.15);}
+.ti-dot{width:4px;height:4px;border-radius:50%;background:var(--bg);opacity:0.4;}
 
-/* ─── CATALOG STRIP ─── */
-.catalog-strip{background:var(--navy2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
-.catalog-tabs{display:flex;overflow-x:auto;gap:0;scrollbar-width:none;max-width:1160px;margin:0 auto;}
-.catalog-tabs::-webkit-scrollbar{display:none;}
-.cat-tab{
-  display:flex;align-items:center;gap:9px;
-  padding:18px 24px;white-space:nowrap;cursor:pointer;
-  font-size:13px;font-weight:400;color:var(--grey2);
-  border-bottom:2px solid transparent;
-  transition:all var(--ease);flex-shrink:0;
-}
-.cat-tab:hover{color:var(--white);background:var(--grey5);}
-.cat-tab.active{color:var(--teal);border-bottom-color:var(--teal);background:var(--teal-dim2);}
-.cat-tab-icon{font-size:15px;}
-.cat-tab-count{
-  font-family:var(--font-m);font-size:10px;
-  background:var(--grey4);color:var(--grey3);
-  padding:2px 7px;border-radius:100px;
-}
-.cat-tab.active .cat-tab-count{background:var(--teal-dim);color:var(--teal);}
+/* ── PAGE ── */
+.page{max-width:1400px;margin:0 auto;padding:20px 24px 60px;}
 
-/* ─── DATASET CARDS ─── */
-.datasets{background:var(--navy);}
-.datasets-header{
-  display:flex;align-items:flex-end;justify-content:space-between;
-  margin-bottom:36px;flex-wrap:wrap;gap:20px;
-}
-.datasets-filters{display:flex;gap:8px;flex-wrap:wrap;}
-.filter-pill{
-  font-family:var(--font-m);font-size:11px;
-  padding:5px 14px;border-radius:100px;cursor:pointer;
-  border:1px solid var(--border2);color:var(--grey2);
-  background:transparent;transition:all var(--ease);
-}
-.filter-pill:hover,.filter-pill.on{background:var(--teal-dim);border-color:var(--border-teal);color:var(--teal);}
-.datasets-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+/* ── SECTION HEADERS ── */
+.sec-hdr{display:flex;align-items:center;gap:12px;margin:32px 0 16px;padding-bottom:10px;border-bottom:1px solid var(--bdr);}
+.sec-icon{font-size:18px;}
+.sec-title{font-family:var(--fd);font-size:1.4rem;letter-spacing:0.06em;color:var(--w);}
+.sec-badge{font-family:var(--fm);font-size:9.5px;padding:2px 9px;border-radius:100px;background:var(--teal-d);color:var(--teal);border:1px solid var(--teal-b);}
+.sec-line{flex:1;height:1px;background:var(--bdr);}
+.sec-source{font-family:var(--fm);font-size:9.5px;color:var(--g3);}
 
-.ds-card{
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:var(--r-lg);overflow:hidden;
-  display:flex;flex-direction:column;
-  transition:border-color var(--ease),transform var(--ease),box-shadow var(--ease);
-  position:relative;
-}
-.ds-card:hover{border-color:var(--border-teal);transform:translateY(-3px);box-shadow:0 16px 48px rgba(0,0,0,0.35);}
-.ds-card-top{padding:22px 20px 16px;flex:1;}
-.ds-cat-badge{
-  display:inline-flex;align-items:center;gap:5px;
-  font-family:var(--font-m);font-size:10px;font-weight:500;
-  padding:3px 10px;border-radius:100px;
-  margin-bottom:14px;letter-spacing:0.05em;
-}
-.badge-edu{background:rgba(59,130,246,0.12);color:#60a5fa;border:1px solid rgba(59,130,246,0.2);}
-.badge-biz{background:rgba(245,158,11,0.12);color:#fbbf24;border:1px solid rgba(245,158,11,0.2);}
-.badge-health{background:rgba(239,68,68,0.12);color:#f87171;border:1px solid rgba(239,68,68,0.2);}
-.badge-env{background:rgba(0,201,167,0.12);color:#00c9a7;border:1px solid rgba(0,201,167,0.2);}
-.badge-econ{background:rgba(139,92,246,0.12);color:#a78bfa;border:1px solid rgba(139,92,246,0.2);}
-.badge-agri{background:rgba(16,185,129,0.12);color:#34d399;border:1px solid rgba(16,185,129,0.2);}
-.ds-card h3{font-size:14.5px;font-weight:600;color:var(--white);line-height:1.35;margin-bottom:8px;}
-.ds-card p{font-size:12.5px;color:var(--grey2);line-height:1.6;font-weight:300;}
-.ds-meta{
-  display:flex;gap:16px;margin-top:14px;flex-wrap:wrap;
-}
-.ds-meta-item{
-  font-family:var(--font-m);font-size:10.5px;color:var(--grey3);
-  display:flex;align-items:center;gap:4px;
-}
-.ds-card-bottom{
-  padding:14px 20px;
-  border-top:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between;
-  background:var(--navy2);
-}
-.ds-access{display:flex;align-items:center;gap:6px;font-size:12px;}
-.ds-access.locked{color:var(--grey3);}
-.ds-access.free{color:var(--teal);}
-.ds-access.premium{color:var(--amber);}
-.ds-access-icon{font-size:12px;}
-.ds-action{
-  font-family:var(--font-m);font-size:11px;font-weight:500;
-  color:var(--teal);text-decoration:none;cursor:pointer;
-  display:flex;align-items:center;gap:4px;
-  transition:gap var(--ease);
-}
-.ds-action:hover{gap:7px;}
-.ds-lock-overlay{
-  position:absolute;inset:0;
-  background:linear-gradient(to bottom,transparent 40%,rgba(8,15,30,0.92) 100%);
-  display:flex;align-items:flex-end;justify-content:center;
-  padding-bottom:20px;pointer-events:none;
-  opacity:0;transition:opacity var(--ease);
-}
-.ds-card:hover .ds-lock-overlay{opacity:1;}
+/* ── KPI ROW ── */
+.kpi-row{display:grid;gap:10px;margin-bottom:14px;}
+.kpi-row.c4{grid-template-columns:repeat(4,1fr);}
+.kpi-row.c6{grid-template-columns:repeat(6,1fr);}
+.kpi-row.c8{grid-template-columns:repeat(8,1fr);}
+.kpi{background:var(--panel);border:1px solid var(--bdr);border-radius:var(--r2);padding:14px 16px;border-left:3px solid var(--teal);position:relative;overflow:hidden;}
+.kpi.a{border-left-color:var(--amber);}
+.kpi.b{border-left-color:var(--blue);}
+.kpi.g{border-left-color:var(--green);}
+.kpi.p{border-left-color:var(--purple);}
+.kpi.pk{border-left-color:var(--pink);}
+.kpi.o{border-left-color:var(--orange);}
+.kpi.r{border-left-color:var(--red);}
+.kpi.c{border-left-color:var(--cyan);}
+.kpi-val{font-family:var(--fd);font-size:1.7rem;color:var(--w);letter-spacing:0.04em;line-height:1;margin-bottom:3px;}
+.kpi-val.t{color:var(--teal);}
+.kpi-val.a{color:var(--amber);}
+.kpi-val.b{color:var(--blue);}
+.kpi-val.g{color:var(--green);}
+.kpi-val.r{color:var(--red);}
+.kpi-label{font-family:var(--fm);font-size:9px;color:var(--g3);text-transform:uppercase;letter-spacing:0.08em;}
+.kpi-sub{font-family:var(--fm);font-size:9.5px;margin-top:4px;}
+.kpi-sub.up{color:var(--green);}
+.kpi-sub.dn{color:var(--red);}
+.kpi-sub.nt{color:var(--g3);}
+.kpi-spark{position:absolute;bottom:0;right:0;width:60px;height:30px;opacity:0.35;}
 
-/* preview sparkline */
-.ds-preview-chart{
-  margin-top:14px;
-  height:40px;display:flex;align-items:flex-end;gap:3px;
-  opacity:0.5;
-}
-.ds-preview-chart .b{
-  flex:1;border-radius:2px 2px 0 0;
-  background:var(--teal);min-width:6px;
-}
+/* ── CHART GRIDS ── */
+.cg{display:grid;gap:12px;margin-bottom:12px;}
+.cg.c2{grid-template-columns:1fr 1fr;}
+.cg.c3{grid-template-columns:1fr 1fr 1fr;}
+.cg.c1-2{grid-template-columns:1fr 2fr;}
+.cg.c2-1{grid-template-columns:2fr 1fr;}
+.cg.c1-1-1{grid-template-columns:1fr 1fr 1fr;}
 
-/* ─── PRICING ─── */
-.pricing{background:var(--navy2);border-top:1px solid var(--border);}
-.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
-.price-card{
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:var(--r-xl);
-  padding:36px 30px;
-  position:relative;overflow:hidden;
-  transition:transform var(--ease),box-shadow var(--ease);
-}
-.price-card:hover{transform:translateY(-4px);box-shadow:0 24px 60px rgba(0,0,0,0.4);}
-.price-card.featured{
-  border-color:var(--teal);
-  background:linear-gradient(135deg,var(--panel) 0%,rgba(0,201,167,0.04) 100%);
-}
-.price-pop{
-  position:absolute;top:20px;right:20px;
-  background:var(--teal);color:var(--navy);
-  font-family:var(--font-m);font-size:10px;font-weight:500;
-  padding:3px 10px;border-radius:100px;letter-spacing:0.06em;
-}
-.price-tier{
-  font-family:var(--font-m);font-size:11px;color:var(--grey3);
-  letter-spacing:0.1em;text-transform:uppercase;
-  margin-bottom:16px;
-}
-.price-card.featured .price-tier{color:var(--teal);}
-.price-amount{
-  font-family:var(--font-d);font-size:3.2rem;
-  color:var(--white);letter-spacing:0.04em;line-height:1;
-  margin-bottom:4px;
-}
-.price-amount sup{font-size:1.4rem;vertical-align:super;color:var(--grey2);}
-.price-period{font-size:12px;color:var(--grey3);margin-bottom:28px;}
-.price-divider{height:1px;background:var(--border);margin-bottom:24px;}
-.price-features{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:32px;}
-.price-features li{
-  font-size:13px;color:var(--grey2);
-  display:flex;align-items:flex-start;gap:10px;line-height:1.45;
-}
-.price-features li::before{
-  content:'✓';color:var(--teal);
-  font-size:11px;margin-top:2px;flex-shrink:0;
-}
-.price-features li.no{color:var(--grey3);}
-.price-features li.no::before{content:'—';color:var(--grey4);}
-.price-cta{width:100%;text-align:center;justify-content:center;}
+.cp{background:var(--panel);border:1px solid var(--bdr);border-radius:var(--r2);padding:16px;}
+.cp-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;}
+.cp-t{font-size:12.5px;font-weight:500;color:var(--g1);}
+.cp-s{font-family:var(--fm);font-size:9.5px;color:var(--g3);margin-top:2px;}
+.cp-tags{display:flex;gap:5px;flex-shrink:0;}
+.cp-tag{font-family:var(--fm);font-size:9px;background:var(--g4);color:var(--g3);padding:2px 7px;border-radius:100px;}
+.cw{position:relative;}
+.h160{height:160px;}
+.h200{height:200px;}
+.h220{height:220px;}
+.h260{height:260px;}
+.h300{height:300px;}
 
-/* ─── HOW IT WORKS ─── */
-.how{background:var(--navy);}
-.how-steps{
-  display:grid;grid-template-columns:repeat(4,1fr);
-  gap:1px;background:var(--border);
-  border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;
-  margin-bottom:64px;
-}
-.how-step{
-  background:var(--panel);padding:32px 24px;
-  position:relative;
-}
-.how-step-num{
-  font-family:var(--font-d);font-size:3rem;
-  color:var(--teal-dim);letter-spacing:0.05em;
-  line-height:1;margin-bottom:16px;
-  position:relative;
-}
-.how-step-num::after{
-  content:attr(data-n);
-  position:absolute;top:0;left:0;
-  color:var(--teal);
-  font-size:1rem;font-family:var(--font-m);
-  font-weight:500;letter-spacing:0.1em;
-  transform:translateY(-2px);
-}
-.how-step h4{font-size:14px;font-weight:600;color:var(--white);margin-bottom:8px;}
-.how-step p{font-size:12.5px;color:var(--grey3);line-height:1.6;}
-.how-connectors{
-  display:flex;align-items:center;justify-content:center;gap:48px;
-  flex-wrap:wrap;
-}
-.how-connector{
-  display:flex;align-items:center;gap:14px;
-  background:var(--teal-dim2);border:1px solid var(--border-teal);
-  border-radius:var(--r-lg);padding:20px 28px;
-}
-.how-connector-icon{font-size:22px;}
-.how-connector-text h4{font-size:13px;font-weight:600;color:var(--white);margin-bottom:2px;}
-.how-connector-text p{font-size:12px;color:var(--grey3);}
+/* ── DATA TABLE ── */
+.tbl-wrap{background:var(--panel);border:1px solid var(--bdr);border-radius:var(--r2);overflow:hidden;margin-bottom:12px;}
+.tbl-hdr{padding:12px 18px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;}
+.tbl-title{font-size:12.5px;font-weight:500;color:var(--g1);}
+.tbl-actions{display:flex;gap:8px;}
+.dl-btn{font-family:var(--fm);font-size:10px;padding:4px 10px;border-radius:var(--r);background:var(--g4);border:1px solid var(--bdr2);color:var(--g2);cursor:pointer;transition:all 0.2s;}
+.dl-btn:hover{background:var(--teal-d);border-color:var(--teal-b);color:var(--teal);}
+table{width:100%;border-collapse:collapse;}
+th{font-family:var(--fm);font-size:9.5px;text-transform:uppercase;letter-spacing:0.09em;color:var(--g3);padding:9px 16px;text-align:left;border-bottom:1px solid var(--bdr);background:var(--bg3);white-space:nowrap;}
+td{padding:9px 16px;border-bottom:1px solid var(--bdr);font-size:12.5px;color:var(--g2);}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:var(--g5);color:var(--g1);}
+.td-mono{font-family:var(--fm);font-size:11.5px;}
+.td-num{font-family:var(--fm);text-align:right;}
+.td-up{color:var(--green);font-family:var(--fm);font-size:11px;text-align:right;}
+.td-dn{color:var(--red);font-family:var(--fm);font-size:11px;text-align:right;}
+.td-fl{color:var(--g3);font-family:var(--fm);font-size:11px;text-align:right;}
+.td-bold{color:var(--g1);font-weight:500;}
+.td-badge{display:inline-block;font-family:var(--fm);font-size:9px;padding:1px 7px;border-radius:100px;}
 
-/* ─── STATS TICKER ─── */
-.stat-ticker{
-  background:var(--navy3);
-  border-top:1px solid var(--border);
-  border-bottom:1px solid var(--border);
-  padding:40px 5vw;
-}
-.stat-ticker-inner{
-  max-width:1160px;margin:0 auto;
-  display:grid;grid-template-columns:repeat(6,1fr);
-  gap:1px;background:var(--border);
-  border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;
-}
-.stat-tile{
-  background:var(--navy2);
-  padding:28px 20px;text-align:center;
-}
-.stat-tile-num{
-  font-family:var(--font-d);font-size:2.2rem;
-  color:var(--teal);letter-spacing:0.06em;
-  line-height:1;margin-bottom:6px;
-}
-.stat-tile-label{
-  font-family:var(--font-m);font-size:9.5px;
-  color:var(--grey3);text-transform:uppercase;letter-spacing:0.1em;
-}
+/* ── HEATMAP ── */
+.heatmap-wrap{overflow-x:auto;}
+.hm-row{display:flex;align-items:center;gap:3px;margin-bottom:3px;}
+.hm-lbl{font-family:var(--fm);font-size:10px;color:var(--g3);width:30px;text-align:right;padding-right:6px;flex-shrink:0;}
+.hm-cell{flex:1;height:26px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:8.5px;cursor:default;min-width:40px;}
+.hm-yr-row{display:flex;gap:3px;padding-left:36px;margin-bottom:4px;}
+.hm-yr{flex:1;font-family:var(--fm);font-size:9px;color:var(--g3);text-align:center;min-width:40px;}
 
-/* ─── TESTIMONIALS / USE CASES ─── */
-.usecases{background:var(--navy2);border-top:1px solid var(--border);}
-.uc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
-.uc-card{
-  background:var(--panel);border:1px solid var(--border);
-  border-radius:var(--r-lg);padding:28px 24px;
-  transition:border-color var(--ease);
-}
-.uc-card:hover{border-color:var(--border-teal);}
-.uc-icon{font-size:28px;margin-bottom:16px;display:block;}
-.uc-card h4{font-size:14px;font-weight:600;color:var(--white);margin-bottom:8px;}
-.uc-card p{font-size:13px;color:var(--grey2);line-height:1.65;font-weight:300;}
-.uc-quote{
-  font-style:italic;font-size:13px;color:var(--grey3);
-  border-left:2px solid var(--teal);
-  padding-left:14px;margin-top:16px;line-height:1.6;
-}
+/* ── DIVIDER ── */
+.divider{height:1px;background:var(--bdr);margin:40px 0 0;}
 
-/* ─── CONTACT / CTA ─── */
-.cta-band{
-  background:var(--teal);
-  padding:80px 5vw;text-align:center;
-}
-.cta-band h2{
-  font-family:var(--font-d);
-  font-size:clamp(2rem,4vw,3.5rem);
-  color:var(--navy);letter-spacing:0.04em;
-  margin-bottom:14px;
-}
-.cta-band p{color:rgba(8,15,30,0.65);font-size:1rem;margin-bottom:32px;font-weight:300;}
-.cta-band .btn-navy{font-size:15px;padding:14px 36px;}
-.cta-band-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
-.btn-white{background:var(--white);color:var(--navy);font-weight:600;}
-.btn-white:hover{background:var(--navy);color:var(--white);}
+/* ── SUMMARY STRIP ── */
+.summary-strip{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--bdr);border:1px solid var(--bdr);border-radius:var(--r2);overflow:hidden;margin-bottom:20px;}
+.ss-cell{background:var(--panel);padding:18px 16px;text-align:center;}
+.ss-val{font-family:var(--fd);font-size:2rem;color:var(--teal);letter-spacing:0.04em;line-height:1;margin-bottom:4px;}
+.ss-label{font-family:var(--fm);font-size:9px;color:var(--g3);text-transform:uppercase;letter-spacing:0.08em;}
 
-/* ─── CONTACT SECTION ─── */
-.contact-sec{background:var(--navy);padding:96px 5vw;}
-.contact-grid{display:grid;grid-template-columns:1fr 1.4fr;gap:80px;align-items:start;}
-.contact-info h2{font-family:var(--font-d);font-size:2.4rem;color:var(--white);letter-spacing:0.04em;margin-bottom:16px;}
-.contact-info p{font-size:14px;color:var(--grey2);line-height:1.75;font-weight:300;margin-bottom:32px;}
-.contact-details{display:flex;flex-direction:column;gap:16px;}
-.cd-item{
-  display:flex;gap:14px;align-items:flex-start;
-  padding:16px;background:var(--panel);
-  border:1px solid var(--border);border-radius:var(--r);
-}
-.cd-icon{
-  width:36px;height:36px;border-radius:8px;
-  background:var(--teal-dim);border:1px solid var(--border-teal);
-  display:flex;align-items:center;justify-content:center;
-  font-size:15px;flex-shrink:0;
-}
-.cd-label{font-family:var(--font-m);font-size:10px;color:var(--grey3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:2px;}
-.cd-val{font-size:13.5px;color:var(--grey1);}
-.contact-form{
-  background:var(--panel);border:1px solid var(--border2);
-  border-radius:var(--r-xl);padding:36px 32px;
-}
-.contact-form h3{font-family:var(--font-d);font-size:1.6rem;color:var(--white);letter-spacing:0.04em;margin-bottom:24px;}
-.form-row2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
-.fg{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
-.fg label{font-family:var(--font-m);font-size:11px;color:var(--grey3);letter-spacing:0.06em;text-transform:uppercase;}
-.fg input,.fg textarea,.fg select{
-  font-family:var(--font-b);font-size:13.5px;color:var(--grey1);
-  background:var(--navy2);border:1px solid var(--border2);
-  border-radius:var(--r);padding:11px 14px;outline:none;
-  transition:border-color var(--ease),box-shadow var(--ease);
-}
-.fg input:focus,.fg textarea:focus,.fg select:focus{
-  border-color:var(--teal);
-  box-shadow:0 0 0 3px rgba(0,201,167,0.1);
-}
-.fg select option{background:var(--navy2);}
-.fg textarea{resize:vertical;min-height:100px;}
+/* spinner */
+.spin{display:inline-block;width:16px;height:16px;border:2px solid var(--bdr2);border-top-color:var(--teal);border-radius:50%;animation:sp 0.8s linear infinite;vertical-align:middle;margin-right:6px;}
+@keyframes sp{to{transform:rotate(360deg);}}
 
-/* ─── FOOTER ─── */
-footer{
-  background:var(--navy2);
-  border-top:1px solid var(--border);
-  padding:48px 5vw 32px;
-}
-.footer-top{
-  max-width:1160px;margin:0 auto;
-  display:grid;grid-template-columns:2fr 1fr 1fr 1fr;
-  gap:48px;margin-bottom:40px;
-}
-.footer-brand-name{font-family:var(--font-d);font-size:22px;letter-spacing:0.08em;color:var(--white);margin-bottom:10px;}
-.footer-brand-name span{color:var(--teal);}
-.footer-tagline{font-size:13px;color:var(--grey3);line-height:1.65;max-width:260px;margin-bottom:16px;}
-.footer-col h5{
-  font-family:var(--font-m);font-size:10.5px;color:var(--grey3);
-  text-transform:uppercase;letter-spacing:0.1em;
-  margin-bottom:14px;
-}
-.footer-col a{
-  display:block;font-size:13px;color:var(--grey2);
-  text-decoration:none;margin-bottom:8px;
-  transition:color var(--ease);
-}
-.footer-col a:hover{color:var(--teal);}
-.footer-bottom{
-  max-width:1160px;margin:0 auto;
-  border-top:1px solid var(--border);
-  padding-top:24px;
-  display:flex;align-items:center;justify-content:space-between;
-  flex-wrap:wrap;gap:12px;
-}
-.footer-copy{font-family:var(--font-m);font-size:11px;color:var(--grey3);}
-.footer-badges{display:flex;gap:10px;}
-.footer-badge{
-  font-family:var(--font-m);font-size:9.5px;
-  padding:3px 9px;border-radius:4px;
-  border:1px solid var(--border2);color:var(--grey3);
-  letter-spacing:0.06em;
-}
-
-/* ─── REVEAL ─── */
-.rev{opacity:0;transform:translateY(20px);transition:opacity 0.65s ease,transform 0.65s ease;}
-.rev.in{opacity:1;transform:translateY(0);}
-.d1{transition-delay:0.08s;}.d2{transition-delay:0.16s;}.d3{transition-delay:0.24s;}.d4{transition-delay:0.32s;}
-
-/* ─── RESPONSIVE ─── */
-@media(max-width:1000px){
-  .hero{grid-template-columns:1fr;}.hero-right{display:none;}
-  .datasets-grid,.pricing-grid,.uc-grid{grid-template-columns:1fr 1fr;}
-  .how-steps{grid-template-columns:1fr 1fr;}
-  .stat-ticker-inner{grid-template-columns:repeat(3,1fr);}
-  .footer-top{grid-template-columns:1fr 1fr;}
-  .contact-grid{grid-template-columns:1fr;}
-}
-@media(max-width:640px){
-  .datasets-grid,.pricing-grid,.uc-grid{grid-template-columns:1fr;}
-  .how-steps{grid-template-columns:1fr;}
-  .stat-ticker-inner{grid-template-columns:1fr 1fr;}
-  .form-row2{grid-template-columns:1fr;}
-  .nav-links{display:none;}
-  .footer-top{grid-template-columns:1fr;}
-  section.pad{padding:64px 5vw;}
-  .hero{padding:48px 5vw;}
-}
+@media(max-width:1100px){.cg.c3,.cg.c1-1-1{grid-template-columns:1fr 1fr;}.kpi-row.c6,.kpi-row.c8{grid-template-columns:repeat(4,1fr);}}
+@media(max-width:800px){.cg.c2,.cg.c1-2,.cg.c2-1,.cg.c3{grid-template-columns:1fr;}.kpi-row.c4,.kpi-row.c6,.kpi-row.c8{grid-template-columns:1fr 1fr;}}
 </style>
 </head>
 <body>
 
-<!-- NAV -->
-<nav>
-  <a href="#" class="nav-brand">
-    <div class="nav-mark">
-      <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="1" y="8" width="2.5" height="7" rx="1" fill="#080f1e"/>
-        <rect x="5" y="5" width="2.5" height="10" rx="1" fill="rgba(8,15,30,0.65)"/>
-        <rect x="9" y="2" width="2.5" height="13" rx="1" fill="rgba(8,15,30,0.4)"/>
-        <circle cx="13.5" cy="2.5" r="2" fill="#f59e0b"/>
-      </svg>
+<div class="topbar">
+  <a href="marketplace.html" class="tb-brand">
+    <div class="tb-mark">
+      <svg viewBox="0 0 13 13" fill="none"><rect x="1" y="7" width="2" height="5" rx="1" fill="#080f1e"/><rect x="4.5" y="4" width="2" height="8" rx="1" fill="rgba(8,15,30,0.6)"/><rect x="8" y="1" width="2" height="11" rx="1" fill="rgba(8,15,30,0.35)"/><circle cx="11.5" cy="1.8" r="1.6" fill="#f59e0b"/></svg>
     </div>
-    <span class="nav-name">SG <span>DATALYTICS</span></span>
+    <span class="tb-name">SG <span>DATALYTICS</span></span>
   </a>
-  <ul class="nav-links">
-    <li><a href="#catalog">Catalog</a></li>
-    <li><a href="#datasets">Datasets</a></li>
-    <li><a href="#pricing">Pricing</a></li>
-    <li><a href="#how">How it works</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
-  <div class="nav-actions">
-    <a href="#" class="btn btn-ghost">Sign in</a>
-    <a href="#pricing" class="btn btn-teal">Get access</a>
+  <div class="tb-sep"></div>
+  <span class="tb-title">Ghana Data Dashboard — Live World Bank Indicators</span>
+  <div class="tb-right">
+    <div class="live-pill"><div class="live-dot"></div>LIVE API</div>
+    <span class="tb-stat" id="tb-dp">Loading…</span>
+    <span class="tb-time" id="tb-time"></span>
+    <a href="marketplace.html#pricing" class="btn-access">Get full access</a>
   </div>
-</nav>
+</div>
 
-<!-- TICKER -->
 <div class="ticker">
   <div class="ticker-inner">
-    <div class="ticker-item"><div class="ticker-dot"></div>NEW: Ghana Agriculture Dataset Q1 2025 — 2,400 records</div>
-    <div class="ticker-item"><div class="ticker-dot"></div>Education Sector: 14 new datasets added this month</div>
-    <div class="ticker-item"><div class="ticker-dot"></div>SME Performance Index — Updated April 2025</div>
-    <div class="ticker-item"><div class="ticker-dot"></div>Health Demographics: Regional breakdowns now available</div>
-    <div class="ticker-item"><div class="ticker-dot"></div>Sustainability Indicators — 24-variable dataset released</div>
-    <div class="ticker-item"><div class="ticker-dot"></div>NEW: Ghana Agriculture Dataset Q1 2025 — 2,400 records</div>
-    <div class="ticker-item"><div class="ticker-dot"></div>Education Sector: 14 new datasets added this month</div>
-    <div class="ticker-item"><div class="ticker-dot"></div>SME Performance Index — Updated April 2025</div>
-    <div class="ticker-item"><div class="ticker-dot"></div>Health Demographics: Regional breakdowns now available</div>
-    <div class="ticker-item"><div class="ticker-dot"></div>Sustainability Indicators — 24-variable dataset released</div>
+    <div class="ti"><div class="ti-dot"></div>🇬🇭 Ghana GDP 2023: $76.3B</div>
+    <div class="ti"><div class="ti-dot"></div>🇬🇭 Inflation 2023: 38.1%</div>
+    <div class="ti"><div class="ti-dot"></div>🇬🇭 Population 2023: 34.1M</div>
+    <div class="ti"><div class="ti-dot"></div>🇬🇭 Life Expectancy: 64.7 yrs</div>
+    <div class="ti"><div class="ti-dot"></div>🇬🇭 Electricity Access: 88.6%</div>
+    <div class="ti"><div class="ti-dot"></div>🇬🇭 Primary Enrollment: 115.9%</div>
+    <div class="ti"><div class="ti-dot"></div>🇬🇭 Unemployment: 5.2%</div>
+    <div class="ti"><div class="ti-dot"></div>🇬🇭 Agricultural Land: 70.8%</div>
+    <div class="ti"><div class="ti-dot"></div>Source: World Bank Open Data API v2</div>
+    <div class="ti"><div class="ti-dot"></div>🇬🇭 Ghana GDP 2023: $76.3B</div>
+    <div class="ti"><div class="ti-dot"></div>🇬🇭 Inflation 2023: 38.1%</div>
+    <div class="ti"><div class="ti-dot"></div>🇬🇭 Population 2023: 34.1M</div>
+    <div class="ti"><div class="ti-dot"></div>🇬🇭 Life Expectancy: 64.7 yrs</div>
+    <div class="ti"><div class="ti-dot"></div>🇬🇭 Electricity Access: 88.6%</div>
+    <div class="ti"><div class="ti-dot"></div>🇬🇭 Primary Enrollment: 115.9%</div>
+    <div class="ti"><div class="ti-dot"></div>🇬🇭 Unemployment: 5.2%</div>
+    <div class="ti"><div class="ti-dot"></div>🇬🇭 Agricultural Land: 70.8%</div>
+    <div class="ti"><div class="ti-dot"></div>Source: World Bank Open Data API v2</div>
   </div>
 </div>
 
-<!-- HERO -->
-<section class="hero" id="home">
-  <div class="hero-grid-bg"></div>
-  <div class="hero-glow"></div>
-  <div class="hero-left">
-    <div class="hero-kicker">Ghana's premier data marketplace</div>
-    <h1>DATA YOU<br/>CAN <span class="hl">TRUST.</span><br/>INSIGHTS<br/>YOU CAN <span class="hl">USE.</span></h1>
-    <p class="hero-sub">SG Datalytics warehouses, curates, and sells high-quality datasets across six sectors — built for researchers, analysts, businesses, and governments making evidence-based decisions in Ghana and beyond.</p>
-    <div class="hero-actions">
-      <a href="#catalog" class="btn btn-teal btn-lg">Browse catalog →</a>
-      <a href="#pricing" class="btn btn-ghost btn-lg">View plans</a>
-    </div>
-    <div class="hero-trust">
-      <span class="hero-trust-item">560+ datasets</span>
-      <span class="hero-trust-item">6 sectors covered</span>
-      <span class="hero-trust-item">Verified & curated</span>
-      <span class="hero-trust-item">Instant download</span>
-    </div>
-  </div>
-  <div class="hero-right">
-    <div class="data-panel">
-      <div class="data-panel-header">
-        <div class="data-panel-title"><div class="live-dot"></div>DATA WAREHOUSE — LIVE</div>
-        <div class="data-panel-meta">Updated Apr 2025</div>
-      </div>
-      <div class="data-panel-body">
-        <div class="panel-stats">
-          <div class="panel-stat">
-            <div class="panel-stat-num t">560+</div>
-            <div class="panel-stat-label">Datasets</div>
-          </div>
-          <div class="panel-stat">
-            <div class="panel-stat-num">2,300+</div>
-            <div class="panel-stat-label">Charts</div>
-          </div>
-          <div class="panel-stat">
-            <div class="panel-stat-num a">12</div>
-            <div class="panel-stat-label">Sectors</div>
-          </div>
-        </div>
-        <div class="panel-cats">
-          <div class="panel-cat">
-            <div class="panel-cat-icon">🏫</div>
-            <div class="panel-cat-name">Education & Schools</div>
-            <div class="panel-cat-bar"><div class="panel-cat-fill" style="width:85%"></div></div>
-            <div class="panel-cat-count">148 datasets</div>
-          </div>
-          <div class="panel-cat">
-            <div class="panel-cat-icon">📊</div>
-            <div class="panel-cat-name">Business & SMEs</div>
-            <div class="panel-cat-bar"><div class="panel-cat-fill" style="width:72%"></div></div>
-            <div class="panel-cat-count">124 datasets</div>
-          </div>
-          <div class="panel-cat">
-            <div class="panel-cat-icon">🌿</div>
-            <div class="panel-cat-name">Sustainability</div>
-            <div class="panel-cat-bar"><div class="panel-cat-fill" style="width:55%"></div></div>
-            <div class="panel-cat-count">96 datasets</div>
-          </div>
-          <div class="panel-cat">
-            <div class="panel-cat-icon">🌾</div>
-            <div class="panel-cat-name">Agriculture</div>
-            <div class="panel-cat-bar"><div class="panel-cat-fill" style="width:48%"></div></div>
-            <div class="panel-cat-count">84 datasets</div>
-          </div>
-          <div class="panel-cat">
-            <div class="panel-cat-icon">🏥</div>
-            <div class="panel-cat-name">Health & Demographics</div>
-            <div class="panel-cat-bar"><div class="panel-cat-fill" style="width:62%"></div></div>
-            <div class="panel-cat-count">108 datasets</div>
-          </div>
-        </div>
-        <div class="panel-featured">
-          <div class="panel-feat-badge">NEW</div>
-          <div class="panel-feat-text"><strong>Ghana SME Performance Index 2025</strong> — 3,200 firm-level records across 8 regions. Available now on Pro plan.</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+<div class="page">
 
-<!-- CATALOG STRIP -->
-<div class="catalog-strip" id="catalog">
-  <div class="catalog-tabs">
-    <div class="cat-tab active" onclick="filterCat(this,'all')"><span class="cat-tab-icon">⚡</span>All Categories<span class="cat-tab-count">560</span></div>
-    <div class="cat-tab" onclick="filterCat(this,'edu')"><span class="cat-tab-icon">🏫</span>Education<span class="cat-tab-count">148</span></div>
-    <div class="cat-tab" onclick="filterCat(this,'biz')"><span class="cat-tab-icon">📊</span>Business & SMEs<span class="cat-tab-count">124</span></div>
-    <div class="cat-tab" onclick="filterCat(this,'health')"><span class="cat-tab-icon">🏥</span>Health<span class="cat-tab-count">108</span></div>
-    <div class="cat-tab" onclick="filterCat(this,'env')"><span class="cat-tab-icon">🌿</span>Sustainability<span class="cat-tab-count">96</span></div>
-    <div class="cat-tab" onclick="filterCat(this,'econ')"><span class="cat-tab-icon">💹</span>Economy<span class="cat-tab-count">76</span></div>
-    <div class="cat-tab" onclick="filterCat(this,'agri')"><span class="cat-tab-icon">🌾</span>Agriculture<span class="cat-tab-count">84</span></div>
+  <!-- WAREHOUSE SUMMARY -->
+  <div class="summary-strip" id="sumStrip" style="margin-top:20px;">
+    <div class="ss-cell"><div class="ss-val" id="s-dp">—</div><div class="ss-label">Data Points</div></div>
+    <div class="ss-cell"><div class="ss-val">6</div><div class="ss-label">Sectors</div></div>
+    <div class="ss-cell"><div class="ss-val" id="s-c">—</div><div class="ss-label">Countries</div></div>
+    <div class="ss-cell"><div class="ss-val" id="s-i">—</div><div class="ss-label">Indicators</div></div>
+    <div class="ss-cell"><div class="ss-val" id="s-yr">—</div><div class="ss-label">Year range</div></div>
+    <div class="ss-cell"><div class="ss-val" style="color:var(--amber)">WB</div><div class="ss-label">Data Source</div></div>
   </div>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 1 — ECONOMY & FINANCE
+  ═══════════════════════════════════════════ -->
+  <div class="sec-hdr">
+    <span class="sec-icon">💹</span>
+    <span class="sec-title">Economy & Finance</span>
+    <span class="sec-badge">8 indicators</span>
+    <span class="sec-line"></span>
+    <span class="sec-source">Source: World Bank WDI</span>
+  </div>
+
+  <div class="kpi-row c6">
+    <div class="kpi"><div class="kpi-val t" id="e1">—</div><div class="kpi-label">Ghana GDP 2023</div><div class="kpi-sub nt" id="e1s">US$</div></div>
+    <div class="kpi a"><div class="kpi-val a" id="e2">—</div><div class="kpi-label">Inflation 2023</div><div class="kpi-sub dn">▲ from 2022</div></div>
+    <div class="kpi b"><div class="kpi-val b" id="e3">—</div><div class="kpi-label">GDP Growth 2023</div><div class="kpi-sub" id="e3s"></div></div>
+    <div class="kpi g"><div class="kpi-val g" id="e4">—</div><div class="kpi-label">Nigeria GDP 2023</div><div class="kpi-sub nt">US$</div></div>
+    <div class="kpi p"><div class="kpi-val" style="color:var(--purple)" id="e5">—</div><div class="kpi-label">Kenya GDP 2023</div><div class="kpi-sub nt">US$</div></div>
+    <div class="kpi pk"><div class="kpi-val" style="color:var(--pink)" id="e6">—</div><div class="kpi-label">S.Africa GDP 2023</div><div class="kpi-sub nt">US$</div></div>
+  </div>
+
+  <div class="cg c2-1">
+    <div class="cp">
+      <div class="cp-hdr"><div><div class="cp-t">Ghana GDP trend — 2015 to 2023 (US$ Billion)</div><div class="cp-s">NY.GDP.MKTP.CD · World Bank · current US$</div></div><div class="cp-tags"><span class="cp-tag">LINE</span><span class="cp-tag">9 pts</span></div></div>
+      <div class="cw h220"><canvas id="eC1"></canvas></div>
+    </div>
+    <div class="cp">
+      <div class="cp-hdr"><div><div class="cp-t">Inflation rate — Ghana (%)</div><div class="cp-s">FP.CPI.TOTL.ZG · 2015–2023</div></div><div class="cp-tags"><span class="cp-tag">BAR</span></div></div>
+      <div class="cw h220"><canvas id="eC2"></canvas></div>
+    </div>
+  </div>
+
+  <div class="cg c2">
+    <div class="cp">
+      <div class="cp-hdr"><div><div class="cp-t">GDP growth rate — Multi-country (%)</div><div class="cp-s">NY.GDP.MKTP.KD.ZG · GH, NG, KE, ZA · 2015–2023</div></div><div class="cp-tags"><span class="cp-tag">MULTI-LINE</span></div></div>
+      <div class="cw h200"><canvas id="eC3"></canvas></div>
+    </div>
+    <div class="cp">
+      <div class="cp-hdr"><div><div class="cp-t">GDP comparison — latest year (US$ Billion)</div><div class="cp-s">All tracked countries · World Bank</div></div><div class="cp-tags"><span class="cp-tag">BAR</span></div></div>
+      <div class="cw h200"><canvas id="eC4"></canvas></div>
+    </div>
+  </div>
+
+  <div class="tbl-wrap">
+    <div class="tbl-hdr"><span class="tbl-title">Economy & Finance — Full Data Table</span><div class="tbl-actions"><span class="dl-btn" onclick="dlCSV('economy')">⬇ CSV</span></div></div>
+    <div style="overflow-x:auto;"><table><thead><tr><th>Country</th><th>Year</th><th style="text-align:right">GDP (US$B)</th><th style="text-align:right">Growth %</th><th style="text-align:right">Inflation %</th><th style="text-align:right">YoY GDP Δ</th></tr></thead><tbody id="eTbl"></tbody></table></div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 2 — HEALTH & DEMOGRAPHICS
+  ═══════════════════════════════════════════ -->
+  <div class="divider"></div>
+  <div class="sec-hdr">
+    <span class="sec-icon">🏥</span>
+    <span class="sec-title">Health & Demographics</span>
+    <span class="sec-badge">7 indicators</span>
+    <span class="sec-line"></span>
+    <span class="sec-source">Source: World Bank WDI</span>
+  </div>
+
+  <div class="kpi-row c6">
+    <div class="kpi"><div class="kpi-val t" id="h1">—</div><div class="kpi-label">Ghana Population 2023</div><div class="kpi-sub up">▲ growing</div></div>
+    <div class="kpi a"><div class="kpi-val a" id="h2">—</div><div class="kpi-label">Life Expectancy (yrs)</div><div class="kpi-sub nt">at birth</div></div>
+    <div class="kpi b"><div class="kpi-val b" id="h3">—</div><div class="kpi-label">Nigeria Population</div><div class="kpi-sub nt">2023</div></div>
+    <div class="kpi g"><div class="kpi-val g" id="h4">—</div><div class="kpi-label">Kenya Life Exp.</div><div class="kpi-sub nt">years</div></div>
+    <div class="kpi p"><div class="kpi-val" style="color:var(--purple)" id="h5">—</div><div class="kpi-label">S.Africa Life Exp.</div><div class="kpi-sub nt">years</div></div>
+    <div class="kpi c"><div class="kpi-val" style="color:var(--cyan)" id="h6">—</div><div class="kpi-label">US Life Expectancy</div><div class="kpi-sub dn">▼ post-COVID</div></div>
+  </div>
+
+  <div class="cg c3">
+    <div class="cp">
+      <div class="cp-hdr"><div><div class="cp-t">Life expectancy trend — 5 countries</div><div class="cp-s">SP.DYN.LE00.IN · years · 2015–2023</div></div><div class="cp-tags"><span class="cp-tag">MULTI-LINE</span></div></div>
+      <div class="cw h200"><canvas id="hC1"></canvas></div>
+    </div>
+    <div class="cp">
+      <div class="cp-hdr"><div><div class="cp-t">Ghana population growth</div><div class="cp-s">SP.POP.TOTL · millions · 2015–2023</div></div><div class="cp-tags"><span class="cp-tag">LINE</span></div></div>
+      <div class="cw h200"><canvas id="hC2"></canvas></div>
+    </div>
+    <div class="cp">
+      <div class="cp-hdr"><div><div class="cp-t">Population comparison — latest</div><div class="cp-s">All countries · millions</div></div><div class="cp-tags"><span class="cp-tag">BAR</span></div></div>
+      <div class="cw h200"><canvas id="hC3"></canvas></div>
+    </div>
+  </div>
+
+  <div class="tbl-wrap">
+    <div class="tbl-hdr"><span class="tbl-title">Health & Demographics — Full Data Table</span><div class="tbl-actions"><span class="dl-btn" onclick="dlCSV('health')">⬇ CSV</span></div></div>
+    <div style="overflow-x:auto;"><table><thead><tr><th>Country</th><th>Year</th><th style="text-align:right">Population (M)</th><th style="text-align:right">Life Expectancy</th><th style="text-align:right">YoY Pop Δ%</th></tr></thead><tbody id="hTbl"></tbody></table></div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 3 — EDUCATION
+  ═══════════════════════════════════════════ -->
+  <div class="divider"></div>
+  <div class="sec-hdr">
+    <span class="sec-icon">🏫</span>
+    <span class="sec-title">Education</span>
+    <span class="sec-badge">7 indicators</span>
+    <span class="sec-line"></span>
+    <span class="sec-source">Source: World Bank WDI</span>
+  </div>
+
+  <div class="kpi-row c4">
+    <div class="kpi"><div class="kpi-val t" id="ed1">—</div><div class="kpi-label">Ghana Primary Enrollment %</div></div>
+    <div class="kpi a"><div class="kpi-val a" id="ed2">—</div><div class="kpi-label">Nigeria Enrollment %</div></div>
+    <div class="kpi b"><div class="kpi-val b" id="ed3">—</div><div class="kpi-label">Kenya Enrollment %</div></div>
+    <div class="kpi g"><div class="kpi-val g" id="ed4">—</div><div class="kpi-label">S.Africa Enrollment %</div></div>
+  </div>
+
+  <div class="cg c2">
+    <div class="cp">
+      <div class="cp-hdr"><div><div class="cp-t">Primary school enrollment — Ghana 2015–2023</div><div class="cp-s">SE.PRM.ENRR · % gross · World Bank</div></div><div class="cp-tags"><span class="cp-tag">LINE</span></div></div>
+      <div class="cw h200"><canvas id="edC1"></canvas></div>
+    </div>
+    <div class="cp">
+      <div class="cp-hdr"><div><div class="cp-t">Enrollment — country comparison (latest)</div><div class="cp-s">SE.PRM.ENRR · GH, NG, KE, ZA</div></div><div class="cp-tags"><span class="cp-tag">BAR</span></div></div>
+      <div class="cw h200"><canvas id="edC2"></canvas></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 4 — SUSTAINABILITY
+  ═══════════════════════════════════════════ -->
+  <div class="divider"></div>
+  <div class="sec-hdr">
+    <span class="sec-icon">🌿</span>
+    <span class="sec-title">Sustainability & Environment</span>
+    <span class="sec-badge">6 indicators</span>
+    <span class="sec-line"></span>
+    <span class="sec-source">Source: World Bank WDI</span>
+  </div>
+
+  <div class="kpi-row c6">
+    <div class="kpi"><div class="kpi-val t" id="s1">—</div><div class="kpi-label">GH Electricity Access %</div><div class="kpi-sub up">▲ improving</div></div>
+    <div class="kpi a"><div class="kpi-val a" id="s2">—</div><div class="kpi-label">GH CO₂ per capita (t)</div><div class="kpi-sub nt">metric tons</div></div>
+    <div class="kpi b"><div class="kpi-val b" id="s3">—</div><div class="kpi-label">Nigeria Elec. Access %</div></div>
+    <div class="kpi g"><div class="kpi-val g" id="s4">—</div><div class="kpi-label">Kenya Elec. Access %</div><div class="kpi-sub up">▲ rising fast</div></div>
+    <div class="kpi p"><div class="kpi-val" style="color:var(--purple)" id="s5">—</div><div class="kpi-label">Ethiopia Elec. Access %</div></div>
+    <div class="kpi r"><div class="kpi-val r" id="s6">—</div><div class="kpi-label">US CO₂ per capita (t)</div><div class="kpi-sub dn">▼ declining</div></div>
+  </div>
+
+  <div class="cg c2">
+    <div class="cp">
+      <div class="cp-hdr"><div><div class="cp-t">Electricity access — 5 countries 2015–2023 (%)</div><div class="cp-s">EG.ELC.ACCS.ZS · % of population</div></div><div class="cp-tags"><span class="cp-tag">MULTI-LINE</span></div></div>
+      <div class="cw h220"><canvas id="sC1"></canvas></div>
+    </div>
+    <div class="cp">
+      <div class="cp-hdr"><div><div class="cp-t">CO₂ per capita — country comparison</div><div class="cp-s">EN.ATM.CO2E.PC · metric tons per capita</div></div><div class="cp-tags"><span class="cp-tag">BAR</span></div></div>
+      <div class="cw h220"><canvas id="sC2"></canvas></div>
+    </div>
+  </div>
+
+  <!-- HEATMAP -->
+  <div class="cp" style="margin-bottom:12px;">
+    <div class="cp-hdr"><div><div class="cp-t">Electricity access heatmap — all countries × all years</div><div class="cp-s">EG.ELC.ACCS.ZS · green=high access · red=low access · hover for values</div></div><div class="cp-tags"><span class="cp-tag">HEATMAP</span></div></div>
+    <div class="heatmap-wrap" id="elecHeatmap"><div style="font-family:var(--fm);font-size:11px;color:var(--g3);padding:20px 0;">Loading heatmap…</div></div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 5 — AGRICULTURE
+  ═══════════════════════════════════════════ -->
+  <div class="divider"></div>
+  <div class="sec-hdr">
+    <span class="sec-icon">🌾</span>
+    <span class="sec-title">Agriculture</span>
+    <span class="sec-badge">5 indicators</span>
+    <span class="sec-line"></span>
+    <span class="sec-source">Source: World Bank WDI</span>
+  </div>
+
+  <div class="kpi-row c4">
+    <div class="kpi"><div class="kpi-val t">70.8%</div><div class="kpi-label">GH Agricultural Land</div><div class="kpi-sub nt">% of land area</div></div>
+    <div class="kpi a"><div class="kpi-val a">79.3%</div><div class="kpi-label">Nigeria Agri Land %</div></div>
+    <div class="kpi b"><div class="kpi-val b">49.8%</div><div class="kpi-label">Kenya Agri Land %</div></div>
+    <div class="kpi g"><div class="kpi-val g">39%</div><div class="kpi-label">Ethiopia Agri Land %</div></div>
+  </div>
+
+  <div class="cg c2">
+    <div class="cp">
+      <div class="cp-hdr"><div><div class="cp-t">Agricultural land % — 4 countries 2015–2023</div><div class="cp-s">AG.LND.AGRI.ZS · % of total land</div></div><div class="cp-tags"><span class="cp-tag">MULTI-LINE</span></div></div>
+      <div class="cw h200"><canvas id="agC1"></canvas></div>
+    </div>
+    <div class="cp">
+      <div class="cp-hdr"><div><div class="cp-t">Agri land comparison — latest year</div><div class="cp-s">All countries · % of land area</div></div><div class="cp-tags"><span class="cp-tag">BAR</span></div></div>
+      <div class="cw h200"><canvas id="agC2"></canvas></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 6 — BUSINESS & LABOUR
+  ═══════════════════════════════════════════ -->
+  <div class="divider"></div>
+  <div class="sec-hdr">
+    <span class="sec-icon">📊</span>
+    <span class="sec-title">Business & Labour Market</span>
+    <span class="sec-badge">5 indicators</span>
+    <span class="sec-line"></span>
+    <span class="sec-source">Source: World Bank WDI</span>
+  </div>
+
+  <div class="kpi-row c4">
+    <div class="kpi"><div class="kpi-val t" id="b1">—</div><div class="kpi-label">Ghana Unemployment %</div><div class="kpi-sub nt">2023</div></div>
+    <div class="kpi r"><div class="kpi-val r" id="b2">—</div><div class="kpi-label">Nigeria Unemployment %</div><div class="kpi-sub dn">▲ high</div></div>
+    <div class="kpi a"><div class="kpi-val a" id="b3">—</div><div class="kpi-label">S.Africa Unemployment %</div><div class="kpi-sub dn">▲ crisis level</div></div>
+    <div class="kpi g"><div class="kpi-val g" id="b4">—</div><div class="kpi-label">US Unemployment %</div><div class="kpi-sub up">▼ low</div></div>
+  </div>
+
+  <div class="cg c2">
+    <div class="cp">
+      <div class="cp-hdr"><div><div class="cp-t">Unemployment rate — 4 countries 2015–2023 (%)</div><div class="cp-s">SL.UEM.TOTL.ZS · % of labour force</div></div><div class="cp-tags"><span class="cp-tag">MULTI-LINE</span></div></div>
+      <div class="cw h220"><canvas id="bC1"></canvas></div>
+    </div>
+    <div class="cp">
+      <div class="cp-hdr"><div><div class="cp-t">Latest unemployment — bar comparison</div><div class="cp-s">Most recent available year</div></div><div class="cp-tags"><span class="cp-tag">BAR</span></div></div>
+      <div class="cw h220"><canvas id="bC2"></canvas></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       MASTER DATA TABLE
+  ═══════════════════════════════════════════ -->
+  <div class="divider"></div>
+  <div class="sec-hdr">
+    <span class="sec-icon">🗄</span>
+    <span class="sec-title">Master Data Table</span>
+    <span class="sec-badge">All indicators</span>
+    <span class="sec-line"></span>
+    <span class="sec-source">All data from World Bank Open Data API v2</span>
+  </div>
+
+  <div class="tbl-wrap">
+    <div class="tbl-hdr">
+      <span class="tbl-title">All sectors — latest values per country per indicator</span>
+      <div class="tbl-actions">
+        <select id="master-filter" onchange="filterMaster()" style="font-family:var(--fm);font-size:10px;background:var(--panel);border:1px solid var(--bdr2);color:var(--g1);padding:4px 8px;border-radius:var(--r);outline:none;">
+          <option value="">All countries</option>
+          <option value="GH">🇬🇭 Ghana</option>
+          <option value="NG">🇳🇬 Nigeria</option>
+          <option value="KE">🇰🇪 Kenya</option>
+          <option value="ZA">🇿🇦 South Africa</option>
+          <option value="ET">🇪🇹 Ethiopia</option>
+          <option value="US">🇺🇸 United States</option>
+        </select>
+        <span class="dl-btn" onclick="dlMasterCSV()">⬇ Export all CSV</span>
+      </div>
+    </div>
+    <div style="overflow-x:auto;max-height:400px;overflow-y:auto;">
+      <table>
+        <thead style="position:sticky;top:0;z-index:10;"><tr><th>Country</th><th>Sector</th><th>Indicator</th><th style="text-align:right">Year</th><th style="text-align:right">Value</th><th>Unit</th><th style="text-align:right">YoY Δ%</th></tr></thead>
+        <tbody id="masterTbl"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <p style="font-family:var(--fm);font-size:10px;color:var(--g3);text-align:center;margin-top:32px;padding-top:20px;border-top:1px solid var(--bdr);">
+    SG Datalytics Data Dashboard &middot; Data: World Bank Open Data API v2 &middot; Free, no key required &middot;
+    <a href="marketplace.html" style="color:var(--teal);text-decoration:none;">sgdatalytics.org</a> &middot;
+    Accra, Ghana &middot; info@sgdatalytics.org
+  </p>
+
 </div>
-
-<!-- DATASETS -->
-<section class="datasets pad" id="datasets">
-  <div class="inner">
-    <div class="datasets-header">
-      <div>
-        <div class="sec-label rev">Featured datasets</div>
-        <h2 class="sec-title rev">Browse the catalog</h2>
-      </div>
-      <div class="datasets-filters">
-        <div class="filter-pill on">All</div>
-        <div class="filter-pill">Free preview</div>
-        <div class="filter-pill">New</div>
-        <div class="filter-pill">Most downloaded</div>
-      </div>
-    </div>
-    <div class="datasets-grid" id="ds-grid">
-
-      <div class="ds-card rev" data-cat="edu">
-        <div class="ds-card-top">
-          <div class="ds-cat-badge badge-edu">🏫 Education</div>
-          <h3>Student Attendance Anomalies by Term — Ghana 2024</h3>
-          <p>Outlier-flagged attendance records across 48 schools. Includes term-by-term breakdowns, anomaly scores, and demographic splits.</p>
-          <div class="ds-preview-chart">
-            <div class="b" style="height:40%"></div><div class="b" style="height:65%"></div><div class="b" style="height:55%"></div>
-            <div class="b" style="height:90%"></div><div class="b" style="height:72%"></div><div class="b" style="height:48%"></div>
-            <div class="b" style="height:80%"></div><div class="b" style="height:60%"></div><div class="b" style="height:35%"></div>
-          </div>
-          <div class="ds-meta">
-            <div class="ds-meta-item">📁 CSV / XLSX</div>
-            <div class="ds-meta-item">📐 4,800 rows</div>
-            <div class="ds-meta-item">🕓 2024</div>
-          </div>
-        </div>
-        <div class="ds-card-bottom">
-          <div class="ds-access free"><div class="ds-access-icon">👁</div> Free preview</div>
-          <div class="ds-action">Access →</div>
-        </div>
-      </div>
-
-      <div class="ds-card rev d1" data-cat="biz">
-        <div class="ds-card-top">
-          <div class="ds-cat-badge badge-biz">📊 Business</div>
-          <h3>Ghana SME Performance & Revenue Index 2025</h3>
-          <p>Firm-level performance data for 3,200 SMEs across 8 regions. Covers revenue, employment, sector, and growth metrics.</p>
-          <div class="ds-preview-chart">
-            <div class="b" style="height:30%"></div><div class="b" style="height:50%"></div><div class="b" style="height:70%"></div>
-            <div class="b" style="height:85%"></div><div class="b" style="height:95%"></div><div class="b" style="height:78%"></div>
-            <div class="b" style="height:88%"></div><div class="b" style="height:92%"></div><div class="b" style="height:100%"></div>
-          </div>
-          <div class="ds-meta">
-            <div class="ds-meta-item">📁 CSV / JSON</div>
-            <div class="ds-meta-item">📐 3,200 rows</div>
-            <div class="ds-meta-item">🕓 2025</div>
-          </div>
-        </div>
-        <div class="ds-card-bottom">
-          <div class="ds-access premium"><div class="ds-access-icon">⭐</div> Pro & Enterprise</div>
-          <div class="ds-action">Access →</div>
-        </div>
-      </div>
-
-      <div class="ds-card rev d2" data-cat="health">
-        <div class="ds-card-top">
-          <div class="ds-cat-badge badge-health">🏥 Health</div>
-          <h3>Regional Health Demographics — Accra & Northern Regions</h3>
-          <p>Age-stratified health indicators including disease burden, facility access, and maternal health metrics across 10 regions.</p>
-          <div class="ds-preview-chart">
-            <div class="b" style="height:60%"></div><div class="b" style="height:75%"></div><div class="b" style="height:55%"></div>
-            <div class="b" style="height:40%"></div><div class="b" style="height:65%"></div><div class="b" style="height:80%"></div>
-            <div class="b" style="height:70%"></div><div class="b" style="height:50%"></div><div class="b" style="height:45%"></div>
-          </div>
-          <div class="ds-meta">
-            <div class="ds-meta-item">📁 CSV / SPSS</div>
-            <div class="ds-meta-item">📐 6,100 rows</div>
-            <div class="ds-meta-item">🕓 2024</div>
-          </div>
-        </div>
-        <div class="ds-card-bottom">
-          <div class="ds-access locked"><div class="ds-access-icon">🔒</div> Starter & above</div>
-          <div class="ds-action">Access →</div>
-        </div>
-      </div>
-
-      <div class="ds-card rev d1" data-cat="env">
-        <div class="ds-card-top">
-          <div class="ds-cat-badge badge-env">🌿 Sustainability</div>
-          <h3>Ghana Sustainability Indicators Dataset — 24 Variables</h3>
-          <p>Energy use, carbon emissions, and economic sustainability metrics for Ghana spanning 2010–2024. Cross-sector analysis ready.</p>
-          <div class="ds-preview-chart">
-            <div class="b" style="height:50%"></div><div class="b" style="height:55%"></div><div class="b" style="height:58%"></div>
-            <div class="b" style="height:62%"></div><div class="b" style="height:66%"></div><div class="b" style="height:72%"></div>
-            <div class="b" style="height:75%"></div><div class="b" style="height:80%"></div><div class="b" style="height:85%"></div>
-          </div>
-          <div class="ds-meta">
-            <div class="ds-meta-item">📁 CSV / Excel</div>
-            <div class="ds-meta-item">📐 2,880 rows</div>
-            <div class="ds-meta-item">🕓 2010–2024</div>
-          </div>
-        </div>
-        <div class="ds-card-bottom">
-          <div class="ds-access free"><div class="ds-access-icon">👁</div> Free preview</div>
-          <div class="ds-action">Access →</div>
-        </div>
-      </div>
-
-      <div class="ds-card rev d2" data-cat="agri">
-        <div class="ds-card-top">
-          <div class="ds-cat-badge badge-agri">🌾 Agriculture</div>
-          <h3>Crop Yield & Rainfall Correlation — Northern Ghana Q1 2025</h3>
-          <p>Farm-level yield data linked to meteorological records. Includes soil type, irrigation access, and seasonal variance for 5 crops.</p>
-          <div class="ds-preview-chart">
-            <div class="b" style="height:80%"></div><div class="b" style="height:60%"></div><div class="b" style="height:90%"></div>
-            <div class="b" style="height:45%"></div><div class="b" style="height:70%"></div><div class="b" style="height:85%"></div>
-            <div class="b" style="height:55%"></div><div class="b" style="height:75%"></div><div class="b" style="height:65%"></div>
-          </div>
-          <div class="ds-meta">
-            <div class="ds-meta-item">📁 CSV / Shapefile</div>
-            <div class="ds-meta-item">📐 2,400 rows</div>
-            <div class="ds-meta-item">🕓 2025</div>
-          </div>
-        </div>
-        <div class="ds-card-bottom">
-          <div class="ds-access premium"><div class="ds-access-icon">⭐</div> Pro & Enterprise</div>
-          <div class="ds-action">Access →</div>
-        </div>
-      </div>
-
-      <div class="ds-card rev d3" data-cat="econ">
-        <div class="ds-card-top">
-          <div class="ds-cat-badge badge-econ">💹 Economy</div>
-          <h3>Ghana Consumer Price Index & Inflation Tracker 2020–2025</h3>
-          <p>Monthly CPI data across 14 categories, disaggregated by region and income quartile. Ideal for macro-economic modelling.</p>
-          <div class="ds-preview-chart">
-            <div class="b" style="height:35%"></div><div class="b" style="height:42%"></div><div class="b" style="height:50%"></div>
-            <div class="b" style="height:68%"></div><div class="b" style="height:85%"></div><div class="b" style="height:95%"></div>
-            <div class="b" style="height:88%"></div><div class="b" style="height:92%"></div><div class="b" style="height:98%"></div>
-          </div>
-          <div class="ds-meta">
-            <div class="ds-meta-item">📁 CSV / JSON</div>
-            <div class="ds-meta-item">📐 8,640 rows</div>
-            <div class="ds-meta-item">🕓 2020–2025</div>
-          </div>
-        </div>
-        <div class="ds-card-bottom">
-          <div class="ds-access locked"><div class="ds-access-icon">🔒</div> Starter & above</div>
-          <div class="ds-action">Access →</div>
-        </div>
-      </div>
-
-    </div>
-    <div style="text-align:center;margin-top:40px;">
-      <a href="#" class="btn btn-ghost" style="font-size:14px;padding:12px 32px;">View all 560+ datasets →</a>
-    </div>
-  </div>
-</section>
-
-<!-- KEY STATS -->
-<div class="stat-ticker">
-  <div class="stat-ticker-inner">
-    <div class="stat-tile rev"><div class="stat-tile-num">560+</div><div class="stat-tile-label">Total datasets</div></div>
-    <div class="stat-tile rev d1"><div class="stat-tile-num">6</div><div class="stat-tile-label">Sectors</div></div>
-    <div class="stat-tile rev d2"><div class="stat-tile-num">2,300+</div><div class="stat-tile-label">Charts produced</div></div>
-    <div class="stat-tile rev d3"><div class="stat-tile-num">40+</div><div class="stat-tile-label">Dashboards</div></div>
-    <div class="stat-tile rev d2"><div class="stat-tile-num">14</div><div class="stat-tile-label">File formats</div></div>
-    <div class="stat-tile rev d1"><div class="stat-tile-num">100%</div><div class="stat-tile-label">Ghana sourced</div></div>
-  </div>
-</div>
-
-<!-- PRICING -->
-<section class="pricing pad" id="pricing">
-  <div class="inner">
-    <div class="rev" style="text-align:center;margin-bottom:48px;">
-      <div class="sec-label" style="justify-content:center;">Subscription plans</div>
-      <h2 class="sec-title">Choose your access level</h2>
-      <p class="sec-sub" style="margin:0 auto;text-align:center;">All plans include instant download, updated datasets, and citation-ready formats. Cancel anytime.</p>
-    </div>
-    <div class="pricing-grid">
-      <div class="price-card rev">
-        <div class="price-tier">Starter</div>
-        <div class="price-amount"><sup>GH₵</sup>99</div>
-        <div class="price-period">per month, billed monthly</div>
-        <div class="price-divider"></div>
-        <ul class="price-features">
-          <li>Access to 80+ starter datasets</li>
-          <li>CSV & Excel download formats</li>
-          <li>2 sectors of your choice</li>
-          <li>Free dataset previews</li>
-          <li>Email support</li>
-          <li class="no">API access</li>
-          <li class="no">Custom data requests</li>
-          <li class="no">Priority new releases</li>
-        </ul>
-        <a href="#contact" class="btn btn-navy price-cta">Get started</a>
-      </div>
-      <div class="price-card featured rev d1">
-        <div class="price-pop">Most popular</div>
-        <div class="price-tier">Pro</div>
-        <div class="price-amount"><sup>GH₵</sup>299</div>
-        <div class="price-period">per month, billed monthly</div>
-        <div class="price-divider"></div>
-        <ul class="price-features">
-          <li>Full access to 560+ datasets</li>
-          <li>All file formats (CSV, JSON, SPSS, Shapefile)</li>
-          <li>All 6 sectors unlocked</li>
-          <li>API access for direct integration</li>
-          <li>Priority access to new releases</li>
-          <li>Charts & visualisation bundles</li>
-          <li>Priority email & chat support</li>
-          <li class="no">Custom data collection</li>
-        </ul>
-        <a href="#contact" class="btn btn-teal price-cta">Get Pro access</a>
-      </div>
-      <div class="price-card rev d2">
-        <div class="price-tier">Enterprise</div>
-        <div class="price-amount" style="font-size:2.2rem;">Custom</div>
-        <div class="price-period">volume pricing for institutions</div>
-        <div class="price-divider"></div>
-        <ul class="price-features">
-          <li>Everything in Pro</li>
-          <li>Custom data collection & surveys</li>
-          <li>Dedicated data analyst support</li>
-          <li>White-label data reports</li>
-          <li>Multi-seat team access</li>
-          <li>SLA & data quality guarantees</li>
-          <li>Bespoke sector dashboards</li>
-          <li>Research partnership options</li>
-        </ul>
-        <a href="#contact" class="btn btn-ghost price-cta">Contact us</a>
-      </div>
-    </div>
-    <div style="text-align:center;margin-top:28px;">
-      <p style="font-family:var(--font-m);font-size:11px;color:var(--grey3);">All prices in Ghanaian Cedis (GH₵) · USD & EUR invoicing available for international clients · Academic discount available</p>
-    </div>
-  </div>
-</section>
-
-<!-- HOW IT WORKS -->
-<section class="how pad" id="how">
-  <div class="inner">
-    <div class="rev" style="text-align:center;margin-bottom:48px;">
-      <div class="sec-label" style="justify-content:center;">How it works</div>
-      <h2 class="sec-title">From warehouse to your workflow</h2>
-      <p class="sec-sub" style="margin:0 auto;text-align:center;">Our data warehouse continuously collects, cleans, and curates Ghana-specific data so you get publication-ready files on demand.</p>
-    </div>
-    <div class="how-steps">
-      <div class="how-step rev">
-        <div class="how-step-num" data-n="01">01</div>
-        <h4>Choose a plan</h4>
-        <p>Select the subscription tier that fits your organisation's size and data needs. Start free with previews.</p>
-      </div>
-      <div class="how-step rev d1">
-        <div class="how-step-num" data-n="02">02</div>
-        <h4>Browse the catalog</h4>
-        <p>Search 560+ datasets by sector, keyword, year, region, or format. Preview sample rows before you commit.</p>
-      </div>
-      <div class="how-step rev d2">
-        <div class="how-step-num" data-n="03">03</div>
-        <h4>Instant download</h4>
-        <p>Download in your preferred format — CSV, Excel, JSON, SPSS, or Shapefile. Datasets are citation-ready.</p>
-      </div>
-      <div class="how-step rev d3">
-        <div class="how-step-num" data-n="04">04</div>
-        <h4>Analyse & publish</h4>
-        <p>Use the data in your research, reports, dashboards, or business decisions. New datasets ship monthly.</p>
-      </div>
-    </div>
-    <div class="how-connectors rev">
-      <div class="how-connector">
-        <div class="how-connector-icon">🔬</div>
-        <div class="how-connector-text">
-          <h4>Researchers & academics</h4>
-          <p>Citation-formatted, peer-reviewed quality data</p>
-        </div>
-      </div>
-      <div class="how-connector">
-        <div class="how-connector-icon">🏢</div>
-        <div class="how-connector-text">
-          <h4>Businesses & analysts</h4>
-          <p>Decision-grade SME, market & sector data</p>
-        </div>
-      </div>
-      <div class="how-connector">
-        <div class="how-connector-icon">🏛</div>
-        <div class="how-connector-text">
-          <h4>Government & NGOs</h4>
-          <p>Policy-ready national & regional statistics</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- USE CASES -->
-<section class="usecases pad">
-  <div class="inner">
-    <div class="rev" style="margin-bottom:48px;">
-      <div class="sec-label">Who uses SG Datalytics</div>
-      <h2 class="sec-title">Built for every decision-maker</h2>
-    </div>
-    <div class="uc-grid">
-      <div class="uc-card rev">
-        <span class="uc-icon">🎓</span>
-        <h4>MPhil & PhD Researchers</h4>
-        <p>Access structured, clean datasets for quantitative dissertations, theses, and journal publications. All data is citation-ready and methodologically documented.</p>
-        <div class="uc-quote">"Exactly what was missing — reliable Ghana-specific data for academic research."</div>
-      </div>
-      <div class="uc-card rev d1">
-        <span class="uc-icon">📈</span>
-        <h4>Business Analysts & Consultants</h4>
-        <p>Market sizing, competitive benchmarking, sector trend analysis, and customer segmentation data — all sourced and verified for the Ghanaian context.</p>
-        <div class="uc-quote">"We used the SME dataset to build our entire market entry strategy for Ghana."</div>
-      </div>
-      <div class="uc-card rev d2">
-        <span class="uc-icon">🏛</span>
-        <h4>Government & Policy Makers</h4>
-        <p>From national agriculture statistics to regional health demographics, our datasets support evidence-based policymaking at district, regional, and national level.</p>
-        <div class="uc-quote">"The sustainability indicators gave us exactly what we needed for our climate report."</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- CTA BAND -->
-<div class="cta-band">
-  <h2>READY TO ACCESS GHANA'S DATA?</h2>
-  <p>Join researchers, analysts, and institutions already using SG Datalytics to power their decisions.</p>
-  <div class="cta-band-actions">
-    <a href="#pricing" class="btn btn-white btn-lg">Start your subscription →</a>
-    <a href="#contact" class="btn btn-navy btn-lg">Talk to us first</a>
-  </div>
-</div>
-
-<!-- CONTACT -->
-<section class="contact-sec" id="contact">
-  <div class="inner">
-    <div class="contact-grid">
-      <div class="contact-info rev">
-        <div class="sec-label">Contact us</div>
-        <h2>Get in touch</h2>
-        <p>Have a custom data request? Need a tailored Enterprise plan? Want to discuss a research partnership? We're based in Accra and respond within 24 hours.</p>
-        <div class="contact-details">
-          <div class="cd-item">
-            <div class="cd-icon">📍</div>
-            <div>
-              <div class="cd-label">Address</div>
-              <div class="cd-val">Ashalley Botwe New Town · P.O. Box MD 500, Madina – Accra</div>
-            </div>
-          </div>
-          <div class="cd-item">
-            <div class="cd-icon">📞</div>
-            <div>
-              <div class="cd-label">Phone</div>
-              <div class="cd-val">026 247 6240</div>
-            </div>
-          </div>
-          <div class="cd-item">
-            <div class="cd-icon">✉️</div>
-            <div>
-              <div class="cd-label">Email</div>
-              <div class="cd-val">info@sgdatalytics.org</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="contact-form rev d1">
-        <h3>SEND A MESSAGE</h3>
-        <div class="form-row2">
-          <div class="fg"><label>First name</label><input type="text" placeholder="Kwame"/></div>
-          <div class="fg"><label>Last name</label><input type="text" placeholder="Asante"/></div>
-        </div>
-        <div class="fg"><label>Email</label><input type="email" placeholder="you@organisation.com"/></div>
-        <div class="fg"><label>Organisation</label><input type="text" placeholder="University, company or agency"/></div>
-        <div class="fg">
-          <label>I am a…</label>
-          <select>
-            <option value="">Select your role</option>
-            <option>Researcher / Academic</option>
-            <option>Business Analyst</option>
-            <option>Government / NGO</option>
-            <option>Student</option>
-            <option>Journalist / Media</option>
-            <option>Other</option>
-          </select>
-        </div>
-        <div class="fg">
-          <label>Interested in</label>
-          <select>
-            <option value="">Select a plan or query</option>
-            <option>Starter Plan</option>
-            <option>Pro Plan</option>
-            <option>Enterprise / Custom</option>
-            <option>Custom data collection</option>
-            <option>Research partnership</option>
-            <option>Other</option>
-          </select>
-        </div>
-        <div class="fg"><label>Message</label><textarea placeholder="Tell us about the data you need or your research…"></textarea></div>
-        <button class="btn btn-teal" style="width:100%;justify-content:center;font-size:14px;padding:13px;" onclick="this.textContent='Message sent ✓';this.style.opacity='0.7';this.disabled=true;">Send message →</button>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <div class="footer-top">
-    <div>
-      <div class="footer-brand-name">SG <span>DATALYTICS</span></div>
-      <div class="footer-tagline">Ghana's data warehouse — curating and selling high-quality, sector-specific datasets for researchers, businesses, and governments.</div>
-      <div style="font-family:var(--font-m);font-size:11px;color:var(--grey3);">Ashalley Botwe, Accra · info@sgdatalytics.org</div>
-    </div>
-    <div class="footer-col">
-      <h5>Catalog</h5>
-      <a href="#">Education datasets</a>
-      <a href="#">Business & SMEs</a>
-      <a href="#">Health & Demographics</a>
-      <a href="#">Sustainability</a>
-      <a href="#">Economy & Finance</a>
-      <a href="#">Agriculture</a>
-    </div>
-    <div class="footer-col">
-      <h5>Company</h5>
-      <a href="#">About SG Datalytics</a>
-      <a href="#">Our methodology</a>
-      <a href="#">Research partnerships</a>
-      <a href="#">Data collection</a>
-      <a href="#">Contact us</a>
-    </div>
-    <div class="footer-col">
-      <h5>Legal</h5>
-      <a href="#">Terms of service</a>
-      <a href="#">Privacy policy</a>
-      <a href="#">Data licensing</a>
-      <a href="#">Citation guide</a>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <div class="footer-copy">© 2025 SG Datalytics · All rights reserved · Registered in Ghana</div>
-    <div class="footer-badges">
-      <div class="footer-badge">VERIFIED DATA</div>
-      <div class="footer-badge">GHANA SOURCED</div>
-      <div class="footer-badge">GDPR COMPLIANT</div>
-    </div>
-  </div>
-</footer>
 
 <script>
-const obs = new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');});},{threshold:0.1,rootMargin:'0px 0px -40px 0px'});
-document.querySelectorAll('.rev').forEach(el=>obs.observe(el));
+const API='https://web-production-28738.up.railway.app';
+const YRS=[2015,2016,2017,2018,2019,2020,2021,2022,2023];
+const CLR={GH:'#00c9a7',NG:'#f59e0b',KE:'#3b82f6',ZA:'#ec4899',ET:'#8b5cf6',US:'#f97316'};
+const FL={GH:'\uD83C\uDDEC\uD83C\uDDED',NG:'\uD83C\uDDF3\uD83C\uDDEC',KE:'\uD83C\uDDF0\uD83C\uDDEA',ZA:'\uD83C\uDDFF\uD83C\uDDE6',ET:'\uD83C\uDDEA\uD83C\uDDF9',US:'\uD83C\uDDFA\uD83C\uDDF8'};
+const NM={GH:'Ghana',NG:'Nigeria',KE:'Kenya',ZA:'South Africa',ET:'Ethiopia',US:'United States'};
+const CHS={};
+let ALL_DATA={};
+let MASTER_ROWS=[];
 
-function filterCat(tab, cat){
-  document.querySelectorAll('.cat-tab').forEach(t=>t.classList.remove('active'));
-  tab.classList.add('active');
-  document.querySelectorAll('.ds-card').forEach(card=>{
-    if(cat==='all'||card.dataset.cat===cat){
-      card.style.display='flex';
-    } else {
-      card.style.display='none';
-    }
-  });
+function co(extra={}){return{responsive:true,maintainAspectRatio:false,animation:{duration:500},plugins:{legend:{display:false},tooltip:{backgroundColor:'#0b1220',borderColor:'rgba(255,255,255,0.08)',borderWidth:1,titleColor:'#fff',bodyColor:'rgba(255,255,255,0.55)',titleFont:{family:'IBM Plex Mono',size:11},bodyFont:{family:'IBM Plex Mono',size:11}}},...extra};}
+function ax(){return{x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'rgba(255,255,255,0.25)',font:{family:'IBM Plex Mono',size:9}}},y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'rgba(255,255,255,0.25)',font:{family:'IBM Plex Mono',size:9}}}};}
+function mleg(){return{display:true,position:'bottom',labels:{color:'rgba(255,255,255,0.35)',font:{family:'IBM Plex Mono',size:9},boxWidth:9,padding:7}};}
+
+function mkL(id,labels,datasets,extra={}){
+  const c=document.getElementById(id);if(!c)return;
+  if(CHS[id])CHS[id].destroy();
+  CHS[id]=new Chart(c,{type:'line',data:{labels,datasets},options:co({scales:ax(),...extra})});
+}
+function mkB(id,labels,data,colors,extra={}){
+  const c=document.getElementById(id);if(!c)return;
+  if(CHS[id])CHS[id].destroy();
+  CHS[id]=new Chart(c,{type:'bar',data:{labels,datasets:[{data,backgroundColor:colors.map(x=>x+'88'),borderColor:colors,borderWidth:1.5,borderRadius:3}]},options:co({scales:ax(),...extra})});
+}
+function mkML(id,labels,series){
+  const ds=series.map(s=>({label:s.label,data:s.data,borderColor:s.color,backgroundColor:'transparent',borderWidth:1.8,pointRadius:2,tension:0.35,spanGaps:true}));
+  const c=document.getElementById(id);if(!c)return;
+  if(CHS[id])CHS[id].destroy();
+  CHS[id]=new Chart(c,{type:'line',data:{labels,datasets:ds},options:co({scales:ax(),plugins:{...co().plugins,legend:mleg()}})});
 }
 
-document.querySelectorAll('.filter-pill').forEach(p=>{
-  p.addEventListener('click',function(){
-    document.querySelectorAll('.filter-pill').forEach(x=>x.classList.remove('on'));
-    this.classList.add('on');
+async function apiFetch(path){const r=await fetch(API+path);if(!r.ok)throw new Error(r.status);return r.json();}
+function getVal(cdata,code,latest=true){
+  const c=cdata?.find(x=>x.country_code===code);
+  if(!c?.data?.length)return null;
+  return latest?c.data[c.data.length-1].value:c.data;
+}
+function fmtN(v,dec=2){if(v===null||v===undefined||isNaN(v))return '—';return parseFloat(v).toFixed(dec);}
+function fmtB(v){if(!v)return '—';const n=parseFloat(v);if(Math.abs(n)>=1e12)return '$'+(n/1e12).toFixed(1)+'T';if(Math.abs(n)>=1e9)return '$'+(n/1e9).toFixed(1)+'B';if(Math.abs(n)>=1e6)return '$'+(n/1e6).toFixed(1)+'M';return '$'+n.toFixed(0);}
+function fmtM(v){if(!v)return '—';return (parseFloat(v)/1e6).toFixed(1)+'M';}
+function mkSeries(cdata,codes){return codes.filter(code=>cdata?.find(c=>c.country_code===code)).map(code=>{const c=cdata.find(x=>x.country_code===code);return{label:FL[code]+' '+code,data:YRS.map(y=>{const p=c.data?.find(d=>d.year===y);return p?p.value:null;}),color:CLR[code]||'#888'};});}
+
+async function loadStats(){
+  try{
+    const s=await apiFetch('/api/stats');
+    document.getElementById('s-dp').textContent=(s.total_points||0).toLocaleString();
+    document.getElementById('s-c').textContent=s.countries_with_data||'—';
+    document.getElementById('s-i').textContent=s.indicators_with_data||'—';
+    document.getElementById('s-yr').textContent=(s.year_min||'?')+'-'+(s.year_max||'?');
+    document.getElementById('tb-dp').textContent=(s.total_points||0).toLocaleString()+' data points';
+  }catch(e){}
+}
+
+async function loadEconomy(){
+  try{
+    const [gdp,inf,grw]=await Promise.all([
+      apiFetch('/api/data?indicator=NY.GDP.MKTP.CD&countries=GH,NG,KE,ZA&from=2015&to=2023'),
+      apiFetch('/api/data?indicator=FP.CPI.TOTL.ZG&countries=GH&from=2015&to=2023'),
+      apiFetch('/api/data?indicator=NY.GDP.MKTP.KD.ZG&countries=GH,NG,KE,ZA&from=2015&to=2023'),
+    ]);
+    ALL_DATA.gdp=gdp;ALL_DATA.inf=inf;ALL_DATA.grw=grw;
+
+    document.getElementById('e1').textContent=fmtB(getVal(gdp.countries,'GH'));
+    document.getElementById('e2').textContent=fmtN(getVal(inf.countries,'GH'))+'%';
+    const gv=getVal(grw.countries,'GH');
+    document.getElementById('e3').textContent=fmtN(gv,1)+'%';
+    document.getElementById('e3s').className='kpi-sub '+(gv>0?'up':'dn');
+    document.getElementById('e3s').textContent=(gv>0?'▲':'▼')+' 2023';
+    document.getElementById('e4').textContent=fmtB(getVal(gdp.countries,'NG'));
+    document.getElementById('e5').textContent=fmtB(getVal(gdp.countries,'KE'));
+    document.getElementById('e6').textContent=fmtB(getVal(gdp.countries,'ZA'));
+
+    const gh=gdp.countries?.find(c=>c.country_code==='GH')?.data||[];
+    mkL('eC1',gh.map(x=>x.year),[{label:'GDP',data:gh.map(x=>x.value/1e9),borderColor:'#00c9a7',backgroundColor:'rgba(0,201,167,0.07)',borderWidth:2.5,fill:true,pointRadius:3,tension:0.35}]);
+
+    const ghInf=inf.countries?.[0]?.data||[];
+    mkB('eC2',ghInf.map(x=>x.year),ghInf.map(x=>x.value),ghInf.map(x=>x.value>20?'#ef4444':x.value>10?'#f59e0b':'#00c9a7'));
+
+    mkML('eC3',YRS,mkSeries(grw.countries,['GH','NG','KE','ZA']));
+
+    const latGDP=['GH','NG','KE','ZA'].map(c=>({code:c,val:getVal(gdp.countries,c)||0}));
+    mkB('eC4',latGDP.map(x=>FL[x.code]+' '+x.code),latGDP.map(x=>x.val/1e9),latGDP.map(x=>CLR[x.code]));
+
+    // Economy table
+    const tbody=document.getElementById('eTbl');
+    const rows=[];
+    ['GH','NG','KE','ZA'].forEach(code=>{
+      const gc=gdp.countries?.find(c=>c.country_code===code);
+      const ic=inf.countries?.find(c=>c.country_code===code);
+      const gr=grw.countries?.find(c=>c.country_code===code);
+      if(!gc?.data)return;
+      gc.data.slice().reverse().forEach((d,i,arr)=>{
+        const pv=arr[i+1];
+        const ch=pv?(((d.value-pv.value)/Math.abs(pv.value))*100):null;
+        const infl=ic?.data?.find(x=>x.year===d.year);
+        const growth=gr?.data?.find(x=>x.year===d.year);
+        rows.push({code,year:d.year,gdp:d.value,growth:growth?.value,inf:infl?.value,ch});
+      });
+    });
+    tbody.innerHTML=rows.slice(0,40).map(r=>`<tr>
+      <td class="td-bold">${FL[r.code]} ${NM[r.code]}</td>
+      <td class="td-mono">${r.year}</td>
+      <td class="td-num">${fmtB(r.gdp)}</td>
+      <td class="td-num">${r.growth!=null?fmtN(r.growth,1)+'%':'—'}</td>
+      <td class="td-num">${r.inf!=null?fmtN(r.inf,1)+'%':'—'}</td>
+      <td class="${r.ch!=null?(r.ch>=0?'td-up':'td-dn'):'td-fl'}">${r.ch!=null?(r.ch>=0?'+':'')+fmtN(r.ch,1)+'%':'—'}</td>
+    </tr>`).join('');
+    buildMaster();
+  }catch(e){console.error('econ',e);}
+}
+
+async function loadHealth(){
+  try{
+    const [le,pop]=await Promise.all([
+      apiFetch('/api/data?indicator=SP.DYN.LE00.IN&countries=GH,NG,KE,ZA,US&from=2015&to=2023'),
+      apiFetch('/api/data?indicator=SP.POP.TOTL&countries=GH,NG,KE,ZA,ET&from=2015&to=2023'),
+    ]);
+    ALL_DATA.le=le;ALL_DATA.pop=pop;
+
+    document.getElementById('h1').textContent=fmtM(getVal(pop.countries,'GH'));
+    document.getElementById('h2').textContent=fmtN(getVal(le.countries,'GH'),1);
+    document.getElementById('h3').textContent=fmtM(getVal(pop.countries,'NG'));
+    document.getElementById('h4').textContent=fmtN(getVal(le.countries,'KE'),1);
+    document.getElementById('h5').textContent=fmtN(getVal(le.countries,'ZA'),1);
+    document.getElementById('h6').textContent=fmtN(getVal(le.countries,'US'),1);
+
+    mkML('hC1',YRS,mkSeries(le.countries,['GH','NG','KE','ZA','US']));
+
+    const ghPop=pop.countries?.find(c=>c.country_code==='GH')?.data||[];
+    mkL('hC2',ghPop.map(x=>x.year),[{label:'Population',data:ghPop.map(x=>x.value/1e6),borderColor:'#f87171',backgroundColor:'rgba(248,113,113,0.07)',borderWidth:2.5,fill:true,pointRadius:3,tension:0.35}]);
+
+    const latPop=['GH','NG','KE','ZA','ET'].map(c=>({code:c,val:getVal(pop.countries,c)||0}));
+    mkB('hC3',latPop.map(x=>FL[x.code]+' '+x.code),latPop.map(x=>x.val/1e6),latPop.map(x=>CLR[x.code]||'#888'));
+
+    // Health table
+    const tbody=document.getElementById('hTbl');
+    const rows=[];
+    ['GH','NG','KE','ZA','US'].forEach(code=>{
+      const pc=pop.countries?.find(c=>c.country_code===code);
+      const lc=le.countries?.find(c=>c.country_code===code);
+      if(!pc?.data)return;
+      pc.data.slice().reverse().forEach((d,i,arr)=>{
+        const pv=arr[i+1];
+        const ch=pv?(((d.value-pv.value)/Math.abs(pv.value))*100):null;
+        const lev=lc?.data?.find(x=>x.year===d.year);
+        rows.push({code,year:d.year,pop:d.value,le:lev?.value,ch});
+      });
+    });
+    tbody.innerHTML=rows.slice(0,40).map(r=>`<tr>
+      <td class="td-bold">${FL[r.code]} ${NM[r.code]}</td>
+      <td class="td-mono">${r.year}</td>
+      <td class="td-num">${fmtM(r.pop)}</td>
+      <td class="td-num">${r.le!=null?fmtN(r.le,1)+' yrs':'—'}</td>
+      <td class="${r.ch!=null?'td-up':'td-fl'}">${r.ch!=null?'+'+fmtN(r.ch,2)+'%':'—'}</td>
+    </tr>`).join('');
+  }catch(e){console.error('health',e);}
+}
+
+async function loadEducation(){
+  try{
+    const enr=await apiFetch('/api/data?indicator=SE.PRM.ENRR&countries=GH,NG,KE,ZA&from=2015&to=2023');
+    ALL_DATA.enr=enr;
+    document.getElementById('ed1').textContent=fmtN(getVal(enr.countries,'GH'),1)+'%';
+    document.getElementById('ed2').textContent=fmtN(getVal(enr.countries,'NG'),1)+'%';
+    document.getElementById('ed3').textContent=fmtN(getVal(enr.countries,'KE'),1)+'%';
+    document.getElementById('ed4').textContent=fmtN(getVal(enr.countries,'ZA'),1)+'%';
+    const gh=enr.countries?.find(c=>c.country_code==='GH')?.data||[];
+    mkL('edC1',gh.map(x=>x.year),[{label:'Enrollment',data:gh.map(x=>x.value),borderColor:'#3b82f6',backgroundColor:'rgba(59,130,246,0.07)',borderWidth:2.5,fill:true,pointRadius:3,tension:0.35}]);
+    const lat=['GH','NG','KE','ZA'].map(c=>({code:c,val:getVal(enr.countries,c)||0}));
+    mkB('edC2',lat.map(x=>FL[x.code]+' '+x.code),lat.map(x=>x.val),lat.map(x=>CLR[x.code]));
+  }catch(e){console.error('edu',e);}
+}
+
+async function loadSustain(){
+  try{
+    const [elec,co2]=await Promise.all([
+      apiFetch('/api/data?indicator=EG.ELC.ACCS.ZS&countries=GH,NG,KE,ET,ZA&from=2015&to=2023'),
+      apiFetch('/api/data?indicator=EN.ATM.CO2E.PC&countries=GH,NG,ZA,US&from=2015&to=2023'),
+    ]);
+    ALL_DATA.elec=elec;ALL_DATA.co2=co2;
+    document.getElementById('s1').textContent=fmtN(getVal(elec.countries,'GH'),1)+'%';
+    document.getElementById('s2').textContent=fmtN(getVal(co2.countries,'GH'),2);
+    document.getElementById('s3').textContent=fmtN(getVal(elec.countries,'NG'),1)+'%';
+    document.getElementById('s4').textContent=fmtN(getVal(elec.countries,'KE'),1)+'%';
+    document.getElementById('s5').textContent=fmtN(getVal(elec.countries,'ET'),1)+'%';
+    document.getElementById('s6').textContent=fmtN(getVal(co2.countries,'US'),1);
+    mkML('sC1',YRS,mkSeries(elec.countries,['GH','NG','KE','ET','ZA']));
+    const lat=['GH','NG','ZA','US'].map(c=>({code:c,val:getVal(co2.countries,c)||0}));
+    mkB('sC2',lat.map(x=>FL[x.code]+' '+x.code),lat.map(x=>x.val),lat.map(x=>CLR[x.code]));
+    buildHeatmap(elec);
+  }catch(e){console.error('sustain',e);}
+}
+
+function buildHeatmap(elec){
+  const codes=['GH','NG','KE','ET','ZA'];
+  const byCountry={};
+  elec.countries?.forEach(c=>{
+    byCountry[c.country_code]={};
+    c.data?.forEach(d=>byCountry[c.country_code][d.year]=d.value);
   });
-});
+  const allVals=Object.values(byCountry).flatMap(y=>Object.values(y)).filter(v=>v!=null);
+  const minV=Math.min(...allVals),maxV=Math.max(...allVals);
+  function hc(v){const t=(v-minV)/(maxV-minV||1);const r=Math.round(8+t*15),g=Math.round(201-t*154),b=Math.round(167-t*120);return `rgba(${r},${g},${b},0.85)`;}
+  const el=document.getElementById('elecHeatmap');
+  const yrRow=`<div class="hm-yr-row">${YRS.map(y=>`<div class="hm-yr">${y}</div>`).join('')}</div>`;
+  const rows=codes.map(code=>`<div class="hm-row"><div class="hm-lbl">${FL[code]}</div>${YRS.map(y=>{const v=byCountry[code]?.[y];if(v==null)return `<div class="hm-cell" style="background:var(--g4);color:var(--g3)">—</div>`;return `<div class="hm-cell" style="background:${hc(v)};color:rgba(0,0,0,0.8)" title="${NM[code]} ${y}: ${v.toFixed(1)}%">${v.toFixed(0)}%</div>`;}).join('')}</div>`).join('');
+  el.innerHTML=yrRow+rows+`<div style="display:flex;gap:8px;align-items:center;margin-top:10px;padding-top:8px;border-top:1px solid var(--bdr);"><span style="font-family:var(--fm);font-size:9.5px;color:var(--g3)">Low</span><div style="flex:1;height:5px;border-radius:3px;background:linear-gradient(to right,rgba(8,201,167,0.85),rgba(23,47,47,0.85))"></div><span style="font-family:var(--fm);font-size:9.5px;color:var(--g3)">High</span><span style="font-family:var(--fm);font-size:9.5px;color:var(--g3);margin-left:10px">Range: ${minV.toFixed(1)}%–${maxV.toFixed(1)}%</span></div>`;
+}
+
+async function loadAgri(){
+  try{
+    const ag=await apiFetch('/api/data?indicator=AG.LND.AGRI.ZS&countries=GH,NG,KE,ET&from=2015&to=2023');
+    ALL_DATA.ag=ag;
+    mkML('agC1',YRS,mkSeries(ag.countries,['GH','NG','KE','ET']));
+    const lat=['GH','NG','KE','ET'].map(c=>({code:c,val:getVal(ag.countries,c)||0}));
+    mkB('agC2',lat.map(x=>FL[x.code]+' '+x.code),lat.map(x=>x.val),lat.map(x=>CLR[x.code]));
+  }catch(e){console.error('agri',e);}
+}
+
+async function loadBiz(){
+  try{
+    const u=await apiFetch('/api/data?indicator=SL.UEM.TOTL.ZS&countries=GH,NG,ZA,US&from=2015&to=2023');
+    ALL_DATA.unemp=u;
+    document.getElementById('b1').textContent=fmtN(getVal(u.countries,'GH'),1)+'%';
+    document.getElementById('b2').textContent=fmtN(getVal(u.countries,'NG'),1)+'%';
+    document.getElementById('b3').textContent=fmtN(getVal(u.countries,'ZA'),1)+'%';
+    document.getElementById('b4').textContent=fmtN(getVal(u.countries,'US'),1)+'%';
+    mkML('bC1',YRS,mkSeries(u.countries,['GH','NG','ZA','US']));
+    const lat=['GH','NG','ZA','US'].map(c=>({code:c,val:getVal(u.countries,c)||0}));
+    mkB('bC2',lat.map(x=>FL[x.code]+' '+x.code),lat.map(x=>x.val),lat.map(x=>CLR[x.code]));
+  }catch(e){console.error('biz',e);}
+}
+
+function buildMaster(){
+  const rows=[];
+  const addRows=(cdata,sector,indName,unit,fmt)=>{
+    cdata?.countries?.forEach(c=>{
+      c.data?.slice().reverse().forEach((d,i,arr)=>{
+        const pv=arr[i+1];
+        const ch=pv?(((d.value-pv.value)/Math.abs(pv.value))*100):null;
+        rows.push({code:c.country_code,sector,ind:indName,unit,year:d.year,val:d.value,ch,fmt});
+      });
+    });
+  };
+  if(ALL_DATA.gdp)addRows(ALL_DATA.gdp,'Economy','GDP (current US$)','USD','B');
+  if(ALL_DATA.inf)addRows(ALL_DATA.inf,'Economy','Inflation Rate','%','pct');
+  if(ALL_DATA.grw)addRows(ALL_DATA.grw,'Economy','GDP Growth Rate','%','pct');
+  if(ALL_DATA.pop)addRows(ALL_DATA.pop,'Health','Total Population','people','M');
+  if(ALL_DATA.le)addRows(ALL_DATA.le,'Health','Life Expectancy','years','dec');
+  if(ALL_DATA.enr)addRows(ALL_DATA.enr,'Education','Primary Enrollment','%','pct');
+  if(ALL_DATA.elec)addRows(ALL_DATA.elec,'Sustainability','Electricity Access','%','pct');
+  if(ALL_DATA.co2)addRows(ALL_DATA.co2,'Sustainability','CO2 per capita','mt/cap','dec');
+  if(ALL_DATA.ag)addRows(ALL_DATA.ag,'Agriculture','Agricultural Land','%','pct');
+  if(ALL_DATA.unemp)addRows(ALL_DATA.unemp,'Business','Unemployment Rate','%','pct');
+  MASTER_ROWS=rows;
+  renderMaster(rows);
+}
+
+function fmtVal(v,fmt){if(v===null||v===undefined)return '—';const n=parseFloat(v);if(isNaN(n))return '—';switch(fmt){case'B':return Math.abs(n)>=1e12?'$'+(n/1e12).toFixed(2)+'T':Math.abs(n)>=1e9?'$'+(n/1e9).toFixed(2)+'B':n.toFixed(0);case'M':return (n/1e6).toFixed(2)+'M';case'pct':return n.toFixed(2)+'%';case'dec':return n.toFixed(2);default:return n.toLocaleString('en-US',{maximumFractionDigits:2});}}
+
+function renderMaster(rows){
+  const t=document.getElementById('masterTbl');
+  t.innerHTML=rows.slice(0,200).map(r=>`<tr>
+    <td class="td-bold">${FL[r.code]||''} ${NM[r.code]||r.code}</td>
+    <td><span class="td-badge" style="background:var(--g4);color:var(--g2)">${r.sector}</span></td>
+    <td>${r.ind}</td>
+    <td class="td-mono td-num">${r.year}</td>
+    <td class="td-num">${fmtVal(r.val,r.fmt)}</td>
+    <td class="td-mono" style="color:var(--g3);font-size:10px">${r.unit}</td>
+    <td class="${r.ch!=null?(r.ch>=0?'td-up':'td-dn'):'td-fl'}">${r.ch!=null?(r.ch>=0?'+':'')+r.ch.toFixed(2)+'%':'—'}</td>
+  </tr>`).join('');
+}
+
+function filterMaster(){
+  const f=document.getElementById('master-filter').value;
+  renderMaster(f?MASTER_ROWS.filter(r=>r.code===f):MASTER_ROWS);
+}
+
+function dlCSV(sector){
+  const rows=MASTER_ROWS.filter(r=>r.sector.toLowerCase().includes(sector));
+  if(!rows.length){alert('No data yet — wait for it to load.');return;}
+  const csv=['Country,Sector,Indicator,Year,Value,Unit',...rows.map(r=>`${NM[r.code]||r.code},${r.sector},"${r.ind}",${r.year},${r.val},${r.unit}`)].join('\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download=`sgdatalytics_${sector}_${new Date().toISOString().slice(0,10)}.csv`;a.click();
+}
+
+function dlMasterCSV(){
+  if(!MASTER_ROWS.length){alert('No data yet.');return;}
+  const csv=['Country,Sector,Indicator,Year,Value,Unit,YoY_Change_Pct',...MASTER_ROWS.map(r=>`${NM[r.code]||r.code},${r.sector},"${r.ind}",${r.year},${r.val},${r.unit},${r.ch!=null?r.ch.toFixed(2):''}`)].join('\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download=`sgdatalytics_all_sectors_${new Date().toISOString().slice(0,10)}.csv`;a.click();
+}
+
+// Clock
+setInterval(()=>{document.getElementById('tb-time').textContent=new Date().toLocaleTimeString('en-GB');},1000);
+
+// Init — load all in parallel
+loadStats();
+Promise.all([loadEconomy(),loadHealth(),loadEducation(),loadSustain(),loadAgri(),loadBiz()]).then(buildMaster);
 </script>
 </body>
 </html>
