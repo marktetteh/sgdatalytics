@@ -247,8 +247,6 @@ tr:hover td{background:var(--g5);color:var(--g1);}
     </div>
   </div>
 
-  <div class="tbl-wrap">
-    <div class="tbl-hdr"><span class="tbl-title">Economy & Finance — Full Data Table</span><div class="tbl-actions"><span class="dl-btn" onclick="dlCSV('economy')">⬇ CSV</span></div></div>
     <div style="overflow-x:auto;"><table><thead><tr><th>Country</th><th>Year</th><th style="text-align:right">GDP (US$B)</th><th style="text-align:right">Growth %</th><th style="text-align:right">Inflation %</th><th style="text-align:right">YoY GDP Δ</th></tr></thead><tbody id="eTbl"></tbody></table></div>
   </div>
 
@@ -288,8 +286,6 @@ tr:hover td{background:var(--g5);color:var(--g1);}
     </div>
   </div>
 
-  <div class="tbl-wrap">
-    <div class="tbl-hdr"><span class="tbl-title">Health & Demographics — Full Data Table</span><div class="tbl-actions"><span class="dl-btn" onclick="dlCSV('health')">⬇ CSV</span></div></div>
     <div style="overflow-x:auto;"><table><thead><tr><th>Country</th><th>Year</th><th style="text-align:right">Population (M)</th><th style="text-align:right">Life Expectancy</th><th style="text-align:right">YoY Pop Δ%</th></tr></thead><tbody id="hTbl"></tbody></table></div>
   </div>
 
@@ -355,12 +351,6 @@ tr:hover td{background:var(--g5);color:var(--g1);}
     </div>
   </div>
 
-  <!-- HEATMAP -->
-  <div class="cp" style="margin-bottom:12px;">
-    <div class="cp-hdr"><div><div class="cp-t">Electricity access heatmap — all countries × all years</div><div class="cp-s">EG.ELC.ACCS.ZS · green=high access · red=low access · hover for values</div></div><div class="cp-tags"><span class="cp-tag">HEATMAP</span></div></div>
-    <div class="heatmap-wrap" id="elecHeatmap"><div style="font-family:var(--fm);font-size:11px;color:var(--g3);padding:20px 0;">Loading heatmap…</div></div>
-  </div>
-
   <!-- ═══════════════════════════════════════════
        SECTION 5 — AGRICULTURE
   ═══════════════════════════════════════════ -->
@@ -421,42 +411,6 @@ tr:hover td{background:var(--g5);color:var(--g1);}
     </div>
   </div>
 
-  <!-- ═══════════════════════════════════════════
-       MASTER DATA TABLE
-  ═══════════════════════════════════════════ -->
-  <div class="divider"></div>
-  <div class="sec-hdr">
-    <span class="sec-icon">🗄</span>
-    <span class="sec-title">Master Data Table</span>
-    <span class="sec-badge">All indicators</span>
-    <span class="sec-line"></span>
-    <span class="sec-source">All data from World Bank Open Data API v2</span>
-  </div>
-
-  <div class="tbl-wrap">
-    <div class="tbl-hdr">
-      <span class="tbl-title">All sectors — latest values per country per indicator</span>
-      <div class="tbl-actions">
-        <select id="master-filter" onchange="filterMaster()" style="font-family:var(--fm);font-size:10px;background:var(--panel);border:1px solid var(--bdr2);color:var(--g1);padding:4px 8px;border-radius:var(--r);outline:none;">
-          <option value="">All countries</option>
-          <option value="GH">🇬🇭 Ghana</option>
-          <option value="NG">🇳🇬 Nigeria</option>
-          <option value="KE">🇰🇪 Kenya</option>
-          <option value="ZA">🇿🇦 South Africa</option>
-          <option value="ET">🇪🇹 Ethiopia</option>
-          <option value="US">🇺🇸 United States</option>
-        </select>
-        <span class="dl-btn" onclick="dlMasterCSV()">⬇ Export all CSV</span>
-      </div>
-    </div>
-    <div style="overflow-x:auto;max-height:400px;overflow-y:auto;">
-      <table>
-        <thead style="position:sticky;top:0;z-index:10;"><tr><th>Country</th><th>Sector</th><th>Indicator</th><th style="text-align:right">Year</th><th style="text-align:right">Value</th><th>Unit</th><th style="text-align:right">YoY Δ%</th></tr></thead>
-        <tbody id="masterTbl"></tbody>
-      </table>
-    </div>
-  </div>
-
   <p style="font-family:var(--fm);font-size:10px;color:var(--g3);text-align:center;margin-top:32px;padding-top:20px;border-top:1px solid var(--bdr);">
     SG Datalytics Data Dashboard &middot; Data: World Bank Open Data API v2 &middot; Free, no key required &middot;
     <a href="marketplace.html" style="color:var(--teal);text-decoration:none;">sgdatalytics.org</a> &middot;
@@ -472,8 +426,6 @@ const CLR={GH:'#00c9a7',NG:'#f59e0b',KE:'#3b82f6',ZA:'#ec4899',ET:'#8b5cf6',US:'
 const FL={GH:'\uD83C\uDDEC\uD83C\uDDED',NG:'\uD83C\uDDF3\uD83C\uDDEC',KE:'\uD83C\uDDF0\uD83C\uDDEA',ZA:'\uD83C\uDDFF\uD83C\uDDE6',ET:'\uD83C\uDDEA\uD83C\uDDF9',US:'\uD83C\uDDFA\uD83C\uDDF8'};
 const NM={GH:'Ghana',NG:'Nigeria',KE:'Kenya',ZA:'South Africa',ET:'Ethiopia',US:'United States'};
 const CHS={};
-let ALL_DATA={};
-let MASTER_ROWS=[];
 
 function co(extra={}){return{responsive:true,maintainAspectRatio:false,animation:{duration:500},plugins:{legend:{display:false},tooltip:{backgroundColor:'#0b1220',borderColor:'rgba(255,255,255,0.08)',borderWidth:1,titleColor:'#fff',bodyColor:'rgba(255,255,255,0.55)',titleFont:{family:'IBM Plex Mono',size:11},bodyFont:{family:'IBM Plex Mono',size:11}}},...extra};}
 function ax(){return{x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'rgba(255,255,255,0.25)',font:{family:'IBM Plex Mono',size:9}}},y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'rgba(255,255,255,0.25)',font:{family:'IBM Plex Mono',size:9}}}};}
@@ -525,7 +477,6 @@ async function loadEconomy(){
       apiFetch('/api/data?indicator=FP.CPI.TOTL.ZG&countries=GH&from=2015&to=2023'),
       apiFetch('/api/data?indicator=NY.GDP.MKTP.KD.ZG&countries=GH,NG,KE,ZA&from=2015&to=2023'),
     ]);
-    ALL_DATA.gdp=gdp;ALL_DATA.inf=inf;ALL_DATA.grw=grw;
 
     document.getElementById('e1').textContent=fmtB(getVal(gdp.countries,'GH'));
     document.getElementById('e2').textContent=fmtN(getVal(inf.countries,'GH'))+'%';
@@ -572,7 +523,6 @@ async function loadEconomy(){
       <td class="td-num">${r.inf!=null?fmtN(r.inf,1)+'%':'—'}</td>
       <td class="${r.ch!=null?(r.ch>=0?'td-up':'td-dn'):'td-fl'}">${r.ch!=null?(r.ch>=0?'+':'')+fmtN(r.ch,1)+'%':'—'}</td>
     </tr>`).join('');
-    buildMaster();
   }catch(e){console.error('econ',e);}
 }
 
@@ -582,7 +532,6 @@ async function loadHealth(){
       apiFetch('/api/data?indicator=SP.DYN.LE00.IN&countries=GH,NG,KE,ZA,US&from=2015&to=2023'),
       apiFetch('/api/data?indicator=SP.POP.TOTL&countries=GH,NG,KE,ZA,ET&from=2015&to=2023'),
     ]);
-    ALL_DATA.le=le;ALL_DATA.pop=pop;
 
     document.getElementById('h1').textContent=fmtM(getVal(pop.countries,'GH'));
     document.getElementById('h2').textContent=fmtN(getVal(le.countries,'GH'),1);
@@ -626,7 +575,6 @@ async function loadHealth(){
 async function loadEducation(){
   try{
     const enr=await apiFetch('/api/data?indicator=SE.PRM.ENRR&countries=GH,NG,KE,ZA&from=2015&to=2023');
-    ALL_DATA.enr=enr;
     document.getElementById('ed1').textContent=fmtN(getVal(enr.countries,'GH'),1)+'%';
     document.getElementById('ed2').textContent=fmtN(getVal(enr.countries,'NG'),1)+'%';
     document.getElementById('ed3').textContent=fmtN(getVal(enr.countries,'KE'),1)+'%';
@@ -644,7 +592,6 @@ async function loadSustain(){
       apiFetch('/api/data?indicator=EG.ELC.ACCS.ZS&countries=GH,NG,KE,ET,ZA&from=2015&to=2023'),
       apiFetch('/api/data?indicator=EN.ATM.CO2E.PC&countries=GH,NG,ZA,US&from=2015&to=2023'),
     ]);
-    ALL_DATA.elec=elec;ALL_DATA.co2=co2;
     document.getElementById('s1').textContent=fmtN(getVal(elec.countries,'GH'),1)+'%';
     document.getElementById('s2').textContent=fmtN(getVal(co2.countries,'GH'),2);
     document.getElementById('s3').textContent=fmtN(getVal(elec.countries,'NG'),1)+'%';
@@ -658,16 +605,6 @@ async function loadSustain(){
   }catch(e){console.error('sustain',e);}
 }
 
-function buildHeatmap(elec){
-  const codes=['GH','NG','KE','ET','ZA'];
-  const byCountry={};
-  elec.countries?.forEach(c=>{
-    byCountry[c.country_code]={};
-    c.data?.forEach(d=>byCountry[c.country_code][d.year]=d.value);
-  });
-  const allVals=Object.values(byCountry).flatMap(y=>Object.values(y)).filter(v=>v!=null);
-  const minV=Math.min(...allVals),maxV=Math.max(...allVals);
-  function hc(v){const t=(v-minV)/(maxV-minV||1);const r=Math.round(8+t*15),g=Math.round(201-t*154),b=Math.round(167-t*120);return `rgba(${r},${g},${b},0.85)`;}
   const el=document.getElementById('elecHeatmap');
   const yrRow=`<div class="hm-yr-row">${YRS.map(y=>`<div class="hm-yr">${y}</div>`).join('')}</div>`;
   const rows=codes.map(code=>`<div class="hm-row"><div class="hm-lbl">${FL[code]}</div>${YRS.map(y=>{const v=byCountry[code]?.[y];if(v==null)return `<div class="hm-cell" style="background:var(--g4);color:var(--g3)">—</div>`;return `<div class="hm-cell" style="background:${hc(v)};color:rgba(0,0,0,0.8)" title="${NM[code]} ${y}: ${v.toFixed(1)}%">${v.toFixed(0)}%</div>`;}).join('')}</div>`).join('');
@@ -677,7 +614,6 @@ function buildHeatmap(elec){
 async function loadAgri(){
   try{
     const ag=await apiFetch('/api/data?indicator=AG.LND.AGRI.ZS&countries=GH,NG,KE,ET&from=2015&to=2023');
-    ALL_DATA.ag=ag;
     mkML('agC1',YRS,mkSeries(ag.countries,['GH','NG','KE','ET']));
     const lat=['GH','NG','KE','ET'].map(c=>({code:c,val:getVal(ag.countries,c)||0}));
     mkB('agC2',lat.map(x=>FL[x.code]+' '+x.code),lat.map(x=>x.val),lat.map(x=>CLR[x.code]));
@@ -687,7 +623,6 @@ async function loadAgri(){
 async function loadBiz(){
   try{
     const u=await apiFetch('/api/data?indicator=SL.UEM.TOTL.ZS&countries=GH,NG,ZA,US&from=2015&to=2023');
-    ALL_DATA.unemp=u;
     document.getElementById('b1').textContent=fmtN(getVal(u.countries,'GH'),1)+'%';
     document.getElementById('b2').textContent=fmtN(getVal(u.countries,'NG'),1)+'%';
     document.getElementById('b3').textContent=fmtN(getVal(u.countries,'ZA'),1)+'%';
@@ -698,61 +633,11 @@ async function loadBiz(){
   }catch(e){console.error('biz',e);}
 }
 
-function buildMaster(){
-  const rows=[];
-  const addRows=(cdata,sector,indName,unit,fmt)=>{
-    cdata?.countries?.forEach(c=>{
-      c.data?.slice().reverse().forEach((d,i,arr)=>{
-        const pv=arr[i+1];
-        const ch=pv?(((d.value-pv.value)/Math.abs(pv.value))*100):null;
-        rows.push({code:c.country_code,sector,ind:indName,unit,year:d.year,val:d.value,ch,fmt});
-      });
-    });
-  };
-  if(ALL_DATA.gdp)addRows(ALL_DATA.gdp,'Economy','GDP (current US$)','USD','B');
-  if(ALL_DATA.inf)addRows(ALL_DATA.inf,'Economy','Inflation Rate','%','pct');
-  if(ALL_DATA.grw)addRows(ALL_DATA.grw,'Economy','GDP Growth Rate','%','pct');
-  if(ALL_DATA.pop)addRows(ALL_DATA.pop,'Health','Total Population','people','M');
-  if(ALL_DATA.le)addRows(ALL_DATA.le,'Health','Life Expectancy','years','dec');
-  if(ALL_DATA.enr)addRows(ALL_DATA.enr,'Education','Primary Enrollment','%','pct');
-  if(ALL_DATA.elec)addRows(ALL_DATA.elec,'Sustainability','Electricity Access','%','pct');
-  if(ALL_DATA.co2)addRows(ALL_DATA.co2,'Sustainability','CO2 per capita','mt/cap','dec');
-  if(ALL_DATA.ag)addRows(ALL_DATA.ag,'Agriculture','Agricultural Land','%','pct');
-  if(ALL_DATA.unemp)addRows(ALL_DATA.unemp,'Business','Unemployment Rate','%','pct');
-  MASTER_ROWS=rows;
-  renderMaster(rows);
-}
-
-function fmtVal(v,fmt){if(v===null||v===undefined)return '—';const n=parseFloat(v);if(isNaN(n))return '—';switch(fmt){case'B':return Math.abs(n)>=1e12?'$'+(n/1e12).toFixed(2)+'T':Math.abs(n)>=1e9?'$'+(n/1e9).toFixed(2)+'B':n.toFixed(0);case'M':return (n/1e6).toFixed(2)+'M';case'pct':return n.toFixed(2)+'%';case'dec':return n.toFixed(2);default:return n.toLocaleString('en-US',{maximumFractionDigits:2});}}
-
-function renderMaster(rows){
-  const t=document.getElementById('masterTbl');
-  t.innerHTML=rows.slice(0,200).map(r=>`<tr>
-    <td class="td-bold">${FL[r.code]||''} ${NM[r.code]||r.code}</td>
-    <td><span class="td-badge" style="background:var(--g4);color:var(--g2)">${r.sector}</span></td>
-    <td>${r.ind}</td>
-    <td class="td-mono td-num">${r.year}</td>
-    <td class="td-num">${fmtVal(r.val,r.fmt)}</td>
-    <td class="td-mono" style="color:var(--g3);font-size:10px">${r.unit}</td>
-    <td class="${r.ch!=null?(r.ch>=0?'td-up':'td-dn'):'td-fl'}">${r.ch!=null?(r.ch>=0?'+':'')+r.ch.toFixed(2)+'%':'—'}</td>
-  </tr>`).join('');
-}
-
-function filterMaster(){
-  const f=document.getElementById('master-filter').value;
-  renderMaster(f?MASTER_ROWS.filter(r=>r.code===f):MASTER_ROWS);
-}
-
-function dlCSV(sector){
-  const rows=MASTER_ROWS.filter(r=>r.sector.toLowerCase().includes(sector));
-  if(!rows.length){alert('No data yet — wait for it to load.');return;}
   const csv=['Country,Sector,Indicator,Year,Value,Unit',...rows.map(r=>`${NM[r.code]||r.code},${r.sector},"${r.ind}",${r.year},${r.val},${r.unit}`)].join('\n');
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
   a.download=`sgdatalytics_${sector}_${new Date().toISOString().slice(0,10)}.csv`;a.click();
 }
 
-function dlMasterCSV(){
-  if(!MASTER_ROWS.length){alert('No data yet.');return;}
   const csv=['Country,Sector,Indicator,Year,Value,Unit,YoY_Change_Pct',...MASTER_ROWS.map(r=>`${NM[r.code]||r.code},${r.sector},"${r.ind}",${r.year},${r.val},${r.unit},${r.ch!=null?r.ch.toFixed(2):''}`)].join('\n');
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
   a.download=`sgdatalytics_all_sectors_${new Date().toISOString().slice(0,10)}.csv`;a.click();
@@ -763,7 +648,7 @@ setInterval(()=>{document.getElementById('tb-time').textContent=new Date().toLoc
 
 // Init — load all in parallel
 loadStats();
-Promise.all([loadEconomy(),loadHealth(),loadEducation(),loadSustain(),loadAgri(),loadBiz()]).then(buildMaster);
+Promise.all([loadEconomy(),loadHealth(),loadEducation(),loadSustain(),loadAgri(),loadBiz()]);
 </script>
 </body>
 </html>
