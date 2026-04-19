@@ -356,16 +356,25 @@ section.pad{padding:96px 5vw;}
 }
 .ds-card:hover .ds-lock-overlay{opacity:1;}
 
-/* preview sparkline */
+/* preview charts */
 .ds-preview-chart{
-  margin-top:14px;
-  height:40px;display:flex;align-items:flex-end;gap:3px;
-  opacity:0.5;
+  margin-top:14px;height:56px;position:relative;opacity:0.7;
 }
-.ds-preview-chart .b{
-  flex:1;border-radius:2px 2px 0 0;
-  background:var(--teal);min-width:6px;
-}
+/* ── Mini line chart ── */
+.ds-preview-chart.line-chart svg{width:100%;height:48px;}
+.ds-preview-chart.line-chart .chart-line{fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+.line-gh{stroke:#00c9a7;}.line-ng{stroke:#f59e0b;}.line-et{stroke:#ef4444;}.line-de{stroke:#3b82f6;}.line-us{stroke:#a855f7;}
+/* ── Stacked bar chart ── */
+.ds-preview-chart.stacked-chart{display:flex;align-items:flex-end;gap:4px;height:48px;}
+.stacked-col{flex:1;display:flex;flex-direction:column-reverse;border-radius:2px 2px 0 0;overflow:hidden;}
+.stacked-col .seg-gh{background:#00c9a7;}.stacked-col .seg-ng{background:#f59e0b;}
+.stacked-col .seg-et{background:#ef4444;}.stacked-col .seg-de{background:#3b82f6;}.stacked-col .seg-us{background:#a855f7;}
+/* ── Chart legend ── */
+.chart-legend{display:flex;gap:10px;margin-top:4px;}
+.chart-legend span{font-size:9px;font-family:var(--font-m);color:var(--grey3);display:flex;align-items:center;gap:3px;}
+.chart-legend span::before{content:'';width:7px;height:7px;border-radius:50%;display:inline-block;}
+.leg-gh::before{background:#00c9a7;}.leg-ng::before{background:#f59e0b;}
+.leg-et::before{background:#ef4444;}.leg-de::before{background:#3b82f6;}.leg-us::before{background:#a855f7;}
 
 /* ─── PRICING ─── */
 .pricing{background:var(--navy2);border-top:1px solid var(--border);}
@@ -786,10 +795,15 @@ footer{
           <div class="ds-cat-badge badge-edu">🏫 Education</div>
           <h3>Student Attendance Anomalies by Term — Ghana 2024</h3>
           <p>Outlier-flagged attendance records across 48 schools. Includes term-by-term breakdowns, anomaly scores, and demographic splits.</p>
-          <div class="ds-preview-chart">
-            <div class="b" style="height:40%"></div><div class="b" style="height:65%"></div><div class="b" style="height:55%"></div>
-            <div class="b" style="height:90%"></div><div class="b" style="height:72%"></div><div class="b" style="height:48%"></div>
-            <div class="b" style="height:80%"></div><div class="b" style="height:60%"></div><div class="b" style="height:35%"></div>
+          <div class="ds-preview-chart line-chart">
+            <svg viewBox="0 0 200 48" preserveAspectRatio="none">
+              <polyline class="chart-line line-gh" points="0,38 28,30 57,18 85,12 114,8 142,14 171,10 200,6"/>
+              <polyline class="chart-line line-ng" points="0,42 28,36 57,32 85,28 114,22 142,26 171,20 200,16"/>
+              <polyline class="chart-line line-et" points="0,44 28,40 57,38 85,34 114,30 142,32 171,28 200,24"/>
+              <polyline class="chart-line line-de" points="0,20 28,16 57,10 85,6 114,4 142,6 171,4 200,2"/>
+              <polyline class="chart-line line-us" points="0,24 28,18 57,14 85,8 114,6 142,8 171,6 200,4"/>
+            </svg>
+            <div class="chart-legend"><span class="leg-gh">GH</span><span class="leg-ng">NG</span><span class="leg-et">ET</span><span class="leg-de">DE</span><span class="leg-us">US</span></div>
           </div>
           <div class="ds-meta">
             <div class="ds-meta-item">📁 CSV / XLSX</div>
@@ -808,10 +822,15 @@ footer{
           <div class="ds-cat-badge badge-biz">📊 Business</div>
           <h3>Ghana SME Performance & Revenue Index 2026</h3>
           <p>Firm-level performance data for 3,200 SMEs across 8 regions. Covers revenue, employment, sector, and growth metrics.</p>
-          <div class="ds-preview-chart">
-            <div class="b" style="height:30%"></div><div class="b" style="height:50%"></div><div class="b" style="height:70%"></div>
-            <div class="b" style="height:85%"></div><div class="b" style="height:95%"></div><div class="b" style="height:78%"></div>
-            <div class="b" style="height:88%"></div><div class="b" style="height:92%"></div><div class="b" style="height:100%"></div>
+          <div class="ds-preview-chart line-chart">
+            <svg viewBox="0 0 200 48" preserveAspectRatio="none">
+              <polyline class="chart-line line-gh" points="0,40 28,34 57,28 85,20 114,14 142,10 171,8 200,4"/>
+              <polyline class="chart-line line-ng" points="0,36 28,32 57,26 85,22 114,18 142,16 171,12 200,10"/>
+              <polyline class="chart-line line-et" points="0,44 28,42 57,38 85,36 114,32 142,30 171,28 200,26"/>
+              <polyline class="chart-line line-de" points="0,18 28,14 57,12 85,10 114,8 142,6 171,4 200,2"/>
+              <polyline class="chart-line line-us" points="0,14 28,12 57,10 85,8 114,6 142,4 171,4 200,2"/>
+            </svg>
+            <div class="chart-legend"><span class="leg-gh">GH</span><span class="leg-ng">NG</span><span class="leg-et">ET</span><span class="leg-de">DE</span><span class="leg-us">US</span></div>
           </div>
           <div class="ds-meta">
             <div class="ds-meta-item">📁 CSV / JSON</div>
@@ -830,10 +849,15 @@ footer{
           <div class="ds-cat-badge badge-health">🏥 Health</div>
           <h3>Regional Health Demographics — Accra & Northern Regions</h3>
           <p>Age-stratified health indicators including disease burden, facility access, and maternal health metrics across 10 regions.</p>
-          <div class="ds-preview-chart">
-            <div class="b" style="height:60%"></div><div class="b" style="height:75%"></div><div class="b" style="height:55%"></div>
-            <div class="b" style="height:40%"></div><div class="b" style="height:65%"></div><div class="b" style="height:80%"></div>
-            <div class="b" style="height:70%"></div><div class="b" style="height:50%"></div><div class="b" style="height:45%"></div>
+          <div class="ds-preview-chart line-chart">
+            <svg viewBox="0 0 200 48" preserveAspectRatio="none">
+              <polyline class="chart-line line-gh" points="0,30 28,28 57,24 85,26 114,22 142,18 171,16 200,14"/>
+              <polyline class="chart-line line-ng" points="0,34 28,32 57,30 85,32 114,28 142,26 171,24 200,22"/>
+              <polyline class="chart-line line-et" points="0,42 28,40 57,36 85,38 114,34 142,32 171,30 200,28"/>
+              <polyline class="chart-line line-de" points="0,10 28,8 57,6 85,8 114,6 142,4 171,4 200,2"/>
+              <polyline class="chart-line line-us" points="0,16 28,14 57,12 85,14 114,10 142,8 171,6 200,4"/>
+            </svg>
+            <div class="chart-legend"><span class="leg-gh">GH</span><span class="leg-ng">NG</span><span class="leg-et">ET</span><span class="leg-de">DE</span><span class="leg-us">US</span></div>
           </div>
           <div class="ds-meta">
             <div class="ds-meta-item">📁 CSV / SPSS</div>
@@ -852,11 +876,16 @@ footer{
           <div class="ds-cat-badge badge-env">🌿 Sustainability</div>
           <h3>Ghana Sustainability Indicators Dataset — 24 Variables</h3>
           <p>Energy use, carbon emissions, and economic sustainability metrics for Ghana spanning 2010–2024. Cross-sector analysis ready.</p>
-          <div class="ds-preview-chart">
-            <div class="b" style="height:50%"></div><div class="b" style="height:55%"></div><div class="b" style="height:58%"></div>
-            <div class="b" style="height:62%"></div><div class="b" style="height:66%"></div><div class="b" style="height:72%"></div>
-            <div class="b" style="height:75%"></div><div class="b" style="height:80%"></div><div class="b" style="height:85%"></div>
+          <div class="ds-preview-chart stacked-chart">
+            <div class="stacked-col" style="height:70%"><div class="seg-gh" style="height:30%"></div><div class="seg-ng" style="height:22%"></div><div class="seg-et" style="height:18%"></div><div class="seg-de" style="height:16%"></div><div class="seg-us" style="height:14%"></div></div>
+            <div class="stacked-col" style="height:78%"><div class="seg-gh" style="height:28%"></div><div class="seg-ng" style="height:24%"></div><div class="seg-et" style="height:20%"></div><div class="seg-de" style="height:15%"></div><div class="seg-us" style="height:13%"></div></div>
+            <div class="stacked-col" style="height:82%"><div class="seg-gh" style="height:26%"></div><div class="seg-ng" style="height:22%"></div><div class="seg-et" style="height:22%"></div><div class="seg-de" style="height:16%"></div><div class="seg-us" style="height:14%"></div></div>
+            <div class="stacked-col" style="height:88%"><div class="seg-gh" style="height:24%"></div><div class="seg-ng" style="height:20%"></div><div class="seg-et" style="height:24%"></div><div class="seg-de" style="height:18%"></div><div class="seg-us" style="height:14%"></div></div>
+            <div class="stacked-col" style="height:92%"><div class="seg-gh" style="height:22%"></div><div class="seg-ng" style="height:20%"></div><div class="seg-et" style="height:22%"></div><div class="seg-de" style="height:20%"></div><div class="seg-us" style="height:16%"></div></div>
+            <div class="stacked-col" style="height:96%"><div class="seg-gh" style="height:20%"></div><div class="seg-ng" style="height:18%"></div><div class="seg-et" style="height:24%"></div><div class="seg-de" style="height:22%"></div><div class="seg-us" style="height:16%"></div></div>
+            <div class="stacked-col" style="height:100%"><div class="seg-gh" style="height:18%"></div><div class="seg-ng" style="height:20%"></div><div class="seg-et" style="height:22%"></div><div class="seg-de" style="height:22%"></div><div class="seg-us" style="height:18%"></div></div>
           </div>
+          <div class="chart-legend"><span class="leg-gh">GH</span><span class="leg-ng">NG</span><span class="leg-et">ET</span><span class="leg-de">DE</span><span class="leg-us">US</span></div>
           <div class="ds-meta">
             <div class="ds-meta-item">📁 CSV / Excel</div>
             <div class="ds-meta-item">📐 2,880 rows</div>
@@ -874,11 +903,16 @@ footer{
           <div class="ds-cat-badge badge-agri">🌾 Agriculture</div>
           <h3>Crop Yield & Rainfall Correlation — Northern Ghana Q1 2026</h3>
           <p>Farm-level yield data linked to meteorological records. Includes soil type, irrigation access, and seasonal variance for 5 crops.</p>
-          <div class="ds-preview-chart">
-            <div class="b" style="height:80%"></div><div class="b" style="height:60%"></div><div class="b" style="height:90%"></div>
-            <div class="b" style="height:45%"></div><div class="b" style="height:70%"></div><div class="b" style="height:85%"></div>
-            <div class="b" style="height:55%"></div><div class="b" style="height:75%"></div><div class="b" style="height:65%"></div>
+          <div class="ds-preview-chart stacked-chart">
+            <div class="stacked-col" style="height:85%"><div class="seg-gh" style="height:35%"></div><div class="seg-ng" style="height:25%"></div><div class="seg-et" style="height:20%"></div><div class="seg-de" style="height:10%"></div><div class="seg-us" style="height:10%"></div></div>
+            <div class="stacked-col" style="height:72%"><div class="seg-gh" style="height:30%"></div><div class="seg-ng" style="height:28%"></div><div class="seg-et" style="height:22%"></div><div class="seg-de" style="height:10%"></div><div class="seg-us" style="height:10%"></div></div>
+            <div class="stacked-col" style="height:95%"><div class="seg-gh" style="height:32%"></div><div class="seg-ng" style="height:24%"></div><div class="seg-et" style="height:24%"></div><div class="seg-de" style="height:12%"></div><div class="seg-us" style="height:8%"></div></div>
+            <div class="stacked-col" style="height:60%"><div class="seg-gh" style="height:28%"></div><div class="seg-ng" style="height:26%"></div><div class="seg-et" style="height:26%"></div><div class="seg-de" style="height:12%"></div><div class="seg-us" style="height:8%"></div></div>
+            <div class="stacked-col" style="height:80%"><div class="seg-gh" style="height:34%"></div><div class="seg-ng" style="height:22%"></div><div class="seg-et" style="height:20%"></div><div class="seg-de" style="height:14%"></div><div class="seg-us" style="height:10%"></div></div>
+            <div class="stacked-col" style="height:90%"><div class="seg-gh" style="height:30%"></div><div class="seg-ng" style="height:26%"></div><div class="seg-et" style="height:22%"></div><div class="seg-de" style="height:12%"></div><div class="seg-us" style="height:10%"></div></div>
+            <div class="stacked-col" style="height:68%"><div class="seg-gh" style="height:32%"></div><div class="seg-ng" style="height:24%"></div><div class="seg-et" style="height:24%"></div><div class="seg-de" style="height:10%"></div><div class="seg-us" style="height:10%"></div></div>
           </div>
+          <div class="chart-legend"><span class="leg-gh">GH</span><span class="leg-ng">NG</span><span class="leg-et">ET</span><span class="leg-de">DE</span><span class="leg-us">US</span></div>
           <div class="ds-meta">
             <div class="ds-meta-item">📁 CSV / Shapefile</div>
             <div class="ds-meta-item">📐 2,400 rows</div>
@@ -896,11 +930,16 @@ footer{
           <div class="ds-cat-badge badge-econ">💹 Economy</div>
           <h3>Ghana Consumer Price Index & Inflation Tracker 2020–2026</h3>
           <p>Monthly CPI data across 14 categories, disaggregated by region and income quartile. Ideal for macro-economic modelling.</p>
-          <div class="ds-preview-chart">
-            <div class="b" style="height:35%"></div><div class="b" style="height:42%"></div><div class="b" style="height:50%"></div>
-            <div class="b" style="height:68%"></div><div class="b" style="height:85%"></div><div class="b" style="height:95%"></div>
-            <div class="b" style="height:88%"></div><div class="b" style="height:92%"></div><div class="b" style="height:98%"></div>
+          <div class="ds-preview-chart stacked-chart">
+            <div class="stacked-col" style="height:55%"><div class="seg-gh" style="height:36%"></div><div class="seg-ng" style="height:28%"></div><div class="seg-et" style="height:18%"></div><div class="seg-de" style="height:10%"></div><div class="seg-us" style="height:8%"></div></div>
+            <div class="stacked-col" style="height:64%"><div class="seg-gh" style="height:34%"></div><div class="seg-ng" style="height:26%"></div><div class="seg-et" style="height:20%"></div><div class="seg-de" style="height:12%"></div><div class="seg-us" style="height:8%"></div></div>
+            <div class="stacked-col" style="height:72%"><div class="seg-gh" style="height:32%"></div><div class="seg-ng" style="height:24%"></div><div class="seg-et" style="height:22%"></div><div class="seg-de" style="height:12%"></div><div class="seg-us" style="height:10%"></div></div>
+            <div class="stacked-col" style="height:82%"><div class="seg-gh" style="height:30%"></div><div class="seg-ng" style="height:26%"></div><div class="seg-et" style="height:22%"></div><div class="seg-de" style="height:12%"></div><div class="seg-us" style="height:10%"></div></div>
+            <div class="stacked-col" style="height:90%"><div class="seg-gh" style="height:28%"></div><div class="seg-ng" style="height:24%"></div><div class="seg-et" style="height:24%"></div><div class="seg-de" style="height:14%"></div><div class="seg-us" style="height:10%"></div></div>
+            <div class="stacked-col" style="height:96%"><div class="seg-gh" style="height:26%"></div><div class="seg-ng" style="height:22%"></div><div class="seg-et" style="height:24%"></div><div class="seg-de" style="height:16%"></div><div class="seg-us" style="height:12%"></div></div>
+            <div class="stacked-col" style="height:100%"><div class="seg-gh" style="height:24%"></div><div class="seg-ng" style="height:22%"></div><div class="seg-et" style="height:22%"></div><div class="seg-de" style="height:18%"></div><div class="seg-us" style="height:14%"></div></div>
           </div>
+          <div class="chart-legend"><span class="leg-gh">GH</span><span class="leg-ng">NG</span><span class="leg-et">ET</span><span class="leg-de">DE</span><span class="leg-us">US</span></div>
           <div class="ds-meta">
             <div class="ds-meta-item">📁 CSV / JSON</div>
             <div class="ds-meta-item">📐 8,640 rows</div>
