@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-H5K8LEJ6RC"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-H5K8LEJ6RC');</script>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Dashboard — SG Datalytics</title>
+<meta name="description" content="Your SG Datalytics dashboard. View account details, download history, and saved datasets."/>
+<link rel="canonical" href="https://sgdatalytics.org/dashboard.html"/>
+<meta property="og:title" content="Dashboard — SG Datalytics"/>
+<meta property="og:description" content="Your SG Datalytics dashboard."/>
+<meta property="og:url" content="https://sgdatalytics.org/dashboard.html"/>
+<meta property="og:site_name" content="SG Datalytics"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --navy:#080f1e;--navy2:#0d1829;--navy3:#111f35;--navy4:#162440;
+  --panel:#0f1c30;--teal:#00c9a7;--teal-dim:rgba(0,201,167,0.12);
+  --teal-dim2:rgba(0,201,167,0.06);
+  --amber:#f59e0b;--amber-dim:rgba(245,158,11,0.12);
+  --red:#ef4444;--red-dim:rgba(239,68,68,0.12);
+  --blue:#3b82f6;--blue-dim:rgba(59,130,246,0.12);
+  --purple:#a855f7;--purple-dim:rgba(168,85,247,0.12);
+  --white:#ffffff;--grey1:rgba(255,255,255,0.85);--grey2:rgba(255,255,255,0.55);
+  --grey3:rgba(255,255,255,0.28);--grey4:rgba(255,255,255,0.09);
+  --grey5:rgba(255,255,255,0.05);--border:rgba(255,255,255,0.07);
+  --border2:rgba(255,255,255,0.12);--border-teal:rgba(0,201,167,0.25);
+  --r:8px;--r-lg:14px;--r-xl:20px;--nav-h:64px;
+  --font-d:'Bebas Neue',sans-serif;--font-b:'IBM Plex Sans',sans-serif;
+  --font-m:'IBM Plex Mono',monospace;--ease:0.22s cubic-bezier(0.4,0,0.2,1);
+}
+html{scroll-behavior:smooth;}
+body{font-family:var(--font-b);background:var(--navy);color:var(--grey1);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh;}
+::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--navy);}::-webkit-scrollbar-thumb{background:var(--navy4);border-radius:4px;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--nav-h);background:rgba(8,15,30,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 4vw;}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;margin-right:auto;}
+.nav-mark{width:32px;height:32px;border-radius:6px;background:var(--teal);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.nav-mark svg{width:16px;height:16px;}
+.nav-name{font-family:var(--font-d);font-size:18px;letter-spacing:0.08em;color:var(--white);}
+.nav-name span{color:var(--teal);}
+.nav-links{display:flex;list-style:none;gap:2px;margin-right:28px;}
+.nav-links a{font-size:13px;font-weight:400;color:var(--grey2);text-decoration:none;padding:5px 13px;border-radius:5px;transition:color var(--ease),background var(--ease);}
+.nav-links a:hover{color:var(--white);background:var(--grey4);}
+.nav-actions{display:flex;gap:8px;align-items:center;}
+.btn{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-b);font-size:13px;font-weight:500;padding:8px 18px;border-radius:var(--r);cursor:pointer;text-decoration:none;border:none;transition:all var(--ease);}
+.btn-ghost{background:transparent;color:var(--grey2);border:1px solid var(--border2);}
+.btn-ghost:hover{color:var(--white);border-color:var(--grey3);}
+.btn-teal{background:var(--teal);color:var(--navy);font-weight:600;}
+.btn-teal:hover{filter:brightness(1.08);transform:translateY(-1px);}
+
+/* LOADING STATE */
+.dash-loading{
+  display:flex;align-items:center;justify-content:center;
+  min-height:100vh;color:var(--grey3);font-family:var(--font-m);font-size:13px;
+}
+
+/* DASHBOARD LAYOUT */
+.dash-page{
+  padding:calc(var(--nav-h) + 40px) 4vw 80px;
+  max-width:1100px;margin:0 auto;
+  display:none;
+}
+
+/* PROFILE HEADER */
+.dash-header{
+  display:flex;align-items:center;gap:24px;
+  margin-bottom:40px;padding-bottom:32px;
+  border-bottom:1px solid var(--border);
+}
+.dash-avatar{
+  width:72px;height:72px;border-radius:50%;flex-shrink:0;
+  background:var(--teal-dim);border:2px solid var(--teal);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-d);font-size:1.8rem;color:var(--teal);letter-spacing:0.04em;
+}
+.dash-user-info{flex:1;}
+.dash-user-info h1{font-family:var(--font-d);font-size:1.8rem;color:var(--white);letter-spacing:0.04em;line-height:1.1;margin-bottom:4px;}
+.dash-user-info .dash-email{font-family:var(--font-m);font-size:12px;color:var(--grey3);margin-bottom:8px;}
+.dash-user-info .dash-joined{font-size:12px;color:var(--grey3);}
+.dash-header-actions{display:flex;gap:8px;flex-shrink:0;}
+.btn-signout{
+  background:transparent;border:1px solid var(--border2);color:var(--grey2);
+  padding:8px 18px;border-radius:var(--r);cursor:pointer;
+  font-family:var(--font-b);font-size:13px;transition:all var(--ease);
+}
+.btn-signout:hover{border-color:var(--red);color:var(--red);}
+
+/* STAT CARDS */
+.dash-stats{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:16px;
+  margin-bottom:40px;
+}
+.dash-stat{
+  background:var(--panel);border:1px solid var(--border2);
+  border-radius:var(--r-lg);padding:20px 24px;
+}
+.dash-stat-label{
+  font-family:var(--font-m);font-size:10px;color:var(--grey3);
+  letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;
+}
+.dash-stat-value{
+  font-family:var(--font-d);font-size:2rem;color:var(--white);
+  letter-spacing:0.02em;line-height:1;
+}
+.dash-stat-sub{font-size:12px;color:var(--grey3);margin-top:4px;}
+
+/* SECTION TITLES */
+.dash-section{margin-bottom:40px;}
+.dash-section-title{
+  font-family:var(--font-d);font-size:1.3rem;color:var(--white);
+  letter-spacing:0.04em;margin-bottom:20px;
+  display:flex;align-items:center;gap:10px;
+}
+.dash-section-title::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* DOWNLOAD HISTORY TABLE */
+.dash-table{
+  width:100%;border-collapse:collapse;
+}
+.dash-table thead th{
+  font-family:var(--font-m);font-size:10px;color:var(--grey3);
+  letter-spacing:0.1em;text-transform:uppercase;text-align:left;
+  padding:10px 16px;border-bottom:1px solid var(--border2);
+}
+.dash-table tbody tr{
+  border-bottom:1px solid var(--border);transition:background var(--ease);
+}
+.dash-table tbody tr:hover{background:var(--grey5);}
+.dash-table tbody td{
+  padding:14px 16px;font-size:13.5px;vertical-align:middle;
+}
+.dl-name{color:var(--white);font-weight:500;}
+.dl-format{
+  font-family:var(--font-m);font-size:11px;
+  background:var(--grey4);color:var(--grey2);
+  padding:3px 8px;border-radius:4px;display:inline-block;
+}
+.dl-date{color:var(--grey3);font-family:var(--font-m);font-size:12px;}
+.dl-size{color:var(--grey3);font-family:var(--font-m);font-size:12px;}
+.dl-status{font-family:var(--font-m);font-size:11px;padding:3px 10px;border-radius:20px;display:inline-block;}
+.dl-status.complete{background:var(--teal-dim);color:var(--teal);}
+.dl-status.pending{background:var(--amber-dim);color:var(--amber);}
+
+/* SAVED DATASETS */
+.saved-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.saved-card{
+  background:var(--panel);border:1px solid var(--border2);
+  border-radius:var(--r-lg);padding:20px;
+  transition:all var(--ease);cursor:pointer;
+}
+.saved-card:hover{border-color:var(--border-teal);transform:translateY(-2px);}
+.saved-badge{
+  font-family:var(--font-m);font-size:10px;letter-spacing:0.06em;
+  padding:4px 10px;border-radius:20px;display:inline-block;margin-bottom:12px;
+}
+.saved-badge.edu{background:var(--blue-dim);color:var(--blue);}
+.saved-badge.biz{background:var(--amber-dim);color:var(--amber);}
+.saved-badge.health{background:var(--red-dim);color:var(--red);}
+.saved-badge.env{background:var(--teal-dim);color:var(--teal);}
+.saved-badge.agri{background:rgba(34,197,94,0.12);color:#22c55e;}
+.saved-badge.econ{background:var(--purple-dim);color:var(--purple);}
+.saved-card h4{font-size:14px;font-weight:600;color:var(--white);margin-bottom:6px;line-height:1.35;}
+.saved-card p{font-size:12px;color:var(--grey3);line-height:1.5;margin-bottom:12px;}
+.saved-meta{display:flex;gap:12px;font-family:var(--font-m);font-size:10px;color:var(--grey3);}
+.saved-action{
+  display:inline-flex;align-items:center;gap:4px;
+  font-family:var(--font-m);font-size:11px;color:var(--teal);
+  text-decoration:none;margin-top:10px;transition:opacity var(--ease);
+}
+.saved-action:hover{opacity:0.8;}
+
+/* ACCOUNT SETTINGS */
+.account-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.account-item{
+  background:var(--panel);border:1px solid var(--border2);
+  border-radius:var(--r-lg);padding:20px;
+}
+.account-item-label{
+  font-family:var(--font-m);font-size:10px;color:var(--grey3);
+  letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px;
+}
+.account-item-value{font-size:14px;color:var(--white);font-weight:500;}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .dash-header{flex-direction:column;text-align:center;}
+  .dash-stats{grid-template-columns:1fr;}
+  .saved-grid{grid-template-columns:1fr;}
+  .account-grid{grid-template-columns:1fr;}
+  .dash-table{font-size:12px;}
+  .dash-table thead th,.dash-table tbody td{padding:10px 8px;}
+  .nav-links{display:none;}
+}
+.footer-social{display:flex;gap:10px;margin-top:14px;}
+.footer-social a{
+  width:32px;height:32px;border-radius:6px;
+  background:var(--grey4);border:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  transition:all var(--ease);
+}
+.footer-social a:hover{background:var(--teal-dim);border-color:var(--border-teal);}
+.footer-social a svg{width:16px;height:16px;fill:var(--grey2);transition:fill var(--ease);}
+.footer-social a:hover svg{fill:var(--teal);}
+@media(max-width:480px){
+  .dash-header-actions{flex-direction:column;width:100%;}
+  .dash-header-actions .btn,.dash-header-actions .btn-signout{width:100%;justify-content:center;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="marketplace.html" class="nav-brand">
+    <div class="nav-mark"><svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="8" width="2.5" height="7" rx="1" fill="#080f1e"/><rect x="5" y="5" width="2.5" height="10" rx="1" fill="rgba(8,15,30,0.65)"/><rect x="9" y="2" width="2.5" height="13" rx="1" fill="rgba(8,15,30,0.4)"/><circle cx="13.5" cy="2.5" r="2" fill="#f59e0b"/></svg></div>
+    <span class="nav-name">SG <span>DATALYTICS</span></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="marketplace.html#catalog">Catalog</a></li>
+    <li><a href="marketplace.html#datasets">Datasets</a></li>
+    <li><a href="marketplace.html#pricing">Pricing</a></li>
+    <li><a href="marketplace.html#how">How it works</a></li>
+    <li><a href="marketplace.html#contact">Contact</a></li>
+  </ul>
+  <div class="nav-actions">
+    <a href="marketplace.html" class="btn btn-teal">Browse datasets</a>
+  </div>
+</nav>
+
+<!-- LOADING STATE -->
+<div class="dash-loading" id="dash-loading">
+  Checking authentication…
+</div>
+
+<!-- DASHBOARD -->
+<div class="dash-page" id="dash-page">
+
+  <!-- PROFILE HEADER -->
+  <div class="dash-header">
+    <div class="dash-avatar" id="dash-initials">SG</div>
+    <div class="dash-user-info">
+      <h1 id="dash-name">Welcome back</h1>
+      <div class="dash-email" id="dash-email">user@email.com</div>
+      <div class="dash-joined" id="dash-joined">Member since April 2026</div>
+    </div>
+    <div class="dash-header-actions">
+      <a href="marketplace.html" class="btn btn-teal">Browse datasets</a>
+      <button class="btn-signout" id="signout-btn">Sign out</button>
+    </div>
+  </div>
+
+  <!-- QUICK STATS -->
+  <div class="dash-stats">
+    <div class="dash-stat">
+      <div class="dash-stat-label">Downloads</div>
+      <div class="dash-stat-value">12</div>
+      <div class="dash-stat-sub">Across 4 sectors</div>
+    </div>
+    <div class="dash-stat">
+      <div class="dash-stat-label">Saved datasets</div>
+      <div class="dash-stat-value">6</div>
+      <div class="dash-stat-sub">3 new this month</div>
+    </div>
+    <div class="dash-stat">
+      <div class="dash-stat-label">Last active</div>
+      <div class="dash-stat-value" id="dash-last-active">TODAY</div>
+      <div class="dash-stat-sub" id="dash-last-active-sub">Just now</div>
+    </div>
+  </div>
+
+  <!-- DOWNLOAD HISTORY -->
+  <div class="dash-section">
+    <div class="dash-section-title">DOWNLOAD HISTORY</div>
+    <table class="dash-table">
+      <thead>
+        <tr>
+          <th>Dataset</th>
+          <th>Format</th>
+          <th>Size</th>
+          <th>Date</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="dl-name">Ghana SME Performance & Revenue Index 2026</td>
+          <td><span class="dl-format">CSV</span></td>
+          <td class="dl-size">4.2 MB</td>
+          <td class="dl-date">18 Apr 2026</td>
+          <td><span class="dl-status complete">Complete</span></td>
+        </tr>
+        <tr>
+          <td class="dl-name">Student Attendance Anomalies by Term — Ghana 2024</td>
+          <td><span class="dl-format">XLSX</span></td>
+          <td class="dl-size">2.8 MB</td>
+          <td class="dl-date">15 Apr 2026</td>
+          <td><span class="dl-status complete">Complete</span></td>
+        </tr>
+        <tr>
+          <td class="dl-name">Crop Yield & Rainfall Correlation — Northern Ghana Q1 2026</td>
+          <td><span class="dl-format">CSV</span></td>
+          <td class="dl-size">1.6 MB</td>
+          <td class="dl-date">12 Apr 2026</td>
+          <td><span class="dl-status complete">Complete</span></td>
+        </tr>
+        <tr>
+          <td class="dl-name">Regional Health Demographics — Accra & Northern Regions</td>
+          <td><span class="dl-format">SPSS</span></td>
+          <td class="dl-size">5.1 MB</td>
+          <td class="dl-date">8 Apr 2026</td>
+          <td><span class="dl-status complete">Complete</span></td>
+        </tr>
+        <tr>
+          <td class="dl-name">Ghana Consumer Price Index & Inflation Tracker 2020–2026</td>
+          <td><span class="dl-format">JSON</span></td>
+          <td class="dl-size">3.4 MB</td>
+          <td class="dl-date">2 Apr 2026</td>
+          <td><span class="dl-status pending">Processing</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SAVED DATASETS -->
+  <div class="dash-section">
+    <div class="dash-section-title">SAVED DATASETS</div>
+    <div class="saved-grid">
+
+      <div class="saved-card" onclick="window.location='marketplace.html#datasets'">
+        <span class="saved-badge biz">Business</span>
+        <h4>Ghana SME Performance & Revenue Index 2026</h4>
+        <p>Firm-level performance data for 3,200 SMEs across 8 regions.</p>
+        <div class="saved-meta"><span>CSV / JSON</span><span>3,200 rows</span></div>
+        <a class="saved-action" href="marketplace.html#datasets">View dataset →</a>
+      </div>
+
+      <div class="saved-card" onclick="window.location='marketplace.html#datasets'">
+        <span class="saved-badge edu">Education</span>
+        <h4>Student Attendance Anomalies by Term — Ghana 2024</h4>
+        <p>Outlier-flagged attendance records across 48 schools.</p>
+        <div class="saved-meta"><span>CSV / XLSX</span><span>4,800 rows</span></div>
+        <a class="saved-action" href="marketplace.html#datasets">View dataset →</a>
+      </div>
+
+      <div class="saved-card" onclick="window.location='marketplace.html#datasets'">
+        <span class="saved-badge health">Health</span>
+        <h4>Regional Health Demographics — Accra & Northern</h4>
+        <p>Age-stratified health indicators across 10 regions.</p>
+        <div class="saved-meta"><span>CSV / SPSS</span><span>6,100 rows</span></div>
+        <a class="saved-action" href="marketplace.html#datasets">View dataset →</a>
+      </div>
+
+      <div class="saved-card" onclick="window.location='marketplace.html#datasets'">
+        <span class="saved-badge env">Sustainability</span>
+        <h4>Ghana Sustainability Indicators — 24 Variables</h4>
+        <p>Energy use, carbon emissions, and economic sustainability metrics.</p>
+        <div class="saved-meta"><span>CSV / Excel</span><span>2,880 rows</span></div>
+        <a class="saved-action" href="marketplace.html#datasets">View dataset →</a>
+      </div>
+
+      <div class="saved-card" onclick="window.location='marketplace.html#datasets'">
+        <span class="saved-badge agri">Agriculture</span>
+        <h4>Crop Yield & Rainfall — Northern Ghana Q1 2026</h4>
+        <p>Farm-level yield data linked to meteorological records.</p>
+        <div class="saved-meta"><span>CSV / Shapefile</span><span>2,400 rows</span></div>
+        <a class="saved-action" href="marketplace.html#datasets">View dataset →</a>
+      </div>
+
+      <div class="saved-card" onclick="window.location='marketplace.html#datasets'">
+        <span class="saved-badge econ">Economy</span>
+        <h4>Ghana CPI & Inflation Tracker 2020–2026</h4>
+        <p>Monthly CPI data across 14 categories by region.</p>
+        <div class="saved-meta"><span>CSV / JSON</span><span>8,640 rows</span></div>
+        <a class="saved-action" href="marketplace.html#datasets">View dataset →</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ACCOUNT DETAILS -->
+  <div class="dash-section">
+    <div class="dash-section-title">ACCOUNT DETAILS</div>
+    <div class="account-grid">
+      <div class="account-item">
+        <div class="account-item-label">Full name</div>
+        <div class="account-item-value" id="acc-name">—</div>
+      </div>
+      <div class="account-item">
+        <div class="account-item-label">Email address</div>
+        <div class="account-item-value" id="acc-email">—</div>
+      </div>
+      <div class="account-item">
+        <div class="account-item-label">Account created</div>
+        <div class="account-item-value" id="acc-created">—</div>
+      </div>
+      <div class="account-item">
+        <div class="account-item-label">Auth provider</div>
+        <div class="account-item-value" id="acc-provider">—</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer style="border-top:1px solid rgba(255,255,255,0.07);padding:40px 4vw 32px;margin-top:0;">
+  <div style="display:flex;justify-content:space-between;align-items:start;flex-wrap:wrap;gap:32px;max-width:1200px;margin:0 auto;">
+    <div>
+      <div style="font-family:var(--font-d);font-size:18px;color:var(--white);letter-spacing:0.08em;margin-bottom:8px;">SG <span style="color:var(--teal);">DATALYTICS</span></div>
+      <div style="font-size:12px;color:var(--grey3);max-width:260px;line-height:1.6;">Ghana's premier data marketplace. Curated, cleaned, and ready for impact.</div>
+      <div class="footer-social">
+        <a href="https://www.linkedin.com/company/105552398/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+      </div>
+    </div>
+    <div style="display:flex;gap:48px;flex-wrap:wrap;">
+      <div>
+        <div style="font-family:var(--font-m);font-size:10px;color:var(--grey3);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px;">Platform</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <a href="marketplace.html#catalog" style="font-size:13px;color:var(--grey2);text-decoration:none;">Catalog</a>
+          <a href="marketplace.html#pricing" style="font-size:13px;color:var(--grey2);text-decoration:none;">Pricing</a>
+          <a href="marketplace.html#how" style="font-size:13px;color:var(--grey2);text-decoration:none;">How it works</a>
+        </div>
+      </div>
+      <div>
+        <div style="font-family:var(--font-m);font-size:10px;color:var(--grey3);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px;">Company</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <a href="about.html" style="font-size:13px;color:var(--grey2);text-decoration:none;">About</a>
+          <a href="methodology.html" style="font-size:13px;color:var(--grey2);text-decoration:none;">Methodology</a>
+          <a href="marketplace.html#contact" style="font-size:13px;color:var(--grey2);text-decoration:none;">Contact</a>
+        </div>
+      </div>
+      <div>
+        <div style="font-family:var(--font-m);font-size:10px;color:var(--grey3);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px;">Legal</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <a href="terms.html" style="font-size:13px;color:var(--grey2);text-decoration:none;">Terms</a>
+          <a href="privacy.html" style="font-size:13px;color:var(--grey2);text-decoration:none;">Privacy</a>
+          <a href="licensing.html" style="font-size:13px;color:var(--grey2);text-decoration:none;">Licensing</a>
+          <a href="citation.html" style="font-size:13px;color:var(--grey2);text-decoration:none;">Citation guide</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="text-align:center;margin-top:40px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.05);font-size:11px;color:var(--grey3);font-family:var(--font-m);">
+    &copy; 2026 SG Datalytics. All rights reserved. Accra, Ghana.
+  </div>
+</footer>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+
+<script>
+// ─── Firebase Config ───
+const firebaseConfig = {
+  apiKey: "AIzaSyAIwXzuhYOO4Ua64vzTcum9hJtGsiY4CLk",
+  authDomain: "auth-b203a.firebaseapp.com",
+  projectId: "auth-b203a",
+  storageBucket: "auth-b203a.firebasestorage.app",
+  messagingSenderId: "1066148961538",
+  appId: "1:1066148961538:web:a2f29d332b2c9200e4b61b",
+  measurementId: "G-H5K8LEJ6RC"
+};
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+
+// ─── Sign Out ───
+document.getElementById('signout-btn').addEventListener('click', function(){
+  auth.signOut().then(function(){
+    window.location.href = 'auth.html';
+  });
+});
+
+// ─── Auth State ───
+auth.onAuthStateChanged(function(user){
+  var loading = document.getElementById('dash-loading');
+  var page = document.getElementById('dash-page');
+
+  if(user){
+    // Show dashboard
+    loading.style.display = 'none';
+    page.style.display = 'block';
+
+    // Populate user info
+    var name = user.displayName || user.email.split('@')[0];
+    var initials = name.split(' ').map(function(n){ return n[0]; }).join('').toUpperCase().slice(0,2);
+
+    document.getElementById('dash-initials').textContent = initials;
+    document.getElementById('dash-name').textContent = 'Welcome back, ' + name.split(' ')[0];
+    document.getElementById('dash-email').textContent = user.email;
+
+    // Member since
+    var created = user.metadata.creationTime ? new Date(user.metadata.creationTime) : new Date();
+    var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    var joinedStr = months[created.getMonth()] + ' ' + created.getFullYear();
+    document.getElementById('dash-joined').textContent = 'Member since ' + joinedStr;
+
+    // Last active
+    var lastLogin = user.metadata.lastSignInTime ? new Date(user.metadata.lastSignInTime) : new Date();
+    var now = new Date();
+    var diffMs = now - lastLogin;
+    var diffMins = Math.floor(diffMs / 60000);
+    var activeText = 'Just now';
+    if(diffMins > 60){
+      var diffHrs = Math.floor(diffMins / 60);
+      activeText = diffHrs + ' hour' + (diffHrs > 1 ? 's' : '') + ' ago';
+    } else if(diffMins > 1){
+      activeText = diffMins + ' min ago';
+    }
+    document.getElementById('dash-last-active-sub').textContent = activeText;
+
+    // Account details
+    document.getElementById('acc-name').textContent = user.displayName || '—';
+    document.getElementById('acc-email').textContent = user.email;
+    document.getElementById('acc-created').textContent = created.toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'});
+
+    var provider = 'Email / Password';
+    if(user.providerData && user.providerData.length > 0){
+      var pid = user.providerData[0].providerId;
+      if(pid === 'google.com') provider = 'Google';
+      else if(pid === 'password') provider = 'Email / Password';
+    }
+    document.getElementById('acc-provider').textContent = provider;
+
+  } else {
+    // Not signed in — redirect to auth
+    window.location.href = 'auth.html';
+  }
+});
+</script>
+</body>
+</html>
