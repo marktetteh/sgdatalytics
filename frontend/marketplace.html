@@ -617,6 +617,55 @@ footer{
 .rev.in{opacity:1;transform:translateY(0);}
 .d1{transition-delay:0.08s;}.d2{transition-delay:0.16s;}.d3{transition-delay:0.24s;}.d4{transition-delay:0.32s;}
 
+/* ─── HAMBURGER ─── */
+.nav-hamburger{
+  display:none;
+  flex-direction:column;justify-content:center;align-items:center;
+  width:36px;height:36px;gap:5px;
+  background:transparent;border:1px solid var(--border2);
+  border-radius:var(--r);cursor:pointer;padding:0;
+  transition:border-color var(--ease);
+  margin-left:8px;
+}
+.nav-hamburger:hover{border-color:var(--teal);}
+.nav-hamburger span{
+  display:block;width:16px;height:1.5px;
+  background:var(--grey2);border-radius:2px;
+  transition:all 0.25s ease;transform-origin:center;
+}
+.nav-hamburger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);}
+.nav-hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0);}
+.nav-hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
+
+/* Mobile drawer */
+.mobile-menu{
+  display:none;
+  position:fixed;top:var(--nav-h);left:0;right:0;z-index:199;
+  background:rgba(8,15,30,0.97);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  padding:16px 5vw 24px;
+  flex-direction:column;gap:4px;
+  transform:translateY(-8px);opacity:0;
+  transition:opacity 0.2s ease, transform 0.2s ease;
+}
+.mobile-menu.open{
+  display:flex;opacity:1;transform:translateY(0);
+}
+.mobile-menu a{
+  font-size:15px;font-weight:400;color:var(--grey2);
+  text-decoration:none;padding:11px 8px;
+  border-bottom:1px solid var(--border);
+  transition:color var(--ease);
+}
+.mobile-menu a:last-of-type{border-bottom:none;}
+.mobile-menu a:hover{color:var(--teal);}
+.mobile-menu-actions{
+  display:flex;gap:10px;margin-top:12px;
+}
+.mobile-menu-actions .btn{flex:1;justify-content:center;padding:11px;}
+
 /* ─── RESPONSIVE ─── */
 @media(max-width:1000px){
   .hero{grid-template-columns:1fr;}.hero-right{display:none;}
@@ -632,6 +681,8 @@ footer{
   .stat-ticker-inner{grid-template-columns:1fr 1fr;}
   .form-row2{grid-template-columns:1fr;}
   .nav-links{display:none;}
+  .nav-actions{display:none;}
+  .nav-hamburger{display:flex;}
   .footer-top{grid-template-columns:1fr;}
   section.pad{padding:64px 5vw;}
   .hero{padding:48px 5vw;}
@@ -664,7 +715,23 @@ footer{
     <a href="auth.html" class="btn btn-ghost">Sign in</a>
     <a href="#pricing" class="btn btn-teal">Get access</a>
   </div>
+  <button class="nav-hamburger" id="nav-hamburger" aria-label="Toggle menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobile-menu" role="navigation" aria-label="Mobile navigation">
+  <a href="#catalog" class="mobile-nav-link">Catalog</a>
+  <a href="#datasets" class="mobile-nav-link">Datasets</a>
+  <a href="#pricing" class="mobile-nav-link">Pricing</a>
+  <a href="#how" class="mobile-nav-link">How it works</a>
+  <a href="#contact" class="mobile-nav-link">Contact</a>
+  <div class="mobile-menu-actions">
+    <a href="auth.html" class="btn btn-ghost">Sign in</a>
+    <a href="#pricing" class="btn btn-teal">Get access</a>
+  </div>
+</div>
 
 <!-- TICKER -->
 <div class="ticker">
@@ -1374,6 +1441,37 @@ function prefillContact(datasetName){
         status.textContent = 'Something went wrong. Please email us at info@sgdatalytics.org';
         console.error('EmailJS error:', err);
       });
+  });
+})();
+
+/* ─── Hamburger Menu ─── */
+(function(){
+  const hamburger = document.getElementById('nav-hamburger');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  hamburger.addEventListener('click', function(){
+    const isOpen = mobileMenu.classList.contains('open');
+    mobileMenu.classList.toggle('open');
+    hamburger.classList.toggle('open');
+    hamburger.setAttribute('aria-expanded', !isOpen);
+  });
+
+  // Close menu when a link is clicked
+  mobileMenu.querySelectorAll('a').forEach(function(link){
+    link.addEventListener('click', function(){
+      mobileMenu.classList.remove('open');
+      hamburger.classList.remove('open');
+      hamburger.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  // Close menu on outside click
+  document.addEventListener('click', function(e){
+    if(!hamburger.contains(e.target) && !mobileMenu.contains(e.target)){
+      mobileMenu.classList.remove('open');
+      hamburger.classList.remove('open');
+      hamburger.setAttribute('aria-expanded', 'false');
+    }
   });
 })();
 </script>
