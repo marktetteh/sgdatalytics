@@ -1342,6 +1342,7 @@ function prefillContact(datasetName){
     const params = {
       first_name: form.querySelector('[name="first_name"]').value,
       last_name: form.querySelector('[name="last_name"]').value,
+      name: form.querySelector('[name="first_name"]').value + ' ' + form.querySelector('[name="last_name"]').value,
       email: email,
       organisation: form.querySelector('[name="organisation"]').value,
       role: form.querySelector('[name="role"]').value,
