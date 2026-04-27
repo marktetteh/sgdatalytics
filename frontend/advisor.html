@@ -58,44 +58,6 @@
       white-space: nowrap;
     }
 
-    /* ── API key bar ────────────────────────────── */
-    .api-bar {
-      background: white;
-      border-radius: 12px;
-      padding: 0.85rem 1.1rem;
-      display: flex;
-      gap: 0.6rem;
-      align-items: center;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    }
-    .api-bar label {
-      font-size: 0.82rem;
-      color: #555;
-      white-space: nowrap;
-      font-weight: 500;
-    }
-    .api-bar input {
-      flex: 1;
-      border: 1px solid #dde3f0;
-      border-radius: 8px;
-      padding: 0.45rem 0.75rem;
-      font-size: 0.88rem;
-      outline: none;
-      color: #333;
-    }
-    .api-bar input:focus { border-color: #2d5a9e; }
-    .api-bar .save-btn {
-      background: #1a3a6b;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      padding: 0.45rem 1rem;
-      font-size: 0.82rem;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-    .api-bar .save-btn:hover { background: #2d5a9e; }
-    .api-saved { color: #1a6b3a; font-size: 0.78rem; }
 
     /* ── Chat window ────────────────────────────── */
     .chat-window {
@@ -328,13 +290,6 @@
     <div class="badge">🇬🇭 Ghana Datasets</div>
   </div>
 
-  <!-- API Key bar -->
-  <div class="api-bar">
-    <label for="apiKeyInput">Google API Key:</label>
-    <input type="password" id="apiKeyInput" placeholder="AIza..." />
-    <button class="save-btn" onclick="saveApiKey()">Save</button>
-    <span class="api-saved" id="apiSavedMsg" style="display:none">✓ Saved</span>
-  </div>
 
   <!-- Chat window -->
   <div class="chat-window">
@@ -390,24 +345,8 @@
 
   // ── Init ─────────────────────────────────────────────────────────────────────
   window.addEventListener("DOMContentLoaded", () => {
-    // Restore saved API key
-    const saved = sessionStorage.getItem("sg_api_key");
-    if (saved) {
-      document.getElementById("apiKeyInput").value = saved;
-      document.getElementById("apiSavedMsg").style.display = "inline";
-    }
     renderWelcome();
   });
-
-  function saveApiKey() {
-    const key = document.getElementById("apiKeyInput").value.trim();
-    if (key) {
-      sessionStorage.setItem("sg_api_key", key);
-      const msg = document.getElementById("apiSavedMsg");
-      msg.style.display = "inline";
-      setTimeout(() => msg.style.display = "none", 2000);
-    }
-  }
 
   // ── Welcome ──────────────────────────────────────────────────────────────────
   function renderWelcome() {
@@ -451,11 +390,6 @@
     const text = input.value.trim();
     if (!text) return;
 
-    const apiKey = sessionStorage.getItem("sg_api_key") ||
-                   document.getElementById("apiKeyInput").value.trim();
-    if (!apiKey) {
-      // API key stored in Netlify env vars — no user input needed
-    }
 
     // Hide quick prompts after first message
     document.getElementById("quickPrompts").style.display = "none";
@@ -478,7 +412,6 @@
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           messages: conversationHistory,
-          api_key: apiKey,
         }),
       });
 
