@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SG Data Advisor — SG Datalytics</title>
+  <style>
+    /* ── Reset & base ───────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #f0f4fa;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1rem;
+    }
+
+    /* ── Layout ─────────────────────────────────── */
+    .advisor-wrapper {
+      width: 100%;
+      max-width: 800px;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    /* ── Header ─────────────────────────────────── */
+    .advisor-header {
+      background: linear-gradient(135deg, #1a3a6b 0%, #2d5a9e 100%);
+      border-radius: 14px;
+      padding: 1.4rem 1.8rem;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .advisor-header .logo-icon {
+      font-size: 2.2rem;
+      flex-shrink: 0;
+    }
+    .advisor-header h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 0.15rem;
+    }
+    .advisor-header p {
+      font-size: 0.88rem;
+      color: #b8cfee;
+    }
+    .advisor-header .badge {
+      margin-left: auto;
+      background: rgba(255,255,255,0.15);
+      border-radius: 20px;
+      padding: 0.3rem 0.8rem;
+      font-size: 0.75rem;
+      white-space: nowrap;
+    }
+
+    /* ── API key bar ────────────────────────────── */
+    .api-bar {
+      background: white;
+      border-radius: 12px;
+      padding: 0.85rem 1.1rem;
+      display: flex;
+      gap: 0.6rem;
+      align-items: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .api-bar label {
+      font-size: 0.82rem;
+      color: #555;
+      white-space: nowrap;
+      font-weight: 500;
+    }
+    .api-bar input {
+      flex: 1;
+      border: 1px solid #dde3f0;
+      border-radius: 8px;
+      padding: 0.45rem 0.75rem;
+      font-size: 0.88rem;
+      outline: none;
+      color: #333;
+    }
+    .api-bar input:focus { border-color: #2d5a9e; }
+    .api-bar .save-btn {
+      background: #1a3a6b;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 0.45rem 1rem;
+      font-size: 0.82rem;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .api-bar .save-btn:hover { background: #2d5a9e; }
+    .api-saved { color: #1a6b3a; font-size: 0.78rem; }
+
+    /* ── Chat window ────────────────────────────── */
+    .chat-window {
+      background: white;
+      border-radius: 14px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      display: flex;
+      flex-direction: column;
+      height: 520px;
+      overflow: hidden;
+    }
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+      scroll-behavior: smooth;
+    }
+    .chat-messages::-webkit-scrollbar { width: 5px; }
+    .chat-messages::-webkit-scrollbar-thumb { background: #dde3f0; border-radius: 4px; }
+
+    /* ── Bubbles ─────────────────────────────────── */
+    .bubble {
+      max-width: 78%;
+      padding: 0.75rem 1rem;
+      border-radius: 16px;
+      font-size: 0.93rem;
+      line-height: 1.55;
+      word-break: break-word;
+    }
+    .bubble.user {
+      background: #1a3a6b;
+      color: white;
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+    }
+    .bubble.assistant {
+      background: #f5f7fa;
+      border: 1px solid #e2e8f4;
+      color: #1a1a2e;
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+    }
+    .bubble.typing {
+      background: #f5f7fa;
+      border: 1px solid #e2e8f4;
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+      display: flex;
+      gap: 5px;
+      align-items: center;
+      padding: 0.9rem 1.1rem;
+    }
+    .dot {
+      width: 7px; height: 7px;
+      background: #2d5a9e;
+      border-radius: 50%;
+      animation: bounce 1.2s infinite;
+    }
+    .dot:nth-child(2) { animation-delay: 0.2s; }
+    .dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce {
+      0%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-6px); }
+    }
+
+    /* ── Tool activity strip ─────────────────────── */
+    .tool-strip {
+      font-size: 0.75rem;
+      color: #7a8fb0;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0 0.2rem;
+      align-self: flex-start;
+    }
+    .tool-strip span { background: #eef2fb; border-radius: 6px; padding: 0.1rem 0.5rem; }
+
+    /* ── Dataset cards ───────────────────────────── */
+    .dataset-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+      width: 100%;
+      max-width: 78%;
+      align-self: flex-start;
+    }
+    .dataset-card {
+      background: white;
+      border: 1px solid #dde3f0;
+      border-left: 4px solid #f0a500;
+      border-radius: 10px;
+      padding: 0.8rem 1rem;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+    .dataset-card h4 {
+      font-size: 0.88rem;
+      color: #1a3a6b;
+      margin-bottom: 0.25rem;
+    }
+    .dataset-card p {
+      font-size: 0.78rem;
+      color: #666;
+      margin-bottom: 0.4rem;
+      line-height: 1.4;
+    }
+    .dataset-card .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+    }
+    .tag {
+      background: #eef2fb;
+      color: #2d5a9e;
+      border-radius: 6px;
+      padding: 0.1rem 0.5rem;
+      font-size: 0.72rem;
+    }
+    .dataset-card a {
+      display: inline-block;
+      margin-top: 0.5rem;
+      font-size: 0.78rem;
+      color: #f0a500;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .dataset-card a:hover { text-decoration: underline; }
+
+    /* ── Quick prompts ───────────────────────────── */
+    .quick-prompts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      padding: 0.8rem 1.2rem;
+      border-top: 1px solid #f0f2f8;
+      background: #fafbff;
+    }
+    .qp-label {
+      width: 100%;
+      font-size: 0.75rem;
+      color: #888;
+      margin-bottom: 0.1rem;
+    }
+    .chip {
+      background: white;
+      border: 1px solid #2d5a9e;
+      color: #1a3a6b;
+      border-radius: 20px;
+      padding: 0.3rem 0.85rem;
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .chip:hover { background: #1a3a6b; color: white; }
+
+    /* ── Input bar ───────────────────────────────── */
+    .input-bar {
+      display: flex;
+      gap: 0.6rem;
+      padding: 0.9rem 1.1rem;
+      border-top: 1px solid #e8ecf6;
+      background: white;
+    }
+    .input-bar textarea {
+      flex: 1;
+      border: 1px solid #dde3f0;
+      border-radius: 10px;
+      padding: 0.6rem 0.9rem;
+      font-size: 0.93rem;
+      font-family: inherit;
+      resize: none;
+      outline: none;
+      height: 44px;
+      max-height: 130px;
+      overflow-y: auto;
+      line-height: 1.4;
+      color: #333;
+    }
+    .input-bar textarea:focus { border-color: #2d5a9e; }
+    .send-btn {
+      background: #1a3a6b;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      width: 44px;
+      height: 44px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.15s;
+    }
+    .send-btn:hover { background: #2d5a9e; }
+    .send-btn:disabled { background: #b0bcd8; cursor: not-allowed; }
+    .send-btn svg { width: 18px; height: 18px; fill: white; }
+
+    /* ── Footer ─────────────────────────────────── */
+    .advisor-footer {
+      text-align: center;
+      font-size: 0.75rem;
+      color: #999;
+      padding: 0.3rem 0 0.8rem;
+    }
+    .advisor-footer a { color: #2d5a9e; text-decoration: none; }
+    .advisor-footer a:hover { text-decoration: underline; }
+
+    /* ── Responsive ──────────────────────────────── */
+    @media (max-width: 500px) {
+      .bubble { max-width: 92%; }
+      .dataset-cards { max-width: 92%; }
+      .advisor-header .badge { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="advisor-wrapper">
+
+  <!-- Header -->
+  <div class="advisor-header">
+    <div class="logo-icon">📊</div>
+    <div>
+      <h1>SG Data Advisor</h1>
+      <p>Your AI research &amp; data consultant — powered by Gemini</p>
+    </div>
+    <div class="badge">🇬🇭 Ghana Datasets</div>
+  </div>
+
+  <!-- API Key bar -->
+  <div class="api-bar">
+    <label for="apiKeyInput">Google API Key:</label>
+    <input type="password" id="apiKeyInput" placeholder="AIza..." />
+    <button class="save-btn" onclick="saveApiKey()">Save</button>
+    <span class="api-saved" id="apiSavedMsg" style="display:none">✓ Saved</span>
+  </div>
+
+  <!-- Chat window -->
+  <div class="chat-window">
+    <div class="chat-messages" id="chatMessages">
+      <!-- Welcome message rendered by JS -->
+    </div>
+
+    <!-- Quick prompts (hidden after first message) -->
+    <div class="quick-prompts" id="quickPrompts">
+      <div class="qp-label">Try one of these:</div>
+      <button class="chip" onclick="sendQuick(this)">Inflation &amp; exchange rate research</button>
+      <button class="chip" onclick="sendQuick(this)">Segment SMEs using K-means clustering</button>
+      <button class="chip" onclick="sendQuick(this)">Thesis on education in Ghana</button>
+      <button class="chip" onclick="sendQuick(this)">Agricultural production analysis</button>
+      <button class="chip" onclick="sendQuick(this)">Pricing data for my business</button>
+      <button class="chip" onclick="sendQuick(this)">Poverty and development in Ghana</button>
+    </div>
+
+    <!-- Input bar -->
+    <div class="input-bar">
+      <textarea
+        id="userInput"
+        placeholder="Describe your research topic or business problem…"
+        rows="1"
+        onkeydown="handleKey(event)"
+        oninput="autoResize(this)"
+      ></textarea>
+      <button class="send-btn" id="sendBtn" onclick="sendMessage()" title="Send">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="advisor-footer">
+    <a href="https://sgdatalytics.org" target="_blank">sgdatalytics.org</a> ·
+    <a href="https://sgdatalytics.org/marketplace.html" target="_blank">Data Marketplace</a> ·
+    Powered by <strong>Gemini (Google)</strong>
+  </div>
+
+</div>
+
+<script>
+  // ── Config ──────────────────────────────────────────────────────────────────
+  // Change this to your deployed backend URL when you go live
+  const API_BASE = "";
+
+  // ── State ────────────────────────────────────────────────────────────────────
+  let conversationHistory = [];
+  let isThinking = false;
+
+  // ── Init ─────────────────────────────────────────────────────────────────────
+  window.addEventListener("DOMContentLoaded", () => {
+    // Restore saved API key
+    const saved = sessionStorage.getItem("sg_api_key");
+    if (saved) {
+      document.getElementById("apiKeyInput").value = saved;
+      document.getElementById("apiSavedMsg").style.display = "inline";
+    }
+    renderWelcome();
+  });
+
+  function saveApiKey() {
+    const key = document.getElementById("apiKeyInput").value.trim();
+    if (key) {
+      sessionStorage.setItem("sg_api_key", key);
+      const msg = document.getElementById("apiSavedMsg");
+      msg.style.display = "inline";
+      setTimeout(() => msg.style.display = "none", 2000);
+    }
+  }
+
+  // ── Welcome ──────────────────────────────────────────────────────────────────
+  function renderWelcome() {
+    const container = document.getElementById("chatMessages");
+    const bubble = document.createElement("div");
+    bubble.className = "bubble assistant";
+    bubble.innerHTML = `
+      👋 Hello! I'm your <strong>SG Data Advisor</strong>, powered by Gemini.<br><br>
+      Tell me about your research topic, business problem, or the analysis you want to do —
+      and I'll search our Ghana dataset catalog, recommend the right data, suggest analysis methods,
+      and generate research objectives for you.<br><br>
+      <em style="color:#888">Example: "I'm writing a thesis on inflation and SME performance in Ghana."</em>
+    `;
+    container.appendChild(bubble);
+  }
+
+  // ── Quick prompt chips ────────────────────────────────────────────────────────
+  function sendQuick(btn) {
+    document.getElementById("userInput").value = btn.textContent.trim();
+    sendMessage();
+  }
+
+  // ── Auto-resize textarea ─────────────────────────────────────────────────────
+  function autoResize(el) {
+    el.style.height = "44px";
+    el.style.height = Math.min(el.scrollHeight, 130) + "px";
+  }
+
+  function handleKey(e) {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  }
+
+  // ── Send message ─────────────────────────────────────────────────────────────
+  async function sendMessage() {
+    if (isThinking) return;
+
+    const input = document.getElementById("userInput");
+    const text = input.value.trim();
+    if (!text) return;
+
+    const apiKey = sessionStorage.getItem("sg_api_key") ||
+                   document.getElementById("apiKeyInput").value.trim();
+    if (!apiKey) {
+      // API key stored in Netlify env vars — no user input needed
+    }
+
+    // Hide quick prompts after first message
+    document.getElementById("quickPrompts").style.display = "none";
+
+    // Add user bubble
+    appendBubble("user", text);
+    conversationHistory.push({ role: "user", content: text });
+
+    input.value = "";
+    input.style.height = "44px";
+
+    // Show typing indicator
+    isThinking = true;
+    setSendDisabled(true);
+    const typingId = showTyping();
+
+    try {
+      const response = await fetch(`https://frosty-shape-8539.marktetteh07.workers.dev`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          messages: conversationHistory,
+          api_key: apiKey,
+        }),
+      });
+
+      if (!response.ok) {
+        const err = await response.json();
+        throw new Error(err.detail || "Server error");
+      }
+
+      const data = await response.json();
+      removeTyping(typingId);
+
+      // Show tool activity
+      if (data.tool_calls && data.tool_calls.length > 0) {
+        showToolStrip(data.tool_calls);
+      }
+
+      // Add assistant bubble
+      appendBubble("assistant", data.reply);
+      conversationHistory.push({ role: "assistant", content: data.reply });
+
+      // Show dataset cards
+      if (data.datasets_found && data.datasets_found.length > 0) {
+        renderDatasetCards(data.datasets_found);
+      }
+
+    } catch (err) {
+      removeTyping(typingId);
+      appendBubble("assistant", `⚠️ ${err.message || "Could not reach the SG Data Advisor backend. Make sure it's running."}`);
+    }
+
+    isThinking = false;
+    setSendDisabled(false);
+    scrollToBottom();
+  }
+
+  // ── UI helpers ────────────────────────────────────────────────────────────────
+  function renderMarkdown(text) {
+    return escapeHtml(text)
+      // Bold **text**
+      .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+      // Italic *text* (single, not list items)
+      .replace(/(?<![*\n])\*(?!\s)(.+?)(?<!\s)\*(?![*])/g, "<em>$1</em>")
+      // Bullet lines starting with * or -
+      .replace(/^[*-] (.+)$/gm, "<li>$1</li>")
+      // Wrap consecutive <li> in <ul>
+      .replace(/(<li>.*<\/li>\n?)+/g, m => `<ul style="margin:0.4rem 0 0.4rem 1.2rem;padding:0">${m}</ul>`)
+      // Numbered lists
+      .replace(/^\d+\. (.+)$/gm, "<li>$1</li>")
+      // Line breaks
+      .replace(/\n/g, "<br>");
+  }
+
+  function appendBubble(role, text) {
+    const container = document.getElementById("chatMessages");
+    const bubble = document.createElement("div");
+    bubble.className = `bubble ${role}`;
+    bubble.innerHTML = role === "assistant" ? renderMarkdown(text) : escapeHtml(text).replace(/\n/g, "<br>");
+    container.appendChild(bubble);
+    scrollToBottom();
+    return bubble;
+  }
+
+  function showTyping() {
+    const container = document.getElementById("chatMessages");
+    const typing = document.createElement("div");
+    typing.className = "bubble typing";
+    typing.id = "typing-" + Date.now();
+    typing.innerHTML = `<div class="dot"></div><div class="dot"></div><div class="dot"></div>`;
+    container.appendChild(typing);
+    scrollToBottom();
+    return typing.id;
+  }
+
+  function removeTyping(id) {
+    const el = document.getElementById(id);
+    if (el) el.remove();
+  }
+
+  function showToolStrip(toolCalls) {
+    const container = document.getElementById("chatMessages");
+    const strip = document.createElement("div");
+    strip.className = "tool-strip";
+    const labels = {
+      search_datasets: "🔍 Searched datasets",
+      get_dataset_details: "📋 Retrieved dataset details",
+      recommend_analysis: "🧪 Generated analysis plan",
+      get_marketplace_link: "🛒 Fetched marketplace info",
+    };
+    const used = [...new Set(toolCalls.map(t => labels[t.tool] || t.tool))];
+    strip.innerHTML = used.map(l => `<span>${l}</span>`).join(" · ");
+    container.appendChild(strip);
+  }
+
+  function renderDatasetCards(datasets) {
+    const container = document.getElementById("chatMessages");
+    const wrapper = document.createElement("div");
+    wrapper.className = "dataset-cards";
+
+    datasets.forEach(d => {
+      const card = document.createElement("div");
+      card.className = "dataset-card";
+      const methods = (d.suggested_methods || []).slice(0, 3);
+      const sector = d.sector || "";
+      card.innerHTML = `
+        <h4>${escapeHtml(d.name || d.id)}</h4>
+        <p>${escapeHtml(d.description || sector)}</p>
+        <div class="tags">
+          ${methods.map(m => `<span class="tag">${escapeHtml(m)}</span>`).join("")}
+          ${sector ? `<span class="tag" style="background:#fff3d6;color:#8a5c00">${escapeHtml(sector)}</span>` : ""}
+        </div>
+        <a

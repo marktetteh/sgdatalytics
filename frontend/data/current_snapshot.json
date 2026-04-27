@@ -1,0 +1,23 @@
+{
+  "as_of": "Apr 2026",
+  "iphone17": {
+    "value": 14500,
+    "label": "Apr 2026 · 5 listings",
+    "source": "SGMPI"
+  },
+  "samsung_s25": {
+    "value": 8500,
+    "label": "Apr 2026 · 1 listing",
+    "source": "SGMPI"
+  },
+  "laptop": {
+    "value": 2705,
+    "label": "Apr 2026 · 48 listings",
+    "source": "SGMPI"
+  },
+  "rice_bag": {
+    "value": 450,
+    "label": "Apr 2026 · 12 listings",
+    "source": "SGMPI"
+  }
+}

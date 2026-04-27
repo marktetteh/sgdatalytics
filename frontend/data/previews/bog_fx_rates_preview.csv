@@ -1,0 +1,11 @@
+date,year,month,source,last_updated,usd_ghs_end_period,usd_ghs_period_average,gbp_ghs_end_period,gbp_ghs_period_average,eur_ghs_end_period,eur_ghs_period_average,chf_ghs_end_period,chf_ghs_period_average,jpy_ghs_end_period,jpy_ghs_period_average
+2025-12,2025,December,Bank of Ghana Statistical Bulletin,2026-04-20,10.45,11.2784,14.0579,15.0952,12.2728,13.212,13.1863,14.1575,0.0667,0.0724
+2025-11,2025,November,Bank of Ghana Statistical Bulletin,2026-04-20,11.27,11.0237,14.8995,14.486,13.0531,12.7457,13.9915,13.7197,0.0721,0.071
+2025-10,2025,October,Bank of Ghana Statistical Bulletin,2026-04-20,10.9,11.4607,14.3003,15.3076,12.5667,13.3396,13.5593,14.3623,0.0708,0.076
+2025-09,2025,September,Bank of Ghana Statistical Bulletin,2026-04-20,12.42,12.1443,16.7031,16.4022,14.5859,14.2515,15.6067,15.2484,0.084,0.0821
+2025-08,2025,August,Bank of Ghana Statistical Bulletin,2026-04-20,11.4,10.7875,15.3997,14.5171,13.336,12.5671,14.253,13.3902,0.0776,0.0732
+2025-07,2025,July,Bank of Ghana Statistical Bulletin,2026-04-20,10.5,10.417,13.8942,14.0522,12.015,12.1583,12.9338,13.0419,0.0698,0.0708
+2025-06,2025,June,Bank of Ghana Statistical Bulletin,2026-04-20,10.31,10.284,14.1252,13.9553,12.1138,11.8638,12.9643,12.6485,0.0714,0.0712
+2025-05,2025,May,Bank of Ghana Statistical Bulletin,2026-04-20,10.28,12.075133,13.8529,16.130817,11.6675,13.607726,12.4964,14.547064,0.0713,0.083352
+2025-04,2025,April,Bank of Ghana Statistical Bulletin,2026-04-20,14.15,15.2216,18.8769,19.9847,16.064,17.0884,17.2108,18.2635,0.0093,0.1056
+2025-03,2025,March,Bank of Ghana Statistical Bulletin,2026-04-20,15.53,15.5316,20.0951,20.0561,16.8068,16.7911,17.6327,17.5831,0.1034,0.1042

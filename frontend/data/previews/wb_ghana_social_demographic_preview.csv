@@ -1,0 +1,11 @@
+year,country,country_code,source,last_updated,total_population,population_growth_rate,urban_population_of_total,unemployment_rate_of_total_labor_force,youth_unemployment_rate_ages_15–24,poverty_headcount_ratio_at_national_lines,life_expectancy_at_birth_years,under_5_mortality_rate_per_1_000_live_births,adult_literacy_rate,primary_school_enrollment_rate_gross
+2025,Ghana,GH,World Bank Open Data,2026-04-20,,,,2.979,5.826,,,,,
+2024,Ghana,GH,World Bank Open Data,2026-04-20,34427414.0,1.875,58.3655,2.82,5.347,,65.695,35.9,,100.967
+2023,Ghana,GH,World Bank Open Data,2026-04-20,33787914.0,1.9086,57.8075,2.829,5.352,,65.498,37.2,,
+2022,Ghana,GH,World Bank Open Data,2026-04-20,33149152.0,1.9203,57.2506,2.87,5.402,,65.246,38.6,,98.2319
+2021,Ghana,GH,World Bank Open Data,2026-04-20,32518665.0,1.959,56.6953,3.2,5.985,,64.286,40.3,76.49,99.4509
+2020,Ghana,GH,World Bank Open Data,2026-04-20,31887809.0,1.9918,56.2172,3.178,6.319,,64.309,42.2,,98.4049
+2019,Ghana,GH,World Bank Open Data,2026-04-20,31258945.0,2.0078,55.7246,3.067,5.875,,64.455,44.1,,99.875
+2018,Ghana,GH,World Bank Open Data,2026-04-20,30637585.0,2.0752,55.2185,3.204,6.107,,64.138,46.1,,98.6814
+2017,Ghana,GH,World Bank Open Data,2026-04-20,30008354.0,2.1954,54.6991,3.369,6.375,,63.829,48.2,64.49,100.4789
+2016,Ghana,GH,World Bank Open Data,2026-04-20,29356742.0,2.2762,54.1671,5.256,10.616,23.4,63.522,50.3,,101.7511

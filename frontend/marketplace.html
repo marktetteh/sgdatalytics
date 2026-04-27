@@ -28,29 +28,29 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --navy:#080f1e;
-  --navy2:#0d1829;
-  --navy3:#111f35;
-  --navy4:#162440;
-  --panel:#0f1c30;
-  --teal:#00c9a7;
-  --teal-dim:rgba(0,201,167,0.12);
-  --teal-dim2:rgba(0,201,167,0.06);
-  --amber:#f59e0b;
-  --amber-dim:rgba(245,158,11,0.12);
-  --red:#ef4444;
-  --red-dim:rgba(239,68,68,0.12);
-  --blue:#3b82f6;
-  --blue-dim:rgba(59,130,246,0.12);
-  --white:#ffffff;
-  --grey1:rgba(255,255,255,0.85);
-  --grey2:rgba(255,255,255,0.55);
-  --grey3:rgba(255,255,255,0.28);
-  --grey4:rgba(255,255,255,0.09);
-  --grey5:rgba(255,255,255,0.05);
-  --border:rgba(255,255,255,0.07);
-  --border2:rgba(255,255,255,0.12);
-  --border-teal:rgba(0,201,167,0.25);
+  --navy:#f0f4f8;
+  --navy2:#e8edf3;
+  --navy3:#dde4ed;
+  --navy4:#cfd8e3;
+  --panel:#ffffff;
+  --teal:#00957a;
+  --teal-dim:rgba(0,149,122,0.10);
+  --teal-dim2:rgba(0,149,122,0.05);
+  --amber:#c77c00;
+  --amber-dim:rgba(199,124,0,0.10);
+  --red:#dc2626;
+  --red-dim:rgba(220,38,38,0.10);
+  --blue:#2563eb;
+  --blue-dim:rgba(37,99,235,0.10);
+  --white:#1a2535;
+  --grey1:rgba(15,30,55,0.88);
+  --grey2:rgba(15,30,55,0.60);
+  --grey3:rgba(15,30,55,0.38);
+  --grey4:rgba(15,30,55,0.08);
+  --grey5:rgba(15,30,55,0.04);
+  --border:rgba(15,30,55,0.10);
+  --border2:rgba(15,30,55,0.16);
+  --border-teal:rgba(0,149,122,0.30);
   --r:8px;
   --r-lg:14px;
   --r-xl:20px;
@@ -72,7 +72,7 @@ body{font-family:var(--font-b);background:var(--navy);color:var(--grey1);font-si
 nav{
   position:fixed;top:0;left:0;right:0;z-index:200;
   height:var(--nav-h);
-  background:rgba(8,15,30,0.92);
+  background:rgba(240,244,248,0.96);
   backdrop-filter:blur(20px);
   -webkit-backdrop-filter:blur(20px);
   border-bottom:1px solid var(--border);
@@ -107,8 +107,8 @@ nav{
 .btn-ghost:hover{color:var(--white);border-color:var(--grey3);}
 .btn-teal{background:var(--teal);color:var(--navy);font-weight:600;}
 .btn-teal:hover{filter:brightness(1.08);transform:translateY(-1px);}
-.btn-navy{background:var(--navy4);color:var(--white);border:1px solid var(--border2);}
-.btn-navy:hover{background:var(--navy3);border-color:var(--border-teal);}
+.btn-navy{background:#1a2535;color:#ffffff;border:1px solid #1a2535;}
+.btn-navy:hover{background:#2a3a50;border-color:#2a3a50;}
 .btn-lg{padding:12px 28px;font-size:15px;}
 
 /* ─── TICKER ─── */
@@ -126,7 +126,7 @@ nav{
   font-family:var(--font-m);font-size:11px;font-weight:500;
   color:var(--navy);padding:0 32px;
   display:flex;align-items:center;gap:10px;
-  border-right:1px solid rgba(8,15,30,0.15);
+  border-right:1px solid rgba(15,30,55,0.12);
 }
 .ticker-dot{width:5px;height:5px;border-radius:50%;background:var(--navy);opacity:0.4;}
 
@@ -332,6 +332,13 @@ section.pad{padding:96px 5vw;}
   font-family:var(--font-m);font-size:10.5px;color:var(--grey3);
   display:flex;align-items:center;gap:4px;
 }
+.ds-updated-badge{
+  font-family:var(--font-m);font-size:9.5px;font-weight:600;
+  padding:2px 7px;border-radius:3px;
+  background:rgba(0,149,122,0.10);color:var(--teal);
+  border:1px solid rgba(0,149,122,0.22);
+  white-space:nowrap;letter-spacing:0.02em;
+}
 .ds-card-bottom{
   padding:14px 20px;
   border-top:1px solid var(--border);
@@ -352,12 +359,264 @@ section.pad{padding:96px 5vw;}
 .ds-action:hover{gap:7px;}
 .ds-lock-overlay{
   position:absolute;inset:0;
-  background:linear-gradient(to bottom,transparent 40%,rgba(8,15,30,0.92) 100%);
+  background:linear-gradient(to bottom,transparent 40%,rgba(220,230,240,0.92) 100%);
   display:flex;align-items:flex-end;justify-content:center;
   padding-bottom:20px;pointer-events:none;
   opacity:0;transition:opacity var(--ease);
 }
 .ds-card:hover .ds-lock-overlay{opacity:1;}
+
+/* ── Citation Modal ── */
+.cite-btn{
+  font-family:var(--font-m);font-size:10.5px;color:var(--grey3);
+  background:none;border:none;cursor:pointer;
+  display:flex;align-items:center;gap:4px;
+  padding:0;transition:color var(--ease);
+}
+.cite-btn:hover{color:var(--teal);}
+.cite-btn svg{width:13px;height:13px;flex-shrink:0;}
+.cite-overlay{
+  position:fixed;inset:0;background:rgba(200,215,235,0.88);
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  z-index:900;display:flex;align-items:center;justify-content:center;
+  padding:20px;opacity:0;pointer-events:none;
+  transition:opacity 0.22s ease;
+}
+.cite-overlay.open{opacity:1;pointer-events:all;}
+.cite-modal{
+  background:var(--panel);border:1px solid var(--border2);
+  border-radius:var(--r-lg);width:100%;max-width:620px;
+  box-shadow:0 32px 80px rgba(0,0,0,0.55);
+  overflow:hidden;
+  transform:translateY(14px);transition:transform 0.22s ease;
+}
+.cite-overlay.open .cite-modal{transform:translateY(0);}
+.cite-modal-hd{
+  padding:20px 24px 18px;border-bottom:1px solid var(--border);
+  display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
+}
+.cite-modal-title{font-size:14px;font-weight:600;color:var(--white);line-height:1.35;}
+.cite-modal-sub{font-size:11.5px;color:var(--grey3);margin-top:3px;font-family:var(--font-m);}
+.cite-close{
+  background:none;border:none;cursor:pointer;color:var(--grey3);
+  padding:2px;line-height:1;font-size:20px;flex-shrink:0;
+  transition:color var(--ease);
+}
+.cite-close:hover{color:var(--white);}
+.cite-tabs{
+  display:flex;border-bottom:1px solid var(--border);
+  overflow-x:auto;
+}
+.cite-tab{
+  padding:10px 18px;font-family:var(--font-m);font-size:11px;
+  color:var(--grey3);cursor:pointer;white-space:nowrap;
+  border-bottom:2px solid transparent;transition:color var(--ease),border-color var(--ease);
+  background:none;border-top:none;border-left:none;border-right:none;
+  margin-bottom:-1px;
+}
+.cite-tab:hover{color:var(--grey1);}
+.cite-tab.on{color:var(--teal);border-bottom-color:var(--teal);}
+.cite-body{padding:20px 24px;}
+.cite-block{
+  background:var(--navy2);border:1px solid var(--border);
+  border-radius:var(--r);padding:16px;
+  font-family:var(--font-m);font-size:12px;
+  color:var(--grey1);line-height:1.7;
+  white-space:pre-wrap;word-break:break-word;
+  max-height:160px;overflow-y:auto;
+  margin-bottom:12px;
+}
+.cite-copy-row{display:flex;align-items:center;gap:10px;}
+.cite-copy-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  font-family:var(--font-m);font-size:11.5px;font-weight:500;
+  padding:8px 18px;border-radius:var(--r);cursor:pointer;
+  background:var(--teal);color:var(--navy);border:none;
+  transition:filter var(--ease);
+}
+.cite-copy-btn:hover{filter:brightness(1.08);}
+.cite-copied{font-family:var(--font-m);font-size:11px;color:var(--teal);opacity:0;transition:opacity 0.3s;pointer-events:none;}
+.cite-copied.show{opacity:1;}
+.cite-note{font-size:11px;color:var(--grey3);margin-top:14px;line-height:1.5;}
+
+/* ── Preview Modal ── */
+.prev-btn{
+  font-family:var(--font-m);font-size:10.5px;color:var(--grey3);
+  background:none;border:none;cursor:pointer;
+  display:flex;align-items:center;gap:4px;
+  padding:0;transition:color var(--ease);
+}
+.prev-btn:hover{color:var(--teal);}
+.prev-btn svg{width:13px;height:13px;flex-shrink:0;}
+.prev-overlay{
+  position:fixed;inset:0;background:rgba(200,215,235,0.88);
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  z-index:910;display:flex;align-items:center;justify-content:center;
+  padding:20px;opacity:0;pointer-events:none;
+  transition:opacity 0.22s ease;
+}
+.prev-overlay.open{opacity:1;pointer-events:all;}
+.prev-modal{
+  background:var(--panel);border:1px solid var(--border2);
+  border-radius:var(--r-lg);width:100%;max-width:820px;
+  box-shadow:0 32px 80px rgba(0,0,0,0.45);
+  overflow:hidden;display:flex;flex-direction:column;
+  max-height:90vh;
+  transform:translateY(14px);transition:transform 0.22s ease;
+}
+.prev-overlay.open .prev-modal{transform:translateY(0);}
+.prev-modal-hd{
+  padding:18px 24px 16px;border-bottom:1px solid var(--border);
+  display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
+  flex-shrink:0;
+}
+.prev-modal-title{font-size:14px;font-weight:600;color:var(--white);line-height:1.35;}
+.prev-modal-sub{font-size:11.5px;color:var(--grey3);margin-top:3px;font-family:var(--font-m);}
+.prev-close{
+  background:none;border:none;cursor:pointer;color:var(--grey3);
+  padding:2px;line-height:1;font-size:20px;flex-shrink:0;
+  transition:color var(--ease);
+}
+.prev-close:hover{color:var(--white);}
+.prev-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  font-family:var(--font-m);font-size:10px;
+  background:rgba(0,149,122,0.10);color:var(--teal);
+  border:1px solid rgba(0,149,122,0.20);
+  border-radius:4px;padding:2px 8px;margin-top:6px;
+}
+.prev-table-wrap{
+  overflow:auto;flex:1;padding:0;
+}
+.prev-table{
+  width:100%;border-collapse:collapse;font-family:var(--font-m);font-size:11.5px;
+}
+.prev-table thead tr{
+  background:var(--navy2);position:sticky;top:0;z-index:2;
+}
+.prev-table th{
+  padding:9px 14px;text-align:left;font-size:10.5px;font-weight:600;
+  color:var(--grey2);letter-spacing:0.03em;white-space:nowrap;
+  border-bottom:2px solid var(--border2);
+}
+.prev-table td{
+  padding:8px 14px;color:var(--grey1);border-bottom:1px solid var(--border);
+  white-space:nowrap;max-width:200px;overflow:hidden;text-overflow:ellipsis;
+}
+.prev-table tbody tr:hover td{background:var(--navy2);}
+.prev-table tbody tr:last-child td{border-bottom:none;}
+.prev-modal-ft{
+  padding:14px 24px;border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  flex-wrap:wrap;background:var(--navy2);flex-shrink:0;
+}
+.prev-buy-link{
+  font-family:var(--font-m);font-size:11.5px;font-weight:500;
+  color:#fff;background:var(--teal);border:none;
+  text-decoration:none;transition:filter var(--ease);
+  display:inline-flex;align-items:center;gap:6px;
+  padding:8px 18px;border-radius:var(--r);
+}
+.prev-buy-link:hover{filter:brightness(1.08);}
+.prev-user-strip{
+  font-family:var(--font-m);font-size:11px;color:var(--grey3);
+  display:flex;align-items:center;gap:6px;
+}
+.prev-user-strip strong{color:var(--grey1);}
+.prev-signout{
+  background:none;border:none;cursor:pointer;
+  font-family:var(--font-m);font-size:10.5px;color:var(--grey3);
+  padding:0;text-decoration:underline;
+}
+.prev-signout:hover{color:var(--red);}
+.prev-loading{
+  padding:40px;text-align:center;color:var(--grey3);
+  font-family:var(--font-m);font-size:12px;
+}
+/* ── Login / Signup Modal ── */
+.auth-overlay{
+  position:fixed;inset:0;background:rgba(200,215,235,0.92);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  z-index:920;display:flex;align-items:center;justify-content:center;
+  padding:20px;opacity:0;pointer-events:none;
+  transition:opacity 0.22s ease;
+}
+.auth-overlay.open{opacity:1;pointer-events:all;}
+.auth-modal{
+  background:var(--panel);border:1px solid var(--border2);
+  border-radius:var(--r-lg);width:100%;max-width:420px;
+  box-shadow:0 32px 80px rgba(0,0,0,0.45);
+  overflow:hidden;
+  transform:translateY(14px);transition:transform 0.22s ease;
+}
+.auth-overlay.open .auth-modal{transform:translateY(0);}
+.auth-modal-hd{
+  padding:24px 28px 0;
+}
+.auth-logo{
+  font-family:var(--font-d);font-size:22px;color:var(--teal);
+  letter-spacing:0.04em;margin-bottom:14px;
+}
+.auth-modal-title{font-size:17px;font-weight:600;color:var(--white);line-height:1.3;margin-bottom:4px;}
+.auth-modal-sub{font-size:12.5px;color:var(--grey3);line-height:1.5;margin-bottom:20px;}
+.auth-tabs{
+  display:flex;border-bottom:1px solid var(--border);margin:0 -28px;padding:0 28px;
+}
+.auth-tab{
+  padding:10px 18px 10px 0;font-family:var(--font-m);font-size:12px;
+  color:var(--grey3);cursor:pointer;white-space:nowrap;
+  border-bottom:2px solid transparent;margin-bottom:-1px;
+  background:none;border-top:none;border-left:none;border-right:none;
+  transition:color var(--ease),border-color var(--ease);
+}
+.auth-tab:hover{color:var(--grey1);}
+.auth-tab.on{color:var(--teal);border-bottom-color:var(--teal);}
+.auth-body{padding:22px 28px 28px;}
+.auth-field{margin-bottom:14px;}
+.auth-label{
+  display:block;font-family:var(--font-m);font-size:11px;font-weight:600;
+  color:var(--grey2);margin-bottom:5px;letter-spacing:0.03em;
+}
+.auth-input{
+  width:100%;padding:10px 14px;border:1px solid var(--border2);
+  border-radius:var(--r);background:var(--navy2);
+  font-family:var(--font-b);font-size:13.5px;color:var(--grey1);
+  outline:none;transition:border-color var(--ease),box-shadow var(--ease);
+}
+.auth-input:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(0,149,122,0.12);}
+.auth-input::placeholder{color:var(--grey3);}
+.auth-submit{
+  width:100%;padding:11px;border:none;border-radius:var(--r);
+  background:#1a2535;color:#fff;font-family:var(--font-b);
+  font-size:14px;font-weight:600;cursor:pointer;
+  transition:background var(--ease);margin-top:4px;
+}
+.auth-submit:hover{background:#2a3a50;}
+.auth-submit:disabled{opacity:0.5;cursor:not-allowed;}
+.auth-error{
+  font-family:var(--font-m);font-size:11.5px;color:var(--red);
+  margin-top:8px;display:none;
+}
+.auth-error.show{display:block;}
+.auth-divider{
+  text-align:center;font-size:11px;color:var(--grey3);
+  font-family:var(--font-m);margin:14px 0 0;
+}
+.auth-close{
+  position:absolute;top:16px;right:20px;
+  background:none;border:none;cursor:pointer;color:var(--grey3);
+  font-size:20px;line-height:1;transition:color var(--ease);
+}
+.auth-modal{position:relative;}
+.auth-close:hover{color:var(--white);}
+.btn-google{
+  width:100%;display:flex;align-items:center;justify-content:center;gap:10px;
+  padding:10px 18px;border-radius:var(--r);border:1px solid var(--border2);
+  background:transparent;color:var(--grey1);font-family:var(--font-b);
+  font-size:13.5px;font-weight:500;cursor:pointer;transition:all var(--ease);
+}
+.btn-google:hover{border-color:var(--grey3);background:var(--grey5);}
+.btn-google svg{width:18px;height:18px;flex-shrink:0;}
 
 /* preview charts */
 .ds-preview-chart{
@@ -393,7 +652,7 @@ section.pad{padding:96px 5vw;}
 .price-card:hover{transform:translateY(-4px);box-shadow:0 24px 60px rgba(0,0,0,0.4);}
 .price-card.featured{
   border-color:var(--teal);
-  background:linear-gradient(135deg,var(--panel) 0%,rgba(0,201,167,0.04) 100%);
+  background:linear-gradient(135deg,var(--panel) 0%,rgba(0,149,122,0.06) 100%);
 }
 .price-pop{
   position:absolute;top:20px;right:20px;
@@ -525,7 +784,7 @@ section.pad{padding:96px 5vw;}
   color:var(--navy);letter-spacing:0.04em;
   margin-bottom:14px;
 }
-.cta-band p{color:rgba(8,15,30,0.65);font-size:1rem;margin-bottom:32px;font-weight:300;}
+.cta-band p{color:rgba(15,30,55,0.65);font-size:1rem;margin-bottom:32px;font-weight:300;}
 .cta-band .btn-navy{font-size:15px;padding:14px 36px;}
 .cta-band-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
 .btn-white{background:var(--white);color:var(--navy);font-weight:600;}
@@ -651,7 +910,7 @@ footer{
 .mobile-menu{
   display:none;
   position:fixed;top:var(--nav-h);left:0;right:0;z-index:199;
-  background:rgba(8,15,30,0.97);
+  background:rgba(240,244,248,0.98);
   backdrop-filter:blur(20px);
   -webkit-backdrop-filter:blur(20px);
   border-bottom:1px solid var(--border);
@@ -706,20 +965,19 @@ footer{
   <a href="marketplace.html" class="nav-brand">
     <div class="nav-mark">
       <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="1" y="8" width="2.5" height="7" rx="1" fill="#080f1e"/>
-        <rect x="5" y="5" width="2.5" height="10" rx="1" fill="rgba(8,15,30,0.65)"/>
-        <rect x="9" y="2" width="2.5" height="13" rx="1" fill="rgba(8,15,30,0.4)"/>
+        <rect x="1" y="8" width="2.5" height="7" rx="1" fill="#1a2535"/>
+        <rect x="5" y="5" width="2.5" height="10" rx="1" fill="rgba(15,30,55,0.50)"/>
+        <rect x="9" y="2" width="2.5" height="13" rx="1" fill="rgba(15,30,55,0.30)"/>
         <circle cx="13.5" cy="2.5" r="2" fill="#f59e0b"/>
       </svg>
     </div>
     <span class="nav-name">SG <span>DATALYTICS</span></span>
   </a>
   <ul class="nav-links">
-    <li><a href="#catalog">Catalog</a></li>
-    <li><a href="#datasets">Datasets</a></li>
-    <li><a href="#pricing">Pricing</a></li>
-    <li><a href="#how">How it works</a></li>
-    <li><a href="#contact">Contact</a></li>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="marketplace.html" class="active">Marketplace</a></li>
+    <li><a href="insights.html">Insights</a></li>
+    <li><a href="about.html">About</a></li>
   </ul>
   <div class="nav-actions">
     <a href="auth.html" class="btn btn-ghost">Sign in</a>
@@ -746,16 +1004,16 @@ footer{
 <!-- TICKER -->
 <div class="ticker">
   <div class="ticker-inner">
-    <div class="ticker-item"><div class="ticker-dot"></div>NEW: Ghana Agriculture Dataset Q1 2026 — 2,400 records</div>
-    <div class="ticker-item"><div class="ticker-dot"></div>Education Sector: 14 new datasets added this month</div>
-    <div class="ticker-item"><div class="ticker-dot"></div>SME Performance Index — Updated April 2026</div>
-    <div class="ticker-item"><div class="ticker-dot"></div>Health Demographics: Regional breakdowns now available</div>
-    <div class="ticker-item"><div class="ticker-dot"></div>Sustainability Indicators — 24-variable dataset released</div>
-    <div class="ticker-item"><div class="ticker-dot"></div>NEW: Ghana Agriculture Dataset Q1 2026 — 2,400 records</div>
-    <div class="ticker-item"><div class="ticker-dot"></div>Education Sector: 14 new datasets added this month</div>
-    <div class="ticker-item"><div class="ticker-dot"></div>SME Performance Index — Updated April 2026</div>
-    <div class="ticker-item"><div class="ticker-dot"></div>Health Demographics: Regional breakdowns now available</div>
-    <div class="ticker-item"><div class="ticker-dot"></div>Sustainability Indicators — 24-variable dataset released</div>
+    <div class="ticker-item"><div class="ticker-dot"></div>NEW: SGMPI Ghana Market Price Index — 8 categories, 3,715 rows</div>
+    <div class="ticker-item"><div class="ticker-dot"></div>Bank of Ghana GDP — Quarterly sectoral breakdown 2006–2025</div>
+    <div class="ticker-item"><div class="ticker-dot"></div>GSS Interest Rates — Monthly data back to 1971</div>
+    <div class="ticker-item"><div class="ticker-dot"></div>BoG FX Rates — USD, GBP, EUR vs GHS (2005–2025)</div>
+    <div class="ticker-item"><div class="ticker-dot"></div>World Bank Ghana — 6 datasets: macro, trade, agriculture, energy</div>
+    <div class="ticker-item"><div class="ticker-dot"></div>NEW: SGMPI Ghana Market Price Index — 8 categories, 3,715 rows</div>
+    <div class="ticker-item"><div class="ticker-dot"></div>Bank of Ghana GDP — Quarterly sectoral breakdown 2006–2025</div>
+    <div class="ticker-item"><div class="ticker-dot"></div>GSS Interest Rates — Monthly data back to 1971</div>
+    <div class="ticker-item"><div class="ticker-dot"></div>BoG FX Rates — USD, GBP, EUR vs GHS (2005–2025)</div>
+    <div class="ticker-item"><div class="ticker-dot"></div>World Bank Ghana — 6 datasets: macro, trade, agriculture, energy</div>
   </div>
 </div>
 
@@ -772,8 +1030,8 @@ footer{
       <a href="#pricing" class="btn btn-ghost btn-lg">View plans</a>
     </div>
     <div class="hero-trust">
-      <span class="hero-trust-item">560+ datasets</span>
-      <span class="hero-trust-item">6 sectors covered</span>
+      <span class="hero-trust-item">31 datasets</span>
+      <span class="hero-trust-item">4 trusted sources</span>
       <span class="hero-trust-item">Verified & curated</span>
       <span class="hero-trust-item">Instant download</span>
     </div>
@@ -787,53 +1045,47 @@ footer{
       <div class="data-panel-body">
         <div class="panel-stats">
           <div class="panel-stat">
-            <div class="panel-stat-num t">560+</div>
+            <div class="panel-stat-num t">31</div>
             <div class="panel-stat-label">Datasets</div>
           </div>
           <div class="panel-stat">
-            <div class="panel-stat-num">2,300+</div>
-            <div class="panel-stat-label">Charts</div>
+            <div class="panel-stat-num">4</div>
+            <div class="panel-stat-label">Sources</div>
           </div>
           <div class="panel-stat">
-            <div class="panel-stat-num a">12</div>
-            <div class="panel-stat-label">Sectors</div>
+            <div class="panel-stat-num a">$15</div>
+            <div class="panel-stat-label">From</div>
           </div>
         </div>
         <div class="panel-cats">
           <div class="panel-cat">
-            <div class="panel-cat-icon">🏫</div>
-            <div class="panel-cat-name">Education & Schools</div>
-            <div class="panel-cat-bar"><div class="panel-cat-fill" style="width:85%"></div></div>
-            <div class="panel-cat-count">148 datasets</div>
+            <div class="panel-cat-icon">📈</div>
+            <div class="panel-cat-name">SG Market Price Index</div>
+            <div class="panel-cat-bar"><div class="panel-cat-fill" style="width:100%"></div></div>
+            <div class="panel-cat-count">8 datasets — 3,715 rows</div>
           </div>
           <div class="panel-cat">
             <div class="panel-cat-icon">📊</div>
-            <div class="panel-cat-name">Business & SMEs</div>
-            <div class="panel-cat-bar"><div class="panel-cat-fill" style="width:72%"></div></div>
-            <div class="panel-cat-count">124 datasets</div>
+            <div class="panel-cat-name">GSS StatsBank</div>
+            <div class="panel-cat-bar"><div class="panel-cat-fill" style="width:84%"></div></div>
+            <div class="panel-cat-count">13 datasets</div>
           </div>
           <div class="panel-cat">
-            <div class="panel-cat-icon">🌿</div>
-            <div class="panel-cat-name">Sustainability</div>
-            <div class="panel-cat-bar"><div class="panel-cat-fill" style="width:55%"></div></div>
-            <div class="panel-cat-count">96 datasets</div>
+            <div class="panel-cat-icon">🏦</div>
+            <div class="panel-cat-name">Bank of Ghana</div>
+            <div class="panel-cat-bar"><div class="panel-cat-fill" style="width:31%"></div></div>
+            <div class="panel-cat-count">4 datasets</div>
           </div>
           <div class="panel-cat">
-            <div class="panel-cat-icon">🌾</div>
-            <div class="panel-cat-name">Agriculture</div>
-            <div class="panel-cat-bar"><div class="panel-cat-fill" style="width:48%"></div></div>
-            <div class="panel-cat-count">84 datasets</div>
-          </div>
-          <div class="panel-cat">
-            <div class="panel-cat-icon">🏥</div>
-            <div class="panel-cat-name">Health & Demographics</div>
-            <div class="panel-cat-bar"><div class="panel-cat-fill" style="width:62%"></div></div>
-            <div class="panel-cat-count">108 datasets</div>
+            <div class="panel-cat-icon">🌍</div>
+            <div class="panel-cat-name">World Bank</div>
+            <div class="panel-cat-bar"><div class="panel-cat-fill" style="width:46%"></div></div>
+            <div class="panel-cat-count">6 datasets</div>
           </div>
         </div>
         <div class="panel-featured">
           <div class="panel-feat-badge">NEW</div>
-          <div class="panel-feat-text"><strong>Ghana SME Performance Index 2026</strong> — 3,200 firm-level records across 8 regions. Available now on Pro plan.</div>
+          <div class="panel-feat-text"><strong>SGMPI Ghana Market Price Index</strong> — 8 categories of real Ghana market prices. Available now from $15.</div>
         </div>
       </div>
     </div>
@@ -842,14 +1094,12 @@ footer{
 
 <!-- CATALOG STRIP -->
 <div class="catalog-strip" id="catalog">
-  <div class="catalog-tabs">
-    <div class="cat-tab active" onclick="filterCat(this,'all')"><span class="cat-tab-icon">⚡</span>All Categories<span class="cat-tab-count">560</span></div>
-    <div class="cat-tab" onclick="filterCat(this,'edu')"><span class="cat-tab-icon">🏫</span>Education<span class="cat-tab-count">148</span></div>
-    <div class="cat-tab" onclick="filterCat(this,'biz')"><span class="cat-tab-icon">📊</span>Business & SMEs<span class="cat-tab-count">124</span></div>
-    <div class="cat-tab" onclick="filterCat(this,'health')"><span class="cat-tab-icon">🏥</span>Health<span class="cat-tab-count">108</span></div>
-    <div class="cat-tab" onclick="filterCat(this,'env')"><span class="cat-tab-icon">🌿</span>Sustainability<span class="cat-tab-count">96</span></div>
-    <div class="cat-tab" onclick="filterCat(this,'econ')"><span class="cat-tab-icon">💹</span>Economy<span class="cat-tab-count">76</span></div>
-    <div class="cat-tab" onclick="filterCat(this,'agri')"><span class="cat-tab-icon">🌾</span>Agriculture<span class="cat-tab-count">84</span></div>
+  <div class="catalog-tabs" id="source-tabs">
+    <div class="cat-tab active" data-src="all" onclick="filterSrc(this,'all')"><span class="cat-tab-icon">⚡</span>All Sources<span class="cat-tab-count" id="cnt-all">31</span></div>
+    <div class="cat-tab" data-src="sgmpi" onclick="filterSrc(this,'sgmpi')"><span class="cat-tab-icon">📈</span>SG Market Price Index<span class="cat-tab-count" id="cnt-sgmpi">8</span></div>
+    <div class="cat-tab" data-src="gss" onclick="filterSrc(this,'gss')"><span class="cat-tab-icon">📊</span>GSS StatsBank<span class="cat-tab-count" id="cnt-gss">13</span></div>
+    <div class="cat-tab" data-src="bog" onclick="filterSrc(this,'bog')"><span class="cat-tab-icon">🏦</span>Bank of Ghana<span class="cat-tab-count" id="cnt-bog">4</span></div>
+    <div class="cat-tab" data-src="worldbank" onclick="filterSrc(this,'worldbank')"><span class="cat-tab-icon">🌍</span>World Bank<span class="cat-tab-count" id="cnt-worldbank">6</span></div>
   </div>
 </div>
 
@@ -858,183 +1108,25 @@ footer{
   <div class="inner">
     <div class="datasets-header">
       <div>
-        <div class="sec-label rev">Featured datasets</div>
+        <div class="sec-label rev">Real, authenticated datasets</div>
         <h2 class="sec-title rev">Browse the catalog</h2>
       </div>
       <div class="datasets-filters">
-        <div class="filter-pill on">All</div>
-        <div class="filter-pill">Free preview</div>
-        <div class="filter-pill">New</div>
-        <div class="filter-pill">Most downloaded</div>
+        <div class="filter-pill on" data-freq="all">All frequencies</div>
+        <div class="filter-pill" data-freq="Weekly">Weekly</div>
+        <div class="filter-pill" data-freq="Monthly">Monthly</div>
+        <div class="filter-pill" data-freq="Annual">Annual</div>
       </div>
     </div>
     <div class="datasets-grid" id="ds-grid">
+      <div style="grid-column:1/-1;text-align:center;padding:48px 0;color:rgba(15,30,55,0.35);font-family:'IBM Plex Mono',monospace;font-size:13px;" id="ds-loading">Loading datasets…</div>
 
-      <div class="ds-card rev" data-cat="edu" data-access="free" data-new="false" data-pop="true">
-        <div class="ds-card-top">
-          <div class="ds-cat-badge badge-edu">🏫 Education</div>
-          <h3>Student Attendance Anomalies by Term — Ghana 2024</h3>
-          <p>Outlier-flagged attendance records across 48 schools. Includes term-by-term breakdowns, anomaly scores, and demographic splits.</p>
-          <div class="ds-preview-chart stacked-chart">
-            <div class="stacked-col" style="height:70%"><div class="seg-gh" style="height:30%"></div><div class="seg-ng" style="height:22%"></div><div class="seg-et" style="height:18%"></div><div class="seg-de" style="height:16%"></div><div class="seg-us" style="height:14%"></div></div>
-            <div class="stacked-col" style="height:78%"><div class="seg-gh" style="height:28%"></div><div class="seg-ng" style="height:24%"></div><div class="seg-et" style="height:20%"></div><div class="seg-de" style="height:15%"></div><div class="seg-us" style="height:13%"></div></div>
-            <div class="stacked-col" style="height:82%"><div class="seg-gh" style="height:26%"></div><div class="seg-ng" style="height:22%"></div><div class="seg-et" style="height:22%"></div><div class="seg-de" style="height:16%"></div><div class="seg-us" style="height:14%"></div></div>
-            <div class="stacked-col" style="height:88%"><div class="seg-gh" style="height:24%"></div><div class="seg-ng" style="height:20%"></div><div class="seg-et" style="height:24%"></div><div class="seg-de" style="height:18%"></div><div class="seg-us" style="height:14%"></div></div>
-            <div class="stacked-col" style="height:92%"><div class="seg-gh" style="height:22%"></div><div class="seg-ng" style="height:20%"></div><div class="seg-et" style="height:22%"></div><div class="seg-de" style="height:20%"></div><div class="seg-us" style="height:16%"></div></div>
-            <div class="stacked-col" style="height:96%"><div class="seg-gh" style="height:20%"></div><div class="seg-ng" style="height:18%"></div><div class="seg-et" style="height:24%"></div><div class="seg-de" style="height:22%"></div><div class="seg-us" style="height:16%"></div></div>
-            <div class="stacked-col" style="height:100%"><div class="seg-gh" style="height:18%"></div><div class="seg-ng" style="height:20%"></div><div class="seg-et" style="height:22%"></div><div class="seg-de" style="height:22%"></div><div class="seg-us" style="height:18%"></div></div>
-          </div>
-          <div class="chart-legend"><span class="leg-gh">GH</span><span class="leg-ng">NG</span><span class="leg-et">ET</span><span class="leg-de">DE</span><span class="leg-us">US</span></div>
-          <div class="ds-meta">
-            <div class="ds-meta-item">📁 CSV / XLSX</div>
-            <div class="ds-meta-item">📐 4,800 rows</div>
-            <div class="ds-meta-item">🕓 2024</div>
-          </div>
-        </div>
-        <div class="ds-card-bottom">
-          <div class="ds-access free"><div class="ds-access-icon">👁</div> Free preview</div>
-          <a class="ds-action" href="#contact" onclick="prefillContact('Student Attendance Anomalies by Term — Ghana 2024')">Access →</a>
-        </div>
-      </div>
-
-      <div class="ds-card rev d1" data-cat="biz" data-access="premium" data-new="true" data-pop="true">
-        <div class="ds-card-top">
-          <div class="ds-cat-badge badge-biz">📊 Business</div>
-          <h3>Ghana SME Performance & Revenue Index 2026</h3>
-          <p>Firm-level performance data for 3,200 SMEs across 8 regions. Covers revenue, employment, sector, and growth metrics.</p>
-          <div class="ds-preview-chart line-chart">
-            <svg viewBox="0 0 200 48" preserveAspectRatio="none">
-              <polyline class="chart-line line-gh" points="0,40 28,34 57,28 85,20 114,14 142,10 171,8 200,4"/>
-              <polyline class="chart-line line-ng" points="0,36 28,32 57,26 85,22 114,18 142,16 171,12 200,10"/>
-              <polyline class="chart-line line-et" points="0,44 28,42 57,38 85,36 114,32 142,30 171,28 200,26"/>
-              <polyline class="chart-line line-de" points="0,18 28,14 57,12 85,10 114,8 142,6 171,4 200,2"/>
-              <polyline class="chart-line line-us" points="0,14 28,12 57,10 85,8 114,6 142,4 171,4 200,2"/>
-            </svg>
-            <div class="chart-legend"><span class="leg-gh">GH</span><span class="leg-ng">NG</span><span class="leg-et">ET</span><span class="leg-de">DE</span><span class="leg-us">US</span></div>
-          </div>
-          <div class="ds-meta">
-            <div class="ds-meta-item">📁 CSV / JSON</div>
-            <div class="ds-meta-item">📐 3,200 rows</div>
-            <div class="ds-meta-item">🕓 2026</div>
-          </div>
-        </div>
-        <div class="ds-card-bottom">
-          <div class="ds-access premium"><div class="ds-access-icon">⭐</div> Pro & Enterprise</div>
-          <a class="ds-action" href="#contact" onclick="prefillContact('Ghana SME Performance & Revenue Index 2026')">Access →</a>
-        </div>
-      </div>
-
-      <div class="ds-card rev d2" data-cat="health" data-access="locked" data-new="false" data-pop="true">
-        <div class="ds-card-top">
-          <div class="ds-cat-badge badge-health">🏥 Health</div>
-          <h3>Regional Health Demographics — Accra & Northern Regions</h3>
-          <p>Age-stratified health indicators including disease burden, facility access, and maternal health metrics across 10 regions.</p>
-          <div class="ds-preview-chart line-chart">
-            <svg viewBox="0 0 200 48" preserveAspectRatio="none">
-              <polyline class="chart-line line-gh" points="0,30 28,28 57,24 85,26 114,22 142,18 171,16 200,14"/>
-              <polyline class="chart-line line-ng" points="0,34 28,32 57,30 85,32 114,28 142,26 171,24 200,22"/>
-              <polyline class="chart-line line-et" points="0,42 28,40 57,36 85,38 114,34 142,32 171,30 200,28"/>
-              <polyline class="chart-line line-de" points="0,10 28,8 57,6 85,8 114,6 142,4 171,4 200,2"/>
-              <polyline class="chart-line line-us" points="0,16 28,14 57,12 85,14 114,10 142,8 171,6 200,4"/>
-            </svg>
-            <div class="chart-legend"><span class="leg-gh">GH</span><span class="leg-ng">NG</span><span class="leg-et">ET</span><span class="leg-de">DE</span><span class="leg-us">US</span></div>
-          </div>
-          <div class="ds-meta">
-            <div class="ds-meta-item">📁 CSV / SPSS</div>
-            <div class="ds-meta-item">📐 6,100 rows</div>
-            <div class="ds-meta-item">🕓 2024</div>
-          </div>
-        </div>
-        <div class="ds-card-bottom">
-          <div class="ds-access locked"><div class="ds-access-icon">🔒</div> Starter & above</div>
-          <a class="ds-action" href="#contact" onclick="prefillContact('Regional Health Demographics — Accra & Northern Regions')">Access →</a>
-        </div>
-      </div>
-
-      <div class="ds-card rev d1" data-cat="env" data-access="free" data-new="false" data-pop="false">
-        <div class="ds-card-top">
-          <div class="ds-cat-badge badge-env">🌿 Sustainability</div>
-          <h3>Ghana Sustainability Indicators Dataset — 24 Variables</h3>
-          <p>Energy use, carbon emissions, and economic sustainability metrics for Ghana spanning 2010–2024. Cross-sector analysis ready.</p>
-          <div class="ds-preview-chart stacked-chart">
-            <div class="stacked-col" style="height:70%"><div class="seg-gh" style="height:30%"></div><div class="seg-ng" style="height:22%"></div><div class="seg-et" style="height:18%"></div><div class="seg-de" style="height:16%"></div><div class="seg-us" style="height:14%"></div></div>
-            <div class="stacked-col" style="height:78%"><div class="seg-gh" style="height:28%"></div><div class="seg-ng" style="height:24%"></div><div class="seg-et" style="height:20%"></div><div class="seg-de" style="height:15%"></div><div class="seg-us" style="height:13%"></div></div>
-            <div class="stacked-col" style="height:82%"><div class="seg-gh" style="height:26%"></div><div class="seg-ng" style="height:22%"></div><div class="seg-et" style="height:22%"></div><div class="seg-de" style="height:16%"></div><div class="seg-us" style="height:14%"></div></div>
-            <div class="stacked-col" style="height:88%"><div class="seg-gh" style="height:24%"></div><div class="seg-ng" style="height:20%"></div><div class="seg-et" style="height:24%"></div><div class="seg-de" style="height:18%"></div><div class="seg-us" style="height:14%"></div></div>
-            <div class="stacked-col" style="height:92%"><div class="seg-gh" style="height:22%"></div><div class="seg-ng" style="height:20%"></div><div class="seg-et" style="height:22%"></div><div class="seg-de" style="height:20%"></div><div class="seg-us" style="height:16%"></div></div>
-            <div class="stacked-col" style="height:96%"><div class="seg-gh" style="height:20%"></div><div class="seg-ng" style="height:18%"></div><div class="seg-et" style="height:24%"></div><div class="seg-de" style="height:22%"></div><div class="seg-us" style="height:16%"></div></div>
-            <div class="stacked-col" style="height:100%"><div class="seg-gh" style="height:18%"></div><div class="seg-ng" style="height:20%"></div><div class="seg-et" style="height:22%"></div><div class="seg-de" style="height:22%"></div><div class="seg-us" style="height:18%"></div></div>
-          </div>
-          <div class="chart-legend"><span class="leg-gh">GH</span><span class="leg-ng">NG</span><span class="leg-et">ET</span><span class="leg-de">DE</span><span class="leg-us">US</span></div>
-          <div class="ds-meta">
-            <div class="ds-meta-item">📁 CSV / Excel</div>
-            <div class="ds-meta-item">📐 2,880 rows</div>
-            <div class="ds-meta-item">🕓 2010–2024</div>
-          </div>
-        </div>
-        <div class="ds-card-bottom">
-          <div class="ds-access free"><div class="ds-access-icon">👁</div> Free preview</div>
-          <a class="ds-action" href="#contact" onclick="prefillContact('Ghana Sustainability Indicators Dataset — 24 Variables')">Access →</a>
-        </div>
-      </div>
-
-      <div class="ds-card rev d2" data-cat="agri" data-access="premium" data-new="true" data-pop="false">
-        <div class="ds-card-top">
-          <div class="ds-cat-badge badge-agri">🌾 Agriculture</div>
-          <h3>Crop Yield & Rainfall Correlation — Northern Ghana Q1 2026</h3>
-          <p>Farm-level yield data linked to meteorological records. Includes soil type, irrigation access, and seasonal variance for 5 crops.</p>
-          <div class="ds-preview-chart stacked-chart">
-            <div class="stacked-col" style="height:85%"><div class="seg-gh" style="height:35%"></div><div class="seg-ng" style="height:25%"></div><div class="seg-et" style="height:20%"></div><div class="seg-de" style="height:10%"></div><div class="seg-us" style="height:10%"></div></div>
-            <div class="stacked-col" style="height:72%"><div class="seg-gh" style="height:30%"></div><div class="seg-ng" style="height:28%"></div><div class="seg-et" style="height:22%"></div><div class="seg-de" style="height:10%"></div><div class="seg-us" style="height:10%"></div></div>
-            <div class="stacked-col" style="height:95%"><div class="seg-gh" style="height:32%"></div><div class="seg-ng" style="height:24%"></div><div class="seg-et" style="height:24%"></div><div class="seg-de" style="height:12%"></div><div class="seg-us" style="height:8%"></div></div>
-            <div class="stacked-col" style="height:60%"><div class="seg-gh" style="height:28%"></div><div class="seg-ng" style="height:26%"></div><div class="seg-et" style="height:26%"></div><div class="seg-de" style="height:12%"></div><div class="seg-us" style="height:8%"></div></div>
-            <div class="stacked-col" style="height:80%"><div class="seg-gh" style="height:34%"></div><div class="seg-ng" style="height:22%"></div><div class="seg-et" style="height:20%"></div><div class="seg-de" style="height:14%"></div><div class="seg-us" style="height:10%"></div></div>
-            <div class="stacked-col" style="height:90%"><div class="seg-gh" style="height:30%"></div><div class="seg-ng" style="height:26%"></div><div class="seg-et" style="height:22%"></div><div class="seg-de" style="height:12%"></div><div class="seg-us" style="height:10%"></div></div>
-            <div class="stacked-col" style="height:68%"><div class="seg-gh" style="height:32%"></div><div class="seg-ng" style="height:24%"></div><div class="seg-et" style="height:24%"></div><div class="seg-de" style="height:10%"></div><div class="seg-us" style="height:10%"></div></div>
-          </div>
-          <div class="chart-legend"><span class="leg-gh">GH</span><span class="leg-ng">NG</span><span class="leg-et">ET</span><span class="leg-de">DE</span><span class="leg-us">US</span></div>
-          <div class="ds-meta">
-            <div class="ds-meta-item">📁 CSV / Shapefile</div>
-            <div class="ds-meta-item">📐 2,400 rows</div>
-            <div class="ds-meta-item">🕓 2026</div>
-          </div>
-        </div>
-        <div class="ds-card-bottom">
-          <div class="ds-access premium"><div class="ds-access-icon">⭐</div> Pro & Enterprise</div>
-          <a class="ds-action" href="#contact" onclick="prefillContact('Crop Yield & Rainfall Correlation — Northern Ghana Q1 2026')">Access →</a>
-        </div>
-      </div>
-
-      <div class="ds-card rev d3" data-cat="econ" data-access="locked" data-new="true" data-pop="true">
-        <div class="ds-card-top">
-          <div class="ds-cat-badge badge-econ">💹 Economy</div>
-          <h3>Ghana Consumer Price Index & Inflation Tracker 2020–2026</h3>
-          <p>Monthly CPI data across 14 categories, disaggregated by region and income quartile. Ideal for macro-economic modelling.</p>
-          <div class="ds-preview-chart line-chart">
-            <svg viewBox="0 0 200 48" preserveAspectRatio="none">
-              <polyline class="chart-line line-gh" points="0,40 28,36 57,30 85,24 114,18 142,12 171,8 200,4"/>
-              <polyline class="chart-line line-ng" points="0,38 28,34 57,28 85,24 114,20 142,16 171,14 200,10"/>
-              <polyline class="chart-line line-et" points="0,44 28,42 57,38 85,34 114,28 142,24 171,20 200,18"/>
-              <polyline class="chart-line line-de" points="0,18 28,16 57,14 85,12 114,10 142,8 171,6 200,4"/>
-              <polyline class="chart-line line-us" points="0,22 28,20 57,16 85,14 114,12 142,10 171,8 200,6"/>
-            </svg>
-            <div class="chart-legend"><span class="leg-gh">GH</span><span class="leg-ng">NG</span><span class="leg-et">ET</span><span class="leg-de">DE</span><span class="leg-us">US</span></div>
-          </div>
-          <div class="ds-meta">
-            <div class="ds-meta-item">📁 CSV / JSON</div>
-            <div class="ds-meta-item">📐 8,640 rows</div>
-            <div class="ds-meta-item">🕓 2020–2026</div>
-          </div>
-        </div>
-        <div class="ds-card-bottom">
-          <div class="ds-access locked"><div class="ds-access-icon">🔒</div> Starter & above</div>
-          <a class="ds-action" href="#contact" onclick="prefillContact('Ghana Consumer Price Index & Inflation Tracker 2020–2026')">Access →</a>
-        </div>
-      </div>
+      <!-- Dataset cards injected by JS from data/catalogue.csv -->
 
     </div>
-    <div style="text-align:center;margin-top:40px;">
-      <a href="#contact" class="btn btn-ghost" style="font-size:14px;padding:12px 32px;" onclick="prefillContact('Full dataset catalog access')">View all 560+ datasets →</a>
+    <div style="text-align:center;margin-top:40px;" id="ds-footer-cta">
+      <a href="insights.html" class="btn btn-ghost" style="font-size:14px;padding:12px 32px;margin-right:12px;">View Ghana Insights Charts →</a>
+      <a href="#contact" class="btn btn-teal" style="font-size:14px;padding:12px 32px;">Request a dataset →</a>
     </div>
   </div>
 </section>
@@ -1042,11 +1134,11 @@ footer{
 <!-- KEY STATS -->
 <div class="stat-ticker">
   <div class="stat-ticker-inner">
-    <div class="stat-tile rev"><div class="stat-tile-num">560+</div><div class="stat-tile-label">Total datasets</div></div>
-    <div class="stat-tile rev d1"><div class="stat-tile-num">6</div><div class="stat-tile-label">Sectors</div></div>
-    <div class="stat-tile rev d2"><div class="stat-tile-num">2,300+</div><div class="stat-tile-label">Charts produced</div></div>
-    <div class="stat-tile rev d3"><div class="stat-tile-num">40+</div><div class="stat-tile-label">Dashboards</div></div>
-    <div class="stat-tile rev d2"><div class="stat-tile-num">14</div><div class="stat-tile-label">File formats</div></div>
+    <div class="stat-tile rev"><div class="stat-tile-num">31</div><div class="stat-tile-label">Total datasets</div></div>
+    <div class="stat-tile rev d1"><div class="stat-tile-num">4</div><div class="stat-tile-label">Trusted sources</div></div>
+    <div class="stat-tile rev d2"><div class="stat-tile-num">3,715</div><div class="stat-tile-label">SGMPI rows</div></div>
+    <div class="stat-tile rev d3"><div class="stat-tile-num">50+</div><div class="stat-tile-label">Years of data</div></div>
+    <div class="stat-tile rev d2"><div class="stat-tile-num">CSV</div><div class="stat-tile-label">Clean format</div></div>
     <div class="stat-tile rev d1"><div class="stat-tile-num">100%</div><div class="stat-tile-label">Ghana sourced</div></div>
   </div>
 </div>
@@ -1055,66 +1147,70 @@ footer{
 <section class="pricing pad" id="pricing">
   <div class="inner">
     <div class="rev" style="text-align:center;margin-bottom:48px;">
-      <div class="sec-label" style="justify-content:center;">Subscription plans</div>
-      <h2 class="sec-title">Choose your access level</h2>
-      <p class="sec-sub" style="margin:0 auto;text-align:center;">All plans include instant download, updated datasets, and citation-ready formats. Cancel anytime.</p>
+      <div class="sec-label" style="justify-content:center;">One-time purchase · Instant download</div>
+      <h2 class="sec-title">Get the data you need</h2>
+      <p class="sec-sub" style="margin:0 auto;text-align:center;">No subscriptions. Buy once, download instantly via Gumroad. Re-download anytime from your purchase link.</p>
     </div>
     <div class="pricing-grid">
+
+      <!-- PRODUCT 1 -->
       <div class="price-card rev">
-        <div class="price-tier">Starter</div>
-        <div class="price-amount"><sup>GH₵</sup>99</div>
-        <div class="price-period">per month, billed monthly</div>
+        <div class="price-tier">SGMPI Market Prices</div>
+        <div class="price-amount"><sup>$</sup>15</div>
+        <div class="price-period">one-time purchase · instant CSV download</div>
         <div class="price-divider"></div>
         <ul class="price-features">
-          <li>Access to 80+ starter datasets</li>
-          <li>CSV & Excel download formats</li>
-          <li>2 sectors of your choice</li>
-          <li>Free dataset previews</li>
-          <li>Email support</li>
-          <li class="no">API access</li>
-          <li class="no">Custom data requests</li>
-          <li class="no">Priority new releases</li>
+          <li>8 CSV files — real Ghana market prices</li>
+          <li>Mobile Phones, Vehicles, Electronics</li>
+          <li>Home &amp; Furniture, Food &amp; Agriculture</li>
+          <li>Property, Fashion, Commercial Equipment</li>
+          <li>3,715 rows with price, condition &amp; region</li>
+          <li>Updated monthly — re-download free</li>
+          <li class="no">BoG / GSS / World Bank data</li>
         </ul>
-        <a href="#contact" class="btn btn-navy price-cta">Get started</a>
+        <a href="https://datalyze.gumroad.com/l/mcrmty" target="_blank" rel="noopener" class="btn btn-navy price-cta">Buy on Gumroad →</a>
       </div>
+
+      <!-- PRODUCT 2 -->
       <div class="price-card featured rev d1">
-        <div class="price-pop">Most popular</div>
-        <div class="price-tier">Pro</div>
-        <div class="price-amount"><sup>GH₵</sup>299</div>
-        <div class="price-period">per month, billed monthly</div>
+        <div class="price-pop">Best value</div>
+        <div class="price-tier">Ghana Data Full Bundle</div>
+        <div class="price-amount"><sup>$</sup>29</div>
+        <div class="price-period">one-time purchase · all 31 datasets in one zip</div>
         <div class="price-divider"></div>
         <ul class="price-features">
-          <li>Full access to 560+ datasets</li>
-          <li>All file formats (CSV, JSON, SPSS, Shapefile)</li>
-          <li>All 6 sectors unlocked</li>
-          <li>API access for direct integration</li>
-          <li>Priority access to new releases</li>
-          <li>Charts & visualisation bundles</li>
-          <li>Priority email & chat support</li>
-          <li class="no">Custom data collection</li>
+          <li>Everything in SGMPI (8 files)</li>
+          <li>Bank of Ghana — FX, CPI, GDP, Indicators</li>
+          <li>GSS StatsBank — 13 datasets (back to 1971)</li>
+          <li>World Bank Ghana — 6 annual datasets</li>
+          <li>31 clean CSVs in a single zip archive</li>
+          <li>Consistent headers &amp; date formats</li>
+          <li>Updated monthly — re-download free</li>
         </ul>
-        <a href="#contact" class="btn btn-teal price-cta">Get Pro access</a>
+        <a href="https://datalyze.gumroad.com/l/fjxiy" target="_blank" rel="noopener" class="btn btn-teal price-cta">Buy on Gumroad →</a>
       </div>
+
+      <!-- ENTERPRISE -->
       <div class="price-card rev d2">
-        <div class="price-tier">Enterprise</div>
+        <div class="price-tier">Enterprise / Custom</div>
         <div class="price-amount" style="font-size:2.2rem;">Custom</div>
-        <div class="price-period">volume pricing for institutions</div>
+        <div class="price-period">for institutions, governments &amp; research teams</div>
         <div class="price-divider"></div>
         <ul class="price-features">
-          <li>Everything in Pro</li>
-          <li>Custom data collection & surveys</li>
+          <li>Custom data collection &amp; surveys</li>
           <li>Dedicated data analyst support</li>
           <li>White-label data reports</li>
           <li>Multi-seat team access</li>
-          <li>SLA & data quality guarantees</li>
+          <li>SLA &amp; data quality guarantees</li>
           <li>Bespoke sector dashboards</li>
           <li>Research partnership options</li>
         </ul>
         <a href="#contact" class="btn btn-ghost price-cta">Contact us</a>
       </div>
+
     </div>
     <div style="text-align:center;margin-top:28px;">
-      <p style="font-family:var(--font-m);font-size:11px;color:var(--grey3);">All prices in Ghanaian Cedis (GH₵) · USD & EUR invoicing available for international clients · Academic discount available</p>
+      <p style="font-family:var(--font-m);font-size:11px;color:var(--grey3);">Prices in USD · Secure checkout via Gumroad · Academic discount available — contact us</p>
     </div>
   </div>
 </section>
@@ -1130,13 +1226,13 @@ footer{
     <div class="how-steps">
       <div class="how-step rev">
         <div class="how-step-num" data-n="01">01</div>
-        <h4>Choose a plan</h4>
-        <p>Select the subscription tier that fits your organisation's size and data needs. Start free with previews.</p>
+        <h4>Choose your bundle</h4>
+        <p>Pick the SGMPI Market Price bundle ($15) or the Ghana Data Full Bundle ($29) — all 31 datasets.</p>
       </div>
       <div class="how-step rev d1">
         <div class="how-step-num" data-n="02">02</div>
         <h4>Browse the catalog</h4>
-        <p>Search 560+ datasets by sector, keyword, year, region, or format. Preview sample rows before you commit.</p>
+        <p>Filter 31 datasets by source — BoG, GSS, World Bank, or our proprietary SGMPI market price data.</p>
       </div>
       <div class="how-step rev d2">
         <div class="how-step-num" data-n="03">03</div>
@@ -1208,9 +1304,9 @@ footer{
 <!-- CTA BAND -->
 <div class="cta-band">
   <h2>READY TO ACCESS GHANA'S DATA?</h2>
-  <p>Join researchers, analysts, and institutions already using SG Datalytics to power their decisions.</p>
+  <p>Buy once, download instantly. 31 clean datasets from BoG, GSS, World Bank, and SGMPI.</p>
   <div class="cta-band-actions">
-    <a href="#pricing" class="btn btn-white btn-lg">Start your subscription →</a>
+    <a href="https://datalyze.gumroad.com/l/fjxiy" target="_blank" rel="noopener" class="btn btn-white btn-lg">Buy on Gumroad →</a>
     <a href="#contact" class="btn btn-navy btn-lg">Talk to us first</a>
   </div>
 </div>
@@ -1270,9 +1366,9 @@ footer{
         <div class="fg">
           <label>Interested in</label>
           <select name="interest">
-            <option value="">Select a plan or query</option>
-            <option>Starter Plan</option>
-            <option>Pro Plan</option>
+            <option value="">Select a topic</option>
+            <option>SGMPI Market Price Bundle ($15)</option>
+            <option>Ghana Data Full Bundle ($29)</option>
             <option>Enterprise / Custom</option>
             <option>Custom data collection</option>
             <option>Research partnership</option>
@@ -1457,6 +1553,156 @@ function prefillContact(datasetName){
   });
 })();
 
+/* ─── Real Dataset Catalogue Loader ─── */
+(function(){
+  // Load PapaParse
+  const ps = document.createElement('script');
+  ps.src = 'https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js';
+  ps.onload = loadCatalogue;
+  document.head.appendChild(ps);
+
+  const SOURCE_META = {
+    sgmpi:     { label:'SG Market Price Index', icon:'📈', color:'var(--teal)',   freq:'Weekly',  gumroad:'https://datalyze.gumroad.com/l/mcrmty' },
+    gss:       { label:'GSS StatsBank',         icon:'📊', color:'var(--blue)',   freq:'Monthly', gumroad:'https://datalyze.gumroad.com/l/fjxiy' },
+    bog:       { label:'Bank of Ghana',         icon:'🏦', color:'var(--purple)', freq:'Monthly', gumroad:'https://datalyze.gumroad.com/l/fjxiy' },
+    worldbank: { label:'World Bank',            icon:'🌍', color:'var(--blue)',   freq:'Annual',  gumroad:'https://datalyze.gumroad.com/l/fjxiy' },
+  };
+
+  const FREQ_BADGE = {
+    Weekly:    { bg:'rgba(0,201,167,0.12)',   color:'#00c9a7', border:'rgba(0,201,167,0.25)' },
+    Monthly:   { bg:'rgba(59,130,246,0.12)',  color:'#3b82f6', border:'rgba(59,130,246,0.25)' },
+    Quarterly: { bg:'rgba(168,85,247,0.12)',  color:'#a855f7', border:'rgba(168,85,247,0.25)' },
+    Annual:    { bg:'rgba(245,158,11,0.12)',  color:'#f59e0b', border:'rgba(245,158,11,0.25)' },
+    Mixed:     { bg:'rgba(239,68,68,0.12)',   color:'#ef4444', border:'rgba(239,68,68,0.25)' },
+  };
+
+  let allDatasets = [];
+  let activeSrc = 'all';
+  let activeFreq = 'all';
+
+  function loadCatalogue() {
+    Papa.parse('data/catalogue.csv', {
+      download: true, header: true, skipEmptyLines: true,
+      complete: function(results) {
+        allDatasets = results.data;
+        renderCards(allDatasets);
+        document.getElementById('ds-loading').style.display = 'none';
+        updateCounts(allDatasets);
+      },
+      error: function() {
+        document.getElementById('ds-loading').textContent = 'Could not load catalogue.';
+      }
+    });
+  }
+
+  function updateCounts(data) {
+    const groups = {};
+    data.forEach(d => {
+      const src = d.category;
+      groups[src] = (groups[src]||0) + 1;
+    });
+    Object.entries(groups).forEach(([src, count]) => {
+      const el = document.getElementById('cnt-'+src);
+      if(el) el.textContent = count;
+    });
+    document.getElementById('cnt-all').textContent = data.length;
+  }
+
+  // Format "2026-04-20" → "Apr 2026"
+  function fmtUpdated(dateStr) {
+    if (!dateStr) return null;
+    const d = new Date(dateStr);
+    if (isNaN(d)) return null;
+    return d.toLocaleDateString('en-GB', { month:'short', year:'numeric' });
+  }
+
+  function renderCards(data) {
+    const grid = document.getElementById('ds-grid');
+    // Remove existing real cards
+    grid.querySelectorAll('.real-ds-card').forEach(c => c.remove());
+
+    const filtered = data.filter(d => {
+      const srcMatch = activeSrc === 'all' || d.category === activeSrc;
+      const freqMatch = activeFreq === 'all' || d.frequency === activeFreq;
+      return srcMatch && freqMatch;
+    });
+
+    filtered.forEach((ds, i) => {
+      const src = SOURCE_META[ds.category] || { label: ds.category, icon:'📁', color:'var(--teal)', gumroad:'https://datalyze.gumroad.com/l/fjxiy' };
+      const freq = FREQ_BADGE[ds.frequency] || FREQ_BADGE['Monthly'];
+      const dateRange = ds.date_start && ds.date_end ? `${ds.date_start} → ${ds.date_end}` : 'Various';
+      const updated   = fmtUpdated(ds.last_updated);
+
+      // Build preview slug from file path: clean/gss/gss_cpi_inflation_2026-04.csv → gss_cpi_inflation_preview.csv
+      const previewSlug = (ds.file || '').split('/').pop().replace('.csv','').replace(/_\d{4}-\d{2}$/, '') + '_preview.csv';
+      const dsJson = JSON.stringify(ds).replace(/'/g, '&#39;');
+
+      const card = document.createElement('div');
+      card.className = 'ds-card real-ds-card';
+      card.style.animationDelay = (i * 0.04) + 's';
+      card.innerHTML = `
+        <div class="ds-card-top">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+            <div style="font-size:12px;font-weight:600;color:${src.color};letter-spacing:0.04em;">${src.icon} ${src.label}</div>
+            <div style="display:flex;align-items:center;gap:6px;">
+              ${updated ? `<span class="ds-updated-badge">Updated ${updated}</span>` : ''}
+              <span style="font-size:10px;font-family:'IBM Plex Mono',monospace;padding:3px 8px;border-radius:4px;background:${freq.bg};color:${freq.color};border:1px solid ${freq.border};">${ds.frequency}</span>
+            </div>
+          </div>
+          <h3>${ds.dataset_name}</h3>
+          <p>${ds.description}</p>
+          <div class="ds-meta" style="margin-top:14px;">
+            <div class="ds-meta-item">📁 CSV</div>
+            <div class="ds-meta-item">📐 ${parseInt(ds.rows).toLocaleString()} rows</div>
+            <div class="ds-meta-item">🕓 ${dateRange}</div>
+          </div>
+        </div>
+        <div class="ds-card-bottom">
+          <div style="display:flex;align-items:center;gap:14px;">
+            <button class="cite-btn" onclick='window.openCiteModal(${dsJson})' title="Generate citation">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 17l-4-4 4-4"/><path d="M16 7l4 4-4 4"/><path d="M12 3v18" stroke-dasharray="3 2"/></svg>
+              Cite
+            </button>
+            <button class="prev-btn" onclick='window.openPreviewModal(${dsJson},"${previewSlug}","${src.gumroad}")' title="Preview 10 rows">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              Preview
+            </button>
+          </div>
+          <a class="ds-action" href="${src.gumroad}" target="_blank" rel="noopener">Buy on Gumroad →</a>
+        </div>`;
+      grid.insertBefore(card, grid.querySelector('#ds-loading').nextSibling || null);
+      grid.appendChild(card);
+    });
+
+    // Show empty state if nothing matches
+    if(filtered.length === 0) {
+      const empty = document.createElement('div');
+      empty.className = 'real-ds-card';
+      empty.style.cssText = 'grid-column:1/-1;text-align:center;padding:48px;color:rgba(15,30,55,0.35);font-family:IBM Plex Mono,monospace;font-size:13px;';
+      empty.textContent = 'No datasets match this filter.';
+      grid.appendChild(empty);
+    }
+  }
+
+  // Source tab filtering
+  window.filterSrc = function(el, src) {
+    document.querySelectorAll('[data-src]').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    activeSrc = src;
+    renderCards(allDatasets);
+  };
+
+  // Frequency pill filtering
+  document.querySelectorAll('.filter-pill[data-freq]').forEach(p => {
+    p.addEventListener('click', function() {
+      document.querySelectorAll('.filter-pill[data-freq]').forEach(x => x.classList.remove('on'));
+      this.classList.add('on');
+      activeFreq = this.dataset.freq;
+      renderCards(allDatasets);
+    });
+  });
+})();
+
 /* ─── Hamburger Menu ─── */
 (function(){
   const hamburger = document.getElementById('nav-hamburger');
@@ -1486,6 +1732,463 @@ function prefillContact(datasetName){
       hamburger.setAttribute('aria-expanded', 'false');
     }
   });
+})();
+</script>
+
+<!-- ── CITATION MODAL ── -->
+<div class="cite-overlay" id="citeOverlay" role="dialog" aria-modal="true" aria-label="Citation">
+  <div class="cite-modal" id="citeModal">
+    <div class="cite-modal-hd">
+      <div>
+        <div class="cite-modal-title" id="citeDatasetName">Dataset</div>
+        <div class="cite-modal-sub" id="citeDatasetMeta"></div>
+      </div>
+      <button class="cite-close" id="citeClose" aria-label="Close">×</button>
+    </div>
+    <div class="cite-tabs" id="citeTabs">
+      <button class="cite-tab on" data-fmt="apa">APA 7</button>
+      <button class="cite-tab" data-fmt="chicago">Chicago</button>
+      <button class="cite-tab" data-fmt="harvard">Harvard</button>
+      <button class="cite-tab" data-fmt="bibtex">BibTeX</button>
+      <button class="cite-tab" data-fmt="mla">MLA 9</button>
+    </div>
+    <div class="cite-body">
+      <div class="cite-block" id="citeText"></div>
+      <div class="cite-copy-row">
+        <button class="cite-copy-btn" id="citeCopyBtn">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          Copy citation
+        </button>
+        <span class="cite-copied" id="citeCopied">✓ Copied!</span>
+      </div>
+      <p class="cite-note">Cite the <strong>SG Datalytics</strong> platform as distributor. For original source data, also cite the primary source listed above. Access date reflects when the dataset was compiled.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ── Auth Modal (Login / Sign Up) ──────────────────────────── -->
+<div class="auth-overlay" id="authOverlay" role="dialog" aria-modal="true" aria-label="Sign in">
+  <div class="auth-modal" id="authModal">
+    <button class="auth-close" id="authClose" aria-label="Close">×</button>
+    <div class="auth-modal-hd">
+      <div class="auth-logo">SG Datalytics</div>
+      <div class="auth-modal-title" id="authTitle">Sign in to preview data</div>
+      <div class="auth-modal-sub" id="authSub">Free accounts can preview the first 10 rows of any dataset. No credit card needed.</div>
+      <div class="auth-tabs">
+        <button class="auth-tab on" data-auth="login" id="authTabLogin">Sign in</button>
+        <button class="auth-tab" data-auth="signup" id="authTabSignup">Create free account</button>
+      </div>
+    </div>
+    <div class="auth-body">
+      <form id="authForm" novalidate>
+        <div class="auth-field" id="authNameField" style="display:none;">
+          <label class="auth-label" for="authName">Full name</label>
+          <input class="auth-input" id="authName" type="text" placeholder="Your name" autocomplete="name"/>
+        </div>
+        <div class="auth-field">
+          <label class="auth-label" for="authEmail">Email address</label>
+          <input class="auth-input" id="authEmail" type="email" placeholder="you@example.com" autocomplete="email" required/>
+        </div>
+        <div class="auth-field">
+          <label class="auth-label" for="authPassword">Password</label>
+          <input class="auth-input" id="authPassword" type="password" placeholder="••••••••" autocomplete="current-password" required/>
+        </div>
+        <div class="auth-error" id="authError"></div>
+        <button type="submit" class="auth-submit" id="authSubmit">Sign in</button>
+        <div style="display:flex;align-items:center;gap:10px;margin:14px 0 0;">
+          <div style="flex:1;height:1px;background:var(--border);"></div>
+          <span style="font-family:var(--font-m);font-size:10.5px;color:var(--grey3);">or</span>
+          <div style="flex:1;height:1px;background:var(--border);"></div>
+        </div>
+        <button type="button" class="btn-google" id="authGoogle" style="margin-top:10px;">
+          <svg viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/><path fill="none" d="M0 0h48v48H0z"/></svg>
+          Continue with Google
+        </button>
+        <p class="auth-divider" id="authSwitch">Don't have an account? <button type="button" class="prev-signout" id="authSwitchBtn" style="font-size:11px;text-decoration:underline;color:var(--teal);">Create one free →</button></p>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ── Preview Modal ─────────────────────────────────────────── -->
+<div class="prev-overlay" id="prevOverlay" role="dialog" aria-modal="true" aria-label="Dataset preview">
+  <div class="prev-modal" id="prevModal">
+    <div class="prev-modal-hd">
+      <div>
+        <div class="prev-modal-title" id="prevDatasetName">Dataset</div>
+        <div class="prev-modal-sub" id="prevDatasetMeta"></div>
+        <div class="prev-badge">
+          <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          Free preview · first 10 rows
+        </div>
+      </div>
+      <button class="prev-close" id="prevClose" aria-label="Close">×</button>
+    </div>
+    <div class="prev-table-wrap" id="prevTableWrap">
+      <div class="prev-loading" id="prevLoading">Loading preview…</div>
+    </div>
+    <div class="prev-modal-ft">
+      <div class="prev-user-strip" id="prevUserStrip">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Logged in as <strong id="prevUserEmail">—</strong>
+        <button class="prev-signout" id="prevSignOut">Sign out</button>
+      </div>
+      <a class="prev-buy-link" id="prevBuyLink" href="#" target="_blank" rel="noopener">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        Buy full dataset →
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Citation Generator ────────────────────────────────────────
+(function(){
+  const overlay = document.getElementById('citeOverlay');
+  const closeBtn = document.getElementById('citeClose');
+  const tabs     = document.querySelectorAll('.cite-tab');
+  const citeText = document.getElementById('citeText');
+  const copyBtn  = document.getElementById('citeCopyBtn');
+  const copied   = document.getElementById('citeCopied');
+
+  let currentDs  = null;
+  let currentFmt = 'apa';
+
+  // Source organisation mapping
+  const ORG_MAP = {
+    gss:       { org: 'Ghana Statistical Service', abbr: 'GSS', place: 'Accra, Ghana', url: 'https://statsbank.statsghana.gov.gh' },
+    bog:       { org: 'Bank of Ghana', abbr: 'BoG', place: 'Accra, Ghana', url: 'https://www.bog.gov.gh' },
+    worldbank: { org: 'World Bank', abbr: 'World Bank', place: 'Washington, D.C.', url: 'https://data.worldbank.org' },
+    sgmpi:     { org: 'SG Datalytics', abbr: 'SG Datalytics', place: 'Accra, Ghana', url: 'https://sgdatalytics.org' },
+  };
+
+  function fmtYear(dateStr) {
+    if (!dateStr) return '2026';
+    const m = dateStr.match(/(\d{4})/);
+    return m ? m[1] : '2026';
+  }
+
+  function accessDate() {
+    const d = new Date();
+    return d.toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' });
+  }
+
+  function buildKey(name) {
+    // BibTeX key: authorYear_keyword
+    const words = name.replace(/[^a-zA-Z0-9 ]/g,'').split(' ').filter(Boolean);
+    return words.slice(0,2).map(w=>w.toLowerCase()).join('') + '2026';
+  }
+
+  function buildCitation(ds, fmt) {
+    const org  = ORG_MAP[ds.category] || ORG_MAP.sgmpi;
+    const year = fmtYear(ds.date_end || ds.last_updated);
+    const acc  = accessDate();
+    const url  = `https://sgdatalytics.org/marketplace.html`;
+    const distrib = 'SG Datalytics';
+    const name = ds.dataset_name;
+    const dateRange = ds.date_start && ds.date_end ? `${ds.date_start}–${ds.date_end}` : year;
+
+    switch(fmt) {
+
+      case 'apa':
+        return `${org.org}. (${year}). ${name} [Data set]. Distributed by ${distrib}. ${url}\n\nData coverage: ${dateRange}. Retrieved ${acc}.`;
+
+      case 'chicago':
+        return `${org.org}. "${name}." Data set. ${org.place}: ${org.org}, ${year}. Distributed by ${distrib}, ${url}. Accessed ${acc}.`;
+
+      case 'harvard':
+        return `${org.org} (${year}) ${name} [Data set]. ${org.place}: ${org.org}. Available via ${distrib}: ${url} (Accessed: ${acc}).`;
+
+      case 'mla':
+        return `${org.org}. "${name}." ${distrib}, ${url}, ${year}. Accessed ${acc}.`;
+
+      case 'bibtex':
+        return `@dataset{${buildKey(name)},
+  author    = {${org.org}},
+  title     = {${name}},
+  year      = {${year}},
+  publisher = {${distrib}},
+  url       = {${url}},
+  note      = {Data coverage: ${dateRange}. Accessed ${acc}.}
+}`;
+
+      default: return '';
+    }
+  }
+
+  function openModal(ds) {
+    currentDs = ds;
+    document.getElementById('citeDatasetName').textContent = ds.dataset_name;
+    const org = ORG_MAP[ds.category] || ORG_MAP.sgmpi;
+    document.getElementById('citeDatasetMeta').textContent = `${org.org} · ${ds.frequency || 'Various'} · ${ds.date_start||''}–${ds.date_end||''}`;
+    renderCite();
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function renderCite() {
+    if (!currentDs) return;
+    citeText.textContent = buildCitation(currentDs, currentFmt);
+  }
+
+  // Tab switching
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('on'));
+      tab.classList.add('on');
+      currentFmt = tab.dataset.fmt;
+      renderCite();
+      copied.classList.remove('show');
+    });
+  });
+
+  // Copy
+  copyBtn.addEventListener('click', () => {
+    navigator.clipboard.writeText(citeText.textContent).then(() => {
+      copied.classList.add('show');
+      setTimeout(() => copied.classList.remove('show'), 2200);
+    });
+  });
+
+  // Close
+  closeBtn.addEventListener('click', closeModal);
+  overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+  // Expose globally so dataset cards can trigger it
+  window.openCiteModal = openModal;
+})();
+</script>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+
+<script>
+// ── Firebase + Auth + Dataset Preview ────────────────────────
+(function(){
+  // ── Firebase init ──────────────────────────────────────────
+  const firebaseConfig = {
+    apiKey:            "AIzaSyAIwXzuhYOO4Ua64vzTcum9hJtGsiY4CLk",
+    authDomain:        "auth-b203a.firebaseapp.com",
+    projectId:         "auth-b203a",
+    storageBucket:     "auth-b203a.firebasestorage.app",
+    messagingSenderId: "1066148961538",
+    appId:             "1:1066148961538:web:a2f29d332b2c9200e4b61b"
+  };
+  // Avoid "already initialized" error if Firebase is loaded elsewhere
+  const fbApp = firebase.apps.length ? firebase.app() : firebase.initializeApp(firebaseConfig);
+  const auth  = firebase.auth();
+
+  let currentUser = null; // set by onAuthStateChanged
+
+  auth.onAuthStateChanged(function(user) {
+    currentUser = user;
+    // If a preview was pending (user just signed in), open it now
+    if (user && pendingDs) {
+      const ds = pendingDs, slug = pendingSlug, gumroad = pendingGumroad;
+      pendingDs = pendingSlug = pendingGumroad = null;
+      closeAuthModal();
+      _showPreview(ds, slug, gumroad);
+    }
+  });
+
+  // ── Auth Modal ─────────────────────────────────────────────
+  const authOverlay  = document.getElementById('authOverlay');
+  const authClose    = document.getElementById('authClose');
+  const authForm     = document.getElementById('authForm');
+  const authError    = document.getElementById('authError');
+  const authSubmit   = document.getElementById('authSubmit');
+  const authEmailEl  = document.getElementById('authEmail');
+  const authPassEl   = document.getElementById('authPassword');
+  const authNameEl   = document.getElementById('authName');
+  const authNameField= document.getElementById('authNameField');
+  const authTabLogin = document.getElementById('authTabLogin');
+  const authTabSignup= document.getElementById('authTabSignup');
+  const authSwitchBtn= document.getElementById('authSwitchBtn');
+  const authTitle    = document.getElementById('authTitle');
+  const authSub      = document.getElementById('authSub');
+  const authSwitch   = document.getElementById('authSwitch');
+  const authGoogle   = document.getElementById('authGoogle');
+
+  let authMode = 'login';
+  let pendingDs = null, pendingSlug = null, pendingGumroad = null;
+
+  function setAuthMode(mode) {
+    authMode = mode;
+    const su = mode === 'signup';
+    authTabLogin.classList.toggle('on', !su);
+    authTabSignup.classList.toggle('on', su);
+    authNameField.style.display = su ? '' : 'none';
+    authSubmit.textContent = su ? 'Create free account' : 'Sign in';
+    authTitle.textContent  = su ? 'Create a free account' : 'Sign in to preview data';
+    authSub.textContent    = su
+      ? 'Free accounts can preview the first 10 rows of any dataset. No credit card needed.'
+      : 'Welcome back. Sign in to access your free dataset previews.';
+    authSwitch.innerHTML   = su
+      ? `Already have an account? <button type="button" class="prev-signout" id="authSwitchBtn2" style="font-size:11px;text-decoration:underline;color:var(--teal);">Sign in →</button>`
+      : `Don't have an account? <button type="button" class="prev-signout" id="authSwitchBtn2" style="font-size:11px;text-decoration:underline;color:var(--teal);">Create one free →</button>`;
+    document.getElementById('authSwitchBtn2').addEventListener('click', () => setAuthMode(su ? 'login' : 'signup'));
+    showAuthError('');
+  }
+
+  function showAuthError(msg) {
+    authError.textContent = msg;
+    authError.classList.toggle('show', !!msg);
+  }
+
+  function openAuthModal(ds, slug, gumroad) {
+    pendingDs = ds; pendingSlug = slug; pendingGumroad = gumroad;
+    setAuthMode('login');
+    authEmailEl.value = ''; authPassEl.value = ''; authNameEl.value = '';
+    authSubmit.disabled = false;
+    authOverlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => authEmailEl.focus(), 120);
+  }
+
+  function closeAuthModal() {
+    authOverlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function firebaseErrorMsg(code) {
+    const map = {
+      'auth/user-not-found':        'No account found with this email.',
+      'auth/wrong-password':        'Incorrect password. Please try again.',
+      'auth/invalid-credential':    'Invalid email or password.',
+      'auth/email-already-in-use':  'This email is already registered. Try signing in.',
+      'auth/weak-password':         'Password must be at least 6 characters.',
+      'auth/invalid-email':         'Please enter a valid email address.',
+      'auth/too-many-requests':     'Too many attempts. Please try again later.',
+      'auth/popup-closed-by-user':  'Sign-in popup was closed. Please try again.',
+      'auth/popup-blocked':         'Popup blocked. Please allow popups and try again.',
+    };
+    return map[code] || 'Authentication failed. Please try again.';
+  }
+
+  authTabLogin.addEventListener('click',  () => setAuthMode('login'));
+  authTabSignup.addEventListener('click', () => setAuthMode('signup'));
+  authSwitchBtn.addEventListener('click', () => setAuthMode('signup'));
+  authClose.addEventListener('click', closeAuthModal);
+  authOverlay.addEventListener('click', e => { if (e.target === authOverlay) closeAuthModal(); });
+
+  // Email/password submit
+  authForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const email = authEmailEl.value.trim();
+    const pass  = authPassEl.value;
+    showAuthError('');
+    authSubmit.disabled = true;
+    authSubmit.textContent = authMode === 'signup' ? 'Creating account…' : 'Signing in…';
+
+    const promise = authMode === 'signup'
+      ? auth.createUserWithEmailAndPassword(email, pass)
+          .then(cred => cred.user.updateProfile({ displayName: authNameEl.value.trim() }))
+      : auth.signInWithEmailAndPassword(email, pass);
+
+    promise.catch(function(err) {
+      authSubmit.disabled = false;
+      authSubmit.textContent = authMode === 'signup' ? 'Create free account' : 'Sign in';
+      showAuthError(firebaseErrorMsg(err.code));
+    });
+    // On success: onAuthStateChanged fires → opens preview automatically
+  });
+
+  // Google Sign-In
+  authGoogle.addEventListener('click', function() {
+    showAuthError('');
+    const provider = new firebase.auth.GoogleAuthProvider();
+    auth.signInWithPopup(provider).catch(function(err) {
+      showAuthError(firebaseErrorMsg(err.code));
+    });
+    // On success: onAuthStateChanged fires → opens preview automatically
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && authOverlay.classList.contains('open')) closeAuthModal();
+  });
+
+  // ── Preview Modal ───────────────────────────────────────────
+  const prevOverlay = document.getElementById('prevOverlay');
+  const prevClose   = document.getElementById('prevClose');
+  const tableWrap   = document.getElementById('prevTableWrap');
+  const buyLink     = document.getElementById('prevBuyLink');
+  const userEmailEl = document.getElementById('prevUserEmail');
+  const signOutBtn  = document.getElementById('prevSignOut');
+
+  function openPreviewModal(ds, slug, gumroadUrl) {
+    if (!currentUser) {
+      openAuthModal(ds, slug, gumroadUrl);
+      return;
+    }
+    _showPreview(ds, slug, gumroadUrl);
+  }
+
+  function _showPreview(ds, slug, gumroadUrl) {
+    document.getElementById('prevDatasetName').textContent = ds.dataset_name;
+    document.getElementById('prevDatasetMeta').textContent =
+      `${ds.source || ds.category} · ${ds.frequency || 'Various'} · ${ds.date_start||''}–${ds.date_end||''}`;
+
+    userEmailEl.textContent = currentUser
+      ? (currentUser.displayName || currentUser.email)
+      : '';
+
+    tableWrap.innerHTML = '<div class="prev-loading">Loading preview…</div>';
+    buyLink.href = gumroadUrl || '#';
+
+    prevOverlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+
+    fetch('data/previews/' + slug)
+      .then(r => { if (!r.ok) throw new Error(); return r.text(); })
+      .then(csvText => renderTable(csvText))
+      .catch(() => {
+        tableWrap.innerHTML = '<div class="prev-loading">Preview not available for this dataset.</div>';
+      });
+  }
+
+  function renderTable(csvText) {
+    const result = Papa.parse(csvText.trim(), { header: false, skipEmptyLines: true });
+    const rows   = result.data;
+    if (!rows || rows.length < 2) {
+      tableWrap.innerHTML = '<div class="prev-loading">No preview data available.</div>';
+      return;
+    }
+    const headers  = rows[0];
+    const dataRows = rows.slice(1);
+    const thead = headers.map(h => `<th>${esc(h)}</th>`).join('');
+    const tbody = dataRows.map(r =>
+      '<tr>' + headers.map((_,i) => `<td title="${esc(r[i]||'')}">${esc(r[i]||'')}</td>`).join('') + '</tr>'
+    ).join('');
+    tableWrap.innerHTML = `<table class="prev-table"><thead><tr>${thead}</tr></thead><tbody>${tbody}</tbody></table>`;
+  }
+
+  function esc(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function closePrevModal() {
+    prevOverlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  signOutBtn.addEventListener('click', () => {
+    auth.signOut().then(closePrevModal);
+  });
+
+  prevClose.addEventListener('click', closePrevModal);
+  prevOverlay.addEventListener('click', e => { if (e.target === prevOverlay) closePrevModal(); });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && prevOverlay.classList.contains('open')) closePrevModal();
+  });
+
+  window.openPreviewModal = openPreviewModal;
 })();
 </script>
 </body>

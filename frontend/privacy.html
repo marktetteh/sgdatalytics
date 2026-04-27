@@ -24,13 +24,13 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --navy:#080f1e;--navy2:#0d1829;--navy3:#111f35;--navy4:#162440;
-  --panel:#0f1c30;--teal:#00c9a7;--teal-dim:rgba(0,201,167,0.12);
+  --navy:#f0f4f8;--navy2:#e8edf3;--navy3:#dde4ed;--navy4:#cfd8e3;
+  --panel:#ffffff;--teal:#00c9a7;--teal-dim:rgba(0,201,167,0.12);
   --teal-dim2:rgba(0,201,167,0.06);--amber:#f59e0b;
-  --white:#ffffff;--grey1:rgba(255,255,255,0.85);--grey2:rgba(255,255,255,0.55);
-  --grey3:rgba(255,255,255,0.28);--grey4:rgba(255,255,255,0.09);
-  --grey5:rgba(255,255,255,0.05);--border:rgba(255,255,255,0.07);
-  --border2:rgba(255,255,255,0.12);--border-teal:rgba(0,201,167,0.25);
+  --white:#1a2535;--grey1:rgba(15,30,55,0.88);--grey2:rgba(15,30,55,0.60);
+  --grey3:rgba(15,30,55,0.38);--grey4:rgba(15,30,55,0.08);
+  --grey5:rgba(15,30,55,0.04);--border:rgba(255,255,255,0.07);
+  --border2:rgba(255,255,255,0.12);--border-teal:rgba(0,149,122,0.30);
   --r:8px;--r-lg:14px;--r-xl:20px;--nav-h:64px;
   --font-d:'Bebas Neue',sans-serif;--font-b:'IBM Plex Sans',sans-serif;
   --font-m:'IBM Plex Mono',monospace;--ease:0.22s cubic-bezier(0.4,0,0.2,1);
@@ -40,7 +40,7 @@ body{font-family:var(--font-b);background:var(--navy);color:var(--grey1);font-si
 ::-webkit-scrollbar{width:5px;}
 ::-webkit-scrollbar-track{background:var(--navy);}
 ::-webkit-scrollbar-thumb{background:var(--navy4);border-radius:4px;}
-nav{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--nav-h);background:rgba(8,15,30,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 4vw;}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--nav-h);background:rgba(240,244,248,0.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 4vw;}
 .nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;margin-right:auto;}
 .nav-mark{width:32px;height:32px;border-radius:6px;background:var(--teal);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .nav-mark svg{width:16px;height:16px;}
@@ -108,7 +108,7 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:48px 5
   <a href="marketplace.html" class="nav-brand">
     <div class="nav-mark">
       <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="1" y="8" width="2.5" height="7" rx="1" fill="#080f1e"/>
+        <rect x="1" y="8" width="2.5" height="7" rx="1" fill="#1a2535"/>
         <rect x="5" y="5" width="2.5" height="10" rx="1" fill="rgba(8,15,30,0.65)"/>
         <rect x="9" y="2" width="2.5" height="13" rx="1" fill="rgba(8,15,30,0.4)"/>
         <circle cx="13.5" cy="2.5" r="2" fill="#f59e0b"/>

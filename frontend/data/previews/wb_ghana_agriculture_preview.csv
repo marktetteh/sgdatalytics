@@ -1,0 +1,11 @@
+year,country,country_code,source,last_updated,agriculture_forestry_fishing_of_gdp,agriculture_value_added_growth,arable_land_of_land_area,agricultural_land_of_land_area,cereal_yield_kg_per_hectare,prevalence_of_undernourishment,food_production_index,employment_in_agriculture_of_total
+2025,Ghana,GH,World Bank Open Data,2026-04-20,,,,,,,,34.5736
+2024,Ghana,GH,World Bank Open Data,2026-04-20,20.8867,2.8178,,,,,,35.1865
+2023,Ghana,GH,World Bank Open Data,2026-04-20,20.9431,5.8686,20.6999,55.393,2687.6,6.3,,36.0072
+2022,Ghana,GH,World Bank Open Data,2026-04-20,19.5136,4.1605,20.6999,55.393,2433.8,5.9,135.5,36.3202
+2021,Ghana,GH,World Bank Open Data,2026-04-20,19.6575,8.4568,20.6999,55.393,2360.5,5.6,130.54,35.969
+2020,Ghana,GH,World Bank Open Data,2026-04-20,18.8538,7.2837,20.7001,55.3938,2410.8,5.7,122.4,37.416
+2019,Ghana,GH,World Bank Open Data,2026-04-20,17.3232,4.6551,20.4878,54.8491,2346.2,6.6,119.42,37.658
+2018,Ghana,GH,World Bank Open Data,2026-04-20,18.1366,4.8757,20.2751,53.694,2172.6,7.5,113.03,39.8966
+2017,Ghana,GH,World Bank Open Data,2026-04-20,19.5617,6.2138,20.063,53.107,1930.7,8.8,107.89,42.0184
+2016,Ghana,GH,World Bank Open Data,2026-04-20,20.8443,2.733,19.8509,54.3111,1842.4,9.5,101.19,42.8608

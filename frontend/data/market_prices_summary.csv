@@ -1,0 +1,17 @@
+category,platform,median_price_ghs,avg_price_ghs,min_price_ghs,max_price_ghs,listing_count
+Mobile Phones & Tablets,Platform A,700.0,1269.09,20.0,4712.0,330
+Mobile Phones & Tablets,Platform B,1600.0,2246.29,45.0,6800.0,252
+Vehicles,Platform A,1150.0,2539.54,40.0,11000.0,338
+Vehicles,Platform B,1600.0,9208.05,30.0,55000.0,248
+Electronics,Platform A,250.0,667.69,10.0,2850.0,228
+Electronics,Platform B,1800.0,2261.27,50.0,6834.0,178
+"Home, Furniture & Appliances",Platform A,590.0,1159.25,13.0,3565.0,219
+"Home, Furniture & Appliances",Platform B,1250.0,1537.36,5.0,4679.0,178
+"Food, Agriculture & Farming",Platform A,250.0,1178.02,1.0,4725.0,323
+"Food, Agriculture & Farming",Platform B,200.0,611.18,8.0,3400.0,262
+Property & Real Estate,Platform A,25000.0,58572.36,200.0,250000.0,282
+Property & Real Estate,Platform B,1125129.5,2113884.99,600.0,8501249.85,253
+Fashion,Platform A,230.0,379.1,10.0,1200.0,169
+Fashion,Platform B,280.0,403.7,20.0,976.95,138
+Commercial Equipment & Tools,Platform A,350.0,1903.16,7.0,11875.0,175
+Commercial Equipment & Tools,Platform B,250.0,1200.9,2.0,4689.0,142

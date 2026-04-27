@@ -1,0 +1,11 @@
+year,country,country_code,source,last_updated,access_to_electricity_of_population,access_to_electricity_rural_of_rural_population,access_to_electricity_urban_of_urban_population,energy_use_kg_of_oil_equivalent_per_capita,internet_users_of_population,mobile_cellular_subscriptions_per_100_people,roads_paved_of_total_roads,renewable_energy_consumption_of_total
+2024,Ghana,GH,World Bank Open Data,2026-04-20,,,,,72.1757,113.648,,
+2023,Ghana,GH,World Bank Open Data,2026-04-20,89.5,77.8,97.5,369.3313,70.6743,98.8059,,
+2022,Ghana,GH,World Bank Open Data,2026-04-20,85.1,71.6,95.0,361.5629,69.9133,120.8034,,
+2021,Ghana,GH,World Bank Open Data,2026-04-20,86.3,74.0,95.2,382.1919,68.6,124.4026,,39.0
+2020,Ghana,GH,World Bank Open Data,2026-04-20,85.4,73.1,94.6,392.3731,62.5176,126.8874,,40.0
+2019,Ghana,GH,World Bank Open Data,2026-04-20,83.5,70.0,93.8,380.4212,22.0732,130.7052,,42.6
+2018,Ghana,GH,World Bank Open Data,2026-04-20,80.4,68.3,89.9,378.6575,43.0,133.61,,42.1
+2017,Ghana,GH,World Bank Open Data,2026-04-20,79.0,65.3,90.0,351.114,37.8842,122.4718,,45.3
+2016,Ghana,GH,World Bank Open Data,2026-04-20,79.3,66.6,89.8,327.9305,28.0,130.4814,,45.2
+2015,Ghana,GH,World Bank Open Data,2026-04-20,74.0,57.0,88.4,325.604,23.0,121.9972,,44.0

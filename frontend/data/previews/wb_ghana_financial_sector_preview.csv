@@ -1,0 +1,11 @@
+year,country,country_code,source,last_updated,lending_interest_rate,deposit_interest_rate,domestic_credit_to_private_sector_of_gdp,domestic_credit_to_private_sector_by_banks_of_gdp,atms_per_100_000_adults,commercial_bank_branches_per_100_000_adults,account_ownership_at_financial_institution,bank_capital_to_assets_ratio,bank_nonperforming_loans_of_total_loans
+2024,Ghana,GH,World Bank Open Data,2026-04-20,,,,8.3328,,,81.243,,
+2023,Ghana,GH,World Bank Open Data,2026-04-20,,11.4167,,8.6512,10.5722,4.4378,,5.227,
+2022,Ghana,GH,World Bank Open Data,2026-04-20,,12.0521,,11.2707,10.6865,5.7459,,7.7381,
+2021,Ghana,GH,World Bank Open Data,2026-04-20,,11.5,,12.0248,11.0576,11.1693,68.2304,9.0121,
+2020,Ghana,GH,World Bank Open Data,2026-04-20,,11.5,,12.0865,11.1368,5.9742,,9.7606,
+2019,Ghana,GH,World Bank Open Data,2026-04-20,,11.5,,13.0414,10.843,8.0799,,10.6645,
+2018,Ghana,GH,World Bank Open Data,2026-04-20,,12.0833,,12.7801,11.2029,8.3118,,12.2867,
+2017,Ghana,GH,World Bank Open Data,2026-04-20,,14.0625,,15.1357,10.9837,8.1894,57.7175,8.9073,
+2016,Ghana,GH,World Bank Open Data,2026-04-20,,13.0417,,16.5318,10.6387,6.8037,,9.1802,
+2015,Ghana,GH,World Bank Open Data,2026-04-20,,13.3392,,17.1193,9.7439,6.8094,,10.5038,
