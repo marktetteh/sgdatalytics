@@ -447,6 +447,11 @@
     scrollToBottom();
   }
 
+  function setSendDisabled(val) {
+    const btn = document.getElementById("sendBtn");
+    if (btn) btn.disabled = val;
+  }
+
   // ── UI helpers ────────────────────────────────────────────────────────────────
   function renderMarkdown(text) {
     return escapeHtml(text)
