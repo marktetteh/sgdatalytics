@@ -452,6 +452,19 @@
     if (btn) btn.disabled = val;
   }
 
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function scrollToBottom() {
+    const container = document.getElementById("chatMessages");
+    if (container) container.scrollTop = container.scrollHeight;
+  }
+
   // ── UI helpers ────────────────────────────────────────────────────────────────
   function renderMarkdown(text) {
     return escapeHtml(text)
