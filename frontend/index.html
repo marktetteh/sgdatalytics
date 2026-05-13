@@ -350,8 +350,124 @@ footer{border-top:1px solid var(--border);padding:28px 4vw;text-align:center;fon
 footer a{color:var(--teal);text-decoration:none;}
 footer a:hover{text-decoration:underline;}
 
+/* ── LIVE FEED SECTION ── */
+.live-feed-section{
+  background:var(--navy);
+  border-top:1px solid var(--border);
+  padding:64px 5vw;
+}
+.live-feed-inner{max-width:1160px;margin:0 auto;}
+.live-feed-hd{
+  display:flex;align-items:flex-end;justify-content:space-between;
+  margin-bottom:32px;flex-wrap:wrap;gap:16px;
+}
+.live-feed-counter{
+  display:flex;align-items:center;gap:10px;
+  font-family:var(--font-m);font-size:11px;color:var(--grey3);
+}
+.live-feed-counter-num{
+  font-family:var(--font-d);font-size:1.6rem;
+  color:var(--teal);letter-spacing:0.06em;line-height:1;
+}
+.live-pulse{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--teal);
+  animation:pulse-ring 1.8s infinite;
+  flex-shrink:0;
+}
+@keyframes pulse-ring{
+  0%{box-shadow:0 0 0 0 rgba(0,149,122,0.5);}
+  70%{box-shadow:0 0 0 8px rgba(0,149,122,0);}
+  100%{box-shadow:0 0 0 0 rgba(0,149,122,0);}
+}
+.feed-sector-tabs{
+  display:flex;gap:6px;flex-wrap:wrap;margin-bottom:28px;
+}
+.feed-tab{
+  font-family:var(--font-m);font-size:11px;
+  padding:5px 14px;border-radius:100px;cursor:pointer;
+  border:1px solid var(--border2);color:var(--grey2);
+  background:transparent;transition:all var(--ease);
+}
+.feed-tab:hover,.feed-tab.on{
+  background:var(--teal-dim);border-color:var(--border-teal);color:var(--teal);
+}
+.feed-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:16px;
+}
+.feed-card{
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:var(--r-lg);padding:18px 16px;
+  display:flex;flex-direction:column;gap:10px;
+  transition:border-color var(--ease),transform var(--ease);
+  animation:fadeSlideIn 0.4s ease both;
+}
+.feed-card:hover{border-color:var(--border-teal);transform:translateY(-2px);}
+@keyframes fadeSlideIn{
+  from{opacity:0;transform:translateY(12px);}
+  to{opacity:1;transform:translateY(0);}
+}
+.feed-card-top{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.feed-category{
+  font-family:var(--font-m);font-size:10px;font-weight:600;
+  color:var(--teal);letter-spacing:0.06em;text-transform:uppercase;
+}
+.feed-date{font-family:var(--font-m);font-size:10px;color:var(--grey3);}
+.feed-title{
+  font-size:13px;font-weight:600;color:var(--white);
+  line-height:1.35;display:-webkit-box;
+  -webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+}
+.feed-price{
+  font-family:var(--font-d);font-size:1.6rem;
+  color:var(--amber);letter-spacing:0.04em;line-height:1;
+}
+.feed-price.no-price{color:var(--grey3);font-size:1rem;font-family:var(--font-m);}
+.feed-meta{
+  display:flex;gap:10px;flex-wrap:wrap;
+  border-top:1px solid var(--border);padding-top:10px;
+}
+.feed-meta-item{
+  font-family:var(--font-m);font-size:10px;color:var(--grey3);
+  display:flex;align-items:center;gap:4px;
+}
+.feed-empty{
+  grid-column:1/-1;text-align:center;
+  padding:48px;color:var(--grey3);
+  font-family:var(--font-m);font-size:12px;
+}
+.feed-loading{
+  grid-column:1/-1;display:flex;align-items:center;justify-content:center;
+  gap:10px;padding:48px;
+  font-family:var(--font-m);font-size:12px;color:var(--grey3);
+}
+.feed-load-more{
+  text-align:center;margin-top:28px;
+}
+.feed-stats-bar{
+  display:grid;grid-template-columns:repeat(6,1fr);
+  gap:1px;background:var(--border);
+  border:1px solid var(--border);border-radius:var(--r-lg);
+  overflow:hidden;margin-bottom:32px;
+}
+.feed-stat{
+  background:var(--navy2);padding:18px 14px;text-align:center;
+}
+.feed-stat-num{
+  font-family:var(--font-d);font-size:1.6rem;
+  color:var(--teal);letter-spacing:0.06em;
+  line-height:1;margin-bottom:4px;
+}
+.feed-stat-label{
+  font-family:var(--font-m);font-size:9.5px;
+  color:var(--grey3);text-transform:uppercase;letter-spacing:0.1em;
+}
+
 /* ── RESPONSIVE ── */
 @media(max-width:900px){
+  .feed-grid{grid-template-columns:1fr 1fr;}
+  .feed-stats-bar{grid-template-columns:repeat(3,1fr);}
   .hero{grid-template-columns:1fr;gap:40px;}
   .hero-right{display:none;}
   .kpi-strip-inner{grid-template-columns:1fr 1fr;}
@@ -360,6 +476,8 @@ footer a:hover{text-decoration:underline;}
   .ds-grid{grid-template-columns:1fr 1fr;}
 }
 @media(max-width:600px){
+  .feed-grid{grid-template-columns:1fr;}
+  .feed-stats-bar{grid-template-columns:repeat(2,1fr);}
   .kpi-strip-inner{grid-template-columns:1fr 1fr;}
   .ds-grid{grid-template-columns:1fr;}
   .kpi-grid{grid-template-columns:1fr 1fr;}
@@ -647,6 +765,80 @@ footer a:hover{text-decoration:underline;}
     <div class="view-all-row">
       <a href="marketplace.html" class="btn btn-teal">Browse All Datasets →</a>
     </div>
+  </div>
+</div>
+
+<!-- ── LIVE SGMPI DATA FEED ───────────────────────────────────── -->
+<div class="live-feed-section">
+  <div class="live-feed-inner">
+
+    <!-- Section header -->
+    <div class="live-feed-hd">
+      <div>
+        <div class="section-label">
+          <div class="live-pulse"></div>
+          Live data feed — auto-updating
+        </div>
+        <div class="section-title">Latest Ghana Market Prices</div>
+        <div class="section-sub">Real listings collected from across Ghana — updated weekly by our automated pipeline.</div>
+      </div>
+      <div class="live-feed-counter">
+        <div>
+          <div class="live-feed-counter-num" id="feed-total">—</div>
+          <div style="font-family:var(--font-m);font-size:9.5px;color:var(--grey3);text-transform:uppercase;letter-spacing:0.08em;margin-top:2px;">Total records</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live stats bar -->
+    <div class="feed-stats-bar">
+      <div class="feed-stat">
+        <div class="feed-stat-num" id="fst-market">—</div>
+        <div class="feed-stat-label">Market listings</div>
+      </div>
+      <div class="feed-stat">
+        <div class="feed-stat-num" id="fst-property">—</div>
+        <div class="feed-stat-label">Property</div>
+      </div>
+      <div class="feed-stat">
+        <div class="feed-stat-num" id="fst-accommodation">—</div>
+        <div class="feed-stat-label">Accommodation</div>
+      </div>
+      <div class="feed-stat">
+        <div class="feed-stat-num" id="fst-economic">—</div>
+        <div class="feed-stat-label">Economic records</div>
+      </div>
+      <div class="feed-stat">
+        <div class="feed-stat-num" id="fst-commodities">—</div>
+        <div class="feed-stat-label">Commodities</div>
+      </div>
+      <div class="feed-stat">
+        <div class="feed-stat-num" id="fst-locations">—</div>
+        <div class="feed-stat-label">Locations</div>
+      </div>
+    </div>
+
+    <!-- Sector filter tabs -->
+    <div class="feed-sector-tabs">
+      <div class="feed-tab on" data-feed="market_prices">🛒 Market Prices</div>
+      <div class="feed-tab" data-feed="property">🏠 Property</div>
+      <div class="feed-tab" data-feed="accommodation">🏨 Accommodation</div>
+      <div class="feed-tab" data-feed="economic">📈 Economic</div>
+      <div class="feed-tab" data-feed="commodities">⛽ Commodities</div>
+    </div>
+
+    <!-- Feed grid -->
+    <div class="feed-grid" id="feed-grid">
+      <div class="feed-loading">
+        <div class="live-pulse"></div>
+        Loading latest data…
+      </div>
+    </div>
+
+    <div class="feed-load-more">
+      <a href="marketplace.html" class="btn btn-teal">Browse Full Marketplace →</a>
+    </div>
+
   </div>
 </div>
 
@@ -1539,6 +1731,162 @@ init();
       hamburger.setAttribute('aria-expanded', 'false');
     }
   });
+})();
+<!-- ── LIVE SGMPI FEED SCRIPT ─────────────────────────────────── -->
+<script>
+(function(){
+  const API = 'https://sgdatalytics-production.up.railway.app';
+
+  function fmt(n) {
+    if (!n && n !== 0) return '—';
+    return Number(n).toLocaleString();
+  }
+
+  function fmtPrice(p) {
+    if (!p) return null;
+    return 'GH₵ ' + Number(p).toLocaleString('en-GH', {minimumFractionDigits:0, maximumFractionDigits:0});
+  }
+
+  function fmtDate(d) {
+    if (!d) return '';
+    const dt = new Date(d);
+    return dt.toLocaleDateString('en-GB', {day:'numeric', month:'short', year:'numeric'});
+  }
+
+  // ── Load stats bar ────────────────────────────────────────────
+  fetch(API + '/api/stats')
+    .then(r => r.ok ? r.json() : Promise.reject())
+    .then(d => {
+      const s = d.sectors || {};
+      document.getElementById('feed-total').textContent         = fmt(d.total_records);
+      document.getElementById('fst-market').textContent        = fmt(s.market_prices?.records);
+      document.getElementById('fst-property').textContent      = fmt(s.property?.records);
+      document.getElementById('fst-accommodation').textContent = fmt((s.accommodation?.hotel_records||0)+(s.accommodation?.airbnb_records||0));
+      document.getElementById('fst-economic').textContent      = fmt(s.economic?.records);
+      document.getElementById('fst-commodities').textContent   = fmt((s.commodities?.commodity_records||0)+(s.commodities?.fuel_records||0));
+      document.getElementById('fst-locations').textContent     = fmt(s.market_prices?.locations);
+    })
+    .catch(() => {});
+
+  // ── Feed rendering ────────────────────────────────────────────
+  let activeFeed = 'market_prices';
+
+  function loadFeed(sector) {
+    const grid = document.getElementById('feed-grid');
+    grid.innerHTML = '<div class="feed-loading"><div class="live-pulse"></div>Loading latest data…</div>';
+
+    const endpoints = {
+      market_prices: API + '/api/market-prices?limit=9',
+      property:      API + '/api/property?limit=9',
+      accommodation: API + '/api/accommodation?type=hotel&limit=9',
+      economic:      API + '/api/economic?limit=9',
+      commodities:   API + '/api/commodities?limit=9',
+    };
+
+    fetch(endpoints[sector])
+      .then(r => r.ok ? r.json() : Promise.reject())
+      .then(data => {
+        if (!data || !data.length) {
+          grid.innerHTML = '<div class="feed-empty">No data available yet for this sector.</div>';
+          return;
+        }
+        grid.innerHTML = '';
+        data.forEach((item, i) => {
+          const card = document.createElement('div');
+          card.className = 'feed-card';
+          card.style.animationDelay = (i * 0.05) + 's';
+          card.innerHTML = renderCard(sector, item);
+          grid.appendChild(card);
+        });
+      })
+      .catch(() => {
+        grid.innerHTML = '<div class="feed-empty">Could not load data — please try again.</div>';
+      });
+  }
+
+  function renderCard(sector, item) {
+    if (sector === 'market_prices') {
+      return `
+        <div class="feed-card-top">
+          <div class="feed-category">${item.product_category || 'General'}</div>
+          <div class="feed-date">${fmtDate(item.collected_date)}</div>
+        </div>
+        <div class="feed-title">${item.title || '—'}</div>
+        <div class="feed-price ${item.price_ghs ? '' : 'no-price'}">${item.price_ghs ? fmtPrice(item.price_ghs) : 'Price on request'}</div>
+        <div class="feed-meta">
+          ${item.location ? `<div class="feed-meta-item">📍 ${item.location}</div>` : ''}
+          ${item.condition ? `<div class="feed-meta-item">🏷️ ${item.condition}</div>` : ''}
+          ${item.source ? `<div class="feed-meta-item">🔗 ${item.source}</div>` : ''}
+        </div>`;
+    }
+    if (sector === 'property') {
+      return `
+        <div class="feed-card-top">
+          <div class="feed-category">Property</div>
+          <div class="feed-date">${fmtDate(item.collected_date)}</div>
+        </div>
+        <div class="feed-title">${item.title || item.property_type || '—'}</div>
+        <div class="feed-price ${item.price_ghs ? '' : 'no-price'}">${item.price_ghs ? fmtPrice(item.price_ghs) : 'Price on request'}</div>
+        <div class="feed-meta">
+          ${item.location ? `<div class="feed-meta-item">📍 ${item.location}</div>` : ''}
+          ${item.bedrooms ? `<div class="feed-meta-item">🛏️ ${item.bedrooms} beds</div>` : ''}
+        </div>`;
+    }
+    if (sector === 'accommodation') {
+      return `
+        <div class="feed-card-top">
+          <div class="feed-category">Hotel</div>
+          <div class="feed-date">${fmtDate(item.collected_date)}</div>
+        </div>
+        <div class="feed-title">${item.name || item.title || '—'}</div>
+        <div class="feed-price ${item.price_ghs ? '' : 'no-price'}">${item.price_ghs ? fmtPrice(item.price_ghs) + '/night' : 'Price varies'}</div>
+        <div class="feed-meta">
+          ${item.location ? `<div class="feed-meta-item">📍 ${item.location}</div>` : ''}
+          ${item.star_rating ? `<div class="feed-meta-item">⭐ ${item.star_rating} stars</div>` : ''}
+        </div>`;
+    }
+    if (sector === 'economic') {
+      return `
+        <div class="feed-card-top">
+          <div class="feed-category">${item.sector || 'Economic'}</div>
+          <div class="feed-date">${fmtDate(item.collected_date)}</div>
+        </div>
+        <div class="feed-title">${item.indicator_name || '—'}</div>
+        <div class="feed-price">${item.value ? Number(item.value).toLocaleString() + (item.unit ? ' ' + item.unit : '') : '—'}</div>
+        <div class="feed-meta">
+          ${item.source ? `<div class="feed-meta-item">🔗 ${item.source}</div>` : ''}
+          ${item.year ? `<div class="feed-meta-item">📅 ${item.year}${item.month ? '/' + item.month : ''}</div>` : ''}
+        </div>`;
+    }
+    if (sector === 'commodities') {
+      return `
+        <div class="feed-card-top">
+          <div class="feed-category">Commodity</div>
+          <div class="feed-date">${fmtDate(item.collected_date)}</div>
+        </div>
+        <div class="feed-title">${item.commodity_name || item.name || '—'}</div>
+        <div class="feed-price ${item.price_ghs ? '' : 'no-price'}">${item.price_ghs ? fmtPrice(item.price_ghs) : (item.price_usd ? '$' + item.price_usd : '—')}</div>
+        <div class="feed-meta">
+          ${item.unit ? `<div class="feed-meta-item">📦 per ${item.unit}</div>` : ''}
+          ${item.source ? `<div class="feed-meta-item">🔗 ${item.source}</div>` : ''}
+        </div>`;
+    }
+    return '<div class="feed-title">—</div>';
+  }
+
+  // ── Sector tab switching ──────────────────────────────────────
+  document.querySelectorAll('.feed-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.feed-tab').forEach(t => t.classList.remove('on'));
+      tab.classList.add('on');
+      activeFeed = tab.dataset.feed;
+      loadFeed(activeFeed);
+    });
+  });
+
+  // ── Initial load ──────────────────────────────────────────────
+  loadFeed('market_prices');
+
 })();
 </script>
 </body>
