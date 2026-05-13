@@ -1124,10 +1124,10 @@ footer{
 <!-- KEY STATS -->
 <div class="stat-ticker">
   <div class="stat-ticker-inner">
-    <div class="stat-tile rev"><div class="stat-tile-num" id="st-datapoints">—</div><div class="stat-tile-label">Data points</div></div>
-    <div class="stat-tile rev d1"><div class="stat-tile-num" id="st-countries">—</div><div class="stat-tile-label">Countries</div></div>
+    <div class="stat-tile rev"><div class="stat-tile-num" id="st-datapoints">—</div><div class="stat-tile-label">Total records</div></div>
+    <div class="stat-tile rev d1"><div class="stat-tile-num" id="st-countries">—</div><div class="stat-tile-label">Locations</div></div>
     <div class="stat-tile rev d2"><div class="stat-tile-num" id="st-indicators">—</div><div class="stat-tile-label">Indicators</div></div>
-    <div class="stat-tile rev d3"><div class="stat-tile-num" id="st-sectors">—</div><div class="stat-tile-label">Sectors</div></div>
+    <div class="stat-tile rev d3"><div class="stat-tile-num" id="st-sectors">6</div><div class="stat-tile-label">Sectors</div></div>
     <div class="stat-tile rev d2"><div class="stat-tile-num" id="st-yearmin">—</div><div class="stat-tile-label">Data from</div></div>
     <div class="stat-tile rev d1"><div class="stat-tile-num">100%</div><div class="stat-tile-label">Ghana sourced</div></div>
   </div>
@@ -2182,68 +2182,93 @@ function prefillContact(datasetName){
 })();
 </script>
 <script>
-// ── Live API Data Loader ──────────────────────────────────────
+// ── Live SGMPI API Data Loader ────────────────────────────────
 (function(){
-  const SECTOR_ICONS = {
-    economy:'📈', education:'📚', health:'❤️',
-    sustainability:'🌱', agriculture:'🌾', business:'💼'
-  };
 
   function fmt(n) {
     if (!n && n !== 0) return '—';
     return Number(n).toLocaleString();
   }
 
-  // ── Load /api/stats → update stat ticker + hero panel ────────
+  // ── Load /api/stats → update all live elements ───────────────
   fetch(SG_API + '/api/stats')
     .then(r => r.ok ? r.json() : Promise.reject())
     .then(d => {
-      // Hero panel
-      document.getElementById('live-total-indicators').textContent = fmt(d.indicators_with_data);
-      document.getElementById('live-total-countries').textContent  = fmt(d.countries_with_data);
-      document.getElementById('live-datapoints').textContent       = fmt(d.total_points);
+      const s = d.sectors || {};
+
+      // ── Hero panel stats ──
+      const totalRecords = d.total_records || 0;
+      const marketCats   = s.market_prices ? s.market_prices.categories : 0;
+      const marketLocs   = s.market_prices ? s.market_prices.locations  : 0;
+
+      document.getElementById('live-total-indicators').textContent = fmt(marketCats) + ' cats';
+      document.getElementById('live-total-countries').textContent  = fmt(marketLocs) + ' areas';
+      document.getElementById('live-datapoints').textContent       = fmt(totalRecords);
       document.getElementById('live-sectors-count').textContent    = fmt(d.total_sectors);
 
-      // Stat ticker
-      document.getElementById('st-datapoints').textContent  = fmt(d.total_points);
-      document.getElementById('st-countries').textContent   = fmt(d.total_countries);
-      document.getElementById('st-indicators').textContent  = fmt(d.total_indicators);
+      // ── Stat ticker ──
+      document.getElementById('st-datapoints').textContent  = fmt(totalRecords);
+      document.getElementById('st-countries').textContent   = fmt(marketLocs);
+      document.getElementById('st-indicators').textContent  = fmt(s.economic ? s.economic.indicators : '—');
       document.getElementById('st-sectors').textContent     = fmt(d.total_sectors);
-      document.getElementById('st-yearmin').textContent     = d.year_min || '—';
+      document.getElementById('st-yearmin').textContent     = s.market_prices ? s.market_prices.date_min : '—';
 
-      // Update panel meta timestamp
+      // ── Panel meta timestamp ──
       const meta = document.querySelector('.data-panel-meta');
-      if (meta) meta.textContent = 'Live · ' + new Date().toLocaleDateString('en-GB',{month:'short',year:'numeric'});
+      if (meta && s.market_prices && s.market_prices.date_max) {
+        const d2 = new Date(s.market_prices.date_max);
+        meta.textContent = 'Updated ' + d2.toLocaleDateString('en-GB',{month:'short',year:'numeric'});
+      }
+
+      // ── Hero panel sector list ──
+      const container = document.getElementById('live-sectors');
+      if (container) {
+        const sectorRows = [
+          { icon:'🛒', name:'Market Prices',  key:'market_prices',  val: s.market_prices  ? fmt(s.market_prices.records)  + ' listings'  : '—' },
+          { icon:'🏠', name:'Property',       key:'property',       val: s.property       ? fmt(s.property.records)       + ' listings'  : '—' },
+          { icon:'🏨', name:'Accommodation',  key:'accommodation',  val: s.accommodation  ? fmt((s.accommodation.hotel_records||0)+(s.accommodation.airbnb_records||0)) + ' listings' : '—' },
+          { icon:'📈', name:'Economic',       key:'economic',       val: s.economic       ? fmt(s.economic.records)       + ' records'   : '—' },
+          { icon:'⛽', name:'Commodities',    key:'commodities',    val: s.commodities    ? fmt((s.commodities.commodity_records||0)+(s.commodities.fuel_records||0)) + ' records' : '—' },
+          { icon:'📊', name:'Financials',     key:'financials',     val: s.financials     ? fmt(s.financials.records)     + ' records'   : '—' },
+        ];
+        const maxVal = Math.max(
+          s.market_prices?.records||0, s.property?.records||0,
+          (s.accommodation?.hotel_records||0)+(s.accommodation?.airbnb_records||0),
+          s.economic?.records||0,
+          (s.commodities?.commodity_records||0)+(s.commodities?.fuel_records||0),
+          s.financials?.records||0
+        );
+        container.innerHTML = '';
+        sectorRows.forEach(row => {
+          const numVal = parseInt((row.val||'0').replace(/[^0-9]/g,'')) || 0;
+          const fill   = maxVal > 0 ? Math.round((numVal / maxVal) * 100) : 10;
+          const div    = document.createElement('div');
+          div.className = 'panel-cat';
+          div.innerHTML = `
+            <div class="panel-cat-icon">${row.icon}</div>
+            <div class="panel-cat-name">${row.name}</div>
+            <div class="panel-cat-bar"><div class="panel-cat-fill" style="width:${fill}%"></div></div>
+            <div class="panel-cat-count">${row.val}</div>`;
+          container.appendChild(div);
+        });
+      }
     })
     .catch(() => {
-      // API down — keep static fallback values visible, no crash
-      console.warn('SG API stats unavailable — showing fallback values');
+      console.warn('SG SGMPI API stats unavailable — showing fallback values');
     });
 
-  // ── Load /api/sectors → populate hero panel sector list ──────
-  fetch(SG_API + '/api/sectors')
+  // ── Load /api/market-prices/latest → update hero trust line ──
+  fetch(SG_API + '/api/market-prices/latest')
     .then(r => r.ok ? r.json() : Promise.reject())
-    .then(sectors => {
-      const container = document.getElementById('live-sectors');
-      if (!container || !sectors.length) return;
-      container.innerHTML = '';
-      const max = Math.max(...sectors.map(s => s.id || 1));
-      sectors.forEach(s => {
-        const icon  = SECTOR_ICONS[s.code] || s.icon || '📊';
-        const fill  = Math.round((s.id / max) * 100);
-        const div   = document.createElement('div');
-        div.className = 'panel-cat';
-        div.innerHTML = `
-          <div class="panel-cat-icon">${icon}</div>
-          <div class="panel-cat-name">${s.name}</div>
-          <div class="panel-cat-bar"><div class="panel-cat-fill" style="width:${fill}%"></div></div>
-          <div class="panel-cat-count">${s.description ? s.description.slice(0,32)+'…' : ''}</div>`;
-        container.appendChild(div);
-      });
+    .then(data => {
+      if (!data || !data.length) return;
+      // Update hero trust items with live category count
+      const trustItems = document.querySelectorAll('.hero-trust-item');
+      if (trustItems[0]) trustItems[0].textContent = data.length + ' product categories';
+      if (trustItems[1]) trustItems[1].textContent = '169 locations across Ghana';
     })
-    .catch(() => {
-      // Silently keep loading placeholder
-    });
+    .catch(() => {});
+
 })();
 </script>
 
