@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
@@ -547,44 +547,34 @@ footer a:hover{text-decoration:underline;}
         <div class="stat-panel-meta" id="panelDate">Apr 2026</div>
       </div>
       <div class="stat-panel-body">
-        <div class="kpi-grid" id="hero-kpi-grid">
-          <div class="kpi-box">
-            <div class="kpi-lbl">iPhone 17</div>
-            <div class="kpi-val a" id="heroInflation">—</div>
-            <div class="kpi-sub" id="heroInflSub">—</div>
+        <!-- Donut chart -->
+        <div style="position:relative;height:180px;margin-bottom:12px;">
+          <canvas id="heroDonut"></canvas>
+          <div id="heroDonutCenter" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none;">
+            <div style="font-family:var(--font-d);font-size:1.8rem;color:var(--white);letter-spacing:0.04em;line-height:1;" id="heroDonutTotal">—</div>
+            <div style="font-family:var(--font-m);font-size:9px;color:var(--grey3);text-transform:uppercase;letter-spacing:0.08em;margin-top:2px;">listings</div>
           </div>
-          <div class="kpi-box">
-            <div class="kpi-lbl">Samsung S25 Ultra</div>
-            <div class="kpi-val t" id="heroFX">—</div>
-            <div class="kpi-sub" id="heroFXSub">—</div>
-          </div>
-          <div class="kpi-box">
-            <div class="kpi-lbl">Laptop (median)</div>
-            <div class="kpi-val" id="heroPolicy">—</div>
-            <div class="kpi-sub" id="heroPolicySub">—</div>
-          </div>
-          <div class="kpi-box">
-            <div class="kpi-lbl">Rice (bag)</div>
-            <div class="kpi-val" id="heroGDP">—</div>
-            <div class="kpi-sub" id="heroGDPSub">—</div>
-          </div>
+        </div>
+        <!-- Legend -->
+        <div id="heroDonutLegend" style="display:flex;flex-direction:column;gap:5px;margin-bottom:12px;">
+          <div style="text-align:center;font-family:var(--font-m);font-size:10px;color:var(--grey3);">Loading categories…</div>
         </div>
         <div class="kpi-progress"><div class="kpi-progress-bar" id="kpiProgressBar"></div></div>
         <div class="ds-counts">
           <div class="ds-count-item">
-            <div class="ds-count-n">13</div>
-            <div class="ds-count-l">GSS</div>
+            <div class="ds-count-n" id="heroTotalRecords">—</div>
+            <div class="ds-count-l">Total</div>
           </div>
           <div class="ds-count-item">
-            <div class="ds-count-n">4</div>
-            <div class="ds-count-l">BoG</div>
+            <div class="ds-count-n" id="heroCatCount">—</div>
+            <div class="ds-count-l">Categories</div>
           </div>
           <div class="ds-count-item">
-            <div class="ds-count-n">6</div>
-            <div class="ds-count-l">W.Bank</div>
+            <div class="ds-count-n" id="heroLocCount">—</div>
+            <div class="ds-count-l">Locations</div>
           </div>
           <div class="ds-count-item">
-            <div class="ds-count-n">8</div>
+            <div class="ds-count-n">Live</div>
             <div class="ds-count-l">SGMPI</div>
           </div>
         </div>
@@ -1732,8 +1722,7 @@ init();
     }
   });
 })();
-</script>
-<!-- LIVE SGMPI FEED SCRIPT -->
+<!-- ── LIVE SGMPI FEED SCRIPT ─────────────────────────────────── -->
 <script>
 (function(){
   const API = 'https://sgdatalytics-production.up.railway.app';
@@ -1754,8 +1743,88 @@ init();
     return dt.toLocaleDateString('en-GB', {day:'numeric', month:'short', year:'numeric'});
   }
 
-  // ── Load stats bar ────────────────────────────────────────────
+  // ── Hero donut chart ─────────────────────────────────────────
+  const DONUT_COLORS = [
+    '#00957a','#c77c00','#2563eb','#7c3aed',
+    '#dc2626','#059669','#0891b2','#d97706',
+    '#9333ea','#be185d','#0f766e','#b45309','#1d4ed8'
+  ];
+
+  fetch(API + '/api/market-prices/categories')
+    .then(r => r.ok ? r.json() : Promise.reject())
+    .then(data => {
+      if (!data || !data.length) return;
+
+      // Top 8 categories + Others
+      const sorted = [...data].sort((a,b) => b.count - a.count);
+      const top    = sorted.slice(0, 8);
+      const rest   = sorted.slice(8);
+      const otherCount = rest.reduce((s,r) => s + parseInt(r.count), 0);
+      if (otherCount > 0) top.push({ product_category: 'Other', count: otherCount });
+
+      const labels  = top.map(r => r.product_category);
+      const counts  = top.map(r => parseInt(r.count));
+      const total   = counts.reduce((s,n) => s+n, 0);
+      const colors  = top.map((_,i) => DONUT_COLORS[i % DONUT_COLORS.length]);
+
+      // Update center and counts
+      document.getElementById('heroDonutTotal').textContent = total.toLocaleString();
+      document.getElementById('heroTotalRecords').textContent = total.toLocaleString();
+      document.getElementById('heroCatCount').textContent = data.length;
+
+      // Build legend
+      const legend = document.getElementById('heroDonutLegend');
+      legend.innerHTML = top.slice(0,6).map((r,i) => `
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
+          <div style="display:flex;align-items:center;gap:6px;min-width:0;">
+            <div style="width:8px;height:8px;border-radius:50%;background:${colors[i]};flex-shrink:0;"></div>
+            <div style="font-family:var(--font-m);font-size:9.5px;color:var(--grey2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${r.product_category}</div>
+          </div>
+          <div style="font-family:var(--font-m);font-size:9.5px;color:var(--grey3);flex-shrink:0;">${parseInt(r.count).toLocaleString()}</div>
+        </div>`).join('');
+
+      // Draw donut chart
+      const ctx = document.getElementById('heroDonut').getContext('2d');
+      new Chart(ctx, {
+        type: 'doughnut',
+        data: { labels, datasets:[{ data: counts, backgroundColor: colors, borderWidth: 2, borderColor: '#ffffff', hoverOffset: 6 }] },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: '68%',
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: 'rgba(240,244,248,0.97)',
+              borderColor: 'rgba(0,149,122,0.30)',
+              borderWidth: 1,
+              titleColor: '#1a2535',
+              bodyColor: '#1a2535',
+              padding: 10,
+              callbacks: {
+                label: ctx => ` ${ctx.label}: ${ctx.parsed.toLocaleString()} listings (${Math.round(ctx.parsed/total*100)}%)`
+              }
+            }
+          }
+        }
+      });
+    })
+    .catch(() => {});
+
+  // ── Update location count from stats ─────────────────────────
   fetch(API + '/api/stats')
+    .then(r => r.ok ? r.json() : Promise.reject())
+    .then(d => {
+      const locs = d.sectors?.market_prices?.locations;
+      if (locs) document.getElementById('heroLocCount').textContent = locs;
+      // Update panel date
+      const dateMax = d.sectors?.market_prices?.date_max;
+      if (dateMax) {
+        const dt = new Date(dateMax);
+        document.getElementById('panelDate').textContent = dt.toLocaleDateString('en-GB',{month:'short',year:'numeric'});
+      }
+    })
+    .catch(() => {});
     .then(r => r.ok ? r.json() : Promise.reject())
     .then(d => {
       const s = d.sectors || {};
@@ -1892,5 +1961,3 @@ init();
 </script>
 </body>
 </html>
-
-
