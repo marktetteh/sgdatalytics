@@ -1,9 +1,9 @@
 """
-SG Datalytics — REST API
-Railway auto-injects DATABASE_URL. Falls back to individual DB_* vars for local dev.
+SG Datalytics — SGMPI REST API v2
+Connects to 6 Neon databases serving real Ghana market price data.
 
 Run locally : python3 api.py
-Run on Railway: gunicorn -w 2 -b 0.0.0.0:$PORT api:app  (handled by Procfile)
+Run on Railway: gunicorn -w 2 -b 0.0.0.0:$PORT api:app
 """
 import os
 from flask import Flask, jsonify, request
@@ -17,25 +17,26 @@ except ImportError:
     pass
 
 app = Flask(__name__)
-CORS(app)  # allows Netlify frontend to call this API
+CORS(app)
 
-# ── DB CONNECTION ────────────────────────────────────────────
-# Railway sets DATABASE_URL automatically when you add a Postgres plugin
-DATABASE_URL = os.getenv('DATABASE_URL')
+# ── DB CONNECTIONS ───────────────────────────────────────────
+DB = {
+    'market_prices':  os.getenv('NEON_MARKET_PRICES'),
+    'accommodation':  os.getenv('NEON_ACCOMMODATION'),
+    'property':       os.getenv('NEON_PROPERTY'),
+    'economic':       os.getenv('NEON_ECONOMIC'),
+    'commodities':    os.getenv('NEON_COMMODITIES'),
+    'financials':     os.getenv('NEON_FINANCIALS'),
+}
 
-def get_db():
-    if DATABASE_URL:
-        return psycopg2.connect(DATABASE_URL, sslmode='require')
-    return psycopg2.connect(
-        host     = os.getenv('DB_HOST',     'localhost'),
-        port     = os.getenv('DB_PORT',     '5432'),
-        dbname   = os.getenv('DB_NAME',     'sgdatalytics'),
-        user     = os.getenv('DB_USER',     'sgdata'),
-        password = os.getenv('DB_PASSWORD', 'sgdata2025'),
-    )
+def get_conn(db_key):
+    url = DB.get(db_key)
+    if not url:
+        raise Exception(f'No connection string for {db_key}')
+    return psycopg2.connect(url, sslmode='require')
 
-def query(sql, params=None, one=False):
-    conn = get_db()
+def query(db_key, sql, params=None, one=False):
+    conn = get_conn(db_key)
     cur  = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     cur.execute(sql, params or [])
     result = cur.fetchone() if one else cur.fetchall()
@@ -46,151 +47,208 @@ def query(sql, params=None, one=False):
 @app.route('/')
 def root():
     return jsonify({
-        "name": "SG Datalytics API", "version": "1.0.0",
+        "name": "SG Datalytics SGMPI API",
+        "version": "2.0.0",
+        "description": "Real Ghana market price data across 6 sectors",
         "endpoints": [
             "GET /api/health",
             "GET /api/stats",
             "GET /api/sectors",
-            "GET /api/countries",
-            "GET /api/indicators?sector=economy",
-            "GET /api/data?indicator=NY.GDP.MKTP.CD&countries=GH,NG,KE&from=2015&to=2023",
-            "GET /api/latest?indicator=NY.GDP.MKTP.CD",
-            "GET /api/country/GH",
+            "GET /api/market-prices?category=&location=&limit=50",
+            "GET /api/market-prices/categories",
+            "GET /api/market-prices/latest",
+            "GET /api/property?location=&limit=50",
+            "GET /api/accommodation?type=hotel|airbnb&limit=50",
+            "GET /api/economic?indicator=&sector=&limit=50",
+            "GET /api/economic/indicators",
+            "GET /api/commodities?limit=50",
+            "GET /api/financials?limit=50",
         ]
     })
 
 # ── HEALTH ───────────────────────────────────────────────────
 @app.route('/api/health')
 def health():
-    try:
-        r = query("SELECT COUNT(*) AS n FROM data_points", one=True)
-        return jsonify({"status": "ok", "data_points": r['n']})
-    except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 500
+    results = {}
+    total   = 0
+    for key in DB:
+        try:
+            r = query(key, "SELECT COUNT(*) AS n FROM " + {
+                'market_prices': 'market_prices',
+                'accommodation': 'hotel_prices',
+                'property':      'property_prices',
+                'economic':      'economic_indicators',
+                'commodities':   'commodity_prices',
+                'financials':    'stock_prices',
+            }[key], one=True)
+            results[key] = int(r['n'])
+            total += int(r['n'])
+        except Exception as e:
+            results[key] = f'error: {str(e)[:60]}'
+    return jsonify({"status": "ok", "total_records": total, "databases": results})
 
 # ── STATS ────────────────────────────────────────────────────
 @app.route('/api/stats')
 def stats():
-    r = query("""SELECT
-        (SELECT COUNT(*)                     FROM data_points) AS total_points,
-        (SELECT COUNT(*)                     FROM countries)   AS total_countries,
-        (SELECT COUNT(*)                     FROM indicators)  AS total_indicators,
-        (SELECT COUNT(*)                     FROM sectors)     AS total_sectors,
-        (SELECT MIN(year)                    FROM data_points) AS year_min,
-        (SELECT MAX(year)                    FROM data_points) AS year_max,
-        (SELECT COUNT(DISTINCT country_id)   FROM data_points) AS countries_with_data,
-        (SELECT COUNT(DISTINCT indicator_id) FROM data_points) AS indicators_with_data
-    """, one=True)
-    return jsonify(dict(r))
+    stats = {}
+    try:
+        r = query('market_prices', "SELECT COUNT(*) AS n, COUNT(DISTINCT product_category) AS cats, COUNT(DISTINCT location) AS locs, MIN(collected_date) AS date_min, MAX(collected_date) AS date_max FROM market_prices", one=True)
+        stats['market_prices'] = {'records': int(r['n']), 'categories': int(r['cats']), 'locations': int(r['locs']), 'date_min': str(r['date_min']), 'date_max': str(r['date_max'])}
+    except: stats['market_prices'] = {'records': 0}
+    try:
+        r = query('property', "SELECT COUNT(*) AS n, COUNT(DISTINCT location) AS locs FROM property_prices", one=True)
+        stats['property'] = {'records': int(r['n']), 'locations': int(r['locs'])}
+    except: stats['property'] = {'records': 0}
+    try:
+        h = query('accommodation', "SELECT COUNT(*) AS n FROM hotel_prices", one=True)
+        a = query('accommodation', "SELECT COUNT(*) AS n FROM airbnb_prices", one=True)
+        stats['accommodation'] = {'hotel_records': int(h['n']), 'airbnb_records': int(a['n'])}
+    except: stats['accommodation'] = {'records': 0}
+    try:
+        r = query('economic', "SELECT COUNT(*) AS n, COUNT(DISTINCT indicator_name) AS inds, COUNT(DISTINCT sector) AS secs FROM economic_indicators", one=True)
+        stats['economic'] = {'records': int(r['n']), 'indicators': int(r['inds']), 'sectors': int(r['secs'])}
+    except: stats['economic'] = {'records': 0}
+    try:
+        r = query('commodities', "SELECT COUNT(*) AS n FROM commodity_prices", one=True)
+        f = query('commodities', "SELECT COUNT(*) AS n FROM fuel_prices", one=True)
+        stats['commodities'] = {'commodity_records': int(r['n']), 'fuel_records': int(f['n'])}
+    except: stats['commodities'] = {'records': 0}
+    try:
+        r = query('financials', "SELECT COUNT(*) AS n FROM stock_prices", one=True)
+        stats['financials'] = {'records': int(r['n'])}
+    except: stats['financials'] = {'records': 0}
+
+    total = sum(v.get('records', 0) + v.get('hotel_records', 0) + v.get('airbnb_records', 0) +
+                v.get('commodity_records', 0) + v.get('fuel_records', 0)
+                for v in stats.values())
+    return jsonify({"total_records": total, "total_sectors": 6, "sectors": stats})
 
 # ── SECTORS ──────────────────────────────────────────────────
 @app.route('/api/sectors')
 def sectors():
-    rows = query("SELECT id,code,name,icon,color,description FROM sectors ORDER BY id")
+    return jsonify([
+        {"id": 1, "code": "market_prices",  "name": "Market Prices",  "icon": "🛒", "color": "#00957a", "description": "Consumer goods & electronics"},
+        {"id": 2, "code": "property",       "name": "Property",       "icon": "🏠", "color": "#2563eb", "description": "Real estate listings"},
+        {"id": 3, "code": "accommodation",  "name": "Accommodation",  "icon": "🏨", "color": "#c77c00", "description": "Hotels & Airbnb"},
+        {"id": 4, "code": "economic",       "name": "Economic",       "icon": "📈", "color": "#7c3aed", "description": "Macro indicators & FX rates"},
+        {"id": 5, "code": "commodities",    "name": "Commodities",    "icon": "⛽", "color": "#dc2626", "description": "Fuel & commodity prices"},
+        {"id": 6, "code": "financials",     "name": "Financials",     "icon": "📊", "color": "#059669", "description": "GSE stocks & indices"},
+    ])
+
+# ── MARKET PRICES ────────────────────────────────────────────
+@app.route('/api/market-prices')
+def market_prices():
+    category = request.args.get('category')
+    location = request.args.get('location')
+    limit    = min(int(request.args.get('limit', 50)), 200)
+    where, params = [], []
+    if category: where.append("product_category ILIKE %s"); params.append(f'%{category}%')
+    if location: where.append("location ILIKE %s"); params.append(f'%{location}%')
+    sql = "SELECT id, collected_date, week_number, year, product_category, title, price_ghs, location, condition, source FROM market_prices"
+    if where: sql += " WHERE " + " AND ".join(where)
+    sql += " ORDER BY collected_date DESC LIMIT %s"
+    params.append(limit)
+    rows = query('market_prices', sql, params)
     return jsonify([dict(r) for r in rows])
 
-# ── COUNTRIES ────────────────────────────────────────────────
-@app.route('/api/countries')
-def countries():
-    rows = query("SELECT id,TRIM(code) AS code,iso3,name,region,flag,income_level FROM countries ORDER BY region,name")
+@app.route('/api/market-prices/categories')
+def market_categories():
+    rows = query('market_prices', "SELECT DISTINCT product_category, COUNT(*) AS count FROM market_prices GROUP BY product_category ORDER BY count DESC")
     return jsonify([dict(r) for r in rows])
 
-# ── INDICATORS ───────────────────────────────────────────────
-@app.route('/api/indicators')
-def indicators():
-    sector = request.args.get('sector')
-    base   = """SELECT i.id,i.wb_code,i.name,i.unit,i.fmt,i.source,
-                s.code AS sector_code,s.name AS sector_name,s.icon AS sector_icon
-                FROM indicators i JOIN sectors s ON i.sector_id=s.id"""
-    rows = query(base + (" WHERE s.code=%s ORDER BY i.name" if sector else " ORDER BY s.code,i.name"),
-                 [sector] if sector else None)
+@app.route('/api/market-prices/latest')
+def market_latest():
+    rows = query('market_prices', "SELECT product_category, ROUND(AVG(price_ghs),2) AS avg_price_ghs, COUNT(*) AS listings, MAX(collected_date) AS last_updated FROM market_prices GROUP BY product_category ORDER BY listings DESC")
     return jsonify([dict(r) for r in rows])
 
-# ── DATA (time-series) ───────────────────────────────────────
-@app.route('/api/data')
-def data():
-    ind_code = request.args.get('indicator', 'NY.GDP.MKTP.CD')
-    ctries   = request.args.get('countries', 'GH').upper().split(',')
-    yr_from  = int(request.args.get('from', 2010))
-    yr_to    = int(request.args.get('to',   2023))
-    ph       = ','.join(['%s'] * len(ctries))
-    rows     = query(f"""
-        SELECT TRIM(c.code) AS country_code, c.name AS country_name, c.flag, c.region,
-               i.wb_code AS indicator_code, i.name AS indicator_name, i.unit, i.fmt,
-               s.name AS sector, dp.year, dp.value
-        FROM data_points dp
-        JOIN countries  c ON dp.country_id   = c.id
-        JOIN indicators i ON dp.indicator_id = i.id
-        JOIN sectors    s ON i.sector_id     = s.id
-        WHERE i.wb_code=%s AND TRIM(c.code) IN ({ph}) AND dp.year BETWEEN %s AND %s
-        ORDER BY c.name, dp.year
-    """, [ind_code] + ctries + [yr_from, yr_to])
-    grouped, meta = {}, {}
-    for r in rows:
-        code = r['country_code']
-        if code not in grouped:
-            grouped[code] = []
-            meta[code]    = {'country_code': code, 'country_name': r['country_name'],
-                             'flag': r['flag'], 'region': r['region']}
-        grouped[code].append({'year': r['year'], 'value': float(r['value']) if r['value'] else None})
-    return jsonify({
-        'indicator': {'code': ind_code,
-                      'name': rows[0]['indicator_name'] if rows else ind_code,
-                      'unit': rows[0]['unit'] if rows else '',
-                      'fmt':  rows[0]['fmt']  if rows else ''},
-        'year_range': {'from': yr_from, 'to': yr_to},
-        'countries':  [{**meta[c], 'data': grouped[c]} for c in grouped],
-        'total_records': len(rows)
-    })
-
-# ── LATEST ───────────────────────────────────────────────────
-@app.route('/api/latest')
-def latest():
-    ind_code = request.args.get('indicator', 'NY.GDP.MKTP.CD')
-    rows = query("""
-        SELECT TRIM(c.code) AS country_code, c.name AS country_name,
-               c.flag, c.region, i.wb_code, i.name AS indicator_name,
-               i.unit, i.fmt, dp.year, dp.value
-        FROM data_points dp
-        JOIN countries  c ON dp.country_id   = c.id
-        JOIN indicators i ON dp.indicator_id = i.id
-        JOIN (SELECT country_id, indicator_id, MAX(year) AS max_year
-              FROM data_points GROUP BY country_id, indicator_id) latest
-          ON dp.country_id=latest.country_id AND dp.indicator_id=latest.indicator_id
-         AND dp.year=latest.max_year
-        WHERE i.wb_code=%s ORDER BY dp.value DESC NULLS LAST
-    """, [ind_code])
+# ── PROPERTY ─────────────────────────────────────────────────
+@app.route('/api/property')
+def property_prices():
+    location = request.args.get('location')
+    limit    = min(int(request.args.get('limit', 50)), 200)
+    where, params = [], []
+    if location: where.append("location ILIKE %s"); params.append(f'%{location}%')
+    sql = "SELECT * FROM property_prices"
+    if where: sql += " WHERE " + " AND ".join(where)
+    sql += " ORDER BY collected_date DESC LIMIT %s"
+    params.append(limit)
+    rows = query('property', sql, params)
     return jsonify([dict(r) for r in rows])
 
-# ── COUNTRY PROFILE ──────────────────────────────────────────
-@app.route('/api/country/<code>')
-def country_profile(code):
-    code    = code.upper()
-    country = query("SELECT TRIM(code) AS code,name,flag,region,income_level FROM countries WHERE TRIM(code)=%s", [code], one=True)
-    if not country:
-        return jsonify({'error': 'Country not found'}), 404
-    rows = query("""
-        SELECT i.wb_code, i.name AS indicator_name, i.unit, i.fmt,
-               s.name AS sector, s.icon, dp.year, dp.value
-        FROM data_points dp
-        JOIN indicators i ON dp.indicator_id=i.id
-        JOIN sectors    s ON i.sector_id=s.id
-        JOIN countries  c ON dp.country_id=c.id
-        WHERE TRIM(c.code)=%s ORDER BY s.name, i.name, dp.year
-    """, [code])
-    grouped = {}
-    for r in rows:
-        k = r['wb_code']
-        if k not in grouped:
-            grouped[k] = {'wb_code': k, 'name': r['indicator_name'], 'unit': r['unit'],
-                          'fmt': r['fmt'], 'sector': r['sector'], 'icon': r['icon'], 'data': []}
-        if r['value'] is not None:
-            grouped[k]['data'].append({'year': r['year'], 'value': float(r['value'])})
-    return jsonify({'country': dict(country), 'indicators': list(grouped.values())})
+# ── ACCOMMODATION ────────────────────────────────────────────
+@app.route('/api/accommodation')
+def accommodation():
+    acc_type = request.args.get('type', 'hotel')
+    limit    = min(int(request.args.get('limit', 50)), 200)
+    table    = 'airbnb_prices' if acc_type == 'airbnb' else 'hotel_prices'
+    rows     = query('accommodation', f"SELECT * FROM {table} ORDER BY collected_date DESC LIMIT %s", [limit])
+    return jsonify([dict(r) for r in rows])
+
+# ── ECONOMIC ─────────────────────────────────────────────────
+@app.route('/api/economic')
+def economic():
+    indicator = request.args.get('indicator')
+    sector    = request.args.get('sector')
+    limit     = min(int(request.args.get('limit', 50)), 200)
+    where, params = [], []
+    if indicator: where.append("indicator_name ILIKE %s"); params.append(f'%{indicator}%')
+    if sector:    where.append("sector ILIKE %s"); params.append(f'%{sector}%')
+    sql = "SELECT id, collected_date, year, month, indicator_code, indicator_name, sector, value, unit, source FROM economic_indicators"
+    if where: sql += " WHERE " + " AND ".join(where)
+    sql += " ORDER BY collected_date DESC LIMIT %s"
+    params.append(limit)
+    rows = query('economic', sql, params)
+    return jsonify([dict(r) for r in rows])
+
+@app.route('/api/economic/indicators')
+def economic_indicators():
+    rows = query('economic', "SELECT DISTINCT indicator_name, indicator_code, sector, unit, COUNT(*) AS records FROM economic_indicators GROUP BY indicator_name, indicator_code, sector, unit ORDER BY sector, indicator_name")
+    return jsonify([dict(r) for r in rows])
+
+@app.route('/api/economic/exchange-rates')
+def exchange_rates():
+    limit = min(int(request.args.get('limit', 50)), 200)
+    rows  = query('economic', "SELECT * FROM exchange_rates ORDER BY collected_date DESC LIMIT %s", [limit])
+    return jsonify([dict(r) for r in rows])
+
+# ── COMMODITIES ──────────────────────────────────────────────
+@app.route('/api/commodities')
+def commodities():
+    limit = min(int(request.args.get('limit', 50)), 200)
+    rows  = query('commodities', "SELECT * FROM commodity_prices ORDER BY collected_date DESC LIMIT %s", [limit])
+    return jsonify([dict(r) for r in rows])
+
+@app.route('/api/fuel')
+def fuel():
+    limit = min(int(request.args.get('limit', 50)), 200)
+    rows  = query('commodities', "SELECT * FROM fuel_prices ORDER BY collected_date DESC LIMIT %s", [limit])
+    return jsonify([dict(r) for r in rows])
+
+# ── FINANCIALS ───────────────────────────────────────────────
+@app.route('/api/financials/stocks')
+def stocks():
+    limit = min(int(request.args.get('limit', 50)), 200)
+    rows  = query('financials', "SELECT * FROM stock_prices ORDER BY collected_date DESC LIMIT %s", [limit])
+    return jsonify([dict(r) for r in rows])
+
+@app.route('/api/financials/indices')
+def indices():
+    limit = min(int(request.args.get('limit', 50)), 200)
+    rows  = query('financials', "SELECT * FROM gse_indices ORDER BY collected_date DESC LIMIT %s", [limit])
+    return jsonify([dict(r) for r in rows])
+
+# ── ERROR HANDLERS ───────────────────────────────────────────
+@app.errorhandler(404)
+def not_found(e):
+    return jsonify({"error": "Endpoint not found", "available": "/"}), 404
+
+@app.errorhandler(500)
+def server_error(e):
+    return jsonify({"error": "Internal server error", "message": str(e)}), 500
 
 # ── START ─────────────────────────────────────────────────────
 if __name__ == '__main__':
     port = int(os.getenv('PORT', os.getenv('FLASK_PORT', 5050)))
-    print(f"\n  SG Datalytics API → http://0.0.0.0:{port}")
-    print(f"  DB mode: {'DATABASE_URL' if DATABASE_URL else 'individual vars'}\n")
+    print(f"\n  SG Datalytics SGMPI API v2 → http://0.0.0.0:{port}")
+    print(f"  Connected databases: {[k for k,v in DB.items() if v]}\n")
     app.run(host='0.0.0.0', port=port, debug=os.getenv('FLASK_ENV') != 'production')
