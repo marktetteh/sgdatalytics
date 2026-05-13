@@ -1,0 +1,13 @@
+column_name,display_name,description,data_type,unit,example_value,null_count,null_pct
+category,Category,Product category on Tonaton Ghana,object,,Vehicles,0,0.0%
+title,Title,Listing title as entered by seller,object,,Honda CR-V 2024 Blue,0,0.0%
+price_ghs,Price (GHS),Asking price in Ghana Cedis,float64,GHS,460000.0,0,0.0%
+condition,Condition,"Item condition: Brand New, Used, Foreign Used, Refurbished",object,,Foreign Used,1,0.4%
+tags,Tags,"All attribute tags from listing (condition, type, brand etc.)",object,,"Foreign Used, Automatic",1,0.4%
+region,Region,Ghana region (e.g. Greater Accra),object,,Greater Accra,0,0.0%
+area,Area,Specific area within the region,object,,Madina,0,0.0%
+location,Location,Full location string (region + area),object,,"Greater Accra, Madina",0,0.0%
+price_outlier_flag,Outlier Flag,True if price is a statistical outlier (IQR × 3) for its category,bool,,True,0,0.0%
+url,URL,Direct link to listing on tonaton.com,object,,https://tonaton.com/a-MfYFNdCgWgXG83k61SRLDHF9nS0jJwU8-honda-cr-v-2024-blue.html,0,0.0%
+source,Source,Data source,object,,Tonaton Ghana (tonaton.com),0,0.0%
+scraped_date,Scraped Date,Date this record was collected,object,YYYY-MM-DD,2026-04-20,0,0.0%

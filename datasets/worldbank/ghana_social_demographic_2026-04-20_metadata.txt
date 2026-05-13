@@ -1,0 +1,20 @@
+Dataset: Ghana Social & Demographic Indicators
+Description: Ghana population, employment, poverty, health, and education statistics. Source: World Bank Open Data.
+Source: World Bank Open Data API
+Country: Ghana (GH)
+Scraped: 2026-04-20
+Years covered: 1991 – 2025
+Rows: 30
+Columns: 15
+
+Indicators:
+  SP.POP.TOTL: Total Population
+  SP.POP.GROW: Population Growth Rate (%)
+  SP.URB.TOTL.IN.ZS: Urban Population (% of Total)
+  SL.UEM.TOTL.ZS: Unemployment Rate (% of Total Labor Force)
+  SL.UEM.1524.ZS: Youth Unemployment Rate (% ages 15–24)
+  SI.POV.NAHC: Poverty Headcount Ratio at National Lines (%)
+  SP.DYN.LE00.IN: Life Expectancy at Birth (years)
+  SH.DYN.MORT: Under-5 Mortality Rate (per 1,000 live births)
+  SE.ADT.LITR.ZS: Adult Literacy Rate (%)
+  SE.PRM.ENRR: Primary School Enrollment Rate (gross %)

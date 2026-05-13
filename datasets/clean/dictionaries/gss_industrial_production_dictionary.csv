@@ -1,0 +1,106 @@
+column_name,display_name,description,data_type,unit,example_value,null_count,null_pct
+source,Source,Data source organisation,object,,Ghana Statistical Service (GSS StatsBank),0,0.0%
+last_updated,Last Updated,Date data was last refreshed,object,YYYY-MM-DD,2026-04-20,0,0.0%
+period,Period,"Time period (YYYY-MM for monthly, YYYY-QN for quarterly)",object,,2025-Q3,0,0.0%
+index_of_industrial_production_all_industries,Index Of Industrial Production All Industries,,float64,,102.6,0,0.0%
+index_of_industrial_production_mining_and_quarrying,Index Of Industrial Production Mining And Quarrying,,float64,,98.0,0,0.0%
+index_of_industrial_production_extraction_of_crude_petroleum_and_natural_gas,Index Of Industrial Production Extraction Of Crude Petroleum And Natural Gas,,float64,,79.1,0,0.0%
+index_of_industrial_production_mining_of_metal_ores,Index Of Industrial Production Mining Of Metal Ores,,float64,,115.6,0,0.0%
+index_of_industrial_production_other_mining_and_quarrying,Index Of Industrial Production Other Mining And Quarrying,,float64,,131.1,0,0.0%
+index_of_industrial_production_manfacturing,Index Of Industrial Production Manfacturing,,float64,,111.1,0,0.0%
+index_of_industrial_production_manufacture_of_food_products,Index Of Industrial Production Manufacture Of Food Products,,float64,,98.9,0,0.0%
+index_of_industrial_production_manufacture_of_beverages,Index Of Industrial Production Manufacture Of Beverages,,float64,,114.3,0,0.0%
+index_of_industrial_production_manufacture_of_textiles,Index Of Industrial Production Manufacture Of Textiles,,float64,,104.7,0,0.0%
+index_of_industrial_production_manufacture_of_wearing_apparel,Index Of Industrial Production Manufacture Of Wearing Apparel,,float64,,113.6,0,0.0%
+index_of_industrial_production_manufacture_of_leather_and_related_products,Index Of Industrial Production Manufacture Of Leather And Related Products,,float64,,86.0,0,0.0%
+index_of_industrial_production_manufacture_of_wood_and_of_products_of_wood_and_cork,Index Of Industrial Production Manufacture Of Wood And Of Products Of Wood And Cork,,float64,,122.8,0,0.0%
+index_of_industrial_production_manufacture_of_paper_and_paper_products,Index Of Industrial Production Manufacture Of Paper And Paper Products,,float64,,128.1,0,0.0%
+index_of_industrial_production_printing_and_reproduction_of_recorded_media,Index Of Industrial Production Printing And Reproduction Of Recorded Media,,float64,,151.4,0,0.0%
+index_of_industrial_production_manufacture_of_coke_and_refined_petroleum_products,Index Of Industrial Production Manufacture Of Coke And Refined Petroleum Products,,float64,,148.7,0,0.0%
+index_of_industrial_production_manufacture_of_chemicals_and_chemical_products,Index Of Industrial Production Manufacture Of Chemicals And Chemical Products,,float64,,98.5,0,0.0%
+index_of_industrial_production_manufacture_of_pharmaceuticals_medicinal_chemical_and_botanical_products,Index Of Industrial Production Manufacture Of Pharmaceuticals Medicinal Chemical And Botanical Products,,float64,,118.0,0,0.0%
+index_of_industrial_production_manufacture_of_rubber_and_plastics_products,Index Of Industrial Production Manufacture Of Rubber And Plastics Products,,float64,,150.2,0,0.0%
+index_of_industrial_production_manufacture_of_other_non_metallic_mineral_products,Index Of Industrial Production Manufacture Of Other Non Metallic Mineral Products,,float64,,136.7,0,0.0%
+index_of_industrial_production_manufacture_of_basic_metals,Index Of Industrial Production Manufacture Of Basic Metals,,float64,,123.7,0,0.0%
+index_of_industrial_production_manufacture_of_fabricated_metal_products_except_machinery_and_equipment,Index Of Industrial Production Manufacture Of Fabricated Metal Products Except Machinery And Equipment,,float64,,109.8,0,0.0%
+index_of_industrial_production_manufacture_of_computer_electronic_and_optical_products,Index Of Industrial Production Manufacture Of Computer Electronic And Optical Products,,float64,,118.8,0,0.0%
+index_of_industrial_production_manufacture_of_electrical_equipment,Index Of Industrial Production Manufacture Of Electrical Equipment,,float64,,115.0,0,0.0%
+index_of_industrial_production_manufacture_of_machinery_and_equipment_n.e.c.,Index Of Industrial Production Manufacture Of Machinery And Equipment N.E.C.,,float64,,128.9,0,0.0%
+index_of_industrial_production_manufacture_of_motor_vehicles_trailers_and_semi_trailers,Index Of Industrial Production Manufacture Of Motor Vehicles Trailers And Semi Trailers,,float64,,64.9,0,0.0%
+index_of_industrial_production_manufacture_of_other_transport_equipment,Index Of Industrial Production Manufacture Of Other Transport Equipment,,float64,,132.3,0,0.0%
+index_of_industrial_production_manufacture_of_furniture,Index Of Industrial Production Manufacture Of Furniture,,float64,,139.3,0,0.0%
+index_of_industrial_production_other_manufacturing,Index Of Industrial Production Other Manufacturing,,float64,,77.8,0,0.0%
+index_of_industrial_production_repair_and_installation_of_machinery_and_equipment,Index Of Industrial Production Repair And Installation Of Machinery And Equipment,,float64,,94.1,0,0.0%
+index_of_industrial_production_electricity_and_gas,Index Of Industrial Production Electricity And Gas,,float64,,92.8,0,0.0%
+index_of_industrial_production_electricity_gas_steam_and_air_conditioning_supply,Index Of Industrial Production Electricity Gas Steam And Air Conditioning Supply,,float64,,92.8,0,0.0%
+index_of_industrial_production_water_supply_sewage_and_waste_management,Index Of Industrial Production Water Supply Sewage And Waste Management,,float64,,78.8,0,0.0%
+index_of_industrial_production_water_collection_treatment_and_supply,Index Of Industrial Production Water Collection Treatment And Supply,,float64,,107.8,0,0.0%
+index_of_industrial_production_waste_collection_treatment_and_disposal_activities;_materials_recovery,Index Of Industrial Production Waste Collection Treatment And Disposal Activities; Materials Recovery,,float64,,73.7,0,0.0%
+year_on_year_iip_change_all_industries,Year On Year Iip Change All Industries,,float64,,1.9,4,26.7%
+year_on_year_iip_change_mining_and_quarrying,Year On Year Iip Change Mining And Quarrying,,float64,,0.1,4,26.7%
+year_on_year_iip_change_extraction_of_crude_petroleum_and_natural_gas,Year On Year Iip Change Extraction Of Crude Petroleum And Natural Gas,,float64,,-9.4,4,26.7%
+year_on_year_iip_change_mining_of_metal_ores,Year On Year Iip Change Mining Of Metal Ores,,float64,,8.9,4,26.7%
+year_on_year_iip_change_other_mining_and_quarrying,Year On Year Iip Change Other Mining And Quarrying,,float64,,5.9,4,26.7%
+year_on_year_iip_change_manfacturing,Year On Year Iip Change Manfacturing,,float64,,4.3,4,26.7%
+year_on_year_iip_change_manufacture_of_food_products,Year On Year Iip Change Manufacture Of Food Products,,float64,,2.9,4,26.7%
+year_on_year_iip_change_manufacture_of_beverages,Year On Year Iip Change Manufacture Of Beverages,,float64,,0.3,4,26.7%
+year_on_year_iip_change_manufacture_of_textiles,Year On Year Iip Change Manufacture Of Textiles,,float64,,-0.4,4,26.7%
+year_on_year_iip_change_manufacture_of_wearing_apparel,Year On Year Iip Change Manufacture Of Wearing Apparel,,float64,,0.9,4,26.7%
+year_on_year_iip_change_manufacture_of_leather_and_related_products,Year On Year Iip Change Manufacture Of Leather And Related Products,,float64,,3.9,4,26.7%
+year_on_year_iip_change_manufacture_of_wood_and_of_products_of_wood_and_cork,Year On Year Iip Change Manufacture Of Wood And Of Products Of Wood And Cork,,float64,,6.3,4,26.7%
+year_on_year_iip_change_manufacture_of_paper_and_paper_products,Year On Year Iip Change Manufacture Of Paper And Paper Products,,float64,,5.9,4,26.7%
+year_on_year_iip_change_printing_and_reproduction_of_recorded_media,Year On Year Iip Change Printing And Reproduction Of Recorded Media,,float64,,9.7,4,26.7%
+year_on_year_iip_change_manufacture_of_coke_and_refined_petroleum_products,Year On Year Iip Change Manufacture Of Coke And Refined Petroleum Products,,float64,,6.6,4,26.7%
+year_on_year_iip_change_manufacture_of_chemicals_and_chemical_products,Year On Year Iip Change Manufacture Of Chemicals And Chemical Products,,float64,,0.2,4,26.7%
+year_on_year_iip_change_manufacture_of_pharmaceuticals_medicinal_chemical_and_botanical_products,Year On Year Iip Change Manufacture Of Pharmaceuticals Medicinal Chemical And Botanical Products,,float64,,6.3,4,26.7%
+year_on_year_iip_change_manufacture_of_rubber_and_plastics_products,Year On Year Iip Change Manufacture Of Rubber And Plastics Products,,float64,,-6.7,4,26.7%
+year_on_year_iip_change_manufacture_of_other_non_metallic_mineral_products,Year On Year Iip Change Manufacture Of Other Non Metallic Mineral Products,,float64,,3.1,4,26.7%
+year_on_year_iip_change_manufacture_of_basic_metals,Year On Year Iip Change Manufacture Of Basic Metals,,float64,,8.9,4,26.7%
+year_on_year_iip_change_manufacture_of_fabricated_metal_products_except_machinery_and_equipment,Year On Year Iip Change Manufacture Of Fabricated Metal Products Except Machinery And Equipment,,float64,,8.2,4,26.7%
+year_on_year_iip_change_manufacture_of_computer_electronic_and_optical_products,Year On Year Iip Change Manufacture Of Computer Electronic And Optical Products,,float64,,3.1,4,26.7%
+year_on_year_iip_change_manufacture_of_electrical_equipment,Year On Year Iip Change Manufacture Of Electrical Equipment,,float64,,8.7,4,26.7%
+year_on_year_iip_change_manufacture_of_machinery_and_equipment_n.e.c.,Year On Year Iip Change Manufacture Of Machinery And Equipment N.E.C.,,float64,,15.7,4,26.7%
+year_on_year_iip_change_manufacture_of_motor_vehicles_trailers_and_semi_trailers,Year On Year Iip Change Manufacture Of Motor Vehicles Trailers And Semi Trailers,,float64,,-15.2,4,26.7%
+year_on_year_iip_change_manufacture_of_other_transport_equipment,Year On Year Iip Change Manufacture Of Other Transport Equipment,,float64,,2.5,4,26.7%
+year_on_year_iip_change_manufacture_of_furniture,Year On Year Iip Change Manufacture Of Furniture,,float64,,6.6,4,26.7%
+year_on_year_iip_change_other_manufacturing,Year On Year Iip Change Other Manufacturing,,float64,,14.6,4,26.7%
+year_on_year_iip_change_repair_and_installation_of_machinery_and_equipment,Year On Year Iip Change Repair And Installation Of Machinery And Equipment,,float64,,-1.8,4,26.7%
+year_on_year_iip_change_electricity_and_gas,Year On Year Iip Change Electricity And Gas,,float64,,2.8,4,26.7%
+year_on_year_iip_change_electricity_gas_steam_and_air_conditioning_supply,Year On Year Iip Change Electricity Gas Steam And Air Conditioning Supply,,float64,,2.8,4,26.7%
+year_on_year_iip_change_water_supply_sewage_and_waste_management,Year On Year Iip Change Water Supply Sewage And Waste Management,,float64,,1.4,4,26.7%
+year_on_year_iip_change_water_collection_treatment_and_supply,Year On Year Iip Change Water Collection Treatment And Supply,,float64,,1.2,4,26.7%
+year_on_year_iip_change_waste_collection_treatment_and_disposal_activities;_materials_recovery,Year On Year Iip Change Waste Collection Treatment And Disposal Activities; Materials Recovery,,float64,,0.4,4,26.7%
+quarter_on_quarter_iip_change_all_industries,Quarter On Quarter Iip Change All Industries,,float64,,0.5,1,6.7%
+quarter_on_quarter_iip_change_mining_and_quarrying,Quarter On Quarter Iip Change Mining And Quarrying,,float64,,1.4,1,6.7%
+quarter_on_quarter_iip_change_extraction_of_crude_petroleum_and_natural_gas,Quarter On Quarter Iip Change Extraction Of Crude Petroleum And Natural Gas,,float64,,3.5,1,6.7%
+quarter_on_quarter_iip_change_mining_of_metal_ores,Quarter On Quarter Iip Change Mining Of Metal Ores,,float64,,-0.3,1,6.7%
+quarter_on_quarter_iip_change_other_mining_and_quarrying,Quarter On Quarter Iip Change Other Mining And Quarrying,,float64,,1.0,1,6.7%
+quarter_on_quarter_iip_change_manfacturing,Quarter On Quarter Iip Change Manfacturing,,float64,,0.8,1,6.7%
+quarter_on_quarter_iip_change_manufacture_of_food_products,Quarter On Quarter Iip Change Manufacture Of Food Products,,float64,,-0.5,1,6.7%
+quarter_on_quarter_iip_change_manufacture_of_beverages,Quarter On Quarter Iip Change Manufacture Of Beverages,,float64,,-4.3,1,6.7%
+quarter_on_quarter_iip_change_manufacture_of_textiles,Quarter On Quarter Iip Change Manufacture Of Textiles,,float64,,11.1,1,6.7%
+quarter_on_quarter_iip_change_manufacture_of_wearing_apparel,Quarter On Quarter Iip Change Manufacture Of Wearing Apparel,,float64,,1.2,1,6.7%
+quarter_on_quarter_iip_change_manufacture_of_leather_and_related_products,Quarter On Quarter Iip Change Manufacture Of Leather And Related Products,,float64,,-14.5,1,6.7%
+quarter_on_quarter_iip_change_manufacture_of_wood_and_of_products_of_wood_and_cork,Quarter On Quarter Iip Change Manufacture Of Wood And Of Products Of Wood And Cork,,float64,,0.6,1,6.7%
+quarter_on_quarter_iip_change_manufacture_of_paper_and_paper_products,Quarter On Quarter Iip Change Manufacture Of Paper And Paper Products,,float64,,18.4,1,6.7%
+quarter_on_quarter_iip_change_printing_and_reproduction_of_recorded_media,Quarter On Quarter Iip Change Printing And Reproduction Of Recorded Media,,float64,,18.8,1,6.7%
+quarter_on_quarter_iip_change_manufacture_of_coke_and_refined_petroleum_products,Quarter On Quarter Iip Change Manufacture Of Coke And Refined Petroleum Products,,float64,,7.0,1,6.7%
+quarter_on_quarter_iip_change_manufacture_of_chemicals_and_chemical_products,Quarter On Quarter Iip Change Manufacture Of Chemicals And Chemical Products,,float64,,1.9,1,6.7%
+quarter_on_quarter_iip_change_manufacture_of_pharmaceuticals_medicinal_chemical_and_botanical_products,Quarter On Quarter Iip Change Manufacture Of Pharmaceuticals Medicinal Chemical And Botanical Products,,float64,,14.8,1,6.7%
+quarter_on_quarter_iip_change_manufacture_of_rubber_and_plastics_products,Quarter On Quarter Iip Change Manufacture Of Rubber And Plastics Products,,float64,,9.3,1,6.7%
+quarter_on_quarter_iip_change_manufacture_of_other_non_metallic_mineral_products,Quarter On Quarter Iip Change Manufacture Of Other Non Metallic Mineral Products,,float64,,2.2,1,6.7%
+quarter_on_quarter_iip_change_manufacture_of_basic_metals,Quarter On Quarter Iip Change Manufacture Of Basic Metals,,float64,,-8.8,1,6.7%
+quarter_on_quarter_iip_change_manufacture_of_fabricated_metal_products_except_machinery_and_equipment,Quarter On Quarter Iip Change Manufacture Of Fabricated Metal Products Except Machinery And Equipment,,float64,,-2.7,1,6.7%
+quarter_on_quarter_iip_change_manufacture_of_computer_electronic_and_optical_products,Quarter On Quarter Iip Change Manufacture Of Computer Electronic And Optical Products,,float64,,-3.4,1,6.7%
+quarter_on_quarter_iip_change_manufacture_of_electrical_equipment,Quarter On Quarter Iip Change Manufacture Of Electrical Equipment,,float64,,-5.9,1,6.7%
+quarter_on_quarter_iip_change_manufacture_of_machinery_and_equipment_n.e.c.,Quarter On Quarter Iip Change Manufacture Of Machinery And Equipment N.E.C.,,float64,,1.0,1,6.7%
+quarter_on_quarter_iip_change_manufacture_of_motor_vehicles_trailers_and_semi_trailers,Quarter On Quarter Iip Change Manufacture Of Motor Vehicles Trailers And Semi Trailers,,float64,,10.5,1,6.7%
+quarter_on_quarter_iip_change_manufacture_of_other_transport_equipment,Quarter On Quarter Iip Change Manufacture Of Other Transport Equipment,,float64,,-2.6,1,6.7%
+quarter_on_quarter_iip_change_manufacture_of_furniture,Quarter On Quarter Iip Change Manufacture Of Furniture,,float64,,6.7,1,6.7%
+quarter_on_quarter_iip_change_other_manufacturing,Quarter On Quarter Iip Change Other Manufacturing,,float64,,-3.2,1,6.7%
+quarter_on_quarter_iip_change_repair_and_installation_of_machinery_and_equipment,Quarter On Quarter Iip Change Repair And Installation Of Machinery And Equipment,,float64,,-11.5,1,6.7%
+quarter_on_quarter_iip_change_electricity_and_gas,Quarter On Quarter Iip Change Electricity And Gas,,float64,,-14.6,1,6.7%
+quarter_on_quarter_iip_change_electricity_gas_steam_and_air_conditioning_supply,Quarter On Quarter Iip Change Electricity Gas Steam And Air Conditioning Supply,,float64,,-14.6,1,6.7%
+quarter_on_quarter_iip_change_water_supply_sewage_and_waste_management,Quarter On Quarter Iip Change Water Supply Sewage And Waste Management,,float64,,14.8,1,6.7%
+quarter_on_quarter_iip_change_water_collection_treatment_and_supply,Quarter On Quarter Iip Change Water Collection Treatment And Supply,,float64,,0.0,1,6.7%
+quarter_on_quarter_iip_change_waste_collection_treatment_and_disposal_activities;_materials_recovery,Quarter On Quarter Iip Change Waste Collection Treatment And Disposal Activities; Materials Recovery,,float64,,14.8,1,6.7%

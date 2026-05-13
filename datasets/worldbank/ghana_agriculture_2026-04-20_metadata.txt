@@ -1,0 +1,18 @@
+Dataset: Ghana Agriculture & Food Security
+Description: Ghana agricultural production, land use, food security, and rural economy data. Source: World Bank Open Data.
+Source: World Bank Open Data API
+Country: Ghana (GH)
+Scraped: 2026-04-20
+Years covered: 1998 – 2025
+Rows: 28
+Columns: 13
+
+Indicators:
+  NV.AGR.TOTL.ZS: Agriculture, Forestry & Fishing (% of GDP)
+  NV.AGR.TOTL.KD.ZG: Agriculture Value Added Growth (%)
+  AG.LND.ARBL.ZS: Arable Land (% of Land Area)
+  AG.LND.AGRI.ZS: Agricultural Land (% of Land Area)
+  AG.YLD.CREL.KG: Cereal Yield (kg per hectare)
+  SN.ITK.DEFC.ZS: Prevalence of Undernourishment (%)
+  AG.PRD.FOOD.XD: Food Production Index
+  SL.AGR.EMPL.ZS: Employment in Agriculture (% of total)

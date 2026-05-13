@@ -1,0 +1,102 @@
+<svg width="1280" height="720" viewBox="0 0 1280 720" role="img" xmlns="http://www.w3.org/2000/svg">
+<title>SG Datalytics — SGMPI Ghana Market Price Index Gumroad cover</title>
+<desc>Dark navy product cover for the SGMPI Market Price Index showing 8 categories, 3715 listings, at $15</desc>
+
+<rect width="1280" height="720" fill="#080f1e"/>
+
+<!-- Grid -->
+<line x1="0" y1="180" x2="1280" y2="180" stroke="#fff" stroke-opacity="0.03" stroke-width="1"/>
+<line x1="0" y1="360" x2="1280" y2="360" stroke="#fff" stroke-opacity="0.03" stroke-width="1"/>
+<line x1="0" y1="540" x2="1280" y2="540" stroke="#fff" stroke-opacity="0.03" stroke-width="1"/>
+<line x1="213" y1="0" x2="213" y2="720" stroke="#fff" stroke-opacity="0.03" stroke-width="1"/>
+<line x1="640" y1="0" x2="640" y2="720" stroke="#fff" stroke-opacity="0.03" stroke-width="1"/>
+<line x1="1066" y1="0" x2="1066" y2="720" stroke="#fff" stroke-opacity="0.03" stroke-width="1"/>
+
+<!-- Decorative circles right side -->
+<circle cx="980" cy="208" r="72" fill="#00c9a7" fill-opacity="0.05"/>
+<circle cx="1110" cy="292" r="53" fill="#f59e0b" fill-opacity="0.05"/>
+<circle cx="1032" cy="377" r="42" fill="#3b82f6" fill-opacity="0.05"/>
+<circle cx="1158" cy="434" r="80" fill="#00c9a7" fill-opacity="0.04"/>
+<circle cx="1072" cy="537" r="56" fill="#a855f7" fill-opacity="0.06"/>
+<circle cx="1188" cy="584" r="38" fill="#10b981" fill-opacity="0.07"/>
+<circle cx="952" cy="604" r="95" fill="#f59e0b" fill-opacity="0.03"/>
+<circle cx="1225" cy="264" r="104" fill="#00c9a7" fill-opacity="0.03"/>
+
+<!-- Top amber accent -->
+<rect x="0" y="0" width="1280" height="5" fill="#f59e0b"/>
+
+<!-- Logo mark -->
+<rect x="68" y="56" width="52" height="52" rx="9" fill="#00c9a7"/>
+<rect x="76" y="79" width="9" height="23" rx="2" fill="#080f1e"/>
+<rect x="90" y="72" width="9" height="30" rx="2" fill="#080f1e" fill-opacity="0.7"/>
+<rect x="104" y="64" width="9" height="38" rx="2" fill="#080f1e" fill-opacity="0.45"/>
+<text x="132" y="93" font-family="'IBM Plex Mono','Courier New',monospace" font-size="28" font-weight="500" letter-spacing="5" fill="#ffffff">SG DATALYTICS</text>
+
+<!-- Proprietary badge -->
+<rect x="756" y="56" width="150" height="38" rx="19" fill="#f59e0b" fill-opacity="0.15"/>
+<rect x="756" y="56" width="150" height="38" rx="19" stroke="#f59e0b" stroke-opacity="0.4" stroke-width="1.5" fill="none"/>
+<text x="831" y="80" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="16" fill="#f59e0b" letter-spacing="1">PROPRIETARY</text>
+
+<text x="68" y="142" font-family="'IBM Plex Sans',Arial,sans-serif" font-size="20" fill="#00c9a7" letter-spacing="2.5">GHANA'S DATA MARKETPLACE</text>
+<line x1="68" y1="172" x2="740" y2="172" stroke="#fff" stroke-opacity="0.08" stroke-width="1"/>
+
+<!-- Label -->
+<text x="68" y="232" font-family="'IBM Plex Mono',monospace" font-size="24" fill="#f59e0b" letter-spacing="4">SG MARKET PRICE INDEX</text>
+
+<!-- Main title -->
+<text x="68" y="330" font-family="'IBM Plex Sans',Arial,sans-serif" font-size="88" font-weight="600" fill="#ffffff" letter-spacing="-1">Ghana Market</text>
+<text x="68" y="428" font-family="'IBM Plex Sans',Arial,sans-serif" font-size="88" font-weight="600" fill="#00c9a7" letter-spacing="-1">Price Index</text>
+
+<!-- Category pills row 1 -->
+<rect x="68"  y="456" width="198" height="40" rx="20" fill="#162440"/>
+<text x="167" y="481" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="16" fill="#fff" fill-opacity="0.6">Mobile Phones &amp; Tablets</text>
+
+<rect x="278" y="456" width="136" height="40" rx="20" fill="#162440"/>
+<text x="346" y="481" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="16" fill="#fff" fill-opacity="0.6">Vehicles</text>
+
+<rect x="426" y="456" width="154" height="40" rx="20" fill="#162440"/>
+<text x="503" y="481" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="16" fill="#fff" fill-opacity="0.6">Electronics</text>
+
+<rect x="592" y="456" width="126" height="40" rx="20" fill="#162440"/>
+<text x="655" y="481" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="16" fill="#fff" fill-opacity="0.6">Fashion</text>
+
+<!-- Category pills row 2 -->
+<rect x="68"  y="506" width="174" height="40" rx="20" fill="#162440"/>
+<text x="155" y="531" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="16" fill="#fff" fill-opacity="0.6">Home &amp; Furniture</text>
+
+<rect x="254" y="506" width="190" height="40" rx="20" fill="#162440"/>
+<text x="349" y="531" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="16" fill="#fff" fill-opacity="0.6">Food &amp; Agriculture</text>
+
+<rect x="456" y="506" width="196" height="40" rx="20" fill="#162440"/>
+<text x="554" y="531" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="16" fill="#fff" fill-opacity="0.6">Property &amp; Real Estate</text>
+
+<rect x="664" y="506" width="216" height="40" rx="20" fill="#162440"/>
+<text x="772" y="531" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="16" fill="#fff" fill-opacity="0.6">Commercial Equipment</text>
+
+<!-- Stat cards -->
+<rect x="68"  y="572" width="148" height="88" rx="10" fill="#0d1829"/>
+<rect x="68"  y="572" width="148" height="88" rx="10" stroke="#00c9a7" stroke-opacity="0.25" stroke-width="1.5" fill="none"/>
+<text x="142" y="618" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="34" font-weight="500" fill="#00c9a7">8</text>
+<text x="142" y="648" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="15" fill="#fff" fill-opacity="0.4" letter-spacing="0.5">categories</text>
+
+<rect x="230" y="572" width="166" height="88" rx="10" fill="#0d1829"/>
+<rect x="230" y="572" width="166" height="88" rx="10" stroke="#fff" stroke-opacity="0.07" stroke-width="1" fill="none"/>
+<text x="313" y="618" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="34" font-weight="500" fill="#ffffff">3,715</text>
+<text x="313" y="648" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="15" fill="#fff" fill-opacity="0.4" letter-spacing="0.5">listings</text>
+
+<rect x="410" y="572" width="166" height="88" rx="10" fill="#0d1829"/>
+<rect x="410" y="572" width="166" height="88" rx="10" stroke="#fff" stroke-opacity="0.07" stroke-width="1" fill="none"/>
+<text x="493" y="618" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="34" font-weight="500" fill="#ffffff">GHS</text>
+<text x="493" y="648" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="15" fill="#fff" fill-opacity="0.4" letter-spacing="0.5">real prices</text>
+
+<rect x="590" y="572" width="148" height="88" rx="10" fill="#f59e0b" fill-opacity="0.12"/>
+<rect x="590" y="572" width="148" height="88" rx="10" stroke="#f59e0b" stroke-opacity="0.4" stroke-width="1.5" fill="none"/>
+<text x="664" y="618" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="34" font-weight="500" fill="#f59e0b">$15</text>
+<text x="664" y="648" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="15" fill="#f59e0b" fill-opacity="0.7" letter-spacing="0.5">one-time</text>
+
+<text x="1212" y="676" text-anchor="end" font-family="'IBM Plex Mono',monospace" font-size="18" fill="#fff" fill-opacity="0.2" letter-spacing="1">sgdatalytics.org</text>
+
+<!-- Bottom line -->
+<rect x="0" y="715" width="1280" height="5" fill="#f59e0b" fill-opacity="0.4"/>
+
+</svg>

@@ -1,0 +1,12 @@
+column_name,display_name,description,data_type,unit,example_value,null_count,null_pct
+source,Source,Data source organisation,object,,Ghana Statistical Service (GSS StatsBank),0,0.0%
+last_updated,Last Updated,Date data was last refreshed,object,YYYY-MM-DD,2026-04-20,0,0.0%
+period,Period,"Time period (YYYY-MM for monthly, YYYY-QN for quarterly)",object,,2024-06,0,0.0%
+capital_adequacy_ratio,Capital Adequacy Ratio,,float64,,14.3,0,0.0%
+core_liquid_assets_to_short_term_liabilities,Core Liquid Assets To Short Term Liabilities,,float64,,43.0,0,0.0%
+core_liquid_assets_to_total_assets,Core Liquid Assets To Total Assets,,float64,,35.8,0,0.0%
+non_performing_loan_ratio,Non Performing Loan Ratio,,float64,,24.1,0,0.0%
+operational_cost_income,Operational Cost Income,,float64,,49.6,0,0.0%
+return_on_assets,Return On Assets,,float64,,5.4,0,0.0%
+return_on_equity,Return On Equity,,float64,,35.3,0,0.0%
+total_cost_to_gross_income_ratio,Total Cost To Gross Income Ratio,,float64,,76.5,0,0.0%

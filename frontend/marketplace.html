@@ -957,6 +957,11 @@ footer{
   .hero{padding:48px 5vw;}
 }
 </style>
+<script>
+  // ── SG Datalytics API Configuration ──────────────────────────
+  // Update this URL if your Railway domain changes
+  const SG_API = 'https://sgdatalytics-production.up.railway.app';
+</script>
 </head>
 <body>
 
@@ -1046,47 +1051,25 @@ footer{
       <div class="data-panel-body">
         <div class="panel-stats">
           <div class="panel-stat">
-            <div class="panel-stat-num t">31</div>
-            <div class="panel-stat-label">Datasets</div>
+            <div class="panel-stat-num t" id="live-total-indicators">—</div>
+            <div class="panel-stat-label">Indicators</div>
           </div>
           <div class="panel-stat">
-            <div class="panel-stat-num">4</div>
-            <div class="panel-stat-label">Sources</div>
+            <div class="panel-stat-num" id="live-total-countries">—</div>
+            <div class="panel-stat-label">Countries</div>
           </div>
           <div class="panel-stat">
             <div class="panel-stat-num a">$15</div>
             <div class="panel-stat-label">From</div>
           </div>
         </div>
-        <div class="panel-cats">
-          <div class="panel-cat">
-            <div class="panel-cat-icon">📈</div>
-            <div class="panel-cat-name">SG Market Price Index</div>
-            <div class="panel-cat-bar"><div class="panel-cat-fill" style="width:100%"></div></div>
-            <div class="panel-cat-count">8 datasets — 3,715 rows</div>
-          </div>
-          <div class="panel-cat">
-            <div class="panel-cat-icon">📊</div>
-            <div class="panel-cat-name">GSS StatsBank</div>
-            <div class="panel-cat-bar"><div class="panel-cat-fill" style="width:84%"></div></div>
-            <div class="panel-cat-count">13 datasets</div>
-          </div>
-          <div class="panel-cat">
-            <div class="panel-cat-icon">🏦</div>
-            <div class="panel-cat-name">Bank of Ghana</div>
-            <div class="panel-cat-bar"><div class="panel-cat-fill" style="width:31%"></div></div>
-            <div class="panel-cat-count">4 datasets</div>
-          </div>
-          <div class="panel-cat">
-            <div class="panel-cat-icon">🌍</div>
-            <div class="panel-cat-name">World Bank</div>
-            <div class="panel-cat-bar"><div class="panel-cat-fill" style="width:46%"></div></div>
-            <div class="panel-cat-count">6 datasets</div>
-          </div>
+        <div class="panel-cats" id="live-sectors">
+          <!-- Populated by API -->
+          <div class="panel-cat"><div class="panel-cat-icon">⏳</div><div class="panel-cat-name" style="color:var(--grey3)">Loading live data…</div></div>
         </div>
         <div class="panel-featured">
-          <div class="panel-feat-badge">NEW</div>
-          <div class="panel-feat-text"><strong>SGMPI Ghana Market Price Index</strong> — 8 categories of real Ghana market prices. Available now from $15.</div>
+          <div class="panel-feat-badge">LIVE</div>
+          <div class="panel-feat-text"><strong id="live-datapoints">—</strong> data points across <span id="live-sectors-count">—</span> sectors — auto-updated by scheduler.</div>
         </div>
       </div>
     </div>
@@ -1141,11 +1124,11 @@ footer{
 <!-- KEY STATS -->
 <div class="stat-ticker">
   <div class="stat-ticker-inner">
-    <div class="stat-tile rev"><div class="stat-tile-num">31</div><div class="stat-tile-label">Total datasets</div></div>
-    <div class="stat-tile rev d1"><div class="stat-tile-num">4</div><div class="stat-tile-label">Trusted sources</div></div>
-    <div class="stat-tile rev d2"><div class="stat-tile-num">3,715</div><div class="stat-tile-label">SGMPI rows</div></div>
-    <div class="stat-tile rev d3"><div class="stat-tile-num">50+</div><div class="stat-tile-label">Years of data</div></div>
-    <div class="stat-tile rev d2"><div class="stat-tile-num">CSV</div><div class="stat-tile-label">Clean format</div></div>
+    <div class="stat-tile rev"><div class="stat-tile-num" id="st-datapoints">—</div><div class="stat-tile-label">Data points</div></div>
+    <div class="stat-tile rev d1"><div class="stat-tile-num" id="st-countries">—</div><div class="stat-tile-label">Countries</div></div>
+    <div class="stat-tile rev d2"><div class="stat-tile-num" id="st-indicators">—</div><div class="stat-tile-label">Indicators</div></div>
+    <div class="stat-tile rev d3"><div class="stat-tile-num" id="st-sectors">—</div><div class="stat-tile-label">Sectors</div></div>
+    <div class="stat-tile rev d2"><div class="stat-tile-num" id="st-yearmin">—</div><div class="stat-tile-label">Data from</div></div>
     <div class="stat-tile rev d1"><div class="stat-tile-num">100%</div><div class="stat-tile-label">Ghana sourced</div></div>
   </div>
 </div>
@@ -2198,5 +2181,71 @@ function prefillContact(datasetName){
   window.openPreviewModal = openPreviewModal;
 })();
 </script>
+<script>
+// ── Live API Data Loader ──────────────────────────────────────
+(function(){
+  const SECTOR_ICONS = {
+    economy:'📈', education:'📚', health:'❤️',
+    sustainability:'🌱', agriculture:'🌾', business:'💼'
+  };
+
+  function fmt(n) {
+    if (!n && n !== 0) return '—';
+    return Number(n).toLocaleString();
+  }
+
+  // ── Load /api/stats → update stat ticker + hero panel ────────
+  fetch(SG_API + '/api/stats')
+    .then(r => r.ok ? r.json() : Promise.reject())
+    .then(d => {
+      // Hero panel
+      document.getElementById('live-total-indicators').textContent = fmt(d.indicators_with_data);
+      document.getElementById('live-total-countries').textContent  = fmt(d.countries_with_data);
+      document.getElementById('live-datapoints').textContent       = fmt(d.total_points);
+      document.getElementById('live-sectors-count').textContent    = fmt(d.total_sectors);
+
+      // Stat ticker
+      document.getElementById('st-datapoints').textContent  = fmt(d.total_points);
+      document.getElementById('st-countries').textContent   = fmt(d.total_countries);
+      document.getElementById('st-indicators').textContent  = fmt(d.total_indicators);
+      document.getElementById('st-sectors').textContent     = fmt(d.total_sectors);
+      document.getElementById('st-yearmin').textContent     = d.year_min || '—';
+
+      // Update panel meta timestamp
+      const meta = document.querySelector('.data-panel-meta');
+      if (meta) meta.textContent = 'Live · ' + new Date().toLocaleDateString('en-GB',{month:'short',year:'numeric'});
+    })
+    .catch(() => {
+      // API down — keep static fallback values visible, no crash
+      console.warn('SG API stats unavailable — showing fallback values');
+    });
+
+  // ── Load /api/sectors → populate hero panel sector list ──────
+  fetch(SG_API + '/api/sectors')
+    .then(r => r.ok ? r.json() : Promise.reject())
+    .then(sectors => {
+      const container = document.getElementById('live-sectors');
+      if (!container || !sectors.length) return;
+      container.innerHTML = '';
+      const max = Math.max(...sectors.map(s => s.id || 1));
+      sectors.forEach(s => {
+        const icon  = SECTOR_ICONS[s.code] || s.icon || '📊';
+        const fill  = Math.round((s.id / max) * 100);
+        const div   = document.createElement('div');
+        div.className = 'panel-cat';
+        div.innerHTML = `
+          <div class="panel-cat-icon">${icon}</div>
+          <div class="panel-cat-name">${s.name}</div>
+          <div class="panel-cat-bar"><div class="panel-cat-fill" style="width:${fill}%"></div></div>
+          <div class="panel-cat-count">${s.description ? s.description.slice(0,32)+'…' : ''}</div>`;
+        container.appendChild(div);
+      });
+    })
+    .catch(() => {
+      // Silently keep loading placeholder
+    });
+})();
+</script>
+
 </body>
 </html>

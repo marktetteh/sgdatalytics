@@ -1,0 +1,15 @@
+column_name,display_name,description,data_type,unit,example_value,null_count,null_pct
+year,Year,Calendar year of observation,int64,,2024,0,0.0%
+country,Country,Country name,object,,Ghana,0,0.0%
+country_code,Country Code,ISO 2-letter country code,object,,GH,0,0.0%
+source,Source,Data source organisation,object,,World Bank Open Data,0,0.0%
+last_updated,Last Updated,Date data was last refreshed,object,YYYY-MM-DD,2026-04-20,0,0.0%
+lending_interest_rate,Lending Interest Rate,,float64,,,26,100.0%
+deposit_interest_rate,Deposit Interest Rate,,float64,,11.4167,1,3.8%
+domestic_credit_to_private_sector_of_gdp,Domestic Credit To Private Sector Of Gdp,,float64,,,26,100.0%
+domestic_credit_to_private_sector_by_banks_of_gdp,Domestic Credit To Private Sector By Banks Of Gdp,,float64,,8.3328,1,3.8%
+atms_per_100_000_adults,Atms Per 100 000 Adults,,float64,,10.5722,10,38.5%
+commercial_bank_branches_per_100_000_adults,Commercial Bank Branches Per 100 000 Adults,,float64,,4.4378,6,23.1%
+account_ownership_at_financial_institution,Account Ownership At Financial Institution,,float64,,81.243,21,80.8%
+bank_capital_to_assets_ratio,Bank Capital To Assets Ratio,,float64,,5.227,10,38.5%
+bank_nonperforming_loans_of_total_loans,Bank Nonperforming Loans Of Total Loans,,float64,,,26,100.0%

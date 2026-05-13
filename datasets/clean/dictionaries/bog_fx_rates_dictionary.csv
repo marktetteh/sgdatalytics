@@ -1,0 +1,16 @@
+column_name,display_name,description,data_type,unit,example_value,null_count,null_pct
+date,Date,Year-month of observation,object,YYYY-MM,2025-12,0,0.0%
+year,Year,Calendar year,int64,,2025,0,0.0%
+month,Month,Month name,object,,December,0,0.0%
+source,Source,Data source,object,,Bank of Ghana Statistical Bulletin,0,0.0%
+last_updated,Last Updated,Date data was last refreshed,object,YYYY-MM-DD,2026-04-20,0,0.0%
+usd_ghs_end_period,USD/GHS (End),US Dollar to Ghana Cedi – end of period rate,float64,GHS per USD,10.45,0,0.0%
+usd_ghs_period_average,USD/GHS (Average),US Dollar to Ghana Cedi – period average rate,float64,GHS per USD,11.2784,93,37.3%
+gbp_ghs_end_period,GBP/GHS (End),British Pound to Ghana Cedi – end of period rate,float64,GHS per GBP,14.0579,0,0.0%
+gbp_ghs_period_average,GBP/GHS (Average),British Pound to Ghana Cedi – period average rate,float64,GHS per GBP,15.0952,93,37.3%
+eur_ghs_end_period,EUR/GHS (End),Euro to Ghana Cedi – end of period rate,float64,GHS per EUR,12.2728,0,0.0%
+eur_ghs_period_average,EUR/GHS (Average),Euro to Ghana Cedi – period average rate,float64,GHS per EUR,13.212,93,37.3%
+chf_ghs_end_period,CHF/GHS (End),Swiss Franc to Ghana Cedi – end of period rate,float64,GHS per CHF,13.1863,0,0.0%
+chf_ghs_period_average,CHF/GHS (Average),Swiss Franc to Ghana Cedi – period average rate,float64,GHS per CHF,14.1575,93,37.3%
+jpy_ghs_end_period,JPY/GHS (End),Japanese Yen to Ghana Cedi – end of period rate,float64,GHS per JPY,0.0667,0,0.0%
+jpy_ghs_period_average,JPY/GHS (Average),Japanese Yen to Ghana Cedi – period average rate,float64,GHS per JPY,0.0724,93,37.3%

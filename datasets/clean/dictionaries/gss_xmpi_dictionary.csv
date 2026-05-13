@@ -1,0 +1,70 @@
+column_name,display_name,description,data_type,unit,example_value,null_count,null_pct
+source,Source,Data source organisation,object,,Ghana Statistical Service (GSS StatsBank),0,0.0%
+last_updated,Last Updated,Date data was last refreshed,object,YYYY-MM-DD,2026-04-20,0,0.0%
+period,Period,"Time period (YYYY-MM for monthly, YYYY-QN for quarterly)",object,,2025-Q2,0,0.0%
+unit_value_index_export_all_products,Unit Value Index Export All Products,,float64,,358.3,0,0.0%
+unit_value_index_export_gold,Unit Value Index Export Gold,,float64,,418.0,0,0.0%
+unit_value_index_export_mineral_fuels_and_oils,Unit Value Index Export Mineral Fuels And Oils,,float64,,247.0,0,0.0%
+unit_value_index_export_cocoa_beans_and_products,Unit Value Index Export Cocoa Beans And Products,,float64,,367.8,0,0.0%
+unit_value_index_export_machinery_and_electrical_equipment,Unit Value Index Export Machinery And Electrical Equipment,,float64,,,18,100.0%
+unit_value_index_export_chemical_products,Unit Value Index Export Chemical Products,,float64,,,18,100.0%
+unit_value_index_export_vehicles_and_automotive_parts,Unit Value Index Export Vehicles And Automotive Parts,,float64,,,18,100.0%
+unit_value_index_export_iron_and_steel,Unit Value Index Export Iron And Steel,,float64,,,18,100.0%
+unit_value_index_export_plastics,Unit Value Index Export Plastics,,float64,,,18,100.0%
+unit_value_index_export_vegetable_products,Unit Value Index Export Vegetable Products,,float64,,,18,100.0%
+unit_value_index_export_other_products,Unit Value Index Export Other Products,,float64,,251.9,0,0.0%
+unit_value_index_import_all_products,Unit Value Index Import All Products,,float64,,208.0,0,0.0%
+unit_value_index_import_gold,Unit Value Index Import Gold,,float64,,,18,100.0%
+unit_value_index_import_mineral_fuels_and_oils,Unit Value Index Import Mineral Fuels And Oils,,float64,,249.4,0,0.0%
+unit_value_index_import_cocoa_beans_and_products,Unit Value Index Import Cocoa Beans And Products,,float64,,,18,100.0%
+unit_value_index_import_machinery_and_electrical_equipment,Unit Value Index Import Machinery And Electrical Equipment,,float64,,203.3,0,0.0%
+unit_value_index_import_chemical_products,Unit Value Index Import Chemical Products,,float64,,200.1,0,0.0%
+unit_value_index_import_vehicles_and_automotive_parts,Unit Value Index Import Vehicles And Automotive Parts,,float64,,228.7,0,0.0%
+unit_value_index_import_iron_and_steel,Unit Value Index Import Iron And Steel,,float64,,179.9,0,0.0%
+unit_value_index_import_plastics,Unit Value Index Import Plastics,,float64,,179.8,0,0.0%
+unit_value_index_import_vegetable_products,Unit Value Index Import Vegetable Products,,float64,,,18,100.0%
+unit_value_index_import_other_products,Unit Value Index Import Other Products,,float64,,219.1,0,0.0%
+year_on_year_uvi_change_export_all_products,Year On Year Uvi Change Export All Products,,float64,,25.4,4,22.2%
+year_on_year_uvi_change_export_gold,Year On Year Uvi Change Export Gold,,float64,,42.3,4,22.2%
+year_on_year_uvi_change_export_mineral_fuels_and_oils,Year On Year Uvi Change Export Mineral Fuels And Oils,,float64,,-29.4,4,22.2%
+year_on_year_uvi_change_export_cocoa_beans_and_products,Year On Year Uvi Change Export Cocoa Beans And Products,,float64,,55.2,4,22.2%
+year_on_year_uvi_change_export_machinery_and_electrical_equipment,Year On Year Uvi Change Export Machinery And Electrical Equipment,,float64,,,18,100.0%
+year_on_year_uvi_change_export_chemical_products,Year On Year Uvi Change Export Chemical Products,,float64,,,18,100.0%
+year_on_year_uvi_change_export_vehicles_and_automotive_parts,Year On Year Uvi Change Export Vehicles And Automotive Parts,,float64,,,18,100.0%
+year_on_year_uvi_change_export_iron_and_steel,Year On Year Uvi Change Export Iron And Steel,,float64,,,18,100.0%
+year_on_year_uvi_change_export_plastics,Year On Year Uvi Change Export Plastics,,float64,,,18,100.0%
+year_on_year_uvi_change_export_vegetable_products,Year On Year Uvi Change Export Vegetable Products,,float64,,,18,100.0%
+year_on_year_uvi_change_export_other_products,Year On Year Uvi Change Export Other Products,,float64,,0.5,4,22.2%
+year_on_year_uvi_change_import_all_products,Year On Year Uvi Change Import All Products,,float64,,-13.0,4,22.2%
+year_on_year_uvi_change_import_gold,Year On Year Uvi Change Import Gold,,float64,,,18,100.0%
+year_on_year_uvi_change_import_mineral_fuels_and_oils,Year On Year Uvi Change Import Mineral Fuels And Oils,,float64,,-17.6,4,22.2%
+year_on_year_uvi_change_import_cocoa_beans_and_products,Year On Year Uvi Change Import Cocoa Beans And Products,,float64,,,18,100.0%
+year_on_year_uvi_change_import_machinery_and_electrical_equipment,Year On Year Uvi Change Import Machinery And Electrical Equipment,,float64,,-6.9,4,22.2%
+year_on_year_uvi_change_import_chemical_products,Year On Year Uvi Change Import Chemical Products,,float64,,-9.3,4,22.2%
+year_on_year_uvi_change_import_vehicles_and_automotive_parts,Year On Year Uvi Change Import Vehicles And Automotive Parts,,float64,,-8.6,4,22.2%
+year_on_year_uvi_change_import_iron_and_steel,Year On Year Uvi Change Import Iron And Steel,,float64,,-18.9,4,22.2%
+year_on_year_uvi_change_import_plastics,Year On Year Uvi Change Import Plastics,,float64,,-15.8,4,22.2%
+year_on_year_uvi_change_import_vegetable_products,Year On Year Uvi Change Import Vegetable Products,,float64,,,18,100.0%
+year_on_year_uvi_change_import_other_products,Year On Year Uvi Change Import Other Products,,float64,,-8.7,4,22.2%
+quarter_on_quarter_uvi_change_export_all_products,Quarter On Quarter Uvi Change Export All Products,,float64,,-4.2,1,5.6%
+quarter_on_quarter_uvi_change_export_gold,Quarter On Quarter Uvi Change Export Gold,,float64,,3.7,1,5.6%
+quarter_on_quarter_uvi_change_export_mineral_fuels_and_oils,Quarter On Quarter Uvi Change Export Mineral Fuels And Oils,,float64,,-31.8,1,5.6%
+quarter_on_quarter_uvi_change_export_cocoa_beans_and_products,Quarter On Quarter Uvi Change Export Cocoa Beans And Products,,float64,,-1.1,1,5.6%
+quarter_on_quarter_uvi_change_export_machinery_and_electrical_equipment,Quarter On Quarter Uvi Change Export Machinery And Electrical Equipment,,float64,,,18,100.0%
+quarter_on_quarter_uvi_change_export_chemical_products,Quarter On Quarter Uvi Change Export Chemical Products,,float64,,,18,100.0%
+quarter_on_quarter_uvi_change_export_vehicles_and_automotive_parts,Quarter On Quarter Uvi Change Export Vehicles And Automotive Parts,,float64,,,18,100.0%
+quarter_on_quarter_uvi_change_export_iron_and_steel,Quarter On Quarter Uvi Change Export Iron And Steel,,float64,,,18,100.0%
+quarter_on_quarter_uvi_change_export_plastics,Quarter On Quarter Uvi Change Export Plastics,,float64,,,18,100.0%
+quarter_on_quarter_uvi_change_export_vegetable_products,Quarter On Quarter Uvi Change Export Vegetable Products,,float64,,,18,100.0%
+quarter_on_quarter_uvi_change_export_other_products,Quarter On Quarter Uvi Change Export Other Products,,float64,,-13.3,1,5.6%
+quarter_on_quarter_uvi_change_import_all_products,Quarter On Quarter Uvi Change Import All Products,,float64,,-18.5,1,5.6%
+quarter_on_quarter_uvi_change_import_gold,Quarter On Quarter Uvi Change Import Gold,,float64,,,18,100.0%
+quarter_on_quarter_uvi_change_import_mineral_fuels_and_oils,Quarter On Quarter Uvi Change Import Mineral Fuels And Oils,,float64,,-20.0,1,5.6%
+quarter_on_quarter_uvi_change_import_cocoa_beans_and_products,Quarter On Quarter Uvi Change Import Cocoa Beans And Products,,float64,,,18,100.0%
+quarter_on_quarter_uvi_change_import_machinery_and_electrical_equipment,Quarter On Quarter Uvi Change Import Machinery And Electrical Equipment,,float64,,-13.8,1,5.6%
+quarter_on_quarter_uvi_change_import_chemical_products,Quarter On Quarter Uvi Change Import Chemical Products,,float64,,-18.3,1,5.6%
+quarter_on_quarter_uvi_change_import_vehicles_and_automotive_parts,Quarter On Quarter Uvi Change Import Vehicles And Automotive Parts,,float64,,-17.3,1,5.6%
+quarter_on_quarter_uvi_change_import_iron_and_steel,Quarter On Quarter Uvi Change Import Iron And Steel,,float64,,-22.5,1,5.6%
+quarter_on_quarter_uvi_change_import_plastics,Quarter On Quarter Uvi Change Import Plastics,,float64,,-21.8,1,5.6%
+quarter_on_quarter_uvi_change_import_vegetable_products,Quarter On Quarter Uvi Change Import Vegetable Products,,float64,,,18,100.0%
+quarter_on_quarter_uvi_change_import_other_products,Quarter On Quarter Uvi Change Import Other Products,,float64,,-16.1,1,5.6%

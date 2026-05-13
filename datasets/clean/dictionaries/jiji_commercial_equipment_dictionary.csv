@@ -1,0 +1,14 @@
+column_name,display_name,description,data_type,unit,example_value,null_count,null_pct
+category,Category,Product category on Jiji Ghana,object,,Commercial Equipment & Tools,0,0.0%
+title,Title,Listing title as entered by seller,object,,Saloon/Barbering Led Mirror,0,0.0%
+price_ghs,Price (GHS),Asking price in Ghana Cedis,float64,GHS,950.0,0,0.0%
+condition,Condition,"Item condition: Brand New, Used, Foreign Used, Refurbished",object,,Brand New,152,86.9%
+region,Region,Ghana region (e.g. Greater Accra),object,,Greater Accra,0,0.0%
+area,Area,Specific area within the region,object,,Dansoman,2,1.1%
+location,Location,Full location string (region + area),object,,"Greater Accra, Dansoman",0,0.0%
+seller_badge,Seller Badge,"Seller trust level on Jiji (e.g. Enterprise, Diamond)",object,,Verified ID,48,27.4%
+description,Description,Short listing description snippet,object,,Saloon/Barbering Led Mirror,0,0.0%
+price_outlier_flag,Outlier Flag,True if price is a statistical outlier (IQR × 3) for its category,bool,,False,0,0.0%
+url,URL,Direct link to listing on jiji.com.gh,object,,https://jiji.com.gh/dansoman/salon-equipment/saloon-barbering-led-mirror-iG349Gt,0,0.0%
+source,Source,Data source,object,,Jiji Ghana (jiji.com.gh),0,0.0%
+scraped_date,Scraped Date,Date this record was collected,object,YYYY-MM-DD,2026-04-20,0,0.0%

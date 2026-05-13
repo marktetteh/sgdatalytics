@@ -1,0 +1,10 @@
+column_name,display_name,description,data_type,unit,example_value,null_count,null_pct
+source,Source,Data source organisation,object,,Ghana Statistical Service (GSS StatsBank),0,0.0%
+last_updated,Last Updated,Date data was last refreshed,object,YYYY-MM-DD,2026-04-20,0,0.0%
+period,Period,"Time period (YYYY-MM for monthly, YYYY-QN for quarterly)",object,,2024-08,0,0.0%
+interbank_exchange_rate_us_dollar_usd,Interbank Exchange Rate Us Dollar Usd,,float64,,15.1,0,0.0%
+interbank_exchange_rate_pound_sterling_gbp,Interbank Exchange Rate Pound Sterling Gbp,,float64,,19.56,0,0.0%
+interbank_exchange_rate_euro,Interbank Exchange Rate Euro,,float64,,16.65,319,50.9%
+forex_bureau_exchange_rate_us_dollar_usd,Forex Bureau Exchange Rate Us Dollar Usd,,float64,,16.15,331,52.8%
+forex_bureau_exchange_rate_pound_sterling_gbp,Forex Bureau Exchange Rate Pound Sterling Gbp,,float64,,20.26,331,52.8%
+forex_bureau_exchange_rate_euro,Forex Bureau Exchange Rate Euro,,float64,,17.23,331,52.8%

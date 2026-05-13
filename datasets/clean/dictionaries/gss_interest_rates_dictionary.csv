@@ -1,0 +1,10 @@
+column_name,display_name,description,data_type,unit,example_value,null_count,null_pct
+source,Source,Data source organisation,object,,Ghana Statistical Service (GSS StatsBank),0,0.0%
+last_updated,Last Updated,Date data was last refreshed,object,YYYY-MM-DD,2026-04-20,0,0.0%
+period,Period,"Time period (YYYY-MM for monthly, YYYY-QN for quarterly)",object,,2024-07,0,0.0%
+average_lending_rate,Average Lending Rate,,float64,,30.7,420,65.3%
+ghana_reference_rate,Ghana Reference Rate,,float64,,29.4,567,88.2%
+interbank_weighted_average_rate,Interbank Weighted Average Rate,,float64,,28.8,348,54.1%
+monetary_policy_rate,Monetary Policy Rate,,float64,,29.0,0,0.0%
+savings_deposits_rate,Savings Deposits Rate,,float64,,5.0,288,44.8%
+treasury_bill_rate_91_day,Treasury Bill Rate 91 Day,,float64,,24.8,0,0.0%

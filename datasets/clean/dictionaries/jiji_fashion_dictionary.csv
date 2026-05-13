@@ -1,0 +1,14 @@
+column_name,display_name,description,data_type,unit,example_value,null_count,null_pct
+category,Category,Product category on Jiji Ghana,object,,Fashion,0,0.0%
+title,Title,Listing title as entered by seller,object,,Urban Classic Leather Sneakers - Navy Blue (White Sole),0,0.0%
+price_ghs,Price (GHS),Asking price in Ghana Cedis,float64,GHS,400.0,0,0.0%
+condition,Condition,"Item condition: Brand New, Used, Foreign Used, Refurbished",object,,"Men's, 39, 40, 41, 42, 43, 44, 45",33,19.5%
+region,Region,Ghana region (e.g. Greater Accra),object,,Greater Accra,0,0.0%
+area,Area,Specific area within the region,object,,Asylum Down,1,0.6%
+location,Location,Full location string (region + area),object,,"Greater Accra, Asylum Down",0,0.0%
+seller_badge,Seller Badge,"Seller trust level on Jiji (e.g. Enterprise, Diamond)",object,,"Verified ID, 5",29,17.2%
+description,Description,Short listing description snippet,object,,Step into effortless style with these sleek Urban Classic Leather Sneakers. Desi,0,0.0%
+price_outlier_flag,Outlier Flag,True if price is a statistical outlier (IQR × 3) for its category,bool,,False,0,0.0%
+url,URL,Direct link to listing on jiji.com.gh,object,,https://jiji.com.gh/asylum-down/shoes/urban-classic-leather-sneakers-navy-blue-w,0,0.0%
+source,Source,Data source,object,,Jiji Ghana (jiji.com.gh),0,0.0%
+scraped_date,Scraped Date,Date this record was collected,object,YYYY-MM-DD,2026-04-20,0,0.0%

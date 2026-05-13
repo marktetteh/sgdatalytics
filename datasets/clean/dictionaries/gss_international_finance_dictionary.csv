@@ -1,0 +1,12 @@
+column_name,display_name,description,data_type,unit,example_value,null_count,null_pct
+source,Source,Data source organisation,object,,Ghana Statistical Service (GSS StatsBank),0,0.0%
+last_updated,Last Updated,Date data was last refreshed,object,YYYY-MM-DD,2026-04-20,0,0.0%
+period,Period,"Time period (YYYY-MM for monthly, YYYY-QN for quarterly)",object,,2024-Q2,0,0.0%
+balance_of_payments_overall_balance,Balance Of Payments Overall Balance,,int64,,873910000,0,0.0%
+capital_account_balance,Capital Account Balance,,int64,,20600000,0,0.0%
+current_account_balance,Current Account Balance,,int64,,998500000,0,0.0%
+net_official_transfers,Net Official Transfers,,int64,,0,0,0.0%
+net_private_transfers,Net Private Transfers,,int64,,1397700000,0,0.0%
+error_and_omission_net,Error And Omission Net,,int64,,120500000,0,0.0%
+financial_account_balance,Financial Account Balance,,int64,,-265630000,0,0.0%
+foreign_direct_investments_net,Foreign Direct Investments Net,,int64,,436300000,0,0.0%

@@ -1,0 +1,17 @@
+📊 SG Datalytics Weekly Insight — 11 May 2026
+
+📱 Our SGMPI data shows the median mobile phone price in Ghana is GHS 1,000 based on 563 live listings.
+
+563 listings analysed · Top region: Greater Accra · Avg GHS 1,849
+
+This week's chart: Listings — Apr 2026
+
+🔍 Our datasets cover:
+• Ghana CPI & Inflation (GSS + BoG)
+• Exchange Rates (Bank of Ghana)
+• GDP & Fiscal Data
+• SG Market Price Index (SGMPI) — real market prices from online classifieds
+
+📥 Access all 31 datasets at sgdatalytics.org/marketplace.html — free 10-row preview available without a subscription.
+
+#Ghana #GhanaEconomy #DataAnalytics #SGDatalytics #SGMPI #GhanaInflation #GhanaData #EconomicInsight #AfricaData #OpenData

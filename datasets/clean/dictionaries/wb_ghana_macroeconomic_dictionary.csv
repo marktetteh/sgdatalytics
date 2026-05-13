@@ -1,0 +1,16 @@
+column_name,display_name,description,data_type,unit,example_value,null_count,null_pct
+year,Year,Calendar year of observation,int64,,2024,0,0.0%
+country,Country,Country name,object,,Ghana,0,0.0%
+country_code,Country Code,ISO 2-letter country code,object,,GH,0,0.0%
+source,Source,Data source organisation,object,,World Bank Open Data,0,0.0%
+last_updated,Last Updated,Date data was last refreshed,object,YYYY-MM-DD,2026-04-20,0,0.0%
+gdp_current_usd,Gdp Current Usd,,float64,,82308110386.4641,2,7.4%
+gdp_growth_rate,Gdp Growth Rate,,float64,,5.5905,2,7.4%
+gdp_per_capita_current_usd,Gdp Per Capita Current Usd,,float64,,2390.7724,2,7.4%
+gdp_per_capita_growth,Gdp Per Capita Growth,,float64,,3.6291,2,7.4%
+inflation_rate_cpi,Inflation Rate Cpi,,float64,,22.8483,2,7.4%
+official_exchange_rate_lcu_per_usd,Official Exchange Rate Lcu Per Usd,,float64,,14.1819,2,7.4%
+government_debt_of_gdp,Government Debt Of Gdp,,float64,,,27,100.0%
+government_revenue_of_gdp,Government Revenue Of Gdp,,float64,,15.0223,2,7.4%
+government_expenditure_of_gdp,Government Expenditure Of Gdp,,float64,,22.679,5,18.5%
+gross_savings_of_gdp,Gross Savings Of Gdp,,float64,,14.0176,2,7.4%

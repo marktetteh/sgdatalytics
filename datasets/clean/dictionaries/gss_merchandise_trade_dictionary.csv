@@ -1,0 +1,136 @@
+column_name,display_name,description,data_type,unit,example_value,null_count,null_pct
+source,Source,Data source organisation,object,,Ghana Statistical Service (GSS StatsBank),0,0.0%
+last_updated,Last Updated,Date data was last refreshed,object,YYYY-MM-DD,2026-04-20,0,0.0%
+period,Period,"Time period (YYYY-MM for monthly, YYYY-QN for quarterly)",object,,2025-Q2,0,0.0%
+value_in_ghana_cedis_nominal_total_trade_all_products,Value In Ghana Cedis Nominal Total Trade All Products,,int64,,157314990553,0,0.0%
+value_in_ghana_cedis_nominal_total_trade_gold,Value In Ghana Cedis Nominal Total Trade Gold,,int64,,60680120549,0,0.0%
+value_in_ghana_cedis_nominal_total_trade_mineral_fuels_and_oils,Value In Ghana Cedis Nominal Total Trade Mineral Fuels And Oils,,int64,,23638545323,0,0.0%
+value_in_ghana_cedis_nominal_total_trade_cocoa_beans_and_products,Value In Ghana Cedis Nominal Total Trade Cocoa Beans And Products,,int64,,12096734858,0,0.0%
+value_in_ghana_cedis_nominal_total_trade_machinery_and_electrical_equipment,Value In Ghana Cedis Nominal Total Trade Machinery And Electrical Equipment,,int64,,9223902811,0,0.0%
+value_in_ghana_cedis_nominal_total_trade_chemical_products,Value In Ghana Cedis Nominal Total Trade Chemical Products,,int64,,7839412176,0,0.0%
+value_in_ghana_cedis_nominal_total_trade_vehicles_and_automotive_parts,Value In Ghana Cedis Nominal Total Trade Vehicles And Automotive Parts,,int64,,8928946090,0,0.0%
+value_in_ghana_cedis_nominal_total_trade_iron_and_steel,Value In Ghana Cedis Nominal Total Trade Iron And Steel,,int64,,5238864636,0,0.0%
+value_in_ghana_cedis_nominal_total_trade_plastics,Value In Ghana Cedis Nominal Total Trade Plastics,,int64,,3512110218,0,0.0%
+value_in_ghana_cedis_nominal_total_trade_vegetable_products,Value In Ghana Cedis Nominal Total Trade Vegetable Products,,int64,,5957831202,0,0.0%
+value_in_ghana_cedis_nominal_total_trade_other_products,Value In Ghana Cedis Nominal Total Trade Other Products,,int64,,20198522690,0,0.0%
+value_in_ghana_cedis_nominal_export_all_products,Value In Ghana Cedis Nominal Export All Products,,int64,,93391897016,0,0.0%
+value_in_ghana_cedis_nominal_export_gold,Value In Ghana Cedis Nominal Export Gold,,int64,,60680028994,0,0.0%
+value_in_ghana_cedis_nominal_export_mineral_fuels_and_oils,Value In Ghana Cedis Nominal Export Mineral Fuels And Oils,,int64,,7512979824,0,0.0%
+value_in_ghana_cedis_nominal_export_cocoa_beans_and_products,Value In Ghana Cedis Nominal Export Cocoa Beans And Products,,int64,,12037501247,0,0.0%
+value_in_ghana_cedis_nominal_export_machinery_and_electrical_equipment,Value In Ghana Cedis Nominal Export Machinery And Electrical Equipment,,int64,,234924751,0,0.0%
+value_in_ghana_cedis_nominal_export_chemical_products,Value In Ghana Cedis Nominal Export Chemical Products,,int64,,1393700595,0,0.0%
+value_in_ghana_cedis_nominal_export_vehicles_and_automotive_parts,Value In Ghana Cedis Nominal Export Vehicles And Automotive Parts,,int64,,73238324,0,0.0%
+value_in_ghana_cedis_nominal_export_iron_and_steel,Value In Ghana Cedis Nominal Export Iron And Steel,,int64,,1514284064,0,0.0%
+value_in_ghana_cedis_nominal_export_plastics,Value In Ghana Cedis Nominal Export Plastics,,int64,,705691525,0,0.0%
+value_in_ghana_cedis_nominal_export_vegetable_products,Value In Ghana Cedis Nominal Export Vegetable Products,,int64,,2458844449,0,0.0%
+value_in_ghana_cedis_nominal_export_other_products,Value In Ghana Cedis Nominal Export Other Products,,int64,,6780703243,0,0.0%
+value_in_ghana_cedis_nominal_import_all_products,Value In Ghana Cedis Nominal Import All Products,,int64,,63923093537,0,0.0%
+value_in_ghana_cedis_nominal_import_gold,Value In Ghana Cedis Nominal Import Gold,,int64,,91555,0,0.0%
+value_in_ghana_cedis_nominal_import_mineral_fuels_and_oils,Value In Ghana Cedis Nominal Import Mineral Fuels And Oils,,int64,,16125565499,0,0.0%
+value_in_ghana_cedis_nominal_import_cocoa_beans_and_products,Value In Ghana Cedis Nominal Import Cocoa Beans And Products,,int64,,59233611,0,0.0%
+value_in_ghana_cedis_nominal_import_machinery_and_electrical_equipment,Value In Ghana Cedis Nominal Import Machinery And Electrical Equipment,,int64,,8988978060,0,0.0%
+value_in_ghana_cedis_nominal_import_chemical_products,Value In Ghana Cedis Nominal Import Chemical Products,,int64,,6445711581,0,0.0%
+value_in_ghana_cedis_nominal_import_vehicles_and_automotive_parts,Value In Ghana Cedis Nominal Import Vehicles And Automotive Parts,,int64,,8855707766,0,0.0%
+value_in_ghana_cedis_nominal_import_iron_and_steel,Value In Ghana Cedis Nominal Import Iron And Steel,,int64,,3724580573,0,0.0%
+value_in_ghana_cedis_nominal_import_plastics,Value In Ghana Cedis Nominal Import Plastics,,int64,,2806418694,0,0.0%
+value_in_ghana_cedis_nominal_import_vegetable_products,Value In Ghana Cedis Nominal Import Vegetable Products,,int64,,3498986753,0,0.0%
+value_in_ghana_cedis_nominal_import_other_products,Value In Ghana Cedis Nominal Import Other Products,,int64,,13417819448,0,0.0%
+value_in_ghana_cedis_real_total_trade_all_products,Value In Ghana Cedis Real Total Trade All Products,,int64,,56796617003,0,0.0%
+value_in_ghana_cedis_real_total_trade_gold,Value In Ghana Cedis Real Total Trade Gold,,int64,,16937101264,0,0.0%
+value_in_ghana_cedis_real_total_trade_mineral_fuels_and_oils,Value In Ghana Cedis Real Total Trade Mineral Fuels And Oils,,int64,,9848882406,0,0.0%
+value_in_ghana_cedis_real_total_trade_cocoa_beans_and_products,Value In Ghana Cedis Real Total Trade Cocoa Beans And Products,,int64,,3388391460,0,0.0%
+value_in_ghana_cedis_real_total_trade_machinery_and_electrical_equipment,Value In Ghana Cedis Real Total Trade Machinery And Electrical Equipment,,int64,,4386738162,0,0.0%
+value_in_ghana_cedis_real_total_trade_chemical_products,Value In Ghana Cedis Real Total Trade Chemical Products,,int64,,3487581979,0,0.0%
+value_in_ghana_cedis_real_total_trade_vehicles_and_automotive_parts,Value In Ghana Cedis Real Total Trade Vehicles And Automotive Parts,,int64,,4277542657,0,0.0%
+value_in_ghana_cedis_real_total_trade_iron_and_steel,Value In Ghana Cedis Real Total Trade Iron And Steel,,int64,,2213142001,0,0.0%
+value_in_ghana_cedis_real_total_trade_plastics,Value In Ghana Cedis Real Total Trade Plastics,,int64,,1546069848,0,0.0%
+value_in_ghana_cedis_real_total_trade_vegetable_products,Value In Ghana Cedis Real Total Trade Vegetable Products,,int64,,2368341370,0,0.0%
+value_in_ghana_cedis_real_total_trade_other_products,Value In Ghana Cedis Real Total Trade Other Products,,int64,,8342825856,0,0.0%
+value_in_ghana_cedis_real_export_all_products,Value In Ghana Cedis Real Export All Products,,int64,,26067619492,0,0.0%
+value_in_ghana_cedis_real_export_gold,Value In Ghana Cedis Real Export Gold,,int64,,16937057252,0,0.0%
+value_in_ghana_cedis_real_export_mineral_fuels_and_oils,Value In Ghana Cedis Real Export Mineral Fuels And Oils,,int64,,2097028817,0,0.0%
+value_in_ghana_cedis_real_export_cocoa_beans_and_products,Value In Ghana Cedis Real Export Cocoa Beans And Products,,int64,,3359916783,0,0.0%
+value_in_ghana_cedis_real_export_machinery_and_electrical_equipment,Value In Ghana Cedis Real Export Machinery And Electrical Equipment,,int64,,65572381,0,0.0%
+value_in_ghana_cedis_real_export_chemical_products,Value In Ghana Cedis Real Export Chemical Products,,int64,,389010802,0,0.0%
+value_in_ghana_cedis_real_export_vehicles_and_automotive_parts,Value In Ghana Cedis Real Export Vehicles And Automotive Parts,,int64,,20442338,0,0.0%
+value_in_ghana_cedis_real_export_iron_and_steel,Value In Ghana Cedis Real Export Iron And Steel,,int64,,422668155,0,0.0%
+value_in_ghana_cedis_real_export_plastics,Value In Ghana Cedis Real Export Plastics,,int64,,196973171,0,0.0%
+value_in_ghana_cedis_real_export_vegetable_products,Value In Ghana Cedis Real Export Vegetable Products,,int64,,686314590,0,0.0%
+value_in_ghana_cedis_real_export_other_products,Value In Ghana Cedis Real Export Other Products,,int64,,1892635204,0,0.0%
+value_in_ghana_cedis_real_import_all_products,Value In Ghana Cedis Real Import All Products,,int64,,30728997511,0,0.0%
+value_in_ghana_cedis_real_import_gold,Value In Ghana Cedis Real Import Gold,,int64,,44012,0,0.0%
+value_in_ghana_cedis_real_import_mineral_fuels_and_oils,Value In Ghana Cedis Real Import Mineral Fuels And Oils,,int64,,7751853589,0,0.0%
+value_in_ghana_cedis_real_import_cocoa_beans_and_products,Value In Ghana Cedis Real Import Cocoa Beans And Products,,int64,,28474678,0,0.0%
+value_in_ghana_cedis_real_import_machinery_and_electrical_equipment,Value In Ghana Cedis Real Import Machinery And Electrical Equipment,,int64,,4321165781,0,0.0%
+value_in_ghana_cedis_real_import_chemical_products,Value In Ghana Cedis Real Import Chemical Products,,int64,,3098571176,0,0.0%
+value_in_ghana_cedis_real_import_vehicles_and_automotive_parts,Value In Ghana Cedis Real Import Vehicles And Automotive Parts,,int64,,4257100319,0,0.0%
+value_in_ghana_cedis_real_import_iron_and_steel,Value In Ghana Cedis Real Import Iron And Steel,,int64,,1790473846,0,0.0%
+value_in_ghana_cedis_real_import_plastics,Value In Ghana Cedis Real Import Plastics,,int64,,1349096677,0,0.0%
+value_in_ghana_cedis_real_import_vegetable_products,Value In Ghana Cedis Real Import Vegetable Products,,int64,,1682026780,0,0.0%
+value_in_ghana_cedis_real_import_other_products,Value In Ghana Cedis Real Import Other Products,,int64,,6450190652,0,0.0%
+value_in_us_dollars_total_trade_all_products,Value In Us Dollars Total Trade All Products,,int64,,12451257177,0,0.0%
+value_in_us_dollars_total_trade_gold,Value In Us Dollars Total Trade Gold,,int64,,4800575197,0,0.0%
+value_in_us_dollars_total_trade_mineral_fuels_and_oils,Value In Us Dollars Total Trade Mineral Fuels And Oils,,int64,,1911758376,0,0.0%
+value_in_us_dollars_total_trade_cocoa_beans_and_products,Value In Us Dollars Total Trade Cocoa Beans And Products,,int64,,875885919,0,0.0%
+value_in_us_dollars_total_trade_machinery_and_electrical_equipment,Value In Us Dollars Total Trade Machinery And Electrical Equipment,,int64,,734971516,0,0.0%
+value_in_us_dollars_total_trade_chemical_products,Value In Us Dollars Total Trade Chemical Products,,int64,,631317249,0,0.0%
+value_in_us_dollars_total_trade_vehicles_and_automotive_parts,Value In Us Dollars Total Trade Vehicles And Automotive Parts,,int64,,722672326,0,0.0%
+value_in_us_dollars_total_trade_iron_and_steel,Value In Us Dollars Total Trade Iron And Steel,,int64,,423273317,0,0.0%
+value_in_us_dollars_total_trade_plastics,Value In Us Dollars Total Trade Plastics,,int64,,280365808,0,0.0%
+value_in_us_dollars_total_trade_vegetable_products,Value In Us Dollars Total Trade Vegetable Products,,int64,,457095110,0,0.0%
+value_in_us_dollars_total_trade_other_products,Value In Us Dollars Total Trade Other Products,,int64,,1613342361,0,0.0%
+value_in_us_dollars_export_all_products,Value In Us Dollars Export All Products,,int64,,7344178493,0,0.0%
+value_in_us_dollars_export_gold,Value In Us Dollars Export Gold,,int64,,4800567073,0,0.0%
+value_in_us_dollars_export_mineral_fuels_and_oils,Value In Us Dollars Export Mineral Fuels And Oils,,int64,,620475662,0,0.0%
+value_in_us_dollars_export_cocoa_beans_and_products,Value In Us Dollars Export Cocoa Beans And Products,,int64,,870810915,0,0.0%
+value_in_us_dollars_export_machinery_and_electrical_equipment,Value In Us Dollars Export Machinery And Electrical Equipment,,int64,,18116654,0,0.0%
+value_in_us_dollars_export_chemical_products,Value In Us Dollars Export Chemical Products,,int64,,119946550,0,0.0%
+value_in_us_dollars_export_vehicles_and_automotive_parts,Value In Us Dollars Export Vehicles And Automotive Parts,,int64,,5547884,0,0.0%
+value_in_us_dollars_export_iron_and_steel,Value In Us Dollars Export Iron And Steel,,int64,,121905455,0,0.0%
+value_in_us_dollars_export_plastics,Value In Us Dollars Export Plastics,,int64,,56903701,0,0.0%
+value_in_us_dollars_export_vegetable_products,Value In Us Dollars Export Vegetable Products,,int64,,187891992,0,0.0%
+value_in_us_dollars_export_other_products,Value In Us Dollars Export Other Products,,int64,,542012607,0,0.0%
+value_in_us_dollars_import_all_products,Value In Us Dollars Import All Products,,int64,,5107078684,0,0.0%
+value_in_us_dollars_import_gold,Value In Us Dollars Import Gold,,int64,,8124,0,0.0%
+value_in_us_dollars_import_mineral_fuels_and_oils,Value In Us Dollars Import Mineral Fuels And Oils,,int64,,1291282714,0,0.0%
+value_in_us_dollars_import_cocoa_beans_and_products,Value In Us Dollars Import Cocoa Beans And Products,,int64,,5075004,0,0.0%
+value_in_us_dollars_import_machinery_and_electrical_equipment,Value In Us Dollars Import Machinery And Electrical Equipment,,int64,,716854862,0,0.0%
+value_in_us_dollars_import_chemical_products,Value In Us Dollars Import Chemical Products,,int64,,511370699,0,0.0%
+value_in_us_dollars_import_vehicles_and_automotive_parts,Value In Us Dollars Import Vehicles And Automotive Parts,,int64,,717124441,0,0.0%
+value_in_us_dollars_import_iron_and_steel,Value In Us Dollars Import Iron And Steel,,int64,,301367861,0,0.0%
+value_in_us_dollars_import_plastics,Value In Us Dollars Import Plastics,,int64,,223462106,0,0.0%
+value_in_us_dollars_import_vegetable_products,Value In Us Dollars Import Vegetable Products,,int64,,269203118,0,0.0%
+value_in_us_dollars_import_other_products,Value In Us Dollars Import Other Products,,int64,,1071329754,0,0.0%
+net_weight_in_kg_total_trade_all_products,Net Weight In Kg Total Trade All Products,,int64,,12418521511,0,0.0%
+net_weight_in_kg_total_trade_gold,Net Weight In Kg Total Trade Gold,,int64,,48581,0,0.0%
+net_weight_in_kg_total_trade_mineral_fuels_and_oils,Net Weight In Kg Total Trade Mineral Fuels And Oils,,int64,,3190994943,0,0.0%
+net_weight_in_kg_total_trade_cocoa_beans_and_products,Net Weight In Kg Total Trade Cocoa Beans And Products,,int64,,84612819,0,0.0%
+net_weight_in_kg_total_trade_machinery_and_electrical_equipment,Net Weight In Kg Total Trade Machinery And Electrical Equipment,,int64,,252866781,0,0.0%
+net_weight_in_kg_total_trade_chemical_products,Net Weight In Kg Total Trade Chemical Products,,int64,,659490561,0,0.0%
+net_weight_in_kg_total_trade_vehicles_and_automotive_parts,Net Weight In Kg Total Trade Vehicles And Automotive Parts,,int64,,163605457,0,0.0%
+net_weight_in_kg_total_trade_iron_and_steel,Net Weight In Kg Total Trade Iron And Steel,,int64,,534555323,0,0.0%
+net_weight_in_kg_total_trade_plastics,Net Weight In Kg Total Trade Plastics,,int64,,260642265,0,0.0%
+net_weight_in_kg_total_trade_vegetable_products,Net Weight In Kg Total Trade Vegetable Products,,int64,,748060816,0,0.0%
+net_weight_in_kg_total_trade_other_products,Net Weight In Kg Total Trade Other Products,,int64,,6523643967,0,0.0%
+net_weight_in_kg_export_all_products,Net Weight In Kg Export All Products,,int64,,4811940518,0,0.0%
+net_weight_in_kg_export_gold,Net Weight In Kg Export Gold,,int64,,48526,0,0.0%
+net_weight_in_kg_export_mineral_fuels_and_oils,Net Weight In Kg Export Mineral Fuels And Oils,,int64,,1168546619,0,0.0%
+net_weight_in_kg_export_cocoa_beans_and_products,Net Weight In Kg Export Cocoa Beans And Products,,int64,,83842756,0,0.0%
+net_weight_in_kg_export_machinery_and_electrical_equipment,Net Weight In Kg Export Machinery And Electrical Equipment,,int64,,3715523,0,0.0%
+net_weight_in_kg_export_chemical_products,Net Weight In Kg Export Chemical Products,,int64,,91601459,0,0.0%
+net_weight_in_kg_export_vehicles_and_automotive_parts,Net Weight In Kg Export Vehicles And Automotive Parts,,int64,,973551,0,0.0%
+net_weight_in_kg_export_iron_and_steel,Net Weight In Kg Export Iron And Steel,,int64,,161605783,0,0.0%
+net_weight_in_kg_export_plastics,Net Weight In Kg Export Plastics,,int64,,38772953,0,0.0%
+net_weight_in_kg_export_vegetable_products,Net Weight In Kg Export Vegetable Products,,int64,,203065507,0,0.0%
+net_weight_in_kg_export_other_products,Net Weight In Kg Export Other Products,,int64,,3059767840,0,0.0%
+net_weight_in_kg_import_all_products,Net Weight In Kg Import All Products,,int64,,7606580993,0,0.0%
+net_weight_in_kg_import_gold,Net Weight In Kg Import Gold,,int64,,55,0,0.0%
+net_weight_in_kg_import_mineral_fuels_and_oils,Net Weight In Kg Import Mineral Fuels And Oils,,int64,,2022448324,0,0.0%
+net_weight_in_kg_import_cocoa_beans_and_products,Net Weight In Kg Import Cocoa Beans And Products,,int64,,770062,0,0.0%
+net_weight_in_kg_import_machinery_and_electrical_equipment,Net Weight In Kg Import Machinery And Electrical Equipment,,int64,,249151257,0,0.0%
+net_weight_in_kg_import_chemical_products,Net Weight In Kg Import Chemical Products,,int64,,567889102,0,0.0%
+net_weight_in_kg_import_vehicles_and_automotive_parts,Net Weight In Kg Import Vehicles And Automotive Parts,,int64,,162631905,0,0.0%
+net_weight_in_kg_import_iron_and_steel,Net Weight In Kg Import Iron And Steel,,int64,,372949539,0,0.0%
+net_weight_in_kg_import_plastics,Net Weight In Kg Import Plastics,,int64,,221869312,0,0.0%
+net_weight_in_kg_import_vegetable_products,Net Weight In Kg Import Vegetable Products,,int64,,544995309,0,0.0%
+net_weight_in_kg_import_other_products,Net Weight In Kg Import Other Products,,int64,,3463876127,0,0.0%

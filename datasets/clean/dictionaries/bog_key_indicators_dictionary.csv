@@ -1,0 +1,10 @@
+column_name,display_name,description,data_type,unit,example_value,null_count,null_pct
+date,Date,,object,,2025-Dec,0,0.0%
+source,Source,,object,,Bank of Ghana Statistical Bulletin,0,0.0%
+last_updated,Last Updated,Date data was last refreshed,object,YYYY-MM-DD,2026-04-20,0,0.0%
+headline_inflation,Headline Inflation,,float64,,5.388,6,3.1%
+core_inflation,Core Inflation,,float64,,4.5663,0,0.0%
+private_sector_credit_growth,Private Sector Credit Growth,,float64,,19.1515,0,0.0%
+reserve_money_growth,Reserve Money Growth,,float64,,12.4899,0,0.0%
+broad_money_m2_growth,Broad Money M2 Growth,,float64,,26.8808,0,0.0%
+gross_international_reserves_usd_m,Gross International Reserves Usd M,,float64,,13829.194,0,0.0%

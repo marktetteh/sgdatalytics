@@ -1,0 +1,94 @@
+<svg width="1280" height="720" viewBox="0 0 1280 720" role="img" xmlns="http://www.w3.org/2000/svg">
+<title>SG Datalytics — Ghana Data Bundle Gumroad cover</title>
+<desc>Dark navy product cover for the Ghana Data Bundle, featuring teal bar chart graphics and dataset stats</desc>
+
+<!-- Background -->
+<rect width="1280" height="720" fill="#080f1e"/>
+
+<!-- Subtle grid lines -->
+<line x1="0" y1="180" x2="1280" y2="180" stroke="#ffffff" stroke-opacity="0.03" stroke-width="1"/>
+<line x1="0" y1="360" x2="1280" y2="360" stroke="#ffffff" stroke-opacity="0.03" stroke-width="1"/>
+<line x1="0" y1="540" x2="1280" y2="540" stroke="#ffffff" stroke-opacity="0.03" stroke-width="1"/>
+<line x1="213" y1="0" x2="213" y2="720" stroke="#ffffff" stroke-opacity="0.03" stroke-width="1"/>
+<line x1="426" y1="0" x2="426" y2="720" stroke="#ffffff" stroke-opacity="0.03" stroke-width="1"/>
+<line x1="640" y1="0" x2="640" y2="720" stroke="#ffffff" stroke-opacity="0.03" stroke-width="1"/>
+<line x1="853" y1="0" x2="853" y2="720" stroke="#ffffff" stroke-opacity="0.03" stroke-width="1"/>
+<line x1="1066" y1="0" x2="1066" y2="720" stroke="#ffffff" stroke-opacity="0.03" stroke-width="1"/>
+
+<!-- Decorative bar chart — right side -->
+<rect x="810" y="435" width="42" height="188" rx="3" fill="#00c9a7" fill-opacity="0.10"/>
+<rect x="865" y="350" width="42" height="273" rx="3" fill="#00c9a7" fill-opacity="0.10"/>
+<rect x="920" y="396" width="42" height="227" rx="3" fill="#00c9a7" fill-opacity="0.10"/>
+<rect x="975" y="292" width="42" height="331" rx="3" fill="#00c9a7" fill-opacity="0.12"/>
+<rect x="1030" y="320" width="42" height="303" rx="3" fill="#00c9a7" fill-opacity="0.14"/>
+<rect x="1085" y="226" width="42" height="397" rx="3" fill="#00c9a7" fill-opacity="0.18"/>
+<rect x="1140" y="188" width="42" height="435" rx="3" fill="#00c9a7" fill-opacity="0.22"/>
+<rect x="1195" y="151" width="42" height="472" rx="3" fill="#00c9a7" fill-opacity="0.28"/>
+
+<!-- Top teal line -->
+<rect x="0" y="0" width="1280" height="5" fill="#00c9a7"/>
+
+<!-- Logo mark -->
+<rect x="68" y="56" width="52" height="52" rx="9" fill="#00c9a7"/>
+<rect x="76" y="79" width="9" height="23" rx="2" fill="#080f1e"/>
+<rect x="90" y="72" width="9" height="30" rx="2" fill="#080f1e" fill-opacity="0.7"/>
+<rect x="104" y="64" width="9" height="38" rx="2" fill="#080f1e" fill-opacity="0.45"/>
+
+<!-- Brand name -->
+<text x="132" y="93" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="28" font-weight="500" letter-spacing="5" fill="#ffffff">SG DATALYTICS</text>
+
+<!-- Tagline -->
+<text x="68" y="142" font-family="'IBM Plex Sans', Arial, sans-serif" font-size="20" fill="#00c9a7" letter-spacing="2.5">GHANA'S DATA MARKETPLACE</text>
+
+<!-- Divider -->
+<line x1="68" y1="172" x2="740" y2="172" stroke="#ffffff" stroke-opacity="0.08" stroke-width="1"/>
+
+<!-- Main title -->
+<text x="68" y="286" font-family="'IBM Plex Sans', Arial, sans-serif" font-size="88" font-weight="600" fill="#ffffff" letter-spacing="-1">Ghana Data</text>
+<text x="68" y="388" font-family="'IBM Plex Sans', Arial, sans-serif" font-size="88" font-weight="600" fill="#00c9a7" letter-spacing="-1">Full Bundle</text>
+
+<!-- Subtitle -->
+<text x="68" y="436" font-family="'IBM Plex Sans', Arial, sans-serif" font-size="26" fill="#ffffff" fill-opacity="0.45">31 clean CSV datasets · 4 trusted sources · Instant download</text>
+
+<!-- Stat cards -->
+<rect x="68"  y="484" width="160" height="98" rx="10" fill="#0d1829"/>
+<rect x="68"  y="484" width="160" height="98" rx="10" stroke="#00c9a7" stroke-opacity="0.25" stroke-width="1.5" fill="none"/>
+<text x="148" y="528" text-anchor="middle" font-family="'IBM Plex Mono', monospace" font-size="36" font-weight="500" fill="#00c9a7">31</text>
+<text x="148" y="562" text-anchor="middle" font-family="'IBM Plex Mono', monospace" font-size="16" fill="#ffffff" fill-opacity="0.4" letter-spacing="1">datasets</text>
+
+<rect x="242" y="484" width="160" height="98" rx="10" fill="#0d1829"/>
+<rect x="242" y="484" width="160" height="98" rx="10" stroke="#ffffff" stroke-opacity="0.07" stroke-width="1" fill="none"/>
+<text x="322" y="528" text-anchor="middle" font-family="'IBM Plex Mono', monospace" font-size="36" font-weight="500" fill="#ffffff">4</text>
+<text x="322" y="562" text-anchor="middle" font-family="'IBM Plex Mono', monospace" font-size="16" fill="#ffffff" fill-opacity="0.4" letter-spacing="1">sources</text>
+
+<rect x="416" y="484" width="160" height="98" rx="10" fill="#0d1829"/>
+<rect x="416" y="484" width="160" height="98" rx="10" stroke="#ffffff" stroke-opacity="0.07" stroke-width="1" fill="none"/>
+<text x="496" y="528" text-anchor="middle" font-family="'IBM Plex Mono', monospace" font-size="36" font-weight="500" fill="#ffffff">50+</text>
+<text x="496" y="562" text-anchor="middle" font-family="'IBM Plex Mono', monospace" font-size="16" fill="#ffffff" fill-opacity="0.4" letter-spacing="1">yrs of data</text>
+
+<rect x="590" y="484" width="160" height="98" rx="10" fill="#00c9a7" fill-opacity="0.12"/>
+<rect x="590" y="484" width="160" height="98" rx="10" stroke="#00c9a7" stroke-opacity="0.4" stroke-width="1.5" fill="none"/>
+<text x="670" y="528" text-anchor="middle" font-family="'IBM Plex Mono', monospace" font-size="36" font-weight="500" fill="#00c9a7">$29</text>
+<text x="670" y="562" text-anchor="middle" font-family="'IBM Plex Mono', monospace" font-size="16" fill="#00c9a7" fill-opacity="0.7" letter-spacing="1">one-time</text>
+
+<!-- Source pills -->
+<rect x="68"  y="608" width="130" height="40" rx="20" fill="#162440"/>
+<text x="133" y="634" text-anchor="middle" font-family="'IBM Plex Mono', monospace" font-size="17" fill="#ffffff" fill-opacity="0.55" letter-spacing="1">Bank of Ghana</text>
+
+<rect x="210" y="608" width="100" height="40" rx="20" fill="#162440"/>
+<text x="260" y="634" text-anchor="middle" font-family="'IBM Plex Mono', monospace" font-size="17" fill="#ffffff" fill-opacity="0.55" letter-spacing="1">GSS</text>
+
+<rect x="322" y="608" width="188" height="40" rx="20" fill="#162440"/>
+<text x="416" y="634" text-anchor="middle" font-family="'IBM Plex Mono', monospace" font-size="17" fill="#ffffff" fill-opacity="0.55" letter-spacing="1">World Bank</text>
+
+<rect x="522" y="608" width="116" height="40" rx="20" fill="#00c9a7" fill-opacity="0.15"/>
+<rect x="522" y="608" width="116" height="40" rx="20" stroke="#00c9a7" stroke-opacity="0.35" stroke-width="1" fill="none"/>
+<text x="580" y="634" text-anchor="middle" font-family="'IBM Plex Mono', monospace" font-size="17" fill="#00c9a7" letter-spacing="1">SGMPI</text>
+
+<!-- Website -->
+<text x="1212" y="676" text-anchor="end" font-family="'IBM Plex Mono', monospace" font-size="18" fill="#ffffff" fill-opacity="0.2" letter-spacing="1">sgdatalytics.org</text>
+
+<!-- Bottom teal line -->
+<rect x="0" y="715" width="1280" height="5" fill="#00c9a7" fill-opacity="0.4"/>
+
+</svg>

@@ -1,0 +1,14 @@
+column_name,display_name,description,data_type,unit,example_value,null_count,null_pct
+year,Year,Calendar year of observation,int64,,2024,0,0.0%
+country,Country,Country name,object,,Ghana,0,0.0%
+country_code,Country Code,ISO 2-letter country code,object,,GH,0,0.0%
+source,Source,Data source organisation,object,,World Bank Open Data,0,0.0%
+last_updated,Last Updated,Date data was last refreshed,object,YYYY-MM-DD,2026-04-20,0,0.0%
+access_to_electricity_of_population,Access To Electricity Of Population,,float64,,89.5,10,28.6%
+access_to_electricity_rural_of_rural_population,Access To Electricity Rural Of Rural Population,,float64,,77.8,10,28.6%
+access_to_electricity_urban_of_urban_population,Access To Electricity Urban Of Urban Population,,float64,,97.5,10,28.6%
+energy_use_kg_of_oil_equivalent_per_capita,Energy Use Kg Of Oil Equivalent Per Capita,,float64,,369.3313,10,28.6%
+internet_users_of_population,Internet Users Of Population,,float64,,72.1757,10,28.6%
+mobile_cellular_subscriptions_per_100_people,Mobile Cellular Subscriptions Per 100 People,,float64,,113.648,10,28.6%
+roads_paved_of_total_roads,Roads Paved Of Total Roads,,float64,,12.6,21,60.0%
+renewable_energy_consumption_of_total,Renewable Energy Consumption Of Total,,float64,,39.0,10,28.6%

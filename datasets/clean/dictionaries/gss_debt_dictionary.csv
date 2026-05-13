@@ -1,0 +1,20 @@
+column_name,display_name,description,data_type,unit,example_value,null_count,null_pct
+source,Source,Data source organisation,object,,Ghana Statistical Service (GSS StatsBank),0,0.0%
+last_updated,Last Updated,Date data was last refreshed,object,YYYY-MM-DD,2026-04-20,0,0.0%
+period,Period,"Time period (YYYY-MM for monthly, YYYY-QN for quarterly)",object,,2024-06,0,0.0%
+total_public_debt,Total Public Debt,,float64,,50929.4,0,0.0%
+external_debt,External Debt,,float64,,31023.9,0,0.0%
+multilateral_external_debt,Multilateral External Debt,,float64,,10056.6,0,0.0%
+bilateral_external_debt,Bilateral External Debt,,float64,,1416.5,4,3.2%
+export_external_debt,Export External Debt,,float64,,0.0,0,0.0%
+commercial_external_debt,Commercial External Debt,,float64,,2491.6,0,0.0%
+international_capital_market_external_debt,International Capital Market External Debt,,float64,,13103.9,0,0.0%
+other_concessional_external_debt,Other Concessional External Debt,,float64,,0.0,0,0.0%
+domestic_debt,Domestic Debt,,float64,,19905.5,0,0.0%
+short_term_domestic_debt,Short Term Domestic Debt,,float64,,6421.0,0,0.0%
+medium_term_domestic_debt,Medium Term Domestic Debt,,float64,,8743.3,0,0.0%
+long_term_domestic_debt,Long Term Domestic Debt,,float64,,4652.0,0,0.0%
+standard_loans,Standard Loans,,float64,,89.3,0,0.0%
+banking_sector_holdings,Banking Sector Holdings,,float64,,9353.9,0,0.0%
+non_bank_sector_holdings,Non Bank Sector Holdings,,float64,,9555.8,0,0.0%
+foreign_sector_holdings,Foreign Sector Holdings,,float64,,,126,100.0%

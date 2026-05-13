@@ -1,0 +1,37 @@
+column_name,display_name,description,data_type,unit,example_value,null_count,null_pct
+source,Source,Data source organisation,object,,Ghana Statistical Service (GSS StatsBank),0,0.0%
+last_updated,Last Updated,Date data was last refreshed,object,YYYY-MM-DD,2026-04-20,0,0.0%
+period,Period,"Time period (YYYY-MM for monthly, YYYY-QN for quarterly)",object,,2026-01,0,0.0%
+producer_price_index_all_industries,Producer Price Index All Industries,,float64,,274.9,0,0.0%
+producer_price_index_mining_and_quarrying,Producer Price Index Mining And Quarrying,,float64,,368.3,162,69.5%
+producer_price_index_mining_and_quarrying_excluding_petroleum_*,Producer Price Index Mining And Quarrying Excluding Petroleum *,,float64,,479.9,0,0.0%
+producer_price_index_manufacturing,Producer Price Index Manufacturing,,float64,,261.2,0,0.0%
+producer_price_index_electricity_and_gas,Producer Price Index Electricity And Gas,,float64,,234.1,0,0.0%
+producer_price_index_water_supply_sewerage_waste_management,Producer Price Index Water Supply Sewerage Waste Management,,float64,,174.5,162,69.5%
+producer_price_index_water_collection_treatment_and_supply*,Producer Price Index Water Collection Treatment And Supply*,,float64,,189.4,0,0.0%
+producer_price_index_construction,Producer Price Index Construction,,float64,,224.6,162,69.5%
+producer_price_index_transportation_and_storage,Producer Price Index Transportation And Storage,,float64,,224.9,162,69.5%
+producer_price_index_accommdation_and_food_service,Producer Price Index Accommdation And Food Service,,float64,,232.2,162,69.5%
+producer_price_index_information_and_communication,Producer Price Index Information And Communication,,float64,,127.3,162,69.5%
+year_on_year_ppi_change_all_industries,Year On Year Ppi Change All Industries,,float64,,1.6,12,5.2%
+year_on_year_ppi_change_mining_and_quarrying,Year On Year Ppi Change Mining And Quarrying,,float64,,3.7,174,74.7%
+year_on_year_ppi_change_mining_and_quarrying_excluding_petroleum_*,Year On Year Ppi Change Mining And Quarrying Excluding Petroleum *,,float64,,31.5,12,5.2%
+year_on_year_ppi_change_manufacturing,Year On Year Ppi Change Manufacturing,,float64,,-2.2,12,5.2%
+year_on_year_ppi_change_electricity_and_gas,Year On Year Ppi Change Electricity And Gas,,float64,,14.8,12,5.2%
+year_on_year_ppi_change_water_supply_sewerage_waste_management,Year On Year Ppi Change Water Supply Sewerage Waste Management,,float64,,9.9,174,74.7%
+year_on_year_ppi_change_water_collection_treatment_and_supply*,Year On Year Ppi Change Water Collection Treatment And Supply*,,float64,,17.2,12,5.2%
+year_on_year_ppi_change_construction,Year On Year Ppi Change Construction,,float64,,1.1,174,74.7%
+year_on_year_ppi_change_transportation_and_storage,Year On Year Ppi Change Transportation And Storage,,float64,,-6.9,174,74.7%
+year_on_year_ppi_change_accommdation_and_food_service,Year On Year Ppi Change Accommdation And Food Service,,float64,,-5.4,174,74.7%
+year_on_year_ppi_change_information_and_communication,Year On Year Ppi Change Information And Communication,,float64,,1.4,174,74.7%
+month_on_month_ppi_change_all_industries,Month On Month Ppi Change All Industries,,float64,,3.3,1,0.4%
+month_on_month_ppi_change_mining_and_quarrying,Month On Month Ppi Change Mining And Quarrying,,float64,,7.0,163,70.0%
+month_on_month_ppi_change_mining_and_quarrying_excluding_petroleum_*,Month On Month Ppi Change Mining And Quarrying Excluding Petroleum *,,float64,,11.7,1,0.4%
+month_on_month_ppi_change_manufacturing,Month On Month Ppi Change Manufacturing,,float64,,-0.4,1,0.4%
+month_on_month_ppi_change_electricity_and_gas,Month On Month Ppi Change Electricity And Gas,,float64,,8.6,1,0.4%
+month_on_month_ppi_change_water_supply_sewerage_waste_management,Month On Month Ppi Change Water Supply Sewerage Waste Management,,float64,,7.5,163,70.0%
+month_on_month_ppi_change_water_collection_treatment_and_supply*,Month On Month Ppi Change Water Collection Treatment And Supply*,,float64,,15.5,1,0.4%
+month_on_month_ppi_change_construction,Month On Month Ppi Change Construction,,float64,,-0.5,163,70.0%
+month_on_month_ppi_change_transportation_and_storage,Month On Month Ppi Change Transportation And Storage,,float64,,-2.3,163,70.0%
+month_on_month_ppi_change_accommdation_and_food_service,Month On Month Ppi Change Accommdation And Food Service,,float64,,-0.4,163,70.0%
+month_on_month_ppi_change_information_and_communication,Month On Month Ppi Change Information And Communication,,float64,,-0.1,163,70.0%

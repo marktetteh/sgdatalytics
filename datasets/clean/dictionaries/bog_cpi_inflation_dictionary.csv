@@ -1,0 +1,9 @@
+column_name,display_name,description,data_type,unit,example_value,null_count,null_pct
+date,Date,,object,,2025-Dec,0,0.0%
+source,Source,,object,,Bank of Ghana Statistical Bulletin,0,0.0%
+last_updated,Last Updated,Date data was last refreshed,object,YYYY-MM-DD,2026-04-20,0,0.0%
+cpi_overall_index,Cpi Overall Index,,float64,,261.7167,0,0.0%
+cpi_food_non_alcoholic_beverages,Cpi Food Non Alcoholic Beverages,,float64,,291.0393,0,0.0%
+cpi_non_food,Cpi Non Food,,float64,,239.0999,0,0.0%
+headline_inflation,Headline Inflation,,float64,,5.388,0,0.0%
+core_inflation_excl_energy,Core Inflation Excl Energy,,float64,,4.5663,0,0.0%

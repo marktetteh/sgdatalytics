@@ -1,0 +1,16 @@
+column_name,display_name,description,data_type,unit,example_value,null_count,null_pct
+year,Year,Calendar year of observation,int64,,2025,0,0.0%
+country,Country,Country name,object,,Ghana,0,0.0%
+country_code,Country Code,ISO 2-letter country code,object,,GH,0,0.0%
+source,Source,Data source organisation,object,,World Bank Open Data,0,0.0%
+last_updated,Last Updated,Date data was last refreshed,object,YYYY-MM-DD,2026-04-20,0,0.0%
+total_population,Total Population,,float64,,34427414.0,5,16.7%
+population_growth_rate,Population Growth Rate,,float64,,1.875,5,16.7%
+urban_population_of_total,Urban Population Of Total,,float64,,58.3655,5,16.7%
+unemployment_rate_of_total_labor_force,Unemployment Rate Of Total Labor Force,,float64,,2.979,5,16.7%
+youth_unemployment_rate_ages_15–24,Youth Unemployment Rate Ages 15–24,,float64,,5.826,5,16.7%
+poverty_headcount_ratio_at_national_lines,Poverty Headcount Ratio At National Lines,,float64,,23.4,25,83.3%
+life_expectancy_at_birth_years,Life Expectancy At Birth Years,,float64,,65.695,5,16.7%
+under_5_mortality_rate_per_1_000_live_births,Under 5 Mortality Rate Per 1 000 Live Births,,float64,,35.9,5,16.7%
+adult_literacy_rate,Adult Literacy Rate,,float64,,76.49,25,83.3%
+primary_school_enrollment_rate_gross,Primary School Enrollment Rate Gross,,float64,,100.967,5,16.7%

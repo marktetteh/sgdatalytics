@@ -10,4 +10,4 @@ COPY database/ ./database/
 
 EXPOSE 8000
 
-CMD python3 database/init_db.py && gunicorn -w 2 -b 0.0.0.0:$PORT api:app
+CMD gunicorn -w 2 -b 0.0.0.0:$PORT api:app

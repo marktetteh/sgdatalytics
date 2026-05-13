@@ -1,0 +1,20 @@
+Dataset: Ghana Macroeconomic Indicators
+Description: Key macroeconomic indicators for Ghana including GDP, inflation, exchange rate, and fiscal data. Source: World Bank Open Data.
+Source: World Bank Open Data API
+Country: Ghana (GH)
+Scraped: 2026-04-20
+Years covered: 1992 – 2024
+Rows: 27
+Columns: 15
+
+Indicators:
+  NY.GDP.MKTP.CD: GDP (Current USD)
+  NY.GDP.MKTP.KD.ZG: GDP Growth Rate (%)
+  NY.GDP.PCAP.CD: GDP Per Capita (Current USD)
+  NY.GDP.PCAP.KD.ZG: GDP Per Capita Growth (%)
+  FP.CPI.TOTL.ZG: Inflation Rate - CPI (%)
+  PA.NUS.FCRF: Official Exchange Rate (LCU per USD)
+  GC.DOD.TOTL.GD.ZS: Government Debt (% of GDP)
+  GC.REV.XGRT.GD.ZS: Government Revenue (% of GDP)
+  GC.XPN.TOTL.GD.ZS: Government Expenditure (% of GDP)
+  NY.GNS.ICTR.ZS: Gross Savings (% of GDP)

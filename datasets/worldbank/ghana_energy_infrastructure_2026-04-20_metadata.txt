@@ -1,0 +1,18 @@
+Dataset: Ghana Energy & Infrastructure
+Description: Ghana energy access, electricity, road, internet, and infrastructure data. Source: World Bank Open Data.
+Source: World Bank Open Data API
+Country: Ghana (GH)
+Scraped: 2026-04-20
+Years covered: 1990 – 2024
+Rows: 35
+Columns: 13
+
+Indicators:
+  EG.ELC.ACCS.ZS: Access to Electricity (% of Population)
+  EG.ELC.ACCS.RU.ZS: Access to Electricity, Rural (% of Rural Population)
+  EG.ELC.ACCS.UR.ZS: Access to Electricity, Urban (% of Urban Population)
+  EG.USE.PCAP.KG.OE: Energy Use (kg of oil equivalent per capita)
+  IT.NET.USER.ZS: Internet Users (% of Population)
+  IT.CEL.SETS.P2: Mobile Cellular Subscriptions (per 100 people)
+  IS.ROD.PAVE.ZS: Roads, Paved (% of Total Roads)
+  EG.FEC.RNEW.ZS: Renewable Energy Consumption (% of Total)

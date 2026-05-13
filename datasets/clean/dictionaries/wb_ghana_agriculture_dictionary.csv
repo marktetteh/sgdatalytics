@@ -1,0 +1,14 @@
+column_name,display_name,description,data_type,unit,example_value,null_count,null_pct
+year,Year,Calendar year of observation,int64,,2025,0,0.0%
+country,Country,Country name,object,,Ghana,0,0.0%
+country_code,Country Code,ISO 2-letter country code,object,,GH,0,0.0%
+source,Source,Data source organisation,object,,World Bank Open Data,0,0.0%
+last_updated,Last Updated,Date data was last refreshed,object,YYYY-MM-DD,2026-04-20,0,0.0%
+agriculture_forestry_fishing_of_gdp,Agriculture Forestry Fishing Of Gdp,,float64,,20.8867,3,10.7%
+agriculture_value_added_growth,Agriculture Value Added Growth,,float64,,2.8178,10,35.7%
+arable_land_of_land_area,Arable Land Of Land Area,,float64,,20.6999,3,10.7%
+agricultural_land_of_land_area,Agricultural Land Of Land Area,,float64,,55.393,3,10.7%
+cereal_yield_kg_per_hectare,Cereal Yield Kg Per Hectare,,float64,,2687.6,3,10.7%
+prevalence_of_undernourishment,Prevalence Of Undernourishment,,float64,,6.3,5,17.9%
+food_production_index,Food Production Index,,float64,,135.5,3,10.7%
+employment_in_agriculture_of_total,Employment In Agriculture Of Total,,float64,,34.5736,3,10.7%

@@ -1,0 +1,10 @@
+column_name,display_name,description,data_type,unit,example_value,null_count,null_pct
+period,Period,,object,,2006_Q2,0,0.0%
+source,Source,,object,,Bank of Ghana Statistical Bulletin,0,0.0%
+last_updated,Last Updated,Date data was last refreshed,object,YYYY-MM-DD,2026-04-20,0,0.0%
+sheet,Sheet,,object,,Table 29,0,0.0%
+gdp_total,Gdp Total,,float64,,1057.7242,0,0.0%
+agriculture,Agriculture,,float64,,2589.86,0,0.0%
+industry,Industry,,float64,,2423.4875,0,0.0%
+services,Services,,float64,,6071.0717,0,0.0%
+gdp_growth,Gdp Growth,,float64,,338.6374,0,0.0%

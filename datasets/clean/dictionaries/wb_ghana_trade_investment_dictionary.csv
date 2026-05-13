@@ -1,0 +1,16 @@
+column_name,display_name,description,data_type,unit,example_value,null_count,null_pct
+year,Year,Calendar year of observation,int64,,2024,0,0.0%
+country,Country,Country name,object,,Ghana,0,0.0%
+country_code,Country Code,ISO 2-letter country code,object,,GH,0,0.0%
+source,Source,Data source organisation,object,,World Bank Open Data,0,0.0%
+last_updated,Last Updated,Date data was last refreshed,object,YYYY-MM-DD,2026-04-20,0,0.0%
+exports_of_goods_services_of_gdp,Exports Of Goods Services Of Gdp,,float64,,35.4734,0,0.0%
+imports_of_goods_services_of_gdp,Imports Of Goods Services Of Gdp,,float64,,34.315,0,0.0%
+exports_of_goods_services_usd,Exports Of Goods Services Usd,,float64,,29197465998.8647,0,0.0%
+imports_of_goods_services_usd,Imports Of Goods Services Usd,,float64,,28244066026.1723,0,0.0%
+foreign_direct_investment_net_inflows_of_gdp,Foreign Direct Investment Net Inflows Of Gdp,,float64,,2.1451,0,0.0%
+foreign_direct_investment_net_inflows_usd,Foreign Direct Investment Net Inflows Usd,,float64,,1765552579.5641,0,0.0%
+foreign_direct_investment_net_outflows_of_gdp,Foreign Direct Investment Net Outflows Of Gdp,,float64,,,25,100.0%
+merchandise_trade_of_gdp,Merchandise Trade Of Gdp,,float64,,43.0845,0,0.0%
+merchandise_exports_usd,Merchandise Exports Usd,,int64,,20221000000,0,0.0%
+merchandise_imports_usd,Merchandise Imports Usd,,int64,,15241000000,0,0.0%

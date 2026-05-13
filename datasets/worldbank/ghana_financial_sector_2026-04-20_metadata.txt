@@ -1,0 +1,19 @@
+Dataset: Ghana Financial Sector
+Description: Ghana banking sector, interest rates, credit, and financial inclusion data. Source: World Bank Open Data.
+Source: World Bank Open Data API
+Country: Ghana (GH)
+Scraped: 2026-04-20
+Years covered: 1999 – 2024
+Rows: 26
+Columns: 14
+
+Indicators:
+  FR.INR.LEND: Lending Interest Rate (%)
+  FR.INR.DPST: Deposit Interest Rate (%)
+  FS.AST.DOMS.GD.ZS: Domestic Credit to Private Sector (% of GDP)
+  FD.AST.PRVT.GD.ZS: Domestic Credit to Private Sector by Banks (% of GDP)
+  FB.ATM.TOTL.P5: ATMs (per 100,000 adults)
+  FB.CBK.BRCH.P5: Commercial Bank Branches (per 100,000 adults)
+  FX.OWN.TOTL.ZS: Account Ownership at Financial Institution (%)
+  FB.BNK.CAPA.ZS: Bank Capital to Assets Ratio (%)
+  FS.AST.NONP.ZS: Bank Nonperforming Loans (% of Total Loans)

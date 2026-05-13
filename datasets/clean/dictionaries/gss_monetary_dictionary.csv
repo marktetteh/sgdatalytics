@@ -1,0 +1,20 @@
+column_name,display_name,description,data_type,unit,example_value,null_count,null_pct
+source,Source,Data source organisation,object,,Ghana Statistical Service (GSS StatsBank),0,0.0%
+last_updated,Last Updated,Date data was last refreshed,object,YYYY-MM-DD,2026-04-20,0,0.0%
+period,Period,"Time period (YYYY-MM for monthly, YYYY-QN for quarterly)",object,,2024-07,0,0.0%
+narrow_money_m1,Narrow Money M1,,float64,,138489807250.0,0,0.0%
+broad_money_m2,Broad Money M2,,float64,,209091582960.0,0,0.0%
+currency_outside_banks,Currency Outside Banks,,float64,,46752867480.0,0,0.0%
+total_credit,Total Credit,,float64,,84478709500.0,1,0.3%
+credit_for_agriculture_forestry_and_fishing,Credit For Agriculture Forestry And Fishing,,float64,,3045512100.0,0,0.0%
+credit_for_cocoa_marketing,Credit For Cocoa Marketing,,float64,,63638100.0,1,0.3%
+credit_for_commerce_and_finance,Credit For Commerce And Finance,,float64,,12173939300.0,0,0.0%
+credit_for_construction,Credit For Construction,,float64,,7897811500.0,0,0.0%
+credit_for_electricity_gas_and_water,Credit For Electricity Gas And Water,,float64,,3438078100.0,0,0.0%
+credit_for_export_trade,Credit For Export Trade,,float64,,526602800.0,0,0.0%
+credit_for_import_trade,Credit For Import Trade,,float64,,6737115200.0,0,0.0%
+credit_for_manufacturing,Credit For Manufacturing,,float64,,9290172900.0,0,0.0%
+credit_for_mining_and_quarrying,Credit For Mining And Quarrying,,float64,,2715367800.0,0,0.0%
+credit_for_miscellaneous,Credit For Miscellaneous,,float64,,4578600700.0,0,0.0%
+credit_for_services,Credit For Services,,float64,,28044513700.0,0,0.0%
+credit_for_transport_storage_and_communication,Credit For Transport Storage And Communication,,float64,,6258070300.0,0,0.0%

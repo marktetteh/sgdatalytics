@@ -1,0 +1,6 @@
+column_name,display_name,description,data_type,unit,example_value,null_count,null_pct
+source,Source,Data source organisation,object,,Ghana Statistical Service (GSS StatsBank),0,0.0%
+last_updated,Last Updated,Date data was last refreshed,object,YYYY-MM-DD,2026-04-20,0,0.0%
+indicator,Indicator,,float64,,,998,100.0%
+period,Period,"Time period (YYYY-MM for monthly, YYYY-QN for quarterly)",object,,2026-01,0,0.0%
+consumer_price_index_and_inflation,Consumer Price Index And Inflation,,float64,,262.3,0,0.0%

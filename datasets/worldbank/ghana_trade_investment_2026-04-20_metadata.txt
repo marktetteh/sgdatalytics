@@ -1,0 +1,20 @@
+Dataset: Ghana Trade & Investment
+Description: Ghana trade balance, exports, imports, and foreign direct investment data. Source: World Bank Open Data.
+Source: World Bank Open Data API
+Country: Ghana (GH)
+Scraped: 2026-04-20
+Years covered: 2000 – 2024
+Rows: 25
+Columns: 15
+
+Indicators:
+  NE.EXP.GNFS.ZS: Exports of Goods & Services (% of GDP)
+  NE.IMP.GNFS.ZS: Imports of Goods & Services (% of GDP)
+  NE.EXP.GNFS.CD: Exports of Goods & Services (USD)
+  NE.IMP.GNFS.CD: Imports of Goods & Services (USD)
+  BX.KLT.DINV.WD.GD.ZS: Foreign Direct Investment, Net Inflows (% of GDP)
+  BX.KLT.DINV.CD.WD: Foreign Direct Investment, Net Inflows (USD)
+  BM.KLT.DINV.GD.ZS: Foreign Direct Investment, Net Outflows (% of GDP)
+  TG.VAL.TOTL.GD.ZS: Merchandise Trade (% of GDP)
+  TX.VAL.MRCH.CD.WT: Merchandise Exports (USD)
+  TM.VAL.MRCH.CD.WT: Merchandise Imports (USD)
