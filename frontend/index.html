@@ -240,27 +240,28 @@ nav{
 .chart-row.one{grid-template-columns:1fr;}
 .chart-row.three{grid-template-columns:1fr 1fr 1fr;}
 .chart-card{
-  background:var(--panel);border:1px solid var(--border);
+  background:#0f1e37;border:1px solid rgba(255,255,255,0.09);
   border-radius:var(--r-lg);padding:22px 22px 18px;
+  box-shadow:0 4px 24px rgba(0,0,0,0.18);
 }
 .chart-card-hd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px;gap:12px;}
-.cc-title{font-size:13.5px;font-weight:600;color:var(--white);}
-.cc-sub{font-size:11px;color:var(--grey3);margin-top:3px;}
+.cc-title{font-size:13.5px;font-weight:600;color:#ffffff;}
+.cc-sub{font-size:11px;color:rgba(255,255,255,0.38);margin-top:3px;}
 .badge{font-family:var(--font-m);font-size:10px;padding:3px 9px;border-radius:4px;white-space:nowrap;}
-.badge-teal{background:var(--teal-dim);color:var(--teal);border:1px solid var(--border-teal);}
-.badge-amber{background:var(--amber-dim);color:var(--amber);}
-.badge-blue{background:var(--blue-dim);color:var(--blue);}
-.badge-red{background:var(--red-dim);color:var(--red);}
-.badge-green{background:rgba(16,185,129,0.12);color:var(--green);}
+.badge-teal{background:rgba(0,149,122,0.2);color:#00c9a7;border:1px solid rgba(0,201,167,0.3);}
+.badge-amber{background:rgba(245,158,11,0.18);color:#f59e0b;border:1px solid rgba(245,158,11,0.3);}
+.badge-blue{background:rgba(59,130,246,0.18);color:#60a5fa;border:1px solid rgba(59,130,246,0.3);}
+.badge-red{background:rgba(220,38,38,0.18);color:#f87171;border:1px solid rgba(220,38,38,0.3);}
+.badge-green{background:rgba(16,185,129,0.18);color:#34d399;border:1px solid rgba(16,185,129,0.3);}
 .chart-wrap{position:relative;}
 .chart-wrap.h260{height:260px;}
 .chart-wrap.h300{height:300px;}
 .chart-wrap.h340{height:340px;}
 canvas{display:block;}
-.chart-loading{display:flex;align-items:center;justify-content:center;height:100%;color:var(--grey3);font-size:12px;font-family:var(--font-m);}
-.source-note{font-family:var(--font-m);font-size:10px;color:var(--grey3);margin-top:12px;padding-top:10px;border-top:1px solid var(--border);}
+.chart-loading{display:flex;align-items:center;justify-content:center;height:100%;color:rgba(255,255,255,0.3);font-size:12px;font-family:var(--font-m);}
+.source-note{font-family:var(--font-m);font-size:10px;color:rgba(255,255,255,0.28);margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.08);}
 .chart-legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;}
-.legend-item{display:flex;align-items:center;gap:5px;font-family:var(--font-m);font-size:10px;color:var(--grey3);}
+.legend-item{display:flex;align-items:center;gap:5px;font-family:var(--font-m);font-size:10px;color:rgba(255,255,255,0.45);}
 .legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
 
 /* ── DATASETS SECTION ── */
@@ -904,11 +905,16 @@ footer a:hover{text-decoration:underline;}
 </footer>
 
 <script>
-// ── Chart.js defaults ─────────────────────────────────────────
-Chart.defaults.color = 'rgba(15,30,55,0.50)';
-Chart.defaults.borderColor = 'rgba(15,30,55,0.08)';
+// ── Chart.js defaults — dark card theme ───────────────────────
+Chart.defaults.color = 'rgba(255,255,255,0.45)';
+Chart.defaults.borderColor = 'rgba(255,255,255,0.08)';
 Chart.defaults.font.family = "'IBM Plex Mono', monospace";
 Chart.defaults.font.size = 10;
+Chart.defaults.plugins.tooltip.backgroundColor = '#1a2e47';
+Chart.defaults.plugins.tooltip.titleColor = 'rgba(255,255,255,0.85)';
+Chart.defaults.plugins.tooltip.bodyColor  = 'rgba(255,255,255,0.7)';
+Chart.defaults.plugins.tooltip.borderColor = 'rgba(255,255,255,0.12)';
+Chart.defaults.plugins.tooltip.borderWidth = 1;
 
 const TEAL   = '#00c9a7';
 const AMBER  = '#f59e0b';
@@ -1444,11 +1450,6 @@ function buildInflFX(cpi, bogFx) {
       plugins: {
         legend: { display: false },
         tooltip: {
-          backgroundColor:'rgba(240,244,248,0.96)',
-          borderColor:'rgba(15,30,55,0.15)',
-          borderWidth:1,
-          titleColor:'rgba(15,30,55,0.55)',
-          bodyColor:'rgba(15,30,55,0.85)',
           padding:10,
           callbacks: {
             label: c => c.datasetIndex===0
