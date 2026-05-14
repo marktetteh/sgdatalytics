@@ -2120,15 +2120,19 @@ init();
         </div>`;
     }
     if (sector === 'accommodation') {
-      const isAirbnb   = item.source && item.source.toLowerCase().includes('airbnb') || item.room_type || item.property_type;
-      const typeLabel  = isAirbnb ? 'Airbnb' : (item.type === 'hotel' || item.star_rating ? 'Hotel' : 'Accommodation');
-      const title      = item.name || item.title || item.property_type || '—';
+      const platform   = (item.collection_method || item.source_platform || '').toLowerCase();
+      const isAirbnb   = platform.includes('airbnb');
+      const typeLabel  = isAirbnb ? 'Airbnb' : 'Hotel';
+      const title      = item.hotel_name || item.name || item.title || '—';
+      const priceUsd   = item.price_per_night_usd || item.price_usd;
       const priceGhs   = item.price_ghs || item.price_per_night_ghs;
-      const priceLabel = priceGhs ? fmtPrice(priceGhs) + '/night' : (item.price_usd ? 'US$' + Number(item.price_usd).toFixed(0) + '/night' : 'Price on request');
-      const hasPrice   = !!(priceGhs || item.price_usd);
-      const sub1       = item.location || item.city || '';
-      const sub2       = item.star_rating ? item.star_rating + ' ★' : (item.room_type || item.property_type || '');
-      const sub3       = item.bedrooms ? item.bedrooms + ' bed' : (item.beds ? item.beds + ' beds' : '');
+      const priceLabel = priceGhs
+        ? fmtPrice(priceGhs) + '/night'
+        : (priceUsd ? 'US$' + Number(priceUsd).toFixed(0) + '/night' : 'Price on request');
+      const hasPrice   = !!(priceGhs || priceUsd);
+      const stars      = item.star_rating || item.stars;
+      const score      = item.review_score;
+      const reviews    = item.review_count;
       return `
         <div class="feed-card-top">
           <div class="feed-category">${typeLabel}</div>
@@ -2137,9 +2141,10 @@ init();
         <div class="feed-title">${title}</div>
         <div class="feed-price ${hasPrice ? '' : 'no-price'}">${priceLabel}</div>
         <div class="feed-meta">
-          ${sub1 ? `<div class="feed-meta-item">📍 ${sub1}</div>` : ''}
-          ${sub2 ? `<div class="feed-meta-item">🏷️ ${sub2}</div>` : ''}
-          ${sub3 ? `<div class="feed-meta-item">🛏️ ${sub3}</div>` : ''}
+          ${item.city ? `<div class="feed-meta-item">📍 ${item.city}</div>` : ''}
+          ${stars     ? `<div class="feed-meta-item">⭐ ${stars} stars</div>` : ''}
+          ${score     ? `<div class="feed-meta-item">🏅 ${score}${reviews ? ' ('+reviews+')' : ''}</div>` : ''}
+          ${platform  ? `<div class="feed-meta-item">🔗 ${item.collection_method}</div>` : ''}
         </div>`;
     }
     if (sector === 'economic') {
