@@ -2065,27 +2065,47 @@ init();
     const endpoints = {
       market_prices: API + '/api/market-prices?limit=9',
       property:      API + '/api/property?limit=9',
-      accommodation: API + '/api/accommodation?limit=9',
       economic:      API + '/api/economic?limit=9',
       commodities:   API + '/api/commodities?limit=9',
     };
 
+    function renderGrid(data) {
+      if (!data || !data.length) {
+        grid.innerHTML = '<div class="feed-empty">No data available yet for this sector.</div>';
+        return;
+      }
+      grid.innerHTML = '';
+      data.forEach((item, i) => {
+        const card = document.createElement('div');
+        card.className = 'feed-card';
+        card.style.animationDelay = (i * 0.05) + 's';
+        card.innerHTML = renderCard(sector, item);
+        grid.appendChild(card);
+      });
+    }
+
+    if (sector === 'accommodation') {
+      // Fetch hotels and Airbnb in parallel then interleave
+      Promise.all([
+        fetch(API + '/api/accommodation?type=hotel&limit=5').then(r => r.ok ? r.json() : []).catch(() => []),
+        fetch(API + '/api/accommodation?type=airbnb&limit=4').then(r => r.ok ? r.json() : []).catch(() => [])
+      ]).then(([hotels, airbnbs]) => {
+        const combined = [];
+        const max = Math.max(hotels.length, airbnbs.length);
+        for (let i = 0; i < max; i++) {
+          if (hotels[i])  combined.push(hotels[i]);
+          if (airbnbs[i]) combined.push(airbnbs[i]);
+        }
+        renderGrid(combined.slice(0, 9));
+      }).catch(() => {
+        grid.innerHTML = '<div class="feed-empty">Could not load accommodation data.</div>';
+      });
+      return;
+    }
+
     fetch(endpoints[sector])
       .then(r => r.ok ? r.json() : Promise.reject())
-      .then(data => {
-        if (!data || !data.length) {
-          grid.innerHTML = '<div class="feed-empty">No data available yet for this sector.</div>';
-          return;
-        }
-        grid.innerHTML = '';
-        data.forEach((item, i) => {
-          const card = document.createElement('div');
-          card.className = 'feed-card';
-          card.style.animationDelay = (i * 0.05) + 's';
-          card.innerHTML = renderCard(sector, item);
-          grid.appendChild(card);
-        });
-      })
+      .then(data => renderGrid(data))
       .catch(() => {
         grid.innerHTML = '<div class="feed-empty">Could not load data — please try again.</div>';
       });
@@ -2121,9 +2141,9 @@ init();
     }
     if (sector === 'accommodation') {
       const platform   = (item.collection_method || item.source_platform || '').toLowerCase();
-      const isAirbnb   = platform.includes('airbnb');
+      const isAirbnb   = platform.includes('airbnb') || !!(item.room_type || item.listing_name);
       const typeLabel  = isAirbnb ? 'Airbnb' : 'Hotel';
-      const title      = item.hotel_name || item.name || item.title || '—';
+      const title      = item.listing_name || item.hotel_name || item.name || item.title || '—';
       const priceUsd   = item.price_per_night_usd || item.price_usd;
       const priceGhs   = item.price_ghs || item.price_per_night_ghs;
       const priceLabel = priceGhs
@@ -2133,6 +2153,8 @@ init();
       const stars      = item.star_rating || item.stars;
       const score      = item.review_score;
       const reviews    = item.review_count;
+      const roomType   = item.room_type || item.property_type || '';
+      const location   = item.city || item.location || '';
       return `
         <div class="feed-card-top">
           <div class="feed-category">${typeLabel}</div>
@@ -2141,10 +2163,10 @@ init();
         <div class="feed-title">${title}</div>
         <div class="feed-price ${hasPrice ? '' : 'no-price'}">${priceLabel}</div>
         <div class="feed-meta">
-          ${item.city ? `<div class="feed-meta-item">📍 ${item.city}</div>` : ''}
+          ${location  ? `<div class="feed-meta-item">📍 ${location}</div>` : ''}
+          ${roomType  ? `<div class="feed-meta-item">🏠 ${roomType}</div>` : ''}
           ${stars     ? `<div class="feed-meta-item">⭐ ${stars} stars</div>` : ''}
           ${score     ? `<div class="feed-meta-item">🏅 ${score}${reviews ? ' ('+reviews+')' : ''}</div>` : ''}
-          ${platform  ? `<div class="feed-meta-item">🔗 ${item.collection_method}</div>` : ''}
         </div>`;
     }
     if (sector === 'economic') {
