@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
@@ -546,27 +546,40 @@ footer a:hover{text-decoration:underline;}
         </div>
         <div class="stat-panel-meta" id="panelDate">Apr 2026</div>
       </div>
-      <div class="stat-panel-body">
-        <!-- Donut chart -->
-        <div style="position:relative;height:180px;margin-bottom:12px;">
-          <canvas id="heroDonut"></canvas>
-          <div id="heroDonutCenter" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none;">
-            <div style="font-family:var(--font-d);font-size:1.8rem;color:var(--white);letter-spacing:0.04em;line-height:1;" id="heroDonutTotal">—</div>
-            <div style="font-family:var(--font-m);font-size:9px;color:var(--grey3);text-transform:uppercase;letter-spacing:0.08em;margin-top:2px;">listings</div>
-          </div>
+      <div class="stat-panel-body" style="padding:14px;">
+
+        <!-- Category selector dots -->
+        <div id="catDots" style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px;"></div>
+
+        <!-- Category name + count -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+          <div id="catName" style="font-family:var(--font-m);font-size:11px;font-weight:600;color:var(--teal);text-transform:uppercase;letter-spacing:0.08em;">Loading…</div>
+          <div id="catCount" style="font-family:var(--font-d);font-size:1.4rem;color:var(--white);letter-spacing:0.04em;">—</div>
         </div>
-        <!-- Legend -->
-        <div id="heroDonutLegend" style="display:flex;flex-direction:column;gap:5px;margin-bottom:12px;">
-          <div style="text-align:center;font-family:var(--font-m);font-size:10px;color:var(--grey3);">Loading categories…</div>
+
+        <!-- Chart container — switches between bar and radar -->
+        <div style="position:relative;height:180px;margin-bottom:10px;">
+          <canvas id="catBarChart"></canvas>
+          <canvas id="catRadarChart" style="display:none;position:absolute;inset:0;"></canvas>
         </div>
+
+        <!-- Chart type toggle -->
+        <div style="display:flex;gap:6px;margin-bottom:10px;">
+          <div id="btnBar" onclick="setCatChartType('bar')" style="font-family:var(--font-m);font-size:9.5px;padding:3px 10px;border-radius:100px;cursor:pointer;background:var(--teal);color:white;border:1px solid var(--teal);">Bar</div>
+          <div id="btnRadar" onclick="setCatChartType('radar')" style="font-family:var(--font-m);font-size:9.5px;padding:3px 10px;border-radius:100px;cursor:pointer;background:transparent;color:var(--grey3);border:1px solid var(--border2);">Radar</div>
+        </div>
+
+        <!-- Progress bar -->
         <div class="kpi-progress"><div class="kpi-progress-bar" id="kpiProgressBar"></div></div>
-        <div class="ds-counts">
+
+        <!-- Bottom stats -->
+        <div class="ds-counts" style="margin-top:10px;">
           <div class="ds-count-item">
             <div class="ds-count-n" id="heroTotalRecords">—</div>
             <div class="ds-count-l">Total</div>
           </div>
           <div class="ds-count-item">
-            <div class="ds-count-n" id="heroCatCount">—</div>
+            <div class="ds-count-n" id="heroCatCount">13</div>
             <div class="ds-count-l">Categories</div>
           </div>
           <div class="ds-count-item">
@@ -578,6 +591,7 @@ footer a:hover{text-decoration:underline;}
             <div class="ds-count-l">SGMPI</div>
           </div>
         </div>
+
       </div>
     </div>
   </div>
@@ -1722,7 +1736,6 @@ init();
     }
   });
 })();
-</script>
 <!-- ── LIVE SGMPI FEED SCRIPT ─────────────────────────────────── -->
 <script>
 (function(){
@@ -1744,71 +1757,227 @@ init();
     return dt.toLocaleDateString('en-GB', {day:'numeric', month:'short', year:'numeric'});
   }
 
-  // ── Hero donut chart ─────────────────────────────────────────
-  const DONUT_COLORS = [
+  // ── Rotating category chart dashboard ───────────────────────
+  const CAT_COLORS = [
     '#00957a','#c77c00','#2563eb','#7c3aed',
     '#dc2626','#059669','#0891b2','#d97706',
     '#9333ea','#be185d','#0f766e','#b45309','#1d4ed8'
   ];
 
-  fetch(API + '/api/market-prices/categories')
-    .then(r => r.ok ? r.json() : Promise.reject())
-    .then(data => {
-      if (!data || !data.length) return;
+  let catData       = [];   // [{product_category, count}]
+  let catIndex      = 0;
+  let catChartType  = 'bar';
+  let catTimer      = null;
+  let catBarInst    = null;
+  let catRadarInst  = null;
+  let catCache      = {};   // cache top5 per category
+  const CAT_INTERVAL = 6000;
 
-      // Top 8 categories + Others
-      const sorted = [...data].sort((a,b) => b.count - a.count);
-      const top    = sorted.slice(0, 8);
-      const rest   = sorted.slice(8);
-      const otherCount = rest.reduce((s,r) => s + parseInt(r.count), 0);
-      if (otherCount > 0) top.push({ product_category: 'Other', count: otherCount });
+  // Expose chart type toggle globally
+  window.setCatChartType = function(type) {
+    catChartType = type;
+    document.getElementById('btnBar').style.background   = type === 'bar'   ? 'var(--teal)' : 'transparent';
+    document.getElementById('btnBar').style.color        = type === 'bar'   ? 'white'       : 'var(--grey3)';
+    document.getElementById('btnBar').style.borderColor  = type === 'bar'   ? 'var(--teal)' : 'var(--border2)';
+    document.getElementById('btnRadar').style.background = type === 'radar' ? 'var(--teal)' : 'transparent';
+    document.getElementById('btnRadar').style.color      = type === 'radar' ? 'white'       : 'var(--grey3)';
+    document.getElementById('btnRadar').style.borderColor= type === 'radar' ? 'var(--teal)' : 'var(--border2)';
+    renderCatChart(catIndex);
+  };
 
-      const labels  = top.map(r => r.product_category);
-      const counts  = top.map(r => parseInt(r.count));
-      const total   = counts.reduce((s,n) => s+n, 0);
-      const colors  = top.map((_,i) => DONUT_COLORS[i % DONUT_COLORS.length]);
+  function truncate(str, n) {
+    return str && str.length > n ? str.slice(0, n) + '…' : str;
+  }
 
-      // Update center and counts
-      document.getElementById('heroDonutTotal').textContent = total.toLocaleString();
-      document.getElementById('heroTotalRecords').textContent = total.toLocaleString();
-      document.getElementById('heroCatCount').textContent = data.length;
+  function renderCatChart(idx) {
+    const cat   = catData[idx];
+    if (!cat) return;
+    const color = CAT_COLORS[idx % CAT_COLORS.length];
 
-      // Build legend
-      const legend = document.getElementById('heroDonutLegend');
-      legend.innerHTML = top.slice(0,6).map((r,i) => `
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
-          <div style="display:flex;align-items:center;gap:6px;min-width:0;">
-            <div style="width:8px;height:8px;border-radius:50%;background:${colors[i]};flex-shrink:0;"></div>
-            <div style="font-family:var(--font-m);font-size:9.5px;color:var(--grey2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${r.product_category}</div>
-          </div>
-          <div style="font-family:var(--font-m);font-size:9.5px;color:var(--grey3);flex-shrink:0;">${parseInt(r.count).toLocaleString()}</div>
-        </div>`).join('');
+    document.getElementById('catName').textContent  = cat.product_category;
+    document.getElementById('catName').style.color  = color;
+    document.getElementById('catCount').textContent = parseInt(cat.count).toLocaleString() + ' listings';
 
-      // Draw donut chart
-      const ctx = document.getElementById('heroDonut').getContext('2d');
-      new Chart(ctx, {
-        type: 'doughnut',
-        data: { labels, datasets:[{ data: counts, backgroundColor: colors, borderWidth: 2, borderColor: '#ffffff', hoverOffset: 6 }] },
+    // Update dots
+    document.querySelectorAll('.cat-dot').forEach((d,i) => {
+      d.style.background = i === idx ? color : 'var(--border2)';
+      d.style.transform  = i === idx ? 'scale(1.4)' : 'scale(1)';
+    });
+
+    const cacheKey = cat.product_category;
+    if (catCache[cacheKey]) {
+      drawCharts(catCache[cacheKey], color);
+    } else {
+      fetch(API + '/api/market-prices?category=' + encodeURIComponent(cat.product_category) + '&limit=20')
+        .then(r => r.ok ? r.json() : Promise.reject())
+        .then(items => {
+          // Group by title, take median price, top 5
+          const grouped = {};
+          items.forEach(item => {
+            const key = truncate(item.title, 30);
+            if (!grouped[key]) grouped[key] = [];
+            if (item.price_ghs) grouped[key].push(parseFloat(item.price_ghs));
+          });
+          const top5 = Object.entries(grouped)
+            .map(([title, prices]) => ({
+              title,
+              price: prices.sort((a,b)=>a-b)[Math.floor(prices.length/2)] || 0
+            }))
+            .filter(x => x.price > 0)
+            .sort((a,b) => b.price - a.price)
+            .slice(0, 5);
+          catCache[cacheKey] = top5;
+          drawCharts(top5, color);
+        })
+        .catch(() => {});
+    }
+  }
+
+  function drawCharts(top5, color) {
+    const labels = top5.map(x => truncate(x.title, 20));
+    const values = top5.map(x => x.price);
+
+    // Bar chart
+    const barCanvas = document.getElementById('catBarChart');
+    const radarCanvas = document.getElementById('catRadarChart');
+
+    if (catChartType === 'bar') {
+      barCanvas.style.display   = 'block';
+      radarCanvas.style.display = 'none';
+      if (catBarInst) catBarInst.destroy();
+      catBarInst = new Chart(barCanvas.getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{
+            data: values,
+            backgroundColor: color + '99',
+            borderColor: color,
+            borderWidth: 1.5,
+            borderRadius: 4,
+          }]
+        },
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          cutout: '68%',
           plugins: {
             legend: { display: false },
             tooltip: {
               backgroundColor: 'rgba(240,244,248,0.97)',
-              borderColor: 'rgba(0,149,122,0.30)',
+              borderColor: color,
               borderWidth: 1,
               titleColor: '#1a2535',
               bodyColor: '#1a2535',
-              padding: 10,
+              padding: 8,
               callbacks: {
-                label: ctx => ` ${ctx.label}: ${ctx.parsed.toLocaleString()} listings (${Math.round(ctx.parsed/total*100)}%)`
+                label: ctx => ' GH₵ ' + ctx.parsed.y.toLocaleString()
               }
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { font: { size: 8, family: 'IBM Plex Mono' }, color: 'rgba(15,30,55,0.45)', maxRotation: 20 }
+            },
+            y: {
+              grid: { color: 'rgba(15,30,55,0.06)' },
+              ticks: { font: { size: 8, family: 'IBM Plex Mono' }, color: 'rgba(15,30,55,0.45)',
+                callback: v => 'GH₵' + (v>=1000 ? (v/1000).toFixed(0)+'k' : v) }
             }
           }
         }
       });
+    } else {
+      // Radar chart
+      barCanvas.style.display   = 'none';
+      radarCanvas.style.display = 'block';
+      if (catRadarInst) catRadarInst.destroy();
+      catRadarInst = new Chart(radarCanvas.getContext('2d'), {
+        type: 'radar',
+        data: {
+          labels,
+          datasets: [{
+            data: values,
+            backgroundColor: color + '22',
+            borderColor: color,
+            borderWidth: 2,
+            pointBackgroundColor: color,
+            pointRadius: 3,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: 'rgba(240,244,248,0.97)',
+              borderColor: color,
+              borderWidth: 1,
+              titleColor: '#1a2535',
+              bodyColor: '#1a2535',
+              callbacks: {
+                label: ctx => ' GH₵ ' + ctx.parsed.r.toLocaleString()
+              }
+            }
+          },
+          scales: {
+            r: {
+              grid: { color: 'rgba(15,30,55,0.08)' },
+              pointLabels: { font: { size: 7, family: 'IBM Plex Mono' }, color: 'rgba(15,30,55,0.55)' },
+              ticks: { display: false }
+            }
+          }
+        }
+      });
+    }
+  }
+
+  function startCatRotation() {
+    stopCatRotation();
+    animateCatProgress();
+    catTimer = setInterval(() => {
+      catIndex = (catIndex + 1) % catData.length;
+      renderCatChart(catIndex);
+      animateCatProgress();
+    }, CAT_INTERVAL);
+  }
+
+  function stopCatRotation() {
+    if (catTimer) clearInterval(catTimer);
+  }
+
+  function animateCatProgress() {
+    const bar = document.getElementById('kpiProgressBar');
+    if (!bar) return;
+    bar.style.transition = 'none';
+    bar.style.width = '0%';
+    setTimeout(() => {
+      bar.style.transition = 'width ' + CAT_INTERVAL + 'ms linear';
+      bar.style.width = '100%';
+    }, 30);
+  }
+
+  // Load all categories then start rotation
+  fetch(API + '/api/market-prices/categories')
+    .then(r => r.ok ? r.json() : Promise.reject())
+    .then(data => {
+      catData = data;
+      document.getElementById('heroTotalRecords').textContent = data.reduce((s,d) => s + parseInt(d.count), 0).toLocaleString();
+      document.getElementById('heroCatCount').textContent = data.length;
+
+      // Build dots
+      const dotsEl = document.getElementById('catDots');
+      data.forEach((_, i) => {
+        const dot = document.createElement('div');
+        dot.className = 'cat-dot';
+        dot.style.cssText = 'width:6px;height:6px;border-radius:50%;background:var(--border2);cursor:pointer;transition:all 0.3s;flex-shrink:0;';
+        dot.onclick = () => { stopCatRotation(); catIndex = i; renderCatChart(i); startCatRotation(); };
+        dotsEl.appendChild(dot);
+      });
+
+      renderCatChart(0);
+      startCatRotation();
     })
     .catch(() => {});
 
@@ -1816,27 +1985,26 @@ init();
   fetch(API + '/api/stats')
     .then(r => r.ok ? r.json() : Promise.reject())
     .then(d => {
-      const locs = (d.sectors && d.sectors.market_prices ? d.sectors.market_prices.locations : null);
+      const locs = d.sectors?.market_prices?.locations;
       if (locs) document.getElementById('heroLocCount').textContent = locs;
       // Update panel date
-      const dateMax = (d.sectors && d.sectors.market_prices ? d.sectors.market_prices.date_max : null);
+      const dateMax = d.sectors?.market_prices?.date_max;
       if (dateMax) {
         const dt = new Date(dateMax);
         document.getElementById('panelDate').textContent = dt.toLocaleDateString('en-GB',{month:'short',year:'numeric'});
       }
     })
     .catch(() => {});
-  fetch(API + '/api/stats')
     .then(r => r.ok ? r.json() : Promise.reject())
     .then(d => {
       const s = d.sectors || {};
       document.getElementById('feed-total').textContent         = fmt(d.total_records);
-      document.getElementById('fst-market').textContent        = fmt((s.market_prices ? s.market_prices.records : 0));
-      document.getElementById('fst-property').textContent      = fmt((s.property ? s.property.records : 0));
-      document.getElementById('fst-accommodation').textContent = fmt(((s.accommodation ? s.accommodation.hotel_records : 0)||0)+((s.accommodation ? s.accommodation.airbnb_records : 0)||0));
-      document.getElementById('fst-economic').textContent      = fmt((s.economic ? s.economic.records : 0));
-      document.getElementById('fst-commodities').textContent   = fmt(((s.commodities ? s.commodities.commodity_records : 0)||0)+((s.commodities ? s.commodities.fuel_records : 0)||0));
-      document.getElementById('fst-locations').textContent     = fmt((s.market_prices ? s.market_prices.locations : 0));
+      document.getElementById('fst-market').textContent        = fmt(s.market_prices?.records);
+      document.getElementById('fst-property').textContent      = fmt(s.property?.records);
+      document.getElementById('fst-accommodation').textContent = fmt((s.accommodation?.hotel_records||0)+(s.accommodation?.airbnb_records||0));
+      document.getElementById('fst-economic').textContent      = fmt(s.economic?.records);
+      document.getElementById('fst-commodities').textContent   = fmt((s.commodities?.commodity_records||0)+(s.commodities?.fuel_records||0));
+      document.getElementById('fst-locations').textContent     = fmt(s.market_prices?.locations);
     })
     .catch(() => {});
 
@@ -1963,9 +2131,3 @@ init();
 </script>
 </body>
 </html>
-
-
-
-
-
-
