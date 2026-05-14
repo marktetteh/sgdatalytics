@@ -1996,6 +1996,7 @@ init();
       }
     })
     .catch(() => {});
+  fetch(API + '/api/stats')
     .then(r => r.ok ? r.json() : Promise.reject())
     .then(d => {
       const s = d.sectors || {};
@@ -2132,4 +2133,5 @@ init();
 </script>
 </body>
 </html>
+
 
