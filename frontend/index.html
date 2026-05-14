@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
@@ -1736,7 +1736,6 @@ init();
     }
   });
 })();
-</script>
 <!-- ── LIVE SGMPI FEED SCRIPT ─────────────────────────────────── -->
 <script>
 (function(){
@@ -1765,26 +1764,29 @@ init();
     '#9333ea','#be185d','#0f766e','#b45309','#1d4ed8'
   ];
 
-  let catData       = [];   // [{product_category, count}]
-  let catIndex      = 0;
-  let catChartType  = 'bar';
-  let catTimer      = null;
-  let catBarInst    = null;
-  let catRadarInst  = null;
-  let catCache      = {};   // cache top5 per category
-  const CAT_INTERVAL = 6000;
-
-  // Expose chart type toggle globally
-  window.setCatChartType = function(type) {
-    catChartType = type;
-    document.getElementById('btnBar').style.background   = type === 'bar'   ? 'var(--teal)' : 'transparent';
-    document.getElementById('btnBar').style.color        = type === 'bar'   ? 'white'       : 'var(--grey3)';
-    document.getElementById('btnBar').style.borderColor  = type === 'bar'   ? 'var(--teal)' : 'var(--border2)';
-    document.getElementById('btnRadar').style.background = type === 'radar' ? 'var(--teal)' : 'transparent';
-    document.getElementById('btnRadar').style.color      = type === 'radar' ? 'white'       : 'var(--grey3)';
-    document.getElementById('btnRadar').style.borderColor= type === 'radar' ? 'var(--teal)' : 'var(--border2)';
-    renderCatChart(catIndex);
+  // Each category gets its own chart type
+  const CAT_CHART_TYPES = {
+    'Electronics':        'bar',
+    'Vehicle Parts':      'horizontalBar',
+    'Vehicles':           'radar',
+    'Appliances':         'doughnut',
+    'Real Estate':        'polarArea',
+    'Building Materials': 'bar',
+    'Health & Medical':   'line',
+    'Furniture':          'radar',
+    'Sports & Fitness':   'doughnut',
+    'Food & FMCG':        'horizontalBar',
+    'Home & Kitchen':     'polarArea',
+    'Office & Education': 'bar',
+    'Security & Safety':  'radar',
   };
+
+  let catData      = [];
+  let catIndex     = 0;
+  let catTimer     = null;
+  let catChartInst = null;
+  let catCache     = {};
+  const CAT_INTERVAL = 6000;
 
   function truncate(str, n) {
     return str && str.length > n ? str.slice(0, n) + '…' : str;
@@ -1805,14 +1807,25 @@ init();
       d.style.transform  = i === idx ? 'scale(1.4)' : 'scale(1)';
     });
 
+    // Update chart type label
+    const chartType = CAT_CHART_TYPES[cat.product_category] || 'bar';
+    const typeLabel = {
+      'bar': 'Bar', 'horizontalBar': 'H-Bar', 'radar': 'Radar',
+      'doughnut': 'Donut', 'polarArea': 'Polar', 'line': 'Line'
+    }[chartType] || 'Chart';
+    document.getElementById('btnBar').textContent = typeLabel;
+    document.getElementById('btnBar').style.background  = 'var(--teal)';
+    document.getElementById('btnBar').style.color       = 'white';
+    document.getElementById('btnBar').style.borderColor = 'var(--teal)';
+    document.getElementById('btnRadar').style.display   = 'none';
+
     const cacheKey = cat.product_category;
     if (catCache[cacheKey]) {
-      drawCharts(catCache[cacheKey], color);
+      drawCatChart(catCache[cacheKey], color, chartType);
     } else {
       fetch(API + '/api/market-prices?category=' + encodeURIComponent(cat.product_category) + '&limit=20')
         .then(r => r.ok ? r.json() : Promise.reject())
         .then(items => {
-          // Group by title, take median price, top 5
           const grouped = {};
           items.forEach(item => {
             const key = truncate(item.title, 30);
@@ -1828,106 +1841,102 @@ init();
             .sort((a,b) => b.price - a.price)
             .slice(0, 5);
           catCache[cacheKey] = top5;
-          drawCharts(top5, color);
+          drawCatChart(top5, color, chartType);
         })
         .catch(() => {});
     }
   }
 
-  function drawCharts(top5, color) {
-    const labels = top5.map(x => truncate(x.title, 20));
+  function drawCatChart(top5, color, chartType) {
+    const labels = top5.map(x => truncate(x.title, 18));
     const values = top5.map(x => x.price);
-
-    // Bar chart
-    const barCanvas = document.getElementById('catBarChart');
+    const barCanvas   = document.getElementById('catBarChart');
     const radarCanvas = document.getElementById('catRadarChart');
 
-    if (catChartType === 'bar') {
-      barCanvas.style.display   = 'block';
-      radarCanvas.style.display = 'none';
-      if (catBarInst) catBarInst.destroy();
-      catBarInst = new Chart(barCanvas.getContext('2d'), {
+    if (catChartInst) { catChartInst.destroy(); catChartInst = null; }
+
+    // All charts use barCanvas except radar which uses radarCanvas
+    const isRadar = chartType === 'radar';
+    barCanvas.style.display   = isRadar ? 'none'  : 'block';
+    radarCanvas.style.display = isRadar ? 'block' : 'none';
+    const canvas = isRadar ? radarCanvas : barCanvas;
+    const ctx    = canvas.getContext('2d');
+
+    // Multi-color for doughnut/polar
+    const multiColors = CAT_COLORS.map(c => c + 'cc');
+
+    const tooltipDefaults = {
+      backgroundColor: 'rgba(240,244,248,0.97)',
+      borderColor: color, borderWidth: 1,
+      titleColor: '#1a2535', bodyColor: '#1a2535', padding: 8,
+    };
+
+    if (chartType === 'bar' || chartType === 'Building Materials' || chartType === 'Office & Education') {
+      catChartInst = new Chart(ctx, {
         type: 'bar',
-        data: {
-          labels,
-          datasets: [{
-            data: values,
-            backgroundColor: color + '99',
-            borderColor: color,
-            borderWidth: 1.5,
-            borderRadius: 4,
-          }]
-        },
+        data: { labels, datasets: [{ data: values, backgroundColor: color+'99', borderColor: color, borderWidth:1.5, borderRadius:4 }] },
         options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              backgroundColor: 'rgba(240,244,248,0.97)',
-              borderColor: color,
-              borderWidth: 1,
-              titleColor: '#1a2535',
-              bodyColor: '#1a2535',
-              padding: 8,
-              callbacks: {
-                label: ctx => ' GH₵ ' + ctx.parsed.y.toLocaleString()
-              }
-            }
-          },
+          responsive:true, maintainAspectRatio:false,
+          plugins: { legend:{display:false}, tooltip:{...tooltipDefaults, callbacks:{label:c=>' GH₵ '+c.parsed.y.toLocaleString()}} },
           scales: {
-            x: {
-              grid: { display: false },
-              ticks: { font: { size: 8, family: 'IBM Plex Mono' }, color: 'rgba(15,30,55,0.45)', maxRotation: 20 }
-            },
-            y: {
-              grid: { color: 'rgba(15,30,55,0.06)' },
-              ticks: { font: { size: 8, family: 'IBM Plex Mono' }, color: 'rgba(15,30,55,0.45)',
-                callback: v => 'GH₵' + (v>=1000 ? (v/1000).toFixed(0)+'k' : v) }
-            }
+            x: { grid:{display:false}, ticks:{font:{size:8,family:'IBM Plex Mono'},color:'rgba(15,30,55,0.45)',maxRotation:20} },
+            y: { grid:{color:'rgba(15,30,55,0.06)'}, ticks:{font:{size:8,family:'IBM Plex Mono'},color:'rgba(15,30,55,0.45)',callback:v=>'GH₵'+(v>=1000?(v/1000).toFixed(0)+'k':v)} }
           }
         }
       });
-    } else {
-      // Radar chart
-      barCanvas.style.display   = 'none';
-      radarCanvas.style.display = 'block';
-      if (catRadarInst) catRadarInst.destroy();
-      catRadarInst = new Chart(radarCanvas.getContext('2d'), {
-        type: 'radar',
-        data: {
-          labels,
-          datasets: [{
-            data: values,
-            backgroundColor: color + '22',
-            borderColor: color,
-            borderWidth: 2,
-            pointBackgroundColor: color,
-            pointRadius: 3,
-          }]
-        },
+    } else if (chartType === 'horizontalBar') {
+      catChartInst = new Chart(ctx, {
+        type: 'bar',
+        data: { labels, datasets: [{ data: values, backgroundColor: color+'99', borderColor: color, borderWidth:1.5, borderRadius:4 }] },
         options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              backgroundColor: 'rgba(240,244,248,0.97)',
-              borderColor: color,
-              borderWidth: 1,
-              titleColor: '#1a2535',
-              bodyColor: '#1a2535',
-              callbacks: {
-                label: ctx => ' GH₵ ' + ctx.parsed.r.toLocaleString()
-              }
-            }
-          },
+          indexAxis: 'y',
+          responsive:true, maintainAspectRatio:false,
+          plugins: { legend:{display:false}, tooltip:{...tooltipDefaults, callbacks:{label:c=>' GH₵ '+c.parsed.x.toLocaleString()}} },
           scales: {
-            r: {
-              grid: { color: 'rgba(15,30,55,0.08)' },
-              pointLabels: { font: { size: 7, family: 'IBM Plex Mono' }, color: 'rgba(15,30,55,0.55)' },
-              ticks: { display: false }
-            }
+            x: { grid:{color:'rgba(15,30,55,0.06)'}, ticks:{font:{size:8,family:'IBM Plex Mono'},color:'rgba(15,30,55,0.45)',callback:v=>'GH₵'+(v>=1000?(v/1000).toFixed(0)+'k':v)} },
+            y: { grid:{display:false}, ticks:{font:{size:8,family:'IBM Plex Mono'},color:'rgba(15,30,55,0.45)'} }
+          }
+        }
+      });
+    } else if (chartType === 'radar') {
+      catChartInst = new Chart(ctx, {
+        type: 'radar',
+        data: { labels, datasets: [{ data: values, backgroundColor: color+'22', borderColor: color, borderWidth:2, pointBackgroundColor: color, pointRadius:3 }] },
+        options: {
+          responsive:true, maintainAspectRatio:false,
+          plugins: { legend:{display:false}, tooltip:{...tooltipDefaults, callbacks:{label:c=>' GH₵ '+c.parsed.r.toLocaleString()}} },
+          scales: { r: { grid:{color:'rgba(15,30,55,0.08)'}, pointLabels:{font:{size:7,family:'IBM Plex Mono'},color:'rgba(15,30,55,0.55)'}, ticks:{display:false} } }
+        }
+      });
+    } else if (chartType === 'doughnut') {
+      catChartInst = new Chart(ctx, {
+        type: 'doughnut',
+        data: { labels, datasets: [{ data: values, backgroundColor: multiColors.slice(0,5), borderWidth:2, borderColor:'#fff', hoverOffset:6 }] },
+        options: {
+          responsive:true, maintainAspectRatio:false, cutout:'62%',
+          plugins: { legend:{display:false}, tooltip:{...tooltipDefaults, callbacks:{label:c=>' GH₵ '+c.parsed.toLocaleString()}} }
+        }
+      });
+    } else if (chartType === 'polarArea') {
+      catChartInst = new Chart(ctx, {
+        type: 'polarArea',
+        data: { labels, datasets: [{ data: values, backgroundColor: multiColors.slice(0,5), borderWidth:1, borderColor:'rgba(255,255,255,0.6)' }] },
+        options: {
+          responsive:true, maintainAspectRatio:false,
+          plugins: { legend:{display:false}, tooltip:{...tooltipDefaults, callbacks:{label:c=>' GH₵ '+c.parsed.r.toLocaleString()}} },
+          scales: { r: { ticks:{display:false}, grid:{color:'rgba(15,30,55,0.08)'} } }
+        }
+      });
+    } else if (chartType === 'line') {
+      catChartInst = new Chart(ctx, {
+        type: 'line',
+        data: { labels, datasets: [{ data: values, borderColor: color, backgroundColor: color+'22', borderWidth:2, pointBackgroundColor: color, pointRadius:4, fill:true, tension:0.4 }] },
+        options: {
+          responsive:true, maintainAspectRatio:false,
+          plugins: { legend:{display:false}, tooltip:{...tooltipDefaults, callbacks:{label:c=>' GH₵ '+c.parsed.y.toLocaleString()}} },
+          scales: {
+            x: { grid:{display:false}, ticks:{font:{size:8,family:'IBM Plex Mono'},color:'rgba(15,30,55,0.45)',maxRotation:20} },
+            y: { grid:{color:'rgba(15,30,55,0.06)'}, ticks:{font:{size:8,family:'IBM Plex Mono'},color:'rgba(15,30,55,0.45)',callback:v=>'GH₵'+(v>=1000?(v/1000).toFixed(0)+'k':v)} }
           }
         }
       });
@@ -1986,27 +1995,26 @@ init();
   fetch(API + '/api/stats')
     .then(r => r.ok ? r.json() : Promise.reject())
     .then(d => {
-      const locs = (d.sectors && d.sectors.market_prices ? d.sectors.market_prices.locations : null);
+      const locs = d.sectors?.market_prices?.locations;
       if (locs) document.getElementById('heroLocCount').textContent = locs;
       // Update panel date
-      const dateMax = (d.sectors && d.sectors.market_prices ? d.sectors.market_prices.date_max : null);
+      const dateMax = d.sectors?.market_prices?.date_max;
       if (dateMax) {
         const dt = new Date(dateMax);
         document.getElementById('panelDate').textContent = dt.toLocaleDateString('en-GB',{month:'short',year:'numeric'});
       }
     })
     .catch(() => {});
-  fetch(API + '/api/stats')
     .then(r => r.ok ? r.json() : Promise.reject())
     .then(d => {
       const s = d.sectors || {};
       document.getElementById('feed-total').textContent         = fmt(d.total_records);
-      document.getElementById('fst-market').textContent        = fmt((s.market_prices ? s.market_prices.records : 0));
-      document.getElementById('fst-property').textContent      = fmt((s.property ? s.property.records : 0));
-      document.getElementById('fst-accommodation').textContent = fmt(((s.accommodation ? s.accommodation.hotel_records : 0)||0)+((s.accommodation ? s.accommodation.airbnb_records : 0)||0));
-      document.getElementById('fst-economic').textContent      = fmt((s.economic ? s.economic.records : 0));
-      document.getElementById('fst-commodities').textContent   = fmt(((s.commodities ? s.commodities.commodity_records : 0)||0)+((s.commodities ? s.commodities.fuel_records : 0)||0));
-      document.getElementById('fst-locations').textContent     = fmt((s.market_prices ? s.market_prices.locations : 0));
+      document.getElementById('fst-market').textContent        = fmt(s.market_prices?.records);
+      document.getElementById('fst-property').textContent      = fmt(s.property?.records);
+      document.getElementById('fst-accommodation').textContent = fmt((s.accommodation?.hotel_records||0)+(s.accommodation?.airbnb_records||0));
+      document.getElementById('fst-economic').textContent      = fmt(s.economic?.records);
+      document.getElementById('fst-commodities').textContent   = fmt((s.commodities?.commodity_records||0)+(s.commodities?.fuel_records||0));
+      document.getElementById('fst-locations').textContent     = fmt(s.market_prices?.locations);
     })
     .catch(() => {});
 
@@ -2133,5 +2141,3 @@ init();
 </script>
 </body>
 </html>
-
-
