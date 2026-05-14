@@ -1917,13 +1917,15 @@ init();
             plugins:{legend:{display:false},tooltip:Object.assign({},tip,{callbacks:{label:function(c){return ' GH₵ '+c.parsed.r.toLocaleString();}}})},
             scales:{r:{grid:{color:gc},pointLabels:{font:{size:7,family:'IBM Plex Mono'},color:tc},ticks:{display:false},angleLines:{color:gc}}}}};
       } else if (type==='doughnut') {
+        var lgnd = {display:true,position:'bottom',labels:{font:{size:7,family:'IBM Plex Mono'},color:'rgba(255,255,255,0.55)',boxWidth:8,padding:5,usePointStyle:true,pointStyleWidth:6}};
         cfg = {type:'doughnut',data:{labels:lbl,datasets:[{data:val,backgroundColor:mc.slice(0,5),borderWidth:2,borderColor:'#0f1e37',hoverOffset:6}]},
-          options:{responsive:true,maintainAspectRatio:false,cutout:'62%',
-            plugins:{legend:{display:false},tooltip:Object.assign({},tip,{callbacks:{label:function(c){return ' GH₵ '+c.parsed.toLocaleString();}}})}}};
+          options:{responsive:true,maintainAspectRatio:false,cutout:'58%',
+            plugins:{legend:lgnd,tooltip:Object.assign({},tip,{callbacks:{label:function(c){return ' GH₵ '+c.parsed.toLocaleString();}}})}}};
       } else if (type==='polarArea') {
+        var lgndP = {display:true,position:'bottom',labels:{font:{size:7,family:'IBM Plex Mono'},color:'rgba(255,255,255,0.55)',boxWidth:8,padding:5,usePointStyle:true,pointStyleWidth:6}};
         cfg = {type:'polarArea',data:{labels:lbl,datasets:[{data:val,backgroundColor:mc.slice(0,5),borderWidth:1,borderColor:'rgba(255,255,255,0.1)'}]},
           options:{responsive:true,maintainAspectRatio:false,
-            plugins:{legend:{display:false},tooltip:Object.assign({},tip,{callbacks:{label:function(c){return ' GH₵ '+c.parsed.r.toLocaleString();}}})},
+            plugins:{legend:lgndP,tooltip:Object.assign({},tip,{callbacks:{label:function(c){return ' GH₵ '+c.parsed.r.toLocaleString();}}})},
             scales:{r:{ticks:{display:false},grid:{color:gc},angleLines:{color:gc}}}}};
       } else if (type==='line') {
         cfg = {type:'line',data:{labels:lbl,datasets:[{data:val,borderColor:col,backgroundColor:col+'22',borderWidth:2,pointBackgroundColor:col,pointRadius:4,fill:true,tension:0.4}]},
@@ -2061,7 +2063,7 @@ init();
     .then(r => r.ok ? r.json() : Promise.reject())
     .then(d => {
       const locs = (d.sectors && d.sectors.market_prices ? d.sectors.market_prices.locations : null);
-      if (locs) document.getElementById('heroLocCount').textContent = locs;
+      if (locs != null) document.getElementById('heroLocCount').textContent = locs;
       // Update panel date
       const dateMax = (d.sectors && d.sectors.market_prices ? d.sectors.market_prices.date_max : null);
       if (dateMax) {
