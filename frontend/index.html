@@ -536,59 +536,60 @@ footer a:hover{text-decoration:underline;}
 
   <div class="hero-right">
     <div class="stat-panel">
-      <div class="stat-panel-hd">
-        <div style="display:flex;align-items:center;gap:0;">
-          <div class="live-label" id="panelModeLabel"><div class="blink"></div>Live Market Prices</div>
-          <div class="kpi-mode-dots">
-            <div class="kpi-mode-dot on" id="modeDot0"></div>
-            <div class="kpi-mode-dot" id="modeDot1"></div>
-          </div>
-        </div>
-        <div class="stat-panel-meta" id="panelDate">Apr 2026</div>
+      <div class="stat-panel-hd" style="background:#0b1829;border-bottom:1px solid rgba(255,255,255,0.08);">
+        <div class="live-label" id="rdPanelLabel" style="color:#00957a;font-size:10px;letter-spacing:0.07em;flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;"><div class="blink" style="background:#00957a;flex-shrink:0;"></div>MARKET OVERVIEW &middot; ALL CATEGORIES</div>
+        <div class="stat-panel-meta" id="panelDate" style="color:rgba(255,255,255,0.3);white-space:nowrap;margin-left:8px;">May 2026</div>
       </div>
-      <div class="stat-panel-body" style="padding:14px;">
+      <div class="stat-panel-body" style="padding:0;background:#0f1e37;">
 
-        <!-- Category selector dots -->
-        <div id="catDots" style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px;"></div>
+        <!-- Nav dots (one per card) -->
+        <div id="rdNavDots" style="display:flex;gap:4px;flex-wrap:wrap;padding:10px 14px 7px;min-height:27px;align-items:center;"></div>
 
-        <!-- Category name + count -->
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-          <div id="catName" style="font-family:var(--font-m);font-size:11px;font-weight:600;color:var(--teal);text-transform:uppercase;letter-spacing:0.08em;">Loading…</div>
-          <div id="catCount" style="font-family:var(--font-d);font-size:1.4rem;color:var(--white);letter-spacing:0.04em;">—</div>
+        <!-- Cards container (overview + per-category, shown one at a time) -->
+        <div id="rdCardsContainer" style="position:relative;height:240px;">
+
+          <!-- Card 0: Overview donut -->
+          <div id="rdCard0" class="rd-card" style="position:absolute;inset:0;opacity:1;display:block;padding:12px 10px;transition:opacity 0.22s ease;">
+            <div style="display:flex;gap:4px;align-items:center;height:216px;">
+              <!-- Left labels (left-half segments) -->
+              <div id="rdLeftLabels" style="flex:0 0 102px;display:flex;flex-direction:column;gap:4px;justify-content:center;overflow:hidden;"></div>
+              <!-- Donut + centre text -->
+              <div style="flex:0 0 148px;position:relative;">
+                <canvas id="rdOverviewChart" width="148" height="148"></canvas>
+                <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none;width:80px;">
+                  <div id="rdTotalNum" style="font-family:'IBM Plex Mono',monospace;font-size:17px;font-weight:500;color:#fff;line-height:1.1;">—</div>
+                  <div style="font-family:'IBM Plex Mono',monospace;font-size:5.5px;color:rgba(255,255,255,0.32);text-transform:uppercase;letter-spacing:0.13em;margin-top:3px;">TOTAL LISTINGS</div>
+                </div>
+              </div>
+              <!-- Right labels (right-half segments) -->
+              <div id="rdRightLabels" style="flex:1;display:flex;flex-direction:column;gap:4px;justify-content:center;overflow:hidden;"></div>
+            </div>
+          </div>
+
         </div>
 
-        <!-- Chart container — switches between bar and radar -->
-        <div style="position:relative;height:180px;margin-bottom:10px;">
-          <canvas id="catBarChart"></canvas>
-          <canvas id="catRadarChart" style="display:none;position:absolute;inset:0;"></canvas>
+        <!-- Teal progress bar -->
+        <div style="height:2px;background:rgba(255,255,255,0.06);margin:0 14px;">
+          <div id="rdProgressBar" style="height:100%;background:#00957a;width:0%;border-radius:2px;"></div>
         </div>
 
-        <!-- Chart type toggle -->
-        <div style="display:flex;gap:6px;margin-bottom:10px;">
-          <div id="btnBar"  style="font-family:var(--font-m);font-size:9.5px;padding:3px 10px;border-radius:100px;cursor:pointer;background:var(--teal);color:white;border:1px solid var(--teal);">Bar</div>
-          <div id="btnRadar"  style="font-family:var(--font-m);font-size:9.5px;padding:3px 10px;border-radius:100px;cursor:pointer;background:transparent;color:var(--grey3);border:1px solid var(--border2);">Radar</div>
-        </div>
-
-        <!-- Progress bar -->
-        <div class="kpi-progress"><div class="kpi-progress-bar" id="kpiProgressBar"></div></div>
-
-        <!-- Bottom stats -->
-        <div class="ds-counts" style="margin-top:10px;">
-          <div class="ds-count-item">
-            <div class="ds-count-n" id="heroTotalRecords">—</div>
-            <div class="ds-count-l">Total</div>
+        <!-- Bottom stats row -->
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,0.07);margin:8px 14px 12px;border-radius:var(--r);overflow:hidden;border:1px solid rgba(255,255,255,0.07);">
+          <div style="background:rgba(255,255,255,0.03);padding:8px 6px;text-align:center;">
+            <div id="heroTotalRecords" style="font-family:'IBM Plex Mono',monospace;font-size:1rem;color:#00957a;line-height:1.2;">—</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:8.5px;color:rgba(255,255,255,0.32);text-transform:uppercase;letter-spacing:0.07em;margin-top:2px;">Total</div>
           </div>
-          <div class="ds-count-item">
-            <div class="ds-count-n" id="heroCatCount">13</div>
-            <div class="ds-count-l">Categories</div>
+          <div style="background:rgba(255,255,255,0.03);padding:8px 6px;text-align:center;">
+            <div id="heroCatCount" style="font-family:'IBM Plex Mono',monospace;font-size:1rem;color:#00957a;line-height:1.2;">13</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:8.5px;color:rgba(255,255,255,0.32);text-transform:uppercase;letter-spacing:0.07em;margin-top:2px;">Categories</div>
           </div>
-          <div class="ds-count-item">
-            <div class="ds-count-n" id="heroLocCount">—</div>
-            <div class="ds-count-l">Locations</div>
+          <div style="background:rgba(255,255,255,0.03);padding:8px 6px;text-align:center;">
+            <div id="heroLocCount" style="font-family:'IBM Plex Mono',monospace;font-size:1rem;color:#00957a;line-height:1.2;">—</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:8.5px;color:rgba(255,255,255,0.32);text-transform:uppercase;letter-spacing:0.07em;margin-top:2px;">Locations</div>
           </div>
-          <div class="ds-count-item">
-            <div class="ds-count-n">Live</div>
-            <div class="ds-count-l">SGMPI</div>
+          <div style="background:rgba(255,255,255,0.03);padding:8px 6px;text-align:center;">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:1rem;color:#00957a;line-height:1.2;">LIVE</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:8.5px;color:rgba(255,255,255,0.32);text-transform:uppercase;letter-spacing:0.07em;margin-top:2px;">SGMPI</div>
           </div>
         </div>
 
@@ -1758,239 +1759,302 @@ init();
     return dt.toLocaleDateString('en-GB', {day:'numeric', month:'short', year:'numeric'});
   }
 
-  // ── Rotating category chart dashboard ───────────────────────
-  const CAT_COLORS = [
-    '#00957a','#c77c00','#2563eb','#7c3aed',
-    '#dc2626','#059669','#0891b2','#d97706',
-    '#9333ea','#be185d','#0f766e','#b45309','#1d4ed8'
-  ];
-
-  // Each category gets its own chart type
-  const CAT_CHART_TYPES = {
-    'Electronics':        'bar',
-    'Vehicle Parts':      'horizontalBar',
-    'Vehicles':           'radar',
-    'Appliances':         'doughnut',
-    'Real Estate':        'polarArea',
-    'Building Materials': 'bar',
-    'Health & Medical':   'line',
-    'Furniture':          'radar',
-    'Sports & Fitness':   'doughnut',
-    'Food & FMCG':        'horizontalBar',
-    'Home & Kitchen':     'polarArea',
-    'Office & Education': 'bar',
-    'Security & Safety':  'radar',
-  };
-
-  let catData      = [];
-  let catIndex     = 0;
-  let catTimer     = null;
-  let catChartInst = null;
-  let catCache     = {};
-  const CAT_INTERVAL = 6000;
-
-  function truncate(str, n) {
-    return str && str.length > n ? str.slice(0, n) + '…' : str;
-  }
-
-  function renderCatChart(idx) {
-    const cat   = catData[idx];
-    if (!cat) return;
-    const color = CAT_COLORS[idx % CAT_COLORS.length];
-
-    document.getElementById('catName').textContent  = cat.product_category;
-    document.getElementById('catName').style.color  = color;
-    document.getElementById('catCount').textContent = parseInt(cat.count).toLocaleString() + ' listings';
-
-    // Update dots
-    document.querySelectorAll('.cat-dot').forEach((d,i) => {
-      d.style.background = i === idx ? color : 'var(--border2)';
-      d.style.transform  = i === idx ? 'scale(1.4)' : 'scale(1)';
-    });
-
-    // Update chart type label
-    const chartType = CAT_CHART_TYPES[cat.product_category] || 'bar';
-    const typeLabel = {
-      'bar': 'Bar', 'horizontalBar': 'H-Bar', 'radar': 'Radar',
-      'doughnut': 'Donut', 'polarArea': 'Polar', 'line': 'Line'
-    }[chartType] || 'Chart';
-    document.getElementById('btnBar').textContent = typeLabel;
-    document.getElementById('btnBar').style.background  = 'var(--teal)';
-    document.getElementById('btnBar').style.color       = 'white';
-    document.getElementById('btnBar').style.borderColor = 'var(--teal)';
-    document.getElementById('btnRadar').style.display   = 'none';
-
-    const cacheKey = cat.product_category;
-    if (catCache[cacheKey]) {
-      drawCatChart(catCache[cacheKey], color, chartType);
-    } else {
-      fetch(API + '/api/market-prices?category=' + encodeURIComponent(cat.product_category) + '&limit=20')
-        .then(r => r.ok ? r.json() : Promise.reject())
-        .then(items => {
-          const grouped = {};
-          items.forEach(item => {
-            const key = truncate(item.title, 30);
-            if (!grouped[key]) grouped[key] = [];
-            if (item.price_ghs) grouped[key].push(parseFloat(item.price_ghs));
-          });
-          const top5 = Object.entries(grouped)
-            .map(([title, prices]) => ({
-              title,
-              price: prices.sort((a,b)=>a-b)[Math.floor(prices.length/2)] || 0
-            }))
-            .filter(x => x.price > 0)
-            .sort((a,b) => b.price - a.price)
-            .slice(0, 5);
-          catCache[cacheKey] = top5;
-          drawCatChart(top5, color, chartType);
-        })
-        .catch(() => {});
-    }
-  }
-
-  function drawCatChart(top5, color, chartType) {
-    const labels = top5.map(x => truncate(x.title, 18));
-    const values = top5.map(x => x.price);
-    const barCanvas   = document.getElementById('catBarChart');
-    const radarCanvas = document.getElementById('catRadarChart');
-
-    if (catChartInst) { catChartInst.destroy(); catChartInst = null; }
-
-    // All charts use barCanvas except radar which uses radarCanvas
-    const isRadar = chartType === 'radar';
-    barCanvas.style.display   = isRadar ? 'none'  : 'block';
-    radarCanvas.style.display = isRadar ? 'block' : 'none';
-    const canvas = isRadar ? radarCanvas : barCanvas;
-    const ctx    = canvas.getContext('2d');
-
-    // Multi-color for doughnut/polar
-    const multiColors = CAT_COLORS.map(c => c + 'cc');
-
-    const tooltipDefaults = {
-      backgroundColor: 'rgba(240,244,248,0.97)',
-      borderColor: color, borderWidth: 1,
-      titleColor: '#1a2535', bodyColor: '#1a2535', padding: 8,
+  // ── Rotating multi-card market dashboard ─────────────────────
+  (function() {
+    var _RD_COLORS = [
+      '#00957a','#c77c00','#2563eb','#7c3aed',
+      '#dc2626','#059669','#0891b2','#d97706',
+      '#9333ea','#be185d','#0f766e','#b45309','#1d4ed8'
+    ];
+    var _RD_TYPES = {
+      'Electronics':'bar','Vehicle Parts':'horizontalBar','Vehicles':'radar',
+      'Appliances':'doughnut','Real Estate':'polarArea','Building Materials':'bar',
+      'Health & Medical':'line','Furniture':'radar','Sports & Fitness':'doughnut',
+      'Food & FMCG':'horizontalBar','Home & Kitchen':'polarArea',
+      'Office & Education':'bar','Security & Safety':'radar'
     };
+    var _RD_MS = 6000;
+    var _rdIdx = 0, _rdTotal = 0, _rdTimer = null, _rdRaf = null;
+    var _rdCats = [], _rdCache = {}, _rdCharts = {}, _rdOvChart = null;
 
-    if (chartType === 'bar' || chartType === 'Building Materials' || chartType === 'Office & Education') {
-      catChartInst = new Chart(ctx, {
-        type: 'bar',
-        data: { labels, datasets: [{ data: values, backgroundColor: color+'99', borderColor: color, borderWidth:1.5, borderRadius:4 }] },
-        options: {
-          responsive:true, maintainAspectRatio:false,
-          plugins: { legend:{display:false}, tooltip:{...tooltipDefaults, callbacks:{label:c=>' GH₵ '+c.parsed.y.toLocaleString()}} },
-          scales: {
-            x: { grid:{display:false}, ticks:{font:{size:8,family:'IBM Plex Mono'},color:'rgba(15,30,55,0.45)',maxRotation:20} },
-            y: { grid:{color:'rgba(15,30,55,0.06)'}, ticks:{font:{size:8,family:'IBM Plex Mono'},color:'rgba(15,30,55,0.45)',callback:v=>'GH₵'+(v>=1000?(v/1000).toFixed(0)+'k':v)} }
-          }
+    /* inject spinner keyframe */
+    var _ss = document.createElement('style');
+    _ss.textContent = '@keyframes rdSpin{to{transform:rotate(360deg);}}';
+    document.head.appendChild(_ss);
+
+    function _trunc(s, n) { return s && s.length > n ? s.slice(0,n)+'…' : (s||''); }
+    function _median(a) {
+      if (!a || !a.length) return 0;
+      var s = a.slice().sort(function(x,y){return x-y;}), m = Math.floor(s.length/2);
+      return s.length%2 ? s[m] : (s[m-1]+s[m])/2;
+    }
+
+    function _buildDots(n) {
+      var el = document.getElementById('rdNavDots');
+      if (!el) return;
+      el.innerHTML = '';
+      for (var i=0; i<n; i++) {
+        (function(idx) {
+          var d = document.createElement('div');
+          d.className = 'rd-nav-dot';
+          d.style.cssText = 'width:6px;height:6px;border-radius:50%;cursor:pointer;transition:all 0.3s;flex-shrink:0;background:rgba(255,255,255,0.18);';
+          d.addEventListener('click', function() { _goTo(idx,true); _resetTimer(); });
+          el.appendChild(d);
+        })(i);
+      }
+      _syncDots(0);
+    }
+
+    function _syncDots(idx) {
+      var dots = document.querySelectorAll('.rd-nav-dot');
+      for (var i=0; i<dots.length; i++) {
+        if (i===idx) {
+          dots[i].style.background = idx===0 ? '#00957a' : _RD_COLORS[(idx-1)%_RD_COLORS.length];
+          dots[i].style.transform  = 'scale(1.5)';
+        } else {
+          dots[i].style.background = 'rgba(255,255,255,0.18)';
+          dots[i].style.transform  = 'scale(1)';
         }
+      }
+    }
+
+    function _syncLabel(idx) {
+      var el = document.getElementById('rdPanelLabel');
+      if (!el) return;
+      if (idx===0) {
+        el.innerHTML = '<div class="blink" style="background:#00957a;flex-shrink:0;width:6px;height:6px;border-radius:50%;"></div>MARKET OVERVIEW · ALL CATEGORIES';
+      } else {
+        var cat = _rdCats[idx-1];
+        var col = _RD_COLORS[(idx-1)%_RD_COLORS.length];
+        var nm  = cat ? cat.product_category : 'Category';
+        el.innerHTML = '<div class="blink" style="background:'+col+';flex-shrink:0;width:6px;height:6px;border-radius:50%;"></div><span style="color:'+col+';">'+nm.toUpperCase()+'</span>';
+      }
+    }
+
+    function _goTo(idx, anim) {
+      var cur = document.getElementById('rdCard'+_rdIdx);
+      var nxt = document.getElementById('rdCard'+idx);
+      if (!nxt || idx===_rdIdx) return;
+      if (anim && cur) {
+        cur.style.opacity = '0'; cur.style.pointerEvents = 'none';
+        setTimeout(function() {
+          cur.style.display = 'none';
+          nxt.style.display = 'block'; nxt.style.pointerEvents = '';
+          nxt.offsetHeight;
+          nxt.style.opacity = '1';
+        }, 210);
+      } else {
+        if (cur) { cur.style.display='none'; cur.style.opacity='0'; }
+        nxt.style.display='block'; nxt.style.opacity='1'; nxt.style.pointerEvents='';
+      }
+      _rdIdx = idx;
+      _syncDots(idx);
+      _syncLabel(idx);
+      if (idx>0) _loadCat(idx);
+    }
+
+    function _loadCat(ci) {
+      var cat = _rdCats[ci-1];
+      if (!cat) return;
+      var loadEl = document.getElementById('rdLoad'+ci);
+      var canvEl = document.getElementById('rdCanv'+ci);
+      var key = cat.product_category;
+      if (_rdCache[key]) {
+        if (loadEl) loadEl.style.display = 'none';
+        if (canvEl) canvEl.style.display = 'block';
+        if (!_rdCharts[ci]) _drawChart(ci, _rdCache[key], _RD_COLORS[(ci-1)%_RD_COLORS.length], _RD_TYPES[key]||'bar');
+        return;
+      }
+      if (loadEl) loadEl.style.display = 'flex';
+      if (canvEl) canvEl.style.display = 'none';
+      fetch(API+'/api/market-prices?category='+encodeURIComponent(key)+'&limit=20')
+        .then(function(r) { return r.ok ? r.json() : Promise.reject(); })
+        .then(function(items) {
+          var grp = {};
+          items.forEach(function(it) {
+            var k = _trunc(it.title,30);
+            if (!grp[k]) grp[k] = [];
+            if (it.price_ghs) grp[k].push(parseFloat(it.price_ghs));
+          });
+          var top5 = Object.keys(grp)
+            .map(function(k) { return {title:k, price:_median(grp[k])}; })
+            .filter(function(x) { return x.price>0; })
+            .sort(function(a,b) { return b.price-a.price; })
+            .slice(0,5);
+          _rdCache[key] = top5;
+          if (loadEl) loadEl.style.display = 'none';
+          if (canvEl) canvEl.style.display = 'block';
+          if (!_rdCharts[ci]) _drawChart(ci, top5, _RD_COLORS[(ci-1)%_RD_COLORS.length], _RD_TYPES[key]||'bar');
+        })
+        .catch(function() { if (loadEl) loadEl.style.display='none'; if (canvEl) canvEl.style.display='block'; });
+    }
+
+    function _drawChart(ci, top5, col, type) {
+      var canvEl = document.getElementById('rdCanv'+ci);
+      if (!canvEl) return;
+      if (_rdCharts[ci]) { _rdCharts[ci].destroy(); delete _rdCharts[ci]; }
+      var ctx = canvEl.getContext('2d');
+      var lbl = top5.map(function(x) { return _trunc(x.title,18); });
+      var val = top5.map(function(x) { return x.price; });
+      var mc  = _RD_COLORS.map(function(c) { return c+'cc'; });
+      var tip = {backgroundColor:'#fff',borderColor:col,borderWidth:1,titleColor:'#1a2535',bodyColor:'#1a2535',padding:8};
+      var gc = 'rgba(255,255,255,0.08)', tc = 'rgba(255,255,255,0.45)', fn = {size:8,family:'IBM Plex Mono'};
+      var fmt = function(v) { return 'GH₵'+(v>=1000?(v/1000).toFixed(0)+'k':v); };
+      var cfg;
+      if (type==='bar') {
+        cfg = {type:'bar',data:{labels:lbl,datasets:[{data:val,backgroundColor:col+'99',borderColor:col,borderWidth:1.5,borderRadius:4}]},
+          options:{responsive:true,maintainAspectRatio:false,
+            plugins:{legend:{display:false},tooltip:Object.assign({},tip,{callbacks:{label:function(c){return ' GH₵ '+c.parsed.y.toLocaleString();}}})},
+            scales:{x:{grid:{display:false},ticks:{font:fn,color:tc,maxRotation:20}},y:{grid:{color:gc},ticks:{font:fn,color:tc,callback:fmt}}}}};
+      } else if (type==='horizontalBar') {
+        cfg = {type:'bar',data:{labels:lbl,datasets:[{data:val,backgroundColor:col+'99',borderColor:col,borderWidth:1.5,borderRadius:4}]},
+          options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+            plugins:{legend:{display:false},tooltip:Object.assign({},tip,{callbacks:{label:function(c){return ' GH₵ '+c.parsed.x.toLocaleString();}}})},
+            scales:{x:{grid:{color:gc},ticks:{font:fn,color:tc,callback:fmt}},y:{grid:{display:false},ticks:{font:fn,color:tc}}}}};
+      } else if (type==='radar') {
+        cfg = {type:'radar',data:{labels:lbl,datasets:[{data:val,backgroundColor:col+'22',borderColor:col,borderWidth:2,pointBackgroundColor:col,pointRadius:3}]},
+          options:{responsive:true,maintainAspectRatio:false,
+            plugins:{legend:{display:false},tooltip:Object.assign({},tip,{callbacks:{label:function(c){return ' GH₵ '+c.parsed.r.toLocaleString();}}})},
+            scales:{r:{grid:{color:gc},pointLabels:{font:{size:7,family:'IBM Plex Mono'},color:tc},ticks:{display:false},angleLines:{color:gc}}}}};
+      } else if (type==='doughnut') {
+        cfg = {type:'doughnut',data:{labels:lbl,datasets:[{data:val,backgroundColor:mc.slice(0,5),borderWidth:2,borderColor:'#0f1e37',hoverOffset:6}]},
+          options:{responsive:true,maintainAspectRatio:false,cutout:'62%',
+            plugins:{legend:{display:false},tooltip:Object.assign({},tip,{callbacks:{label:function(c){return ' GH₵ '+c.parsed.toLocaleString();}}})}}};
+      } else if (type==='polarArea') {
+        cfg = {type:'polarArea',data:{labels:lbl,datasets:[{data:val,backgroundColor:mc.slice(0,5),borderWidth:1,borderColor:'rgba(255,255,255,0.1)'}]},
+          options:{responsive:true,maintainAspectRatio:false,
+            plugins:{legend:{display:false},tooltip:Object.assign({},tip,{callbacks:{label:function(c){return ' GH₵ '+c.parsed.r.toLocaleString();}}})},
+            scales:{r:{ticks:{display:false},grid:{color:gc},angleLines:{color:gc}}}}};
+      } else if (type==='line') {
+        cfg = {type:'line',data:{labels:lbl,datasets:[{data:val,borderColor:col,backgroundColor:col+'22',borderWidth:2,pointBackgroundColor:col,pointRadius:4,fill:true,tension:0.4}]},
+          options:{responsive:true,maintainAspectRatio:false,
+            plugins:{legend:{display:false},tooltip:Object.assign({},tip,{callbacks:{label:function(c){return ' GH₵ '+c.parsed.y.toLocaleString();}}})},
+            scales:{x:{grid:{display:false},ticks:{font:fn,color:tc,maxRotation:20}},y:{grid:{color:gc},ticks:{font:fn,color:tc,callback:fmt}}}}};
+      }
+      if (cfg) _rdCharts[ci] = new Chart(ctx, cfg);
+    }
+
+    function _buildOverview(data) {
+      var tot = data.reduce(function(s,c){return s+parseInt(c.count);},0);
+      var tn = document.getElementById('rdTotalNum');
+      if (tn) tn.textContent = tot.toLocaleString();
+      var canvEl = document.getElementById('rdOverviewChart');
+      if (!canvEl) return;
+      if (_rdOvChart) { _rdOvChart.destroy(); _rdOvChart=null; }
+      var ctx = canvEl.getContext('2d');
+      /* compute label sides from midpoint angle */
+      var ang = -Math.PI/2, leftS = [], rightS = [];
+      data.forEach(function(cat,i) {
+        var cnt = parseInt(cat.count);
+        var sl  = (cnt/tot)*2*Math.PI, mid = ang+sl/2;
+        var seg = {cat:cat,col:_RD_COLORS[i%_RD_COLORS.length],mid:mid,cnt:cnt};
+        if (Math.cos(mid)<0) leftS.push(seg); else rightS.push(seg);
+        ang += sl;
       });
-    } else if (chartType === 'horizontalBar') {
-      catChartInst = new Chart(ctx, {
-        type: 'bar',
-        data: { labels, datasets: [{ data: values, backgroundColor: color+'99', borderColor: color, borderWidth:1.5, borderRadius:4 }] },
-        options: {
-          indexAxis: 'y',
-          responsive:true, maintainAspectRatio:false,
-          plugins: { legend:{display:false}, tooltip:{...tooltipDefaults, callbacks:{label:c=>' GH₵ '+c.parsed.x.toLocaleString()}} },
-          scales: {
-            x: { grid:{color:'rgba(15,30,55,0.06)'}, ticks:{font:{size:8,family:'IBM Plex Mono'},color:'rgba(15,30,55,0.45)',callback:v=>'GH₵'+(v>=1000?(v/1000).toFixed(0)+'k':v)} },
-            y: { grid:{display:false}, ticks:{font:{size:8,family:'IBM Plex Mono'},color:'rgba(15,30,55,0.45)'} }
-          }
-        }
-      });
-    } else if (chartType === 'radar') {
-      catChartInst = new Chart(ctx, {
-        type: 'radar',
-        data: { labels, datasets: [{ data: values, backgroundColor: color+'22', borderColor: color, borderWidth:2, pointBackgroundColor: color, pointRadius:3 }] },
-        options: {
-          responsive:true, maintainAspectRatio:false,
-          plugins: { legend:{display:false}, tooltip:{...tooltipDefaults, callbacks:{label:c=>' GH₵ '+c.parsed.r.toLocaleString()}} },
-          scales: { r: { grid:{color:'rgba(15,30,55,0.08)'}, pointLabels:{font:{size:7,family:'IBM Plex Mono'},color:'rgba(15,30,55,0.55)'}, ticks:{display:false} } }
-        }
-      });
-    } else if (chartType === 'doughnut') {
-      catChartInst = new Chart(ctx, {
-        type: 'doughnut',
-        data: { labels, datasets: [{ data: values, backgroundColor: multiColors.slice(0,5), borderWidth:2, borderColor:'#fff', hoverOffset:6 }] },
-        options: {
-          responsive:true, maintainAspectRatio:false, cutout:'62%',
-          plugins: { legend:{display:false}, tooltip:{...tooltipDefaults, callbacks:{label:c=>' GH₵ '+c.parsed.toLocaleString()}} }
-        }
-      });
-    } else if (chartType === 'polarArea') {
-      catChartInst = new Chart(ctx, {
-        type: 'polarArea',
-        data: { labels, datasets: [{ data: values, backgroundColor: multiColors.slice(0,5), borderWidth:1, borderColor:'rgba(255,255,255,0.6)' }] },
-        options: {
-          responsive:true, maintainAspectRatio:false,
-          plugins: { legend:{display:false}, tooltip:{...tooltipDefaults, callbacks:{label:c=>' GH₵ '+c.parsed.r.toLocaleString()}} },
-          scales: { r: { ticks:{display:false}, grid:{color:'rgba(15,30,55,0.08)'} } }
-        }
-      });
-    } else if (chartType === 'line') {
-      catChartInst = new Chart(ctx, {
-        type: 'line',
-        data: { labels, datasets: [{ data: values, borderColor: color, backgroundColor: color+'22', borderWidth:2, pointBackgroundColor: color, pointRadius:4, fill:true, tension:0.4 }] },
-        options: {
-          responsive:true, maintainAspectRatio:false,
-          plugins: { legend:{display:false}, tooltip:{...tooltipDefaults, callbacks:{label:c=>' GH₵ '+c.parsed.y.toLocaleString()}} },
-          scales: {
-            x: { grid:{display:false}, ticks:{font:{size:8,family:'IBM Plex Mono'},color:'rgba(15,30,55,0.45)',maxRotation:20} },
-            y: { grid:{color:'rgba(15,30,55,0.06)'}, ticks:{font:{size:8,family:'IBM Plex Mono'},color:'rgba(15,30,55,0.45)',callback:v=>'GH₵'+(v>=1000?(v/1000).toFixed(0)+'k':v)} }
-          }
-        }
+      leftS.sort(function(a,b){return Math.sin(a.mid)-Math.sin(b.mid);});
+      rightS.sort(function(a,b){return Math.sin(a.mid)-Math.sin(b.mid);});
+      function mkLabel(s, align) {
+        var d   = document.createElement('div');
+        d.style.cssText = 'display:flex;align-items:center;gap:3px;'+(align==='right'?'justify-content:flex-end;':'');
+        var dot = document.createElement('div');
+        dot.style.cssText = 'width:5px;height:5px;min-width:5px;border-radius:50%;background:'+s.col+';';
+        var nm  = document.createElement('span');
+        nm.style.cssText = "font-family:'IBM Plex Mono',monospace;font-size:7px;color:rgba(255,255,255,0.52);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:56px;";
+        nm.textContent = s.cat.product_category;
+        var ct  = document.createElement('span');
+        ct.style.cssText = "font-family:'IBM Plex Mono',monospace;font-size:6.5px;color:"+s.col+";white-space:nowrap;";
+        ct.textContent = s.cnt.toLocaleString();
+        if (align==='right') { d.appendChild(nm); d.appendChild(ct); d.appendChild(dot); }
+        else                 { d.appendChild(dot); d.appendChild(nm); d.appendChild(ct); }
+        return d;
+      }
+      var lEl = document.getElementById('rdLeftLabels');
+      if (lEl) { lEl.innerHTML=''; leftS.forEach(function(s){lEl.appendChild(mkLabel(s,'right'));}); }
+      var rEl = document.getElementById('rdRightLabels');
+      if (rEl) { rEl.innerHTML=''; rightS.forEach(function(s){rEl.appendChild(mkLabel(s,'left'));}); }
+      _rdOvChart = new Chart(ctx, {
+        type:'doughnut',
+        data:{
+          labels:data.map(function(c){return c.product_category;}),
+          datasets:[{data:data.map(function(c){return parseInt(c.count);}),
+            backgroundColor:_RD_COLORS.slice(0,data.length),borderWidth:2,borderColor:'#0f1e37',hoverOffset:4}]
+        },
+        options:{responsive:false,cutout:'64%',
+          plugins:{legend:{display:false},tooltip:{backgroundColor:'#fff',borderColor:'#00957a',borderWidth:1,
+            titleColor:'#1a2535',bodyColor:'#1a2535',padding:8,
+            callbacks:{label:function(c){return ' '+c.label+': '+parseInt(c.parsed).toLocaleString();}}}}}
       });
     }
-  }
 
-  function startCatRotation() {
-    stopCatRotation();
-    animateCatProgress();
-    catTimer = setInterval(() => {
-      catIndex = (catIndex + 1) % catData.length;
-      renderCatChart(catIndex);
-      animateCatProgress();
-    }, CAT_INTERVAL);
-  }
-
-  function stopCatRotation() {
-    if (catTimer) clearInterval(catTimer);
-  }
-
-  function animateCatProgress() {
-    const bar = document.getElementById('kpiProgressBar');
-    if (!bar) return;
-    bar.style.transition = 'none';
-    bar.style.width = '0%';
-    setTimeout(() => {
-      bar.style.transition = 'width ' + CAT_INTERVAL + 'ms linear';
-      bar.style.width = '100%';
-    }, 30);
-  }
-
-  // Load all categories then start rotation
-  fetch(API + '/api/market-prices/categories')
-    .then(r => r.ok ? r.json() : Promise.reject())
-    .then(data => {
-      catData = data;
-      document.getElementById('heroTotalRecords').textContent = data.reduce((s,d) => s + parseInt(d.count), 0).toLocaleString();
-      document.getElementById('heroCatCount').textContent = data.length;
-
-      // Build dots
-      const dotsEl = document.getElementById('catDots');
-      data.forEach((_, i) => {
-        const dot = document.createElement('div');
-        dot.className = 'cat-dot';
-        dot.style.cssText = 'width:6px;height:6px;border-radius:50%;background:var(--border2);cursor:pointer;transition:all 0.3s;flex-shrink:0;';
-        dot.onclick = () => { stopCatRotation(); catIndex = i; renderCatChart(i); startCatRotation(); };
-        dotsEl.appendChild(dot);
+    function _buildCatCards(data) {
+      var cont = document.getElementById('rdCardsContainer');
+      if (!cont) return;
+      data.forEach(function(cat,i) {
+        var ci  = i+1, col = _RD_COLORS[i%_RD_COLORS.length], cnt = parseInt(cat.count);
+        var card = document.createElement('div');
+        card.id = 'rdCard'+ci; card.className = 'rd-card';
+        card.style.cssText = 'position:absolute;inset:0;opacity:0;display:none;padding:12px 14px;transition:opacity 0.22s ease;';
+        card.innerHTML =
+          '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">'+
+            '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:9.5px;font-weight:600;color:'+col+';text-transform:uppercase;letter-spacing:0.09em;">'+cat.product_category+'</div>'+
+            '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:9.5px;font-weight:500;color:rgba(255,255,255,0.75);">'+cnt.toLocaleString()+' listings</div>'+
+          '</div>'+
+          '<div style="position:relative;height:182px;">'+
+            '<div id="rdLoad'+ci+'" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;">'+
+              '<div style="width:22px;height:22px;border:2px solid '+col+'44;border-top-color:'+col+';border-radius:50%;animation:rdSpin 0.8s linear infinite;"></div>'+
+              '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:9px;color:rgba(255,255,255,0.35);">Loading…</div>'+
+            '</div>'+
+            '<canvas id="rdCanv'+ci+'" style="display:none;position:absolute;inset:0;"></canvas>'+
+          '</div>';
+        cont.appendChild(card);
       });
+    }
 
-      renderCatChart(0);
-      startCatRotation();
-    })
-    .catch(() => {});
+    function _progress() {
+      var bar = document.getElementById('rdProgressBar');
+      if (!bar) return;
+      if (_rdRaf) cancelAnimationFrame(_rdRaf);
+      bar.style.transition='none'; bar.style.width='0%';
+      bar.style.background = _rdIdx===0 ? '#00957a' : _RD_COLORS[(_rdIdx-1)%_RD_COLORS.length];
+      var t0 = performance.now();
+      function step(now) {
+        var pct = Math.min(((now-t0)/_RD_MS)*100,100);
+        bar.style.width = pct+'%';
+        if (pct<100) _rdRaf = requestAnimationFrame(step);
+      }
+      _rdRaf = requestAnimationFrame(step);
+    }
+
+    function _start() {
+      _stop(); _progress();
+      _rdTimer = setInterval(function() { _goTo((_rdIdx+1)%_rdTotal,true); _progress(); }, _RD_MS);
+    }
+    function _stop() {
+      if (_rdTimer) { clearInterval(_rdTimer); _rdTimer=null; }
+      if (_rdRaf)   { cancelAnimationFrame(_rdRaf); _rdRaf=null; }
+    }
+    function _resetTimer() { _stop(); _start(); }
+
+    /* kick off */
+    fetch(API+'/api/market-prices/categories')
+      .then(function(r) { return r.ok ? r.json() : Promise.reject(); })
+      .then(function(data) {
+        _rdCats  = data;
+        _rdTotal = 1+data.length;
+        var tot  = data.reduce(function(s,d){return s+parseInt(d.count);},0);
+        var te = document.getElementById('heroTotalRecords'); if (te) te.textContent = tot.toLocaleString();
+        var ce = document.getElementById('heroCatCount');     if (ce) ce.textContent = data.length;
+        _buildDots(_rdTotal);
+        _buildOverview(data);
+        _buildCatCards(data);
+        var c0 = document.getElementById('rdCard0');
+        if (c0) { c0.style.display='block'; c0.style.opacity='1'; }
+        _syncDots(0); _syncLabel(0);
+        _loadCat(1);  /* pre-fetch first category */
+        _start();
+      })
+      .catch(function() {});
+  })();
 
   // ── Update location count from stats ─────────────────────────
   fetch(API + '/api/stats')
