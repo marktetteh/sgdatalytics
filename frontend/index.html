@@ -1986,10 +1986,10 @@ init();
   fetch(API + '/api/stats')
     .then(r => r.ok ? r.json() : Promise.reject())
     .then(d => {
-      const locs = d.sectors?.market_prices?.locations;
+      const locs = (d.sectors && d.sectors.market_prices ? d.sectors.market_prices.locations : null);
       if (locs) document.getElementById('heroLocCount').textContent = locs;
       // Update panel date
-      const dateMax = d.sectors?.market_prices?.date_max;
+      const dateMax = (d.sectors && d.sectors.market_prices ? d.sectors.market_prices.date_max : null);
       if (dateMax) {
         const dt = new Date(dateMax);
         document.getElementById('panelDate').textContent = dt.toLocaleDateString('en-GB',{month:'short',year:'numeric'});
@@ -2000,12 +2000,12 @@ init();
     .then(d => {
       const s = d.sectors || {};
       document.getElementById('feed-total').textContent         = fmt(d.total_records);
-      document.getElementById('fst-market').textContent        = fmt(s.market_prices?.records);
-      document.getElementById('fst-property').textContent      = fmt(s.property?.records);
-      document.getElementById('fst-accommodation').textContent = fmt((s.accommodation?.hotel_records||0)+(s.accommodation?.airbnb_records||0));
-      document.getElementById('fst-economic').textContent      = fmt(s.economic?.records);
-      document.getElementById('fst-commodities').textContent   = fmt((s.commodities?.commodity_records||0)+(s.commodities?.fuel_records||0));
-      document.getElementById('fst-locations').textContent     = fmt(s.market_prices?.locations);
+      document.getElementById('fst-market').textContent        = fmt((s.market_prices ? s.market_prices.records : 0));
+      document.getElementById('fst-property').textContent      = fmt((s.property ? s.property.records : 0));
+      document.getElementById('fst-accommodation').textContent = fmt(((s.accommodation ? s.accommodation.hotel_records : 0)||0)+((s.accommodation ? s.accommodation.airbnb_records : 0)||0));
+      document.getElementById('fst-economic').textContent      = fmt((s.economic ? s.economic.records : 0));
+      document.getElementById('fst-commodities').textContent   = fmt(((s.commodities ? s.commodities.commodity_records : 0)||0)+((s.commodities ? s.commodities.fuel_records : 0)||0));
+      document.getElementById('fst-locations').textContent     = fmt((s.market_prices ? s.market_prices.locations : 0));
     })
     .catch(() => {});
 
@@ -2132,3 +2132,4 @@ init();
 </script>
 </body>
 </html>
+
