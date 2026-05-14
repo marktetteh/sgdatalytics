@@ -2065,7 +2065,7 @@ init();
     const endpoints = {
       market_prices: API + '/api/market-prices?limit=9',
       property:      API + '/api/property?limit=9',
-      accommodation: API + '/api/accommodation?type=hotel&limit=9',
+      accommodation: API + '/api/accommodation?limit=9',
       economic:      API + '/api/economic?limit=9',
       commodities:   API + '/api/commodities?limit=9',
     };
@@ -2120,16 +2120,26 @@ init();
         </div>`;
     }
     if (sector === 'accommodation') {
+      const isAirbnb   = item.source && item.source.toLowerCase().includes('airbnb') || item.room_type || item.property_type;
+      const typeLabel  = isAirbnb ? 'Airbnb' : (item.type === 'hotel' || item.star_rating ? 'Hotel' : 'Accommodation');
+      const title      = item.name || item.title || item.property_type || '—';
+      const priceGhs   = item.price_ghs || item.price_per_night_ghs;
+      const priceLabel = priceGhs ? fmtPrice(priceGhs) + '/night' : (item.price_usd ? 'US$' + Number(item.price_usd).toFixed(0) + '/night' : 'Price on request');
+      const hasPrice   = !!(priceGhs || item.price_usd);
+      const sub1       = item.location || item.city || '';
+      const sub2       = item.star_rating ? item.star_rating + ' ★' : (item.room_type || item.property_type || '');
+      const sub3       = item.bedrooms ? item.bedrooms + ' bed' : (item.beds ? item.beds + ' beds' : '');
       return `
         <div class="feed-card-top">
-          <div class="feed-category">Hotel</div>
+          <div class="feed-category">${typeLabel}</div>
           <div class="feed-date">${fmtDate(item.collected_date)}</div>
         </div>
-        <div class="feed-title">${item.name || item.title || '—'}</div>
-        <div class="feed-price ${item.price_ghs ? '' : 'no-price'}">${item.price_ghs ? fmtPrice(item.price_ghs) + '/night' : 'Price varies'}</div>
+        <div class="feed-title">${title}</div>
+        <div class="feed-price ${hasPrice ? '' : 'no-price'}">${priceLabel}</div>
         <div class="feed-meta">
-          ${item.location ? `<div class="feed-meta-item">📍 ${item.location}</div>` : ''}
-          ${item.star_rating ? `<div class="feed-meta-item">⭐ ${item.star_rating} stars</div>` : ''}
+          ${sub1 ? `<div class="feed-meta-item">📍 ${sub1}</div>` : ''}
+          ${sub2 ? `<div class="feed-meta-item">🏷️ ${sub2}</div>` : ''}
+          ${sub3 ? `<div class="feed-meta-item">🛏️ ${sub3}</div>` : ''}
         </div>`;
     }
     if (sector === 'economic') {
