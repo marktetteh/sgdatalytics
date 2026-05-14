@@ -501,18 +501,30 @@ footer a:hover{text-decoration:underline;}
   .kpi-grid{grid-template-columns:1fr 1fr;}
 }
 
-/* ── ADVISOR STRIP ── */
-.advisor-strip{background:#0f1e37;border-top:3px solid var(--teal);padding:40px 5vw;}
-.advisor-strip-inner{max-width:900px;margin:0 auto;display:flex;flex-direction:column;gap:16px;}
-.advisor-strip-hd{display:flex;align-items:center;gap:12px;}
-.advisor-strip-icon{width:38px;height:38px;background:var(--teal);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px;}
-.advisor-strip-title{font-family:var(--font-d);font-size:22px;letter-spacing:0.06em;color:#ffffff;}
-.advisor-strip-sub{font-size:13px;color:rgba(255,255,255,0.45);margin-left:50px;margin-top:-8px;}
-.adv-chat-box{background:#0b1829;border:1px solid rgba(255,255,255,0.09);border-radius:var(--r-lg);overflow:hidden;display:flex;flex-direction:column;}
-.adv-messages{flex:1;height:240px;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:8px;scroll-behavior:smooth;}
+/* ── AI ADVISOR HERO ── */
+.adv-hero{background:#0b1829;padding:60px 5vw 52px;border-bottom:1px solid rgba(255,255,255,0.07);}
+.adv-hero-inner{max-width:660px;margin:0 auto;display:flex;flex-direction:column;align-items:center;text-align:center;}
+.adv-hero-label{font-family:var(--font-m);font-size:11px;color:var(--teal);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:12px;}
+.adv-hero-title{font-family:var(--font-d);font-size:3.4rem;color:#ffffff;letter-spacing:0.05em;line-height:1.05;margin-bottom:10px;}
+.adv-hero-sub{font-size:14px;color:rgba(255,255,255,0.45);margin-bottom:30px;line-height:1.65;max-width:520px;}
+/* Statista-style search bar */
+.adv-searchbar{width:100%;display:flex;background:#ffffff;border-radius:10px;overflow:hidden;box-shadow:0 6px 36px rgba(0,0,0,0.4);margin-bottom:18px;}
+.adv-searchbar textarea{flex:1;border:none;outline:none;padding:14px 18px;font-size:15px;font-family:var(--font-b);color:#1a2535;resize:none;height:52px;max-height:120px;overflow-y:auto;line-height:1.5;background:transparent;}
+.adv-searchbar textarea::placeholder{color:#9aa5b4;}
+.adv-searchbar-btn{background:var(--teal);color:#ffffff;border:none;padding:0 26px;font-family:var(--font-b);font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px;transition:filter 0.15s;white-space:nowrap;flex-shrink:0;}
+.adv-searchbar-btn:hover{filter:brightness(1.1);}
+.adv-searchbar-btn:disabled{background:#2a6e60;cursor:not-allowed;}
+.adv-searchbar-btn svg{width:16px;height:16px;fill:white;}
+/* Chips */
+.adv-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-bottom:0;}
+.adv-chip{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.7);border-radius:20px;padding:5px 14px;font-size:12px;cursor:pointer;transition:all 0.15s;font-family:var(--font-b);}
+.adv-chip:hover{background:var(--teal);border-color:var(--teal);color:#ffffff;}
+/* Messages (hidden until first send) */
+.adv-messages-wrap{display:none;width:100%;margin-bottom:16px;}
+.adv-messages{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:10px;max-height:260px;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:8px;scroll-behavior:smooth;text-align:left;}
 .adv-messages::-webkit-scrollbar{width:4px;}
 .adv-messages::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.12);border-radius:4px;}
-.adv-bubble{max-width:80%;padding:9px 13px;border-radius:14px;font-size:13px;line-height:1.5;word-break:break-word;}
+.adv-bubble{max-width:82%;padding:9px 13px;border-radius:14px;font-size:13px;line-height:1.5;word-break:break-word;}
 .adv-bubble.user{background:var(--teal);color:#ffffff;align-self:flex-end;border-bottom-right-radius:3px;}
 .adv-bubble.assistant{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.09);color:rgba(255,255,255,0.85);align-self:flex-start;border-bottom-left-radius:3px;}
 .adv-bubble.typing{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.09);align-self:flex-start;border-bottom-left-radius:3px;display:flex;gap:5px;align-items:center;padding:10px 14px;}
@@ -520,18 +532,7 @@ footer a:hover{text-decoration:underline;}
 .adv-dot:nth-child(2){animation-delay:0.2s;}
 .adv-dot:nth-child(3){animation-delay:0.4s;}
 @keyframes advBounce{0%,80%,100%{transform:translateY(0);}40%{transform:translateY(-5px);}}
-.adv-chips{display:flex;flex-wrap:wrap;gap:6px;padding:10px 14px;border-top:1px solid rgba(255,255,255,0.07);background:#0b1829;}
-.adv-chip{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.14);color:rgba(255,255,255,0.7);border-radius:20px;padding:4px 12px;font-size:12px;cursor:pointer;transition:all 0.15s;font-family:var(--font-b);}
-.adv-chip:hover{background:var(--teal);border-color:var(--teal);color:#ffffff;}
-.adv-input-bar{display:flex;gap:8px;padding:10px 12px;border-top:1px solid rgba(255,255,255,0.07);background:#0b1829;}
-.adv-input-bar textarea{flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:8px 12px;font-size:13px;font-family:var(--font-b);resize:none;outline:none;height:40px;max-height:100px;overflow-y:auto;line-height:1.4;color:#ffffff;}
-.adv-input-bar textarea::placeholder{color:rgba(255,255,255,0.3);}
-.adv-input-bar textarea:focus{border-color:var(--teal);}
-.adv-send{background:var(--teal);color:white;border:none;border-radius:8px;width:40px;height:40px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:filter 0.15s;}
-.adv-send:hover{filter:brightness(1.1);}
-.adv-send:disabled{background:rgba(255,255,255,0.12);cursor:not-allowed;}
-.adv-send svg{width:16px;height:16px;fill:white;}
-.adv-dataset-cards{display:flex;flex-direction:column;gap:6px;max-width:80%;align-self:flex-start;}
+.adv-dataset-cards{display:flex;flex-direction:column;gap:6px;align-self:flex-start;width:100%;}
 .adv-dataset-card{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.09);border-left:3px solid var(--teal);border-radius:8px;padding:10px 12px;}
 .adv-dataset-card h4{font-size:12px;color:#ffffff;margin-bottom:3px;}
 .adv-dataset-card p{font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:5px;line-height:1.4;}
@@ -539,10 +540,10 @@ footer a:hover{text-decoration:underline;}
 .adv-tag{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.6);border-radius:4px;padding:1px 7px;font-size:11px;}
 .adv-dataset-card a{display:inline-block;margin-top:6px;font-size:11px;color:var(--teal);text-decoration:none;font-weight:600;}
 .adv-dataset-card a:hover{text-decoration:underline;}
-.adv-footer-link{text-align:right;margin-top:4px;}
-.adv-footer-link a{font-size:12px;color:rgba(255,255,255,0.35);text-decoration:none;transition:color 0.15s;}
+.adv-footer-link{margin-top:14px;}
+.adv-footer-link a{font-size:12px;color:rgba(255,255,255,0.3);text-decoration:none;transition:color 0.15s;}
 .adv-footer-link a:hover{color:var(--teal);}
-@media(max-width:700px){.adv-messages{height:200px;}.adv-strip-sub{display:none;}}
+@media(max-width:600px){.adv-hero-title{font-size:2.4rem;}.adv-searchbar-btn span{display:none;}.adv-messages{max-height:200px;}}
 </style>
 </head>
 <body>
@@ -575,6 +576,36 @@ footer a:hover{text-decoration:underline;}
   <a href="about.html">About</a>
   <div class="mobile-menu-actions">
     <a href="marketplace.html" class="btn btn-teal">Browse Datasets</a>
+  </div>
+</div>
+
+<!-- ADVISOR -->
+<div class="adv-hero">
+  <div class="adv-hero-inner">
+    <div class="adv-hero-label">AI-Powered · Ghana Datasets</div>
+    <div class="adv-hero-title">Find Ghana Data</div>
+    <div class="adv-hero-sub">Describe your research topic or business need — our AI advisor will recommend the right datasets from our catalog</div>
+    <!-- Messages expand here once conversation starts -->
+    <div class="adv-messages-wrap" id="advMessagesWrap">
+      <div class="adv-messages" id="advMessages"></div>
+    </div>
+    <!-- Statista-style search bar -->
+    <div class="adv-searchbar">
+      <textarea id="advInput" placeholder="e.g. I need inflation and exchange rate data for a research paper…" rows="1" onkeydown="advHandleKey(event)" oninput="advAutoResize(this)"></textarea>
+      <button class="adv-searchbar-btn" id="advSendBtn" onclick="advSendMessage()">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+        <span>Ask Advisor</span>
+      </button>
+    </div>
+    <!-- Quick topic chips -->
+    <div class="adv-chips" id="advChips">
+      <button class="adv-chip" onclick="advSendQuick(this)">Inflation &amp; exchange rates</button>
+      <button class="adv-chip" onclick="advSendQuick(this)">Pricing data for my business</button>
+      <button class="adv-chip" onclick="advSendQuick(this)">Education thesis in Ghana</button>
+      <button class="adv-chip" onclick="advSendQuick(this)">Agricultural production</button>
+      <button class="adv-chip" onclick="advSendQuick(this)">Poverty &amp; development</button>
+    </div>
+    <div class="adv-footer-link"><a href="advisor.html">Open full advisor experience →</a></div>
   </div>
 </div>
 
@@ -659,36 +690,6 @@ footer a:hover{text-decoration:underline;}
   </div>
 </div>
 
-
-<!-- ADVISOR STRIP -->
-<div class="advisor-strip">
-  <div class="advisor-strip-inner">
-    <div class="advisor-strip-hd">
-      <div class="advisor-strip-icon">📊</div>
-      <div class="advisor-strip-title">SG Data Advisor</div>
-    </div>
-    <div class="advisor-strip-sub">Describe your research or business problem — our AI will find the right Ghana datasets for you</div>
-    <div class="adv-chat-box">
-      <div class="adv-messages" id="advMessages"></div>
-      <div class="adv-chips" id="advChips">
-        <button class="adv-chip" onclick="advSendQuick(this)">Inflation &amp; exchange rate research</button>
-        <button class="adv-chip" onclick="advSendQuick(this)">Pricing data for my business</button>
-        <button class="adv-chip" onclick="advSendQuick(this)">Thesis on education in Ghana</button>
-        <button class="adv-chip" onclick="advSendQuick(this)">Agricultural production analysis</button>
-        <button class="adv-chip" onclick="advSendQuick(this)">Poverty and development in Ghana</button>
-      </div>
-      <div class="adv-input-bar">
-        <textarea id="advInput" placeholder="Describe your research topic or business problem…" rows="1" onkeydown="advHandleKey(event)" oninput="advAutoResize(this)"></textarea>
-        <button class="adv-send" id="advSendBtn" onclick="advSendMessage()" title="Send">
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
-        </button>
-      </div>
-    </div>
-    <div class="adv-footer-link">
-      <a href="advisor.html">Open full advisor →</a>
-    </div>
-  </div>
-</div>
 
 <!-- CHARTS SECTION -->
 <div class="charts-section">
@@ -2383,6 +2384,8 @@ init();
     if (!text) return;
     var chips = document.getElementById('advChips');
     if (chips) chips.style.display = 'none';
+    var wrap = document.getElementById('advMessagesWrap');
+    if (wrap) wrap.style.display = 'block';
     advAppend('user', advEsc(text).replace(/\n/g,'<br>'));
     advHistory.push({ role: 'user', content: text });
     input.value = '';
@@ -2411,10 +2414,6 @@ init();
     if (btn) btn.disabled = false;
   };
 
-  // Welcome message
-  window.addEventListener('DOMContentLoaded', function() {
-    advAppend('assistant', '👋 Hi! Tell me your research topic or business need and I\'ll find the right Ghana dataset for you.');
-  });
 })();
 </script>
 </body>
