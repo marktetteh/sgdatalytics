@@ -1825,7 +1825,7 @@ init();
         document.getElementById('panelDate').textContent = dt.toLocaleDateString('en-GB',{month:'short',year:'numeric'});
       }
     })
-    .catch(() => {})
+    .catch(() => {});
   fetch(API + '/api/stats')
     .then(r => r.ok ? r.json() : Promise.reject())
     .then(d => {
@@ -1963,6 +1963,7 @@ init();
 </script>
 </body>
 </html>
+
 
 
 
