@@ -401,19 +401,19 @@ footer a:hover{text-decoration:underline;}
   gap:16px;
 }
 .feed-card{
-  background:#ffffff;
-  border:1px solid var(--border);
+  background:#0f1e37;
+  border:1px solid rgba(255,255,255,0.09);
   border-top:3px solid transparent;
   border-radius:var(--r-lg);padding:18px 16px;
   display:flex;flex-direction:column;gap:10px;
   transition:border-color var(--ease),transform var(--ease),box-shadow var(--ease);
   animation:fadeSlideIn 0.4s ease both;
-  box-shadow:0 2px 12px rgba(15,30,55,0.07);
+  box-shadow:0 2px 16px rgba(0,0,0,0.18);
 }
 .feed-card:hover{
   border-top-color:var(--teal);
   transform:translateY(-3px);
-  box-shadow:0 8px 28px rgba(15,30,55,0.13);
+  box-shadow:0 8px 32px rgba(0,0,0,0.28);
 }
 @keyframes fadeSlideIn{
   from{opacity:0;transform:translateY(12px);}
@@ -424,23 +424,23 @@ footer a:hover{text-decoration:underline;}
   font-family:var(--font-m);font-size:10px;font-weight:600;
   color:var(--teal);letter-spacing:0.06em;text-transform:uppercase;
 }
-.feed-date{font-family:var(--font-m);font-size:10px;color:var(--grey3);}
+.feed-date{font-family:var(--font-m);font-size:10px;color:rgba(255,255,255,0.35);}
 .feed-title{
-  font-size:13px;font-weight:600;color:var(--white);
+  font-size:13px;font-weight:600;color:#ffffff;
   line-height:1.35;display:-webkit-box;
   -webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
 }
 .feed-price{
   font-family:var(--font-d);font-size:1.6rem;
-  color:var(--amber);letter-spacing:0.04em;line-height:1;
+  color:var(--teal);letter-spacing:0.04em;line-height:1;
 }
-.feed-price.no-price{color:var(--grey3);font-size:1rem;font-family:var(--font-m);}
+.feed-price.no-price{color:rgba(255,255,255,0.3);font-size:1rem;font-family:var(--font-m);}
 .feed-meta{
   display:flex;gap:10px;flex-wrap:wrap;
-  border-top:1px solid var(--border);padding-top:10px;
+  border-top:1px solid rgba(255,255,255,0.08);padding-top:10px;
 }
 .feed-meta-item{
-  font-family:var(--font-m);font-size:10px;color:var(--grey3);
+  font-family:var(--font-m);font-size:10px;color:rgba(255,255,255,0.45);
   display:flex;align-items:center;gap:4px;
 }
 .feed-empty{
