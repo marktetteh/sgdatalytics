@@ -2366,6 +2366,39 @@ init();
     advScroll();
   }
 
+  function advRenderLiveData(liveData) {
+    var c = document.getElementById('advMessages');
+    var wrapper = document.createElement('div');
+    wrapper.style.cssText = 'margin:8px 0 4px 0;width:100%';
+    Object.entries(liveData).forEach(function([key, info]) {
+      if (!info || !info.rows || info.rows.length === 0) return;
+      var section = document.createElement('div');
+      section.style.cssText = 'background:#f0f7ff;border:1px solid #c8dfff;border-radius:10px;padding:12px 14px;margin-bottom:8px;font-size:0.82rem';
+      var label = info.label || key;
+      var total = info.total || info.rows.length;
+      var rows = info.rows.slice(0, 5);
+      var cols = Object.keys(rows[0] || {}).filter(function(col){ return !['id','created_at','updated_at','search_label'].includes(col); }).slice(0, 5);
+      var html = '<div style="font-weight:600;color:#1a4d8a;margin-bottom:6px">📊 ' + advEsc(label) + ' — ' + total.toLocaleString() + ' matching records found</div>';
+      html += '<table style="width:100%;border-collapse:collapse;font-size:0.78rem">';
+      html += '<thead><tr>' + cols.map(function(col){ return '<th style="text-align:left;padding:3px 6px;border-bottom:1px solid #c8dfff;color:#555;text-transform:capitalize">' + advEsc(col.replace(/_/g,' ')) + '</th>'; }).join('') + '</tr></thead>';
+      html += '<tbody>';
+      rows.forEach(function(row) {
+        html += '<tr>' + cols.map(function(col) {
+          var val = row[col];
+          var display = (val === null || val === undefined) ? '—' : String(val).slice(0, 40);
+          return '<td style="padding:3px 6px;border-bottom:1px solid #e8f0fe;color:#222">' + advEsc(display) + '</td>';
+        }).join('') + '</tr>';
+      });
+      html += '</tbody></table>';
+      if (total > 5) {
+        html += '<div style="margin-top:6px;color:#555;font-size:0.76rem">Showing 5 of ' + total.toLocaleString() + ' results. <a href="https://sgdatalytics.org/marketplace.html" target="_blank" style="color:#1a4d8a">Get full dataset →</a></div>';
+      }
+      section.innerHTML = html;
+      wrapper.appendChild(section);
+    });
+    if (wrapper.children.length > 0) { c.appendChild(wrapper); advScroll(); }
+  }
+
   window.advSendQuick = function(btn) {
     document.getElementById('advInput').value = btn.textContent.trim();
     advSendMessage();
@@ -2403,6 +2436,7 @@ init();
       if (!resp.ok) { var er = await resp.json().catch(function(){return {};}); throw new Error(er.error || 'Server error ' + resp.status); }
       var data = await resp.json();
       advRemoveTyping(tid);
+      if (data.live_data && Object.keys(data.live_data).length > 0) advRenderLiveData(data.live_data);
       advAppend('assistant', advMd(data.reply || 'No response received.'));
       advHistory.push({ role: 'assistant', content: data.reply });
       if (data.datasets_found && data.datasets_found.length > 0) advRenderCards(data.datasets_found);
