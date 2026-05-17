@@ -2109,12 +2109,16 @@ init();
   // ── Feed rendering ────────────────────────────────────────────
   let activeFeed = 'market_prices';
 
+  // Daily offset — cycles 9 new products every day across the full dataset
+  const _daysSinceEpoch = Math.floor(Date.now() / 86400000);
+  const _dailyOffset    = (_daysSinceEpoch * 9) % 15000;
+
   function loadFeed(sector) {
     const grid = document.getElementById('feed-grid');
     grid.innerHTML = '<div class="feed-loading"><div class="live-pulse"></div>Loading latest data…</div>';
 
     const endpoints = {
-      market_prices: API + '/api/market-prices?limit=9',
+      market_prices: API + '/api/market-prices?limit=9&offset=' + _dailyOffset,
       property:      API + '/api/property?limit=9',
       economic:      API + '/api/economic?limit=9',
       commodities:   API + '/api/commodities?limit=9',

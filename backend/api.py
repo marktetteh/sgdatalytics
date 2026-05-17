@@ -141,13 +141,16 @@ def market_prices():
     category = request.args.get('category')
     location = request.args.get('location')
     limit    = min(int(request.args.get('limit', 50)), 200)
+    offset   = max(0, int(request.args.get('offset', 0)))
     where, params = [], []
     if category: where.append("product_category ILIKE %s"); params.append(f'%{category}%')
     if location: where.append("location ILIKE %s"); params.append(f'%{location}%')
+    # Only show quality-gated rows (normalized_name present)
+    where.append("normalized_name IS NOT NULL AND normalized_name <> ''")
     sql = "SELECT id, collected_date, week_number, year, product_category, title, price_ghs, location, condition, source FROM market_prices"
     if where: sql += " WHERE " + " AND ".join(where)
-    sql += " ORDER BY collected_date DESC LIMIT %s"
-    params.append(limit)
+    sql += " ORDER BY id DESC LIMIT %s OFFSET %s"
+    params.extend([limit, offset])
     rows = query('market_prices', sql, params)
     return jsonify([dict(r) for r in rows])
 
