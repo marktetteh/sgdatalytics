@@ -246,18 +246,18 @@ def indices():
 # Map Paystack payment page slug → product details + connection strings
 # Connection strings are stored as Railway env vars (set after running Neon SQL)
 PRODUCTS = {
-    'sgdatalytics-sgmpi': {
+    '72ruuze8qn': {
         'name':    'SGMPI Consumer Prices',
-        'price':   '$10/month',
+        'price':   'GHS 150/month',
         'strings': [
             ('Market Prices Database', 'CONN_SGMPI'),
         ],
         'views':   ['sgmpi_product'],
         'example': 'SELECT * FROM sgmpi_product WHERE year = 2026 LIMIT 100',
     },
-    'sgdatalytics-realestate': {
+    'cr1fxldrkx': {
         'name':    'Real Estate & Accommodation',
-        'price':   '$7/month',
+        'price':   'GHS 100/month',
         'strings': [
             ('Property Database',       'CONN_REALESTATE_PROPERTY'),
             ('Accommodation Database',  'CONN_REALESTATE_ACCOMMODATION'),
@@ -265,9 +265,9 @@ PRODUCTS = {
         'views':   ['property_product', 'hotels_product', 'airbnb_product'],
         'example': "SELECT * FROM property_product WHERE city = 'Accra' LIMIT 100",
     },
-    'sgdatalytics-macro': {
+    'g7ug9brvpm': {
         'name':    'Macro & Commodities',
-        'price':   '$7/month',
+        'price':   'GHS 100/month',
         'strings': [
             ('Economic Database',    'CONN_MACRO_ECONOMIC'),
             ('Commodities Database', 'CONN_MACRO_COMMODITIES'),
@@ -275,9 +275,9 @@ PRODUCTS = {
         'views':   ['economic_product', 'fx_product', 'commodities_product', 'fuel_product'],
         'example': "SELECT * FROM economic_product WHERE sector = 'Monetary' LIMIT 100",
     },
-    'sgdatalytics-bundle': {
+    '1q3vr4l02p': {
         'name':    'Ghana Complete Bundle',
-        'price':   '$14/month',
+        'price':   'GHS 300/month',
         'strings': [
             ('Market Prices Database',  'CONN_SGMPI'),
             ('Property Database',       'CONN_REALESTATE_PROPERTY'),
@@ -429,9 +429,9 @@ def paystack_webhook():
     # ── 3. Match product ──────────────────────────────────────
     product = PRODUCTS.get(slug)
     if not product:
-        # Fallback: try matching by amount (in cents)
+        # Fallback: try matching by amount (Paystack sends GHS in pesewas × 100)
         amount = data.get('amount', 0)
-        amount_map = {1000: 'sgdatalytics-sgmpi', 700: 'sgdatalytics-macro', 1400: 'sgdatalytics-bundle'}
+        amount_map = {15000: '72ruuze8qn', 10000: 'cr1fxldrkx', 30000: '1q3vr4l02p'}
         fallback_slug = amount_map.get(amount)
         product = PRODUCTS.get(fallback_slug)
 
