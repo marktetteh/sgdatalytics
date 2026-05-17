@@ -269,7 +269,7 @@ footer a:hover{text-decoration:underline;}
         <div class="product-amount">GHS 150</div>
         <div class="product-currency">per month</div>
       </div>
-      <button class="product-cta cta-secondary" onclick="openModal('SGMPI Consumer Prices','GHS 150/month')">Subscribe via MoMo</button>
+      <a href="https://paystack.com/pay/sgdatalytics-sgmpi" target="_blank" class="product-cta cta-secondary">Subscribe — GHS 150/mo</a>
     </div>
 
     <!-- Product 2 -->
@@ -287,7 +287,7 @@ footer a:hover{text-decoration:underline;}
         <div class="product-amount">GHS 100</div>
         <div class="product-currency">per month</div>
       </div>
-      <button class="product-cta cta-secondary" onclick="openModal('Real Estate & Accommodation','GHS 100/month')">Subscribe via MoMo</button>
+      <a href="https://paystack.com/pay/sgdatalytics-realestate" target="_blank" class="product-cta cta-secondary">Subscribe — GHS 100/mo</a>
     </div>
 
     <!-- Product 3 -->
@@ -309,7 +309,7 @@ footer a:hover{text-decoration:underline;}
         <div class="product-amount">GHS 100</div>
         <div class="product-currency">per month</div>
       </div>
-      <button class="product-cta cta-secondary" onclick="openModal('Macro & Commodities','GHS 100/month')">Subscribe via MoMo</button>
+      <a href="https://paystack.com/pay/sgdatalytics-macro" target="_blank" class="product-cta cta-secondary">Subscribe — GHS 100/mo</a>
     </div>
 
   </div>
@@ -332,7 +332,7 @@ footer a:hover{text-decoration:underline;}
       <div class="bundle-saving">Save GHS 150/mo vs buying separately</div>
       <div class="bundle-amount">GHS 200</div>
       <div class="bundle-period">per month</div>
-      <a href="#" class="bundle-cta" onclick="openModal('Ghana Complete Data Bundle','GHS 200/month');return false;">Subscribe via MoMo</a>
+      <a href="https://paystack.com/pay/sgdatalytics-bundle" target="_blank" class="bundle-cta">Subscribe — GHS 200/mo</a>
     </div>
   </div>
 
@@ -349,8 +349,8 @@ footer a:hover{text-decoration:underline;}
       </div>
       <div class="step">
         <div class="step-num">02</div>
-        <div class="step-title">Pay via Mobile Money</div>
-        <p class="step-body">Send the monthly amount to our MoMo number below. Include your email address and the product name in the payment reference or send us a WhatsApp after paying.</p>
+        <div class="step-title">Pay securely via Paystack</div>
+        <p class="step-body">Click Subscribe on your chosen product. You'll be taken to a secure Paystack checkout — pay by card (Visa, Mastercard), Ghana MoMo (MTN, Vodafone, AirtelTigo) or Verve. Works for Ghana and international buyers.</p>
       </div>
       <div class="step">
         <div class="step-num">03</div>
@@ -359,14 +359,12 @@ footer a:hover{text-decoration:underline;}
       </div>
     </div>
 
-    <!-- MOMO BOX -->
+    <!-- PAYSTACK INFO BOX -->
     <div class="momo-box">
-      <div class="momo-icon">📱</div>
+      <div class="momo-icon">💳</div>
       <div>
-        <div class="momo-title">MTN Mobile Money</div>
-        <div class="momo-number">0545 587 214</div>
-        <div class="momo-name">SG Datalytics</div>
-        <p class="momo-instruction">Send payment, then WhatsApp or email us at <strong>data@sgdatalytics.org</strong> with your name, email address, and which product you subscribed to. We'll activate your access within 24 hours and send your connection string.</p>
+        <div class="momo-title">Secure checkout via Paystack</div>
+        <p class="momo-instruction" style="margin-top:6px;">Paystack accepts <strong>Visa, Mastercard, Verve</strong> and Ghana Mobile Money (<strong>MTN, Vodafone, AirtelTigo</strong>) — so both local and international buyers can subscribe in one click. After payment, Paystack sends you a receipt and notifies us automatically. We'll email your connection string within <strong>24 hours</strong>. Questions? Reach us at <strong>data@sgdatalytics.org</strong></p>
       </div>
     </div>
   </div>
@@ -453,7 +451,7 @@ footer a:hover{text-decoration:underline;}
           How do I cancel?
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
         </button>
-        <div class="faq-a">Simply stop your monthly MoMo payment and send us a message at <strong>data@sgdatalytics.org</strong>. Your access will remain active until the end of the period you've paid for, then be closed automatically.</div>
+        <div class="faq-a">Email us at <strong>data@sgdatalytics.org</strong> to cancel. Your access remains active until the end of the billing period you've paid for, then closes automatically. No penalties, no questions asked.</div>
       </div>
 
       <div class="faq-item">
@@ -475,33 +473,6 @@ footer a:hover{text-decoration:underline;}
   <p>© 2026 SG Datalytics · <a href="marketplace.html">Marketplace</a> · <a href="products.html">Data Products</a> · <a href="insights.html">Insights</a> · <a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a> · <a href="methodology.html">Methodology</a></p>
 </footer>
 
-<!-- SUBSCRIBE MODAL -->
-<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
-  <div class="modal">
-    <div class="modal-title" id="modal-title">Subscribe</div>
-    <p class="modal-sub" id="modal-sub">Follow these steps to activate your access.</p>
-    <div class="modal-steps">
-      <div class="modal-step">
-        <div class="modal-step-num">1</div>
-        <div class="modal-step-text">Send <strong id="modal-amount"></strong> to our MTN MoMo number below. Use your email address or name as the payment reference.</div>
-      </div>
-      <div class="modal-step">
-        <div class="modal-step-num">2</div>
-        <div class="modal-step-text">WhatsApp or email us at <strong>data@sgdatalytics.org</strong> with your name, email and the product: <strong id="modal-product"></strong>.</div>
-      </div>
-      <div class="modal-step">
-        <div class="modal-step-num">3</div>
-        <div class="modal-step-text">We'll send your PostgreSQL connection string within <strong>24 hours</strong>. Paste it into your tool and you're live.</div>
-      </div>
-    </div>
-    <div class="modal-momo">
-      <div class="modal-momo-num">0545 587 214</div>
-      <div class="modal-momo-name">MTN MoMo · SG Datalytics</div>
-    </div>
-    <button class="modal-close" onclick="closeModalDirect()">Close</button>
-  </div>
-</div>
-
 <script>
 // Nav hamburger
 const hamburger = document.getElementById('nav-hamburger');
@@ -518,24 +489,6 @@ function toggleFaq(btn) {
   document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
   if (!isOpen) item.classList.add('open');
 }
-
-// Modal
-function openModal(product, amount) {
-  document.getElementById('modal-title').textContent = product;
-  document.getElementById('modal-sub').textContent = 'Follow these steps to activate your ' + product + ' access.';
-  document.getElementById('modal-amount').textContent = amount;
-  document.getElementById('modal-product').textContent = product;
-  document.getElementById('modal-overlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-function closeModal(e) {
-  if (e.target === document.getElementById('modal-overlay')) closeModalDirect();
-}
-function closeModalDirect() {
-  document.getElementById('modal-overlay').classList.remove('open');
-  document.body.style.overflow = '';
-}
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModalDirect(); });
 </script>
 </body>
 </html>
