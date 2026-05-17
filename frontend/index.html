@@ -701,39 +701,12 @@ footer a:hover{text-decoration:underline;}
 
   <!-- Tab nav -->
   <div class="tab-nav">
-    <button class="tab-btn active" data-tab="macro">Prices &amp; FX</button>
-    <button class="tab-btn" data-tab="sectors">GDP &amp; Sectors</button>
-    <button class="tab-btn" data-tab="market">Market Prices</button>
-    <button class="tab-btn" data-tab="rates">Interest Rates</button>
+    <button class="tab-btn active" data-tab="sectors">GDP &amp; Sectors</button>
+    <button class="tab-btn" data-tab="macro">Prices &amp; FX</button>
   </div>
 
-  <!-- Tab: Prices & FX -->
-  <div class="tab-panel active" id="tab-macro">
-    <div class="chart-row one">
-      <div class="chart-card">
-        <div class="chart-card-hd">
-          <div>
-            <div class="cc-title">Inflation Rate &amp; Exchange Rate</div>
-            <div class="cc-sub">Year-on-year CPI (%) vs USD / GHS — last 5 years · monthly</div>
-          </div>
-          <div style="display:flex;gap:8px;align-items:center;">
-            <div style="display:flex;align-items:center;gap:5px;font-family:var(--font-m);font-size:10px;color:var(--grey2);">
-              <span style="width:10px;height:3px;border-radius:2px;background:#f59e0b;display:inline-block;"></span>Inflation (%)
-            </div>
-            <div style="display:flex;align-items:center;gap:5px;font-family:var(--font-m);font-size:10px;color:var(--grey2);">
-              <span style="width:10px;height:3px;border-radius:2px;background:#00c9a7;display:inline-block;"></span>USD/GHS
-            </div>
-            <span class="badge badge-amber">Monthly</span>
-          </div>
-        </div>
-        <div class="chart-wrap h300" data-anim-chart><canvas id="cInflFX"></canvas></div>
-        <div class="source-note">Sources: Ghana Statistical Service (CPI) · Bank of Ghana (FX)</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Tab: GDP & Sectors -->
-  <div class="tab-panel" id="tab-sectors">
+  <!-- Tab: GDP & Sectors (moved to first/active) -->
+  <div class="tab-panel active" id="tab-sectors">
     <div class="chart-row two">
       <div class="chart-card">
         <div class="chart-card-hd">
@@ -765,37 +738,31 @@ footer a:hover{text-decoration:underline;}
     </div>
   </div>
 
-  <!-- Tab: Market Prices -->
-  <div class="tab-panel" id="tab-market">
+  <!-- Tab: Prices & FX -->
+  <div class="tab-panel" id="tab-macro">
     <div class="chart-row one">
       <div class="chart-card">
         <div class="chart-card-hd">
-          <div><div class="cc-title">SG Market Price Index — Platform Comparison</div><div class="cc-sub">Median listing price in GHS by category (Platform A vs Platform B)</div></div>
-          <span class="badge badge-teal">Weekly</span>
+          <div>
+            <div class="cc-title">Inflation Rate &amp; Exchange Rate</div>
+            <div class="cc-sub">Year-on-year CPI (%) vs USD / GHS — last 5 years · monthly</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <div style="display:flex;align-items:center;gap:5px;font-family:var(--font-m);font-size:10px;color:var(--grey2);">
+              <span style="width:10px;height:3px;border-radius:2px;background:#f59e0b;display:inline-block;"></span>Inflation (%)
+            </div>
+            <div style="display:flex;align-items:center;gap:5px;font-family:var(--font-m);font-size:10px;color:var(--grey2);">
+              <span style="width:10px;height:3px;border-radius:2px;background:#00c9a7;display:inline-block;"></span>USD/GHS
+            </div>
+            <span class="badge badge-amber">Monthly</span>
+          </div>
         </div>
-        <div class="chart-wrap h340"><canvas id="cMarket"></canvas></div>
-        <div class="source-note">Source: SG Datalytics Market Price Index — compiled from public online classifieds in Ghana</div>
+        <div class="chart-wrap h300" data-anim-chart><canvas id="cInflFX"></canvas></div>
+        <div class="source-note">Sources: Ghana Statistical Service (CPI) · Bank of Ghana (FX)</div>
       </div>
     </div>
   </div>
 
-  <!-- Tab: Interest Rates -->
-  <div class="tab-panel" id="tab-rates">
-    <div class="chart-row one">
-      <div class="chart-card">
-        <div class="chart-card-hd">
-          <div><div class="cc-title">Ghana Key Interest Rates</div><div class="cc-sub">Monetary Policy Rate vs 91-Day T-Bill Rate (%)</div></div>
-          <span class="badge badge-blue">Monthly</span>
-        </div>
-        <div class="chart-wrap h340"><canvas id="cRates"></canvas></div>
-        <div class="chart-legend">
-          <div class="legend-item"><div class="legend-dot" style="background:#3b82f6"></div>Policy Rate</div>
-          <div class="legend-item"><div class="legend-dot" style="background:#00c9a7"></div>91-Day T-Bill</div>
-        </div>
-        <div class="source-note">Source: Bank of Ghana Statistical Bulletin</div>
-      </div>
-    </div>
-  </div>
 </div>
 
 <!-- DATASETS SECTION REMOVED -->
@@ -1260,11 +1227,11 @@ async function init() {
         loadCSV('data/gss_cpi_inflation.csv'),
         loadCSV('data/bog_fx_rates.csv'),
         loadCSV('data/wb_ghana_macroeconomic.csv'),
-        loadCSV('data/market_prices_summary.csv'),
+        Promise.resolve([]),
         loadCSV('data/bog_gdp.csv'),
         loadCSV('data/catalogue.csv'),
-        loadCSV('data/gss_interest_rates.csv'),
-        loadCSV('data/policy_rate_extended.csv'),
+        Promise.resolve([]),
+        Promise.resolve([]),
         loadCSV('data/bog_key_indicators.csv'),
         loadCSV('data/gss_commodity_prices.csv'),
       ]),
@@ -1276,8 +1243,6 @@ async function init() {
     buildGDPGrowth(wb);
     buildGDPInflation(wb);
     buildSectors(gdp);
-    buildMarket(market);
-    buildRates(rates, ratesExt);
     buildDatasets(cat);
   } catch(e) {
     console.error('Data load error', e);
