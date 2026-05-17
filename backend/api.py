@@ -252,6 +252,4 @@ def server_error(e):
 # ── START ─────────────────────────────────────────────────────
 if __name__ == '__main__':
     port = int(os.getenv('PORT', os.getenv('FLASK_PORT', 5050)))
-    print(f"\n  SG Datalytics SGMPI API v2 → http://0.0.0.0:{port}")
-    print(f"  Connected databases: {[k for k,v in DB.items() if v]}\n")
-    app.run(host='0.0.0.0', port=port, debug=os.getenv('FLASK_ENV') != 'production')
+    print(f"\n  SG Datalyti

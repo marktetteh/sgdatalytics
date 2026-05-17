@@ -471,6 +471,13 @@ footer a:hover{text-decoration:underline;}
   color:var(--teal);letter-spacing:0.06em;
   line-height:1;margin-bottom:4px;
 }
+@keyframes skel-pulse{0%,100%{opacity:0.45;}50%{opacity:0.9;}}
+.stat-skel{
+  display:inline-block;width:56px;height:1em;
+  border-radius:4px;background:rgba(0,149,122,0.35);
+  animation:skel-pulse 1.4s ease-in-out infinite;
+  vertical-align:middle;
+}
 .feed-stat-label{
   font-family:var(--font-m);font-size:9.5px;
   color:rgba(255,255,255,0.38);text-transform:uppercase;letter-spacing:0.1em;
@@ -811,7 +818,7 @@ footer a:hover{text-decoration:underline;}
       </div>
       <div class="live-feed-counter">
         <div>
-          <div class="live-feed-counter-num" id="feed-total">—</div>
+          <div class="live-feed-counter-num" id="feed-total"><span class="stat-skel"></span></div>
           <div style="font-family:var(--font-m);font-size:9.5px;color:var(--grey3);text-transform:uppercase;letter-spacing:0.08em;margin-top:2px;">Total records</div>
         </div>
       </div>
@@ -820,27 +827,27 @@ footer a:hover{text-decoration:underline;}
     <!-- Live stats bar -->
     <div class="feed-stats-bar">
       <div class="feed-stat">
-        <div class="feed-stat-num" id="fst-market">—</div>
+        <div class="feed-stat-num" id="fst-market"><span class="stat-skel"></span></div>
         <div class="feed-stat-label">Market listings</div>
       </div>
       <div class="feed-stat">
-        <div class="feed-stat-num" id="fst-property">—</div>
+        <div class="feed-stat-num" id="fst-property"><span class="stat-skel"></span></div>
         <div class="feed-stat-label">Property</div>
       </div>
       <div class="feed-stat">
-        <div class="feed-stat-num" id="fst-accommodation">—</div>
+        <div class="feed-stat-num" id="fst-accommodation"><span class="stat-skel"></span></div>
         <div class="feed-stat-label">Accommodation</div>
       </div>
       <div class="feed-stat">
-        <div class="feed-stat-num" id="fst-economic">—</div>
+        <div class="feed-stat-num" id="fst-economic"><span class="stat-skel"></span></div>
         <div class="feed-stat-label">Economic records</div>
       </div>
       <div class="feed-stat">
-        <div class="feed-stat-num" id="fst-commodities">—</div>
+        <div class="feed-stat-num" id="fst-commodities"><span class="stat-skel"></span></div>
         <div class="feed-stat-label">Commodities</div>
       </div>
       <div class="feed-stat">
-        <div class="feed-stat-num" id="fst-locations">—</div>
+        <div class="feed-stat-num" id="fst-locations"><span class="stat-skel"></span></div>
         <div class="feed-stat-label">Locations</div>
       </div>
     </div>
@@ -890,7 +897,7 @@ footer a:hover{text-decoration:underline;}
           <li>Mobile Phones, Vehicles, Electronics</li>
           <li>Home &amp; Furniture, Food &amp; Agriculture</li>
           <li>Property, Fashion, Commercial Equipment</li>
-          <li>3,715 rows with price, condition &amp; region</li>
+          <li>15,000+ enriched listings with price, condition &amp; region</li>
           <li>Updated monthly — re-download free</li>
           <li class="ph-no">BoG / GSS / World Bank data</li>
         </ul>
@@ -2424,3 +2431,4 @@ init();
 
 
 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
