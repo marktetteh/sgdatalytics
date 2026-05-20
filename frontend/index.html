@@ -2181,7 +2181,7 @@ init();
           <div class="feed-category">${item.product_category || 'General'}</div>
           <div class="feed-date">${fmtDate(item.collected_date)}</div>
         </div>
-        <div class="feed-title">${item.title || '—'}</div>
+        <div class="feed-title">${item.normalized_name || item.title || '—'}</div>
         <div class="feed-price ${item.price_ghs ? '' : 'no-price'}">${item.price_ghs ? fmtPrice(item.price_ghs) : 'Price on request'}</div>
         <div class="feed-meta">
           ${item.location ? `<div class="feed-meta-item">📍 ${item.location}</div>` : ''}
