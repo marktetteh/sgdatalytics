@@ -148,7 +148,7 @@ def market_prices():
     if location: where.append("location ILIKE %s"); params.append(f'%{location}%')
     # Only show quality-gated rows (normalized_name present)
     where.append("normalized_name IS NOT NULL AND normalized_name <> ''")
-    sql = "SELECT id, collected_date, week_number, year, product_category, title, price_ghs, location, condition, source FROM market_prices"
+    sql = "SELECT id, collected_date, week_number, year, product_category, title, normalized_name, price_ghs, location, condition, source FROM market_prices"
     if where: sql += " WHERE " + " AND ".join(where)
     sql += " ORDER BY id DESC LIMIT %s OFFSET %s"
     params.extend([limit, offset])
