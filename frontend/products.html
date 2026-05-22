@@ -389,3 +389,202 @@ footer a:hover{text-decoration:underline;}
         <div class="feature-icon">🐍</div>
         <div class="feature-title">Python & R ready</div>
         <p class="feature-body">Load your CSV with <code>pandas.read_csv()</code> or R's <code>read.csv()</code>. Clean column headers, consistent types, analysis-ready out of the box.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">📊</div>
+        <div class="feature-title">Excel & BI tools</div>
+        <p class="feature-body">Import directly into Excel, Google Sheets, Tableau or Power BI. No transformation needed — columns are named and typed for immediate use.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🗂️</div>
+        <div class="feature-title">Structured & clean</div>
+        <p class="feature-body">Every dataset is validated, deduplicated and AI-enriched before delivery. Consistent column names, no merged cells, no formatting noise.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">📅</div>
+        <div class="feature-title">Date & week indexed</div>
+        <p class="feature-body">Every row carries a <code>scraped_date</code>, <code>week_number</code> and <code>year</code> column so you can track price changes over time with a simple group-by.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🔍</div>
+        <div class="feature-title">AI-enriched fields</div>
+        <p class="feature-body">Market price rows include brand, model, condition and a normalised product name — extracted from raw listing titles using Gemini AI, ready for like-for-like comparison.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="faq">
+    <div class="section-label">Common questions</div>
+    <h2 class="section-title">FAQ</h2>
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          How quickly will I receive my data?
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-a">Instantly. As soon as Paystack confirms your payment, our system automatically generates your secure download link and emails it to you — typically within 5–10 seconds. Check your inbox (and spam folder) right after paying.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          What format is the data in?
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-a">All datasets are delivered as CSV files. They open in Excel, Google Sheets, R, Python (pandas), Tableau, Power BI and any other standard data tool. Column headers are clean and consistent across all tables.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          How current is the data?
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-a">Data is collected weekly by our automated pipeline. Each purchase delivers the latest available snapshot. The <code>scraped_date</code> and <code>week_number</code> columns in every row show exactly when the data was collected.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Can I use this for commercial projects?
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-a">Yes. Each purchase grants you a licence to use the dataset in your own projects, reports and applications. Reselling or redistributing the raw data is not permitted. See our <a href="licensing.html" style="color:var(--teal);">licensing page</a> for full terms.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          What payment methods are accepted?
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-a">Paystack accepts Visa, Mastercard, MTN Mobile Money, Vodafone Cash and AirtelTigo Money. Ghana buyers can use any of these. International buyers can pay by card.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          My download link expired — what do I do?
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-a">Download links are valid for 24 hours and can only be used once. If yours expired before you could use it, email us at <strong>info@sgdatalytics.org</strong> with your payment receipt and we'll issue a new link at no charge.</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /container -->
+</div><!-- /page -->
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2025 SG Datalytics &nbsp;·&nbsp; <a href="privacy.html">Privacy</a> &nbsp;·&nbsp; <a href="terms.html">Terms</a> &nbsp;·&nbsp; <a href="licensing.html">Licensing</a> &nbsp;·&nbsp; <a href="mailto:info@sgdatalytics.org">info@sgdatalytics.org</a></p>
+</footer>
+
+<!-- PURCHASE MODAL -->
+<div class="modal-overlay" id="purchase-modal" onclick="if(event.target===this)closePurchaseModal()">
+  <div class="modal">
+    <div class="modal-title" id="modal-title">Buy Dataset</div>
+    <div class="modal-sub" id="modal-sub">Enter your email to receive your secure download link instantly after payment.</div>
+    <label class="modal-label" for="modal-email">Your email address</label>
+    <input class="modal-input" type="email" id="modal-email" placeholder="you@example.com"
+      oninput="document.getElementById('modal-error').style.display='none'"
+      onkeydown="if(event.key==='Enter') triggerPaystack()"/>
+    <div class="modal-error" id="modal-error">Please enter a valid email address.</div>
+    <button class="modal-btn-pay" id="pay-btn" onclick="triggerPaystack()">
+      🔒 Pay Securely with Paystack
+    </button>
+    <button class="modal-close" onclick="closePurchaseModal()">Cancel</button>
+    <div class="modal-security">
+      <span>🔐 Secured by Paystack · Your details are never stored</span>
+    </div>
+  </div>
+</div>
+
+<!-- SUCCESS TOAST -->
+<div class="toast" id="toast">
+  <strong>Payment confirmed!</strong> Check your inbox — your download link is on its way.
+</div>
+
+<script>
+// ── NAV HAMBURGER ─────────────────────────────────────────────
+const hamburger = document.getElementById('nav-hamburger');
+const mobileMenu = document.getElementById('mobile-menu');
+hamburger.addEventListener('click', () => {
+  hamburger.classList.toggle('open');
+  mobileMenu.classList.toggle('open');
+});
+
+// ── FAQ ACCORDION ─────────────────────────────────────────────
+function toggleFaq(btn) {
+  const item = btn.closest('.faq-item');
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+
+// ── Paystack ──────────────────────────────────────────────────
+// Replace with your Paystack Live Public Key from dashboard → Settings → API Keys
+const PAYSTACK_PUBLIC_KEY = 'pk_live_YOUR_KEY_HERE';
+
+const PRODUCTS = {
+  market_prices: { name: 'SGMPI Consumer Prices',        amount: 150 },
+  accommodation: { name: 'Real Estate & Accommodation',  amount: 100 },
+  economic:      { name: 'Macro & Commodities',          amount: 100 },
+  bundle:        { name: 'Ghana Complete Data Bundle',   amount: 300 },
+};
+
+let _currentProduct = null;
+
+function openPurchaseModal(productKey) {
+  _currentProduct = productKey;
+  const p = PRODUCTS[productKey];
+  document.getElementById('modal-title').textContent = p.name;
+  document.getElementById('modal-sub').textContent =
+    `GHS ${p.amount} · One-time purchase · CSV delivered to your inbox instantly`;
+  document.getElementById('modal-email').value = '';
+  document.getElementById('modal-error').style.display = 'none';
+  document.getElementById('pay-btn').textContent = '🔒 Pay Securely with Paystack';
+  document.getElementById('pay-btn').disabled = false;
+  document.getElementById('purchase-modal').classList.add('open');
+  setTimeout(() => document.getElementById('modal-email').focus(), 100);
+}
+
+function closePurchaseModal() {
+  document.getElementById('purchase-modal').classList.remove('open');
+  _currentProduct = null;
+}
+
+function triggerPaystack() {
+  const email = document.getElementById('modal-email').value.trim();
+  const errEl = document.getElementById('modal-error');
+  const payBtn = document.getElementById('pay-btn');
+
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    errEl.style.display = 'block';
+    errEl.textContent = 'Please enter a valid email address.';
+    return;
+  }
+  errEl.style.display = 'none';
+
+  const p = PRODUCTS[_currentProduct];
+  payBtn.disabled = true;
+  payBtn.textContent = 'Opening Paystack…';
+
+  const handler = PaystackPop.setup({
+    key:       PAYSTACK_PUBLIC_KEY,
+    email:     email,
+    amount:    p.amount * 100,  // Paystack uses pesewas
+    currency:  'GHS',
+    ref:       'SGD-' + Date.now(),
+    metadata:  { product: _currentProduct, product_name: p.name },
+    callback: function(response) {
+      closePurchaseModal();
+      showToast();
+    },
+    onClose: function() {
+      payBtn.disabled = false;
+      payBtn.textContent = '🔒 Pay Securely with Paystack';
+    }
+  });
+  handler.openIframe();
+}
+
+function showToast() {
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 6000);
+}
+</script>
+</body>
+</html>
