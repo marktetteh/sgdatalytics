@@ -5,10 +5,8 @@ Connects to 6 Neon databases serving real Ghana market price data.
 Run locally : python3 api.py
 Run on Railway: gunicorn -w 2 -b 0.0.0.0:$PORT api:app
 """
-import os, csv, io, hmac, hashlib, secrets, smtplib
+import os, csv, io, hmac, hashlib, secrets
 from datetime import datetime, timedelta, timezone
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
 from flask import Flask, jsonify, request, Response, stream_with_context
 from flask_cors import CORS
 from flask_limiter import Limiter
@@ -137,12 +135,12 @@ def generate_download_token(email, sector, expires_hours=24):
 def send_download_email(email, download_url, sector):
     """
     Send a professional HTML email with the one-time download link.
-    Uses Gmail SMTP via GMAIL_USER and GMAIL_APP_PASSWORD env vars.
+    Uses Resend HTTP API (RESEND_API_KEY env var) — no SMTP, Railway-safe.
     """
-    gmail_user = os.getenv('GMAIL_USER')
-    gmail_pass = os.getenv('GMAIL_APP_PASSWORD')
-    if not gmail_user or not gmail_pass:
-        raise Exception('Gmail credentials not configured (GMAIL_USER / GMAIL_APP_PASSWORD)')
+    import requests as req
+    api_key = os.getenv('RESEND_API_KEY', '')
+    if not api_key:
+        raise Exception('RESEND_API_KEY not configured')
 
     sector_label = SECTOR_LABELS.get(sector, sector.replace('_', ' ').title())
 
@@ -152,22 +150,16 @@ def send_download_email(email, download_url, sector):
 <table width="100%" cellpadding="0" cellspacing="0">
   <tr><td align="center" style="padding:40px 20px;">
     <table width="600" style="background:#ffffff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
-
-      <!-- Header -->
       <tr><td style="background:#00957a;padding:32px;text-align:center;">
         <h1 style="color:#ffffff;margin:0;font-size:26px;letter-spacing:-0.5px;">SG Datalytics</h1>
         <p style="color:#d0f0e8;margin:8px 0 0;font-size:14px;">Ghana Market Intelligence Platform</p>
       </td></tr>
-
-      <!-- Body -->
       <tr><td style="padding:40px;">
         <h2 style="color:#1a1a1a;margin:0 0 12px;font-size:20px;">Your data is ready ✓</h2>
         <p style="color:#555;line-height:1.7;margin:0 0 24px;">
           Thank you for your purchase. Your <strong>{sector_label}</strong> dataset
           has been prepared and is ready to download as a CSV file.
         </p>
-
-        <!-- Download button -->
         <div style="text-align:center;margin:32px 0;">
           <a href="{download_url}"
              style="background:#00957a;color:#ffffff;padding:16px 48px;border-radius:6px;
@@ -175,8 +167,6 @@ def send_download_email(email, download_url, sector):
             ⬇ Download Your Data
           </a>
         </div>
-
-        <!-- Warning box -->
         <div style="background:#fff8e1;border-left:4px solid #f59e0b;padding:16px 20px;
                     border-radius:4px;margin:24px 0;">
           <p style="margin:0;color:#92400e;font-size:14px;line-height:1.6;">
@@ -184,45 +174,42 @@ def send_download_email(email, download_url, sector):
             and can only be used <strong>once</strong>. Please download your file immediately.
           </p>
         </div>
-
         <p style="color:#777;font-size:13px;line-height:1.6;">
           If the button doesn't work, copy and paste this link into your browser:<br>
           <a href="{download_url}" style="color:#00957a;word-break:break-all;">{download_url}</a>
         </p>
-
         <hr style="border:none;border-top:1px solid #eee;margin:28px 0;">
-
         <p style="color:#999;font-size:12px;margin:0;">
-          Questions? Contact us at
-          <a href="mailto:support@sgdatalytics.org" style="color:#00957a;">support@sgdatalytics.org</a>
+          Questions? <a href="mailto:data@sgdatalytics.org" style="color:#00957a;">data@sgdatalytics.org</a>
         </p>
       </td></tr>
-
-      <!-- Footer -->
       <tr><td style="background:#f9f9f9;padding:20px;text-align:center;border-top:1px solid #eee;">
         <p style="color:#bbb;font-size:12px;margin:0;">
-          &copy; 2025 SG Datalytics &nbsp;|&nbsp;
+          &copy; 2026 SG Datalytics &nbsp;|&nbsp;
           <a href="https://sgdatalytics.org" style="color:#00957a;text-decoration:none;">sgdatalytics.org</a>
         </p>
       </td></tr>
-
     </table>
   </td></tr>
 </table>
 </body>
 </html>"""
 
-    msg = MIMEMultipart('alternative')
-    msg['Subject'] = 'Your SG Datalytics Data is Ready for Download'
-    msg['From']    = f'SG Datalytics <{gmail_user}>'
-    msg['To']      = email
-    msg.attach(MIMEText(html, 'html'))
+    resp = req.post(
+        'https://api.resend.com/emails',
+        headers={'Authorization': f'Bearer {api_key}', 'Content-Type': 'application/json'},
+        json={
+            'from':    'SG Datalytics <data@sgdatalytics.org>',
+            'to':      [email],
+            'subject': f'Your SG Datalytics Data is Ready — {sector_label}',
+            'html':    html,
+        },
+        timeout=15,
+    )
+    if resp.status_code not in (200, 201):
+        raise Exception(f'Resend API error {resp.status_code}: {resp.text[:200]}')
 
-    with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
-        server.login(gmail_user, gmail_pass)
-        server.sendmail(gmail_user, email, msg.as_string())
-
-    print(f"[EMAIL] Sent to {email} | sector={sector}")
+    print(f"[EMAIL] Sent via Resend to {email} | sector={sector}")
 
 # ═══════════════════════════════════════════════════════════════
 # EXISTING ROUTES (unchanged)
