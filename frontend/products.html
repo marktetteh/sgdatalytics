@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-H5K8LEJ6RC"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-H5K8LEJ6RC');</script>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Data Products — SG Datalytics</title>
+<meta name="description" content="Subscribe to Ghana's most complete structured datasets. Live PostgreSQL access to consumer prices, real estate, macro indicators and more. Updated weekly."/>
+<link rel="canonical" href="https://sgdatalytics.org/products.html"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script src="https://js.paystack.co/v1/inline.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --navy:#f0f4f8;--navy2:#e8edf3;--navy3:#dde4ed;--navy4:#cfd8e3;
+  --panel:#ffffff;
+  --teal:#00957a;--teal-dim:rgba(0,149,122,0.10);--teal-dim2:rgba(0,149,122,0.05);
+  --amber:#c77c00;--amber-dim:rgba(199,124,0,0.10);
+  --red:#dc2626;--red-dim:rgba(220,38,38,0.10);
+  --blue:#2563eb;--blue-dim:rgba(37,99,235,0.10);
+  --purple:#7c3aed;--green:#059669;
+  --white:#1a2535;
+  --grey1:rgba(15,30,55,0.88);--grey2:rgba(15,30,55,0.60);
+  --grey3:rgba(15,30,55,0.38);--grey4:rgba(15,30,55,0.08);
+  --grey5:rgba(15,30,55,0.04);
+  --border:rgba(15,30,55,0.10);--border2:rgba(15,30,55,0.16);
+  --border-teal:rgba(0,149,122,0.30);
+  --r:8px;--r-lg:14px;--r-xl:20px;
+  --nav-h:64px;
+  --font-d:'Bebas Neue',sans-serif;
+  --font-b:'IBM Plex Sans',sans-serif;
+  --font-m:'IBM Plex Mono',monospace;
+  --ease:0.22s cubic-bezier(0.4,0,0.2,1);
+}
+html{scroll-behavior:smooth;}
+body{font-family:var(--font-b);background:var(--navy);color:var(--grey1);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--navy);}::-webkit-scrollbar-thumb{background:var(--navy3);border-radius:4px;}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--nav-h);background:rgba(240,244,248,0.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 4vw;}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;margin-right:auto;}
+.nav-mark{width:32px;height:32px;border-radius:6px;background:var(--teal);display:flex;align-items:center;justify-content:center;}
+.nav-mark svg{width:16px;height:16px;}
+.nav-name{font-family:var(--font-d);font-size:18px;letter-spacing:0.08em;color:var(--white);}
+.nav-name span{color:var(--teal);}
+.nav-links{display:flex;list-style:none;gap:2px;margin-right:24px;}
+.nav-links a{font-size:13px;color:var(--grey2);text-decoration:none;padding:5px 13px;border-radius:5px;transition:color var(--ease),background var(--ease);}
+.nav-links a:hover,.nav-links a.active{color:var(--white);background:var(--grey4);}
+.nav-links a.active{color:var(--teal);}
+.nav-actions{display:flex;gap:8px;}
+.btn{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-b);font-size:13px;font-weight:500;padding:8px 18px;border-radius:var(--r);cursor:pointer;text-decoration:none;border:none;transition:all var(--ease);}
+.btn-ghost{background:transparent;color:var(--grey2);border:1px solid var(--border2);}
+.btn-ghost:hover{color:var(--white);border-color:var(--grey3);}
+.btn-teal{background:var(--teal);color:#fff;font-weight:600;}
+.btn-teal:hover{filter:brightness(1.08);transform:translateY(-1px);}
+.nav-hamburger{display:none;flex-direction:column;justify-content:center;align-items:center;width:36px;height:36px;gap:5px;background:transparent;border:1px solid var(--border2);border-radius:var(--r);cursor:pointer;padding:0;transition:border-color var(--ease);margin-left:8px;}
+.nav-hamburger:hover{border-color:var(--teal);}
+.nav-hamburger span{display:block;width:16px;height:1.5px;background:var(--grey2);border-radius:2px;transition:all 0.25s ease;transform-origin:center;}
+.nav-hamburger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);}
+.nav-hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0);}
+.nav-hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
+.mobile-menu{display:none;position:fixed;top:var(--nav-h);left:0;right:0;z-index:199;background:rgba(240,244,248,0.98);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:16px 5vw 24px;flex-direction:column;gap:4px;transform:translateY(-8px);opacity:0;transition:opacity 0.2s ease,transform 0.2s ease;}
+.mobile-menu.open{display:flex;opacity:1;transform:translateY(0);}
+.mobile-menu a{font-size:15px;color:var(--grey2);text-decoration:none;padding:11px 8px;border-bottom:1px solid var(--border);transition:color var(--ease);}
+.mobile-menu a:last-of-type{border-bottom:none;}
+.mobile-menu a:hover{color:var(--teal);}
+.mobile-menu-actions{display:flex;gap:10px;margin-top:12px;}
+.mobile-menu-actions .btn{flex:1;justify-content:center;padding:11px;}
+@media(max-width:640px){.nav-links,.nav-actions{display:none;}.nav-hamburger{display:flex;}}
+
+/* ── PAGE ── */
+.page{padding-top:calc(var(--nav-h) + 48px);padding-bottom:80px;}
+.container{max-width:1100px;margin:0 auto;padding:0 4vw;}
+
+/* ── HERO ── */
+.hero{text-align:center;padding:0 0 56px;}
+.hero-label{display:inline-block;font-family:var(--font-m);font-size:11px;color:var(--teal);text-transform:uppercase;letter-spacing:0.12em;background:var(--teal-dim);padding:5px 14px;border-radius:20px;margin-bottom:18px;}
+.hero-title{font-family:var(--font-d);font-size:clamp(2.6rem,6vw,4rem);letter-spacing:0.04em;color:var(--white);line-height:1.05;margin-bottom:16px;}
+.hero-title span{color:var(--teal);}
+.hero-sub{font-size:16px;color:var(--grey2);max-width:560px;margin:0 auto 28px;line-height:1.65;}
+.hero-badges{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+.hero-badge{font-family:var(--font-m);font-size:11px;color:var(--grey2);background:var(--panel);border:1px solid var(--border);padding:5px 13px;border-radius:20px;}
+
+/* ── PRODUCT CARDS ── */
+.products-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:20px;}
+.product-card{background:var(--panel);border:1px solid var(--border);border-radius:var(--r-lg);padding:28px 24px;display:flex;flex-direction:column;position:relative;transition:border-color var(--ease),box-shadow var(--ease);}
+.product-card:hover{border-color:var(--border-teal);box-shadow:0 4px 24px rgba(0,149,122,0.08);}
+.product-card.featured{border-color:var(--teal);box-shadow:0 0 0 3px var(--teal-dim);}
+.featured-tag{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--teal);color:#fff;font-family:var(--font-m);font-size:10px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;padding:4px 14px;border-radius:20px;white-space:nowrap;}
+.product-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:16px;}
+.product-name{font-family:var(--font-d);font-size:1.45rem;letter-spacing:0.04em;color:var(--white);margin-bottom:6px;}
+.product-desc{font-size:13px;color:var(--grey2);line-height:1.55;margin-bottom:18px;flex:1;}
+.product-views{margin-bottom:20px;}
+.product-view-label{font-family:var(--font-m);font-size:10px;color:var(--grey3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:7px;}
+.product-view-tag{display:inline-block;font-family:var(--font-m);font-size:11px;color:var(--teal);background:var(--teal-dim);padding:3px 9px;border-radius:4px;margin:2px 3px 2px 0;}
+.product-price{margin-bottom:20px;}
+.product-amount{font-family:var(--font-d);font-size:2rem;color:var(--white);letter-spacing:0.04em;line-height:1;}
+.product-currency{font-family:var(--font-m);font-size:13px;color:var(--grey2);margin-top:3px;}
+.product-cta{display:block;text-align:center;padding:11px;border-radius:var(--r);font-weight:600;font-size:13px;text-decoration:none;transition:all var(--ease);cursor:pointer;border:none;font-family:var(--font-b);width:100%;}
+.cta-primary{background:var(--teal);color:#fff;}
+.cta-primary:hover{filter:brightness(1.08);transform:translateY(-1px);}
+.cta-secondary{background:transparent;color:var(--teal);border:1.5px solid var(--border-teal);}
+.cta-secondary:hover{background:var(--teal-dim);}
+
+/* ── BUNDLE CARD ── */
+.bundle-card{background:linear-gradient(135deg,#0f1e37 0%,#1a3050 100%);border:1px solid rgba(255,255,255,0.08);border-radius:var(--r-lg);padding:28px 32px;display:grid;grid-template-columns:1fr auto;align-items:center;gap:24px;}
+.bundle-left{}
+.bundle-tag{display:inline-block;font-family:var(--font-m);font-size:10px;color:var(--teal);text-transform:uppercase;letter-spacing:0.12em;background:rgba(0,149,122,0.15);padding:4px 12px;border-radius:20px;margin-bottom:12px;}
+.bundle-name{font-family:var(--font-d);font-size:1.8rem;letter-spacing:0.04em;color:#fff;margin-bottom:8px;}
+.bundle-desc{font-size:13px;color:rgba(255,255,255,0.55);line-height:1.55;max-width:500px;}
+.bundle-includes{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;}
+.bundle-pill{font-family:var(--font-m);font-size:10.5px;color:rgba(255,255,255,0.5);background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);padding:4px 11px;border-radius:20px;}
+.bundle-right{text-align:right;flex-shrink:0;}
+.bundle-saving{font-family:var(--font-m);font-size:11px;color:var(--teal);margin-bottom:6px;}
+.bundle-amount{font-family:var(--font-d);font-size:2.8rem;color:#fff;letter-spacing:0.04em;line-height:1;}
+.bundle-period{font-family:var(--font-m);font-size:12px;color:rgba(255,255,255,0.4);margin-bottom:18px;}
+.bundle-cta{display:inline-block;padding:12px 28px;background:var(--teal);color:#fff;border-radius:var(--r);font-weight:600;font-size:13px;text-decoration:none;transition:all var(--ease);white-space:nowrap;border:none;cursor:pointer;font-family:var(--font-b);}
+.bundle-cta:hover{filter:brightness(1.08);transform:translateY(-1px);}
+
+/* ── HOW IT WORKS ── */
+.section{margin-top:72px;}
+.section-label{font-family:var(--font-m);font-size:11px;color:var(--teal);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:8px;}
+.section-title{font-family:var(--font-d);font-size:clamp(1.8rem,4vw,2.4rem);letter-spacing:0.04em;color:var(--white);margin-bottom:6px;}
+.section-sub{font-size:14px;color:var(--grey2);margin-bottom:32px;}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.step{background:var(--panel);border:1px solid var(--border);border-radius:var(--r-lg);padding:24px;}
+.step-num{font-family:var(--font-d);font-size:2.4rem;color:var(--teal);opacity:0.3;line-height:1;margin-bottom:12px;}
+.step-title{font-weight:600;color:var(--white);margin-bottom:6px;}
+.step-body{font-size:13px;color:var(--grey2);line-height:1.6;}
+
+/* ── PAYSTACK INFO BOX ── */
+.momo-box{background:var(--panel);border:1.5px solid var(--border-teal);border-radius:var(--r-lg);padding:28px 32px;margin-top:24px;display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:center;}
+.momo-icon{width:56px;height:56px;background:var(--teal-dim);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;}
+.momo-title{font-weight:600;color:var(--white);font-size:16px;margin-bottom:4px;}
+.momo-number{font-family:var(--font-d);font-size:2rem;color:var(--teal);letter-spacing:0.1em;}
+.momo-name{font-family:var(--font-m);font-size:12px;color:var(--grey2);margin-bottom:10px;}
+.momo-instruction{font-size:13px;color:var(--grey2);line-height:1.6;}
+.momo-instruction strong{color:var(--white);}
+
+/* ── WHAT YOU GET ── */
+.features{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:32px;}
+.feature{background:var(--panel);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px;}
+.feature-icon{font-size:22px;margin-bottom:10px;}
+.feature-title{font-weight:600;color:var(--white);font-size:14px;margin-bottom:5px;}
+.feature-body{font-size:13px;color:var(--grey2);line-height:1.55;}
+
+/* ── FAQ ── */
+.faq{margin-top:72px;}
+.faq-list{display:flex;flex-direction:column;gap:1px;background:var(--border);border-radius:var(--r-lg);overflow:hidden;margin-top:32px;}
+.faq-item{background:var(--panel);}
+.faq-q{width:100%;text-align:left;padding:18px 24px;background:none;border:none;font-family:var(--font-b);font-size:14px;font-weight:600;color:var(--white);cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px;transition:background var(--ease);}
+.faq-q:hover{background:var(--grey5);}
+.faq-q svg{flex-shrink:0;transition:transform 0.2s ease;}
+.faq-item.open .faq-q svg{transform:rotate(180deg);}
+.faq-a{display:none;padding:0 24px 18px;font-size:13px;color:var(--grey2);line-height:1.7;}
+.faq-item.open .faq-a{display:block;}
+.faq-a code{font-family:var(--font-m);background:var(--grey4);padding:2px 6px;border-radius:4px;font-size:12px;}
+
+/* ── FOOTER ── */
+footer{border-top:1px solid var(--border);padding:18px 4vw;text-align:center;font-size:12px;color:var(--grey3);}
+footer a{color:var(--teal);text-decoration:none;}
+footer a:hover{text-decoration:underline;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .products-grid{grid-template-columns:1fr 1fr;}
+  .bundle-card{grid-template-columns:1fr;gap:16px;}
+  .bundle-right{text-align:left;}
+  .steps{grid-template-columns:1fr;}
+  .features{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:600px){
+  .products-grid{grid-template-columns:1fr;}
+  .features{grid-template-columns:1fr;}
+  .momo-box{grid-template-columns:1fr;}
+  .momo-icon{width:44px;height:44px;font-size:22px;}
+}
+
+/* ── PURCHASE MODAL ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(15,30,55,0.5);backdrop-filter:blur(4px);z-index:500;align-items:center;justify-content:center;padding:16px;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--panel);border-radius:var(--r-xl);padding:32px;max-width:460px;width:100%;box-shadow:0 24px 64px rgba(0,0,0,0.18);}
+.modal-title{font-family:var(--font-d);font-size:1.5rem;color:var(--white);letter-spacing:0.04em;margin-bottom:4px;}
+.modal-sub{font-size:13px;color:var(--grey2);margin-bottom:24px;line-height:1.6;}
+.modal-label{font-size:13px;color:var(--grey2);display:block;margin-bottom:6px;font-weight:500;}
+.modal-input{width:100%;padding:12px 14px;border:1.5px solid var(--border2);border-radius:var(--r);font-family:var(--font-b);font-size:14px;color:var(--grey1);background:var(--panel);outline:none;transition:border-color var(--ease);margin-bottom:6px;}
+.modal-input:focus{border-color:var(--teal);}
+.modal-error{color:#dc2626;font-size:12px;margin-bottom:14px;display:none;}
+.modal-btn-pay{width:100%;padding:13px;background:var(--teal);border:none;border-radius:var(--r);font-family:var(--font-b);font-size:14px;font-weight:600;color:#fff;cursor:pointer;transition:all var(--ease);margin-bottom:10px;}
+.modal-btn-pay:hover{filter:brightness(1.08);}
+.modal-btn-pay:disabled{opacity:0.6;cursor:not-allowed;}
+.modal-close{width:100%;padding:11px;background:var(--grey4);border:none;border-radius:var(--r);font-family:var(--font-b);font-size:13px;color:var(--grey2);cursor:pointer;transition:background var(--ease);}
+.modal-close:hover{background:var(--navy3);}
+.modal-security{display:flex;align-items:center;gap:6px;margin-top:14px;justify-content:center;}
+.modal-security span{font-size:11px;color:var(--grey3);font-family:var(--font-m);}
+
+/* ── SUCCESS TOAST ── */
+.toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(80px);background:#0f1e37;color:#fff;padding:16px 28px;border-radius:var(--r-lg);font-size:14px;z-index:600;opacity:0;transition:all 0.4s ease;max-width:90vw;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,0.3);}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast strong{color:var(--teal);}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-brand">
+    <div class="nav-mark">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+      </svg>
+    </div>
+    <span class="nav-name">SG <span>Datalytics</span></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="marketplace.html">Marketplace</a></li>
+    <li><a href="products.html" class="active">Data Products</a></li>
+    <li><a href="insights.html">Insights</a></li>
+    <li><a href="about.html">About</a></li>
+  </ul>
+  <div class="nav-actions">
+    <a href="marketplace.html" class="btn btn-ghost">Browse Datasets</a>
+    <a href="advisor.html" class="btn btn-teal">Ask the Advisor</a>
+  </div>
+  <button class="nav-hamburger" id="nav-hamburger" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobile-menu">
+  <a href="index.html">Home</a>
+  <a href="marketplace.html">Marketplace</a>
+  <a href="products.html">Data Products</a>
+  <a href="insights.html">Insights</a>
+  <a href="about.html">About</a>
+  <div class="mobile-menu-actions">
+    <a href="advisor.html" class="btn btn-teal">Ask the Advisor</a>
+  </div>
+</div>
+
+<!-- PAGE -->
+<div class="page">
+<div class="container">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-label">Live Data Products</div>
+    <h1 class="hero-title">Ghana's Data,<br/><span>Delivered as a Service</span></h1>
+    <p class="hero-sub">Structured, weekly-updated datasets covering Ghana's consumer prices, real estate, economic indicators and more — pay securely and receive your data instantly.</p>
+    <div class="hero-badges">
+      <span class="hero-badge">⚡ Weekly updates</span>
+      <span class="hero-badge">🔒 Secure Paystack checkout</span>
+      <span class="hero-badge">📊 CSV download — instant delivery</span>
+      <span class="hero-badge">📧 Sent to your email in seconds</span>
+    </div>
+  </div>
+
+  <!-- PRODUCT CARDS -->
+  <div class="products-grid">
+
+    <!-- Product 1 -->
+    <div class="product-card">
+      <div class="product-icon" style="background:var(--teal-dim);">🛒</div>
+      <div class="product-name">SGMPI Consumer Prices</div>
+      <p class="product-desc">Weekly retail and second-hand prices for electronics, phones, furniture, fashion and more — collected from Ghana's largest online markets and AI-enriched with brand, model and condition.</p>
+      <div class="product-views">
+        <div class="product-view-label">Dataset includes</div>
+        <span class="product-view-tag">market_prices</span>
+      </div>
+      <div class="product-price">
+        <div class="product-amount">GHS 150</div>
+        <div class="product-currency">one-time download</div>
+      </div>
+      <button onclick="openPurchaseModal('market_prices')" class="product-cta cta-primary">Buy Now — Pay with Paystack</button>
+    </div>
+
+    <!-- Product 2 -->
+    <div class="product-card">
+      <div class="product-icon" style="background:var(--blue-dim);">🏠</div>
+      <div class="product-name">Real Estate & Accommodation</div>
+      <p class="product-desc">Property sale and rental listings from Ghana's largest real estate portal, enriched with neighbourhood and city data. Plus weekly hotel and Airbnb nightly rates across major Ghanaian cities.</p>
+      <div class="product-views">
+        <div class="product-view-label">Datasets include</div>
+        <span class="product-view-tag">property_prices</span>
+        <span class="product-view-tag">hotel_prices</span>
+        <span class="product-view-tag">airbnb_prices</span>
+      </div>
+      <div class="product-price">
+        <div class="product-amount">GHS 100</div>
+        <div class="product-currency">one-time download</div>
+      </div>
+      <button onclick="openPurchaseModal('accommodation')" class="product-cta cta-primary">Buy Now — Pay with Paystack</button>
+    </div>
+
+    <!-- Product 3 -->
+    <div class="product-card">
+      <div class="product-icon" style="background:rgba(124,58,237,0.10);">📈</div>
+      <div class="product-name">Macro & Commodities</div>
+      <p class="product-desc">Bank of Ghana macro indicators, FX rates, sector-level economic data, commodity market prices and weekly national fuel prices — structured and ready for analysis.</p>
+      <div class="product-views">
+        <div class="product-view-label">Datasets include</div>
+        <span class="product-view-tag">economic_indicators</span>
+        <span class="product-view-tag">exchange_rates</span>
+        <span class="product-view-tag">commodity_prices</span>
+        <span class="product-view-tag">fuel_prices</span>
+      </div>
+      <div class="product-price">
+        <div class="product-amount">GHS 100</div>
+        <div class="product-currency">one-time download</div>
+      </div>
+      <button onclick="openPurchaseModal('economic')" class="product-cta cta-primary">Buy Now — Pay with Paystack</button>
+    </div>
+
+  </div>
+
+  <!-- BUNDLE CARD -->
+  <div class="bundle-card">
+    <div class="bundle-left">
+      <div class="bundle-tag">Best Value</div>
+      <div class="bundle-name">Ghana Complete Data Bundle</div>
+      <p class="bundle-desc">All datasets in one purchase. Consumer prices, real estate, accommodation, macro indicators, FX rates, commodities and fuel — everything SG Datalytics collects, delivered to your inbox instantly.</p>
+      <div class="bundle-includes">
+        <span class="bundle-pill">SGMPI Consumer Prices</span>
+        <span class="bundle-pill">Real Estate & Accommodation</span>
+        <span class="bundle-pill">Macro & Commodities</span>
+        <span class="bundle-pill">6 datasets</span>
+        <span class="bundle-pill">Instant delivery</span>
+      </div>
+    </div>
+    <div class="bundle-right">
+      <div class="bundle-saving">Save GHS 50 vs buying separately</div>
+      <div class="bundle-amount">GHS 300</div>
+      <div class="bundle-period">one-time purchase</div>
+      <button onclick="openPurchaseModal('bundle')" class="bundle-cta">Get Full Bundle — Pay with Paystack</button>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div class="section">
+    <div class="section-label">Getting started</div>
+    <h2 class="section-title">Three steps to your data</h2>
+    <p class="section-sub">No sign-up forms. No waiting. Your data is delivered to your inbox within seconds of payment.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-title">Pick your dataset</div>
+        <p class="step-body">Choose the dataset that fits your work — or take the full bundle for maximum coverage. Click the Buy Now button on any product card above.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-title">Pay securely via Paystack</div>
+        <p class="step-body">Enter your email and complete payment through Paystack — Ghana's most trusted payment gateway. Accepts card, MTN MoMo, Vodafone Cash and AirtelTigo Money.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-title">Download from your inbox</div>
+        <p class="step-body">Immediately after payment, a secure download link is sent to your email. Click to download your CSV dataset. The link is valid for 24 hours and works once.</p>
+      </div>
+    </div>
+
+    <!-- PAYSTACK INFO BOX -->
+    <div class="momo-box">
+      <div class="momo-icon">🔒</div>
+      <div>
+        <div class="momo-title">Secure checkout powered by Paystack</div>
+        <div class="momo-number" style="font-size:1.3rem;margin-top:4px;">Cards · MoMo · Vodafone Cash · AirtelTigo</div>
+        <p class="momo-instruction" style="margin-top:8px;">All payments are processed securely by <strong>Paystack</strong> — Ghana's leading payment infrastructure. Your card or mobile money details are never stored on our servers. After payment, your download link is sent to your email <strong>automatically within seconds</strong>. Questions? Email <strong>info@sgdatalytics.org</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- WHAT YOU GET -->
+  <div class="section">
+    <div class="section-label">What's included</div>
+    <h2 class="section-title">Built for analysts & developers</h2>
+    <p class="section-sub">Clean, structured CSV files ready for Python, R, Excel, Tableau or Power BI.</p>
+    <div class="features">
+      <div class="feature">
+        <div class="feature-icon">⚡</div>
+        <div class="feature-title">Weekly-updated data</div>
+        <p class="feature-body">Data is collected and refreshed every week by our automated pipeline. Each purchase includes the most current available snapshot.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🐍</div>
+        <div class="feature-title">Python & R ready</div>
+        <p class="feature-body">Load your CSV with <code>pandas.read_csv()</code> or R's <code>read.csv()</code>. Clean column headers, consistent types, analysis-ready out of the box.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">📊</div>
+        <div class="feature-title">Excel, Tableau & Power BI</div>
+        <p class="feature-body">Open directly in Excel or import into Tableau and Power BI. No database connection needed — just open the file and start analysing.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🤖</div>
+        <div class="feature-title">AI-enriched quality</div>
+        <p class="feature-body">Market price listings are enriched with brand, model, condition (New/Used) and normalized product names via Gemini AI — structured and analysis-ready.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">📧</div>
+        <div class="feature-title">Instant email delivery</div>
+        <p class="feature-body">Your secure download link arrives within seconds of payment confirmation. No manual processing, no waiting for a human to respond.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🔐</div>
+        <div class="feature-title">One-time secure links</div>
+        <p class="feature-body">Each download link is unique, expires after 24 hours, and works only once — keeping your purchase secure and preventing unauthorised redistribution.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="faq section">
+    <div class="section-label">Common questions</div>
+    <h2 class="section-title">FAQ</h2>
+    <div class="faq-list">
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          What format is the data delivered in?
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-a">All datasets are delivered as CSV files — the universal format that works in Python (<code>pandas.read_csv()</code>), R, Excel, Google Sheets, Tableau, Power BI and any data tool. The file is sent as a secure download link to your email immediately after payment.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          How quickly do I receive my data after paying?
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-a">Instantly. As soon as Paystack confirms your payment, our system automatically generates your secure download link and emails it to you — typically within 5–10 seconds. Check your inbox (and spam folder) right after paying.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          How often is the data updated?
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-a">Market prices, property listings, accommodation rates and fuel prices are collected weekly, typically on Mondays. Economic indicators are updated as new data is published by the Bank of Ghana and Ghana Statistical Service. Each purchase gives you the latest available snapshot at the time of purchase.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Can I use the data commercially?
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-a">Yes. Your purchase grants you a licence to use the data for internal research, analytics, dashboards and commercial applications. You may not resell or redistribute the raw data to third parties. See our <a href="terms.html">Terms of Service</a> for full details.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          My download link expired. What do I do?
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-a">Download links expire after 24 hours and work only once. If your link expired before you could download, email us at <strong>info@sgdatalytics.org</strong> with your payment reference and we'll issue a new link promptly.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          What if I need a custom dataset or enterprise access?
+          <svg width="16" height="16" viewBox="0 0 24 atalytics" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-a">We work with banks, consultancies, NGOs and research institutions on custom data scopes, recurring data feeds, API access and additional sectors. Email us at <strong>info@sgdatalytics.org</strong> to discuss enterprise access.</div>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- /container -->
+</div><!-- /page -->
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 SG Datalytics · <a href="marketplace.html">Marketplace</a> · <a href="products.html">Data Products</a> · <a href="insights.html">Insights</a> · <a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a> · <a href="methodology.html">Methodology</a></p>
+</footer>
+
+<!-- PURCHASE MODAL -->
+<div class="modal-overlay" id="purchase-modal">
+  <div class="modal">
+    <div class="modal-title" id="modal-product-name">Buy Dataset</div>
+    <p class="modal-sub">Enter your email address — your secure download link will be sent there automatically after payment.</p>
+    <label class="modal-label" for="purchase-email">Email address</label>
+    <input type="email" id="purchase-email" class="modal-input" placeholder="you@example.com"
+      onkeydown="if(event.key==='Enter') triggerPaystack()"
+    />
+    <div class="modal-error" id="email-error">Please enter a valid email address.</div>
+    <button class="modal-btn-pay" id="pay-btn" onclick="triggerPaystack()">
+      🔒 Pay Securely with Paystack
+    </button>
+    <button class="modal-close" onclick="closePurchaseModal()">Cancel</button>
+    <div class="modal-security">
+      <span>🔐 Secured by Paystack · Your details are never stored</span>
+    </div>
+  </div>
+</div>
+
+<!-- SUCCESS TOAST -->
+<div class="toast" id="success-toast">
+  ✅ Payment confirmed! <strong>Check your email</strong> for your download link.
+</div>
+
+<script>
+// ── Nav ───────────────────────────────────────────────────────
+const hamburger = document.getElementById('nav-hamburger');
+const mobileMenu = document.getElementById('mobile-menu');
+hamburger.addEventListener('click', () => {
+  hamburger.classList.toggle('open');
+  mobileMenu.classList.toggle('open');
+});
+
+// ── FAQ ───────────────────────────────────────────────────────
+function toggleFaq(btn) {
+  const item = btn.closest('.faq-item');
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+
+// ── Paystack ──────────────────────────────────────────────────
+// Replace with your Paystack Live Public Key from dashboard → Settings → API Keys
+const PAYSTACK_PUBLIC_KEY = 'pk_live_YOUR_KEY_HERE';
+
+const PRODUCTS = {
+  'market_prices':  { name: 'SGMPI Consumer Prices',       amount: 150 },
+  'accommodation':  { name: 'Real Estate & Accommodation',  amount: 100 },
+  'economic':       { name: 'Macro & Commodities',          amount: 100 },
+  'bundle':         { name: 'Ghana Complete Data Bundle',   amount: 300 },
+};
+
+let _activePlan = null;
+
+function openPurchaseModal(productKey) {
+  _activePlan = PRODUCTS[productKey];
+  if (!_activePlan) return;
+  document.getElementById('modal-product-name').textContent =
+    _activePlan.name + ' — GHS ' + _activePlan.amount;
+  document.getElementById('purchase-email').value = '';
+  document.getElementById('email-error').style.display = 'none';
+  document.getElementById('pay-btn').disabled = false;
+  document.getElementById('pay-btn').textContent = '🔒 Pay Securely with Paystack';
+  document.getElementById('purchase-modal').classList.add('open');
+  setTimeout(() => document.getElementById('purchase-email').focus(), 150);
+}
+
+function closePurchaseModal() {
+  document.getElementById('purchase-modal').classList.remove('open');
+}
+
+// Close on overlay click
+document.getElementById('purchase-modal').addEventListener('click', function(e) {
+  if (e.target === this) closePurchaseModal();
+});
+
+function showToast(msg) {
+  const toast = document.getElementById('success-toast');
+  toast.innerHTML = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 6000);
+}
+
+function triggerPaystack() {
+  const emailEl = document.getElementById('purchase-email');
+  const errorEl = document.getElementById('email-error');
+  const payBtn  = document.getElementById('pay-btn');
+  const email   = emailEl.value.trim();
+
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    errorEl.style.display = 'block';
+    emailEl.focus();
+    return;
+  }
+  errorEl.style.display = 'none';
+  payBtn.disabled = true;
+  payBtn.textContent = 'Opening Paystack…';
+
+  closePurchaseModal();
+
+  const handler = PaystackPop.setup({
+    key:      PAYSTACK_PUBLIC_KEY,
+    email:    email,
+    amount:   _activePlan.amount * 100,  // GHS → pesewas
+    currency: 'GHS',
+    label:    _activePlan.name,
+    metadata: { plan_name: _activePlan.name },
+    callback: function(response) {
+      showToast('✅ Payment confirmed! <strong>Check your email</strong> (' + email + ') for your download link.');
+    },
+    onClose: function() {
+      payBtn.disabled = false;
+      payBtn.textContent = '🔒 Pay Securely with Paystack';
+    },
+  });
+  handler.openIframe();
+}
+</script>
+</body>
+</html>
