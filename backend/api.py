@@ -138,7 +138,7 @@ def send_download_email(email, download_url, sector):
     Uses Resend HTTP API (RESEND_API_KEY env var) — no SMTP, Railway-safe.
     """
     import requests as req
-    api_key = os.getenv('RESEND_API_KEY', '')
+    api_key = os.getenv('RESEND_API_KEY', '').strip()
     if not api_key:
         raise Exception('RESEND_API_KEY not configured')
 
