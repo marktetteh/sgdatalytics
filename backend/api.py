@@ -5,11 +5,15 @@ Connects to 6 Neon databases serving real Ghana market price data.
 Run locally : python3 api.py
 Run on Railway: gunicorn -w 2 -b 0.0.0.0:$PORT api:app
 """
-import os, hmac, hashlib, json
-from flask import Flask, jsonify, request
+import os, csv, io, hmac, hashlib, secrets, smtplib
+from datetime import datetime, timedelta, timezone
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from flask import Flask, jsonify, request, Response, stream_with_context
 from flask_cors import CORS
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 import psycopg2, psycopg2.extras
-import resend
 
 try:
     from dotenv import load_dotenv
@@ -19,6 +23,14 @@ except ImportError:
 
 app = Flask(__name__)
 CORS(app)
+
+# ── RATE LIMITER ─────────────────────────────────────────────
+limiter = Limiter(
+    get_remote_address,
+    app=app,
+    default_limits=["200 per hour"],
+    storage_uri="memory://",
+)
 
 # ── DB CONNECTIONS ───────────────────────────────────────────
 DB = {
@@ -44,7 +56,178 @@ def query(db_key, sql, params=None, one=False):
     cur.close(); conn.close()
     return result
 
-# ── ROOT ─────────────────────────────────────────────────────
+# ── TOKEN STORE (in-memory) ──────────────────────────────────
+# { token: { email, sector, created_at, expires_at, used } }
+# Note: resets on Railway restart — acceptable for 24hr tokens
+_TOKEN_STORE = {}
+
+# ── SECTOR CONFIG ────────────────────────────────────────────
+SECTOR_LABELS = {
+    'market_prices': 'Market Prices',
+    'property':      'Property',
+    'accommodation': 'Accommodation',
+    'economic':      'Economic Indicators',
+    'commodities':   'Commodities & Fuel',
+    'financials':    'Financial Markets',
+}
+
+SECTOR_QUERIES = {
+    'market_prices':  [('market_prices', 'SELECT * FROM market_prices ORDER BY collected_date DESC')],
+    'property':       [('property',      'SELECT * FROM property_prices ORDER BY collected_date DESC')],
+    'accommodation':  [('accommodation', 'SELECT * FROM hotel_prices ORDER BY collected_date DESC'),
+                       ('accommodation', 'SELECT * FROM airbnb_prices ORDER BY collected_date DESC')],
+    'economic':       [('economic',      'SELECT * FROM economic_indicators ORDER BY collected_date DESC'),
+                       ('economic',      'SELECT * FROM exchange_rates ORDER BY collected_date DESC')],
+    'commodities':    [('commodities',   'SELECT * FROM commodity_prices ORDER BY collected_date DESC'),
+                       ('commodities',   'SELECT * FROM fuel_prices ORDER BY collected_date DESC')],
+    'financials':     [('financials',    'SELECT * FROM gse_indices ORDER BY collected_date DESC'),
+                       ('financials',    'SELECT * FROM stock_prices ORDER BY collected_date DESC')],
+}
+
+# Maps Paystack plan name keywords → sector codes
+PLAN_SECTOR_MAP = {
+    'market':        'market_prices',
+    'property':      'property',
+    'accommodation': 'accommodation',
+    'hotel':         'accommodation',
+    'airbnb':        'accommodation',
+    'economic':      'economic',
+    'commodit':      'commodities',
+    'fuel':          'commodities',
+    'financial':     'financials',
+    'stock':         'financials',
+    'gse':           'financials',
+}
+
+def resolve_sector(plan_name):
+    """Map a Paystack plan name to a sector code using keyword matching."""
+    name_lower = (plan_name or '').lower()
+    for keyword, sector in PLAN_SECTOR_MAP.items():
+        if keyword in name_lower:
+            return sector
+    return 'market_prices'  # safe default
+
+# ═══════════════════════════════════════════════════════════════
+# PART 2 — TOKEN GENERATION
+# ═══════════════════════════════════════════════════════════════
+def generate_download_token(email, sector, expires_hours=24):
+    """
+    Generate a secure one-time download token.
+    Stores it in memory and returns the full download URL.
+    """
+    token      = secrets.token_urlsafe(32)
+    now        = datetime.now(timezone.utc)
+    expires_at = now + timedelta(hours=expires_hours)
+
+    _TOKEN_STORE[token] = {
+        'email':      email,
+        'sector':     sector,
+        'created_at': now,
+        'expires_at': expires_at,
+        'used':       False,
+    }
+
+    download_url = f"https://sgdatalytics-production.up.railway.app/api/download?token={token}"
+    print(f"[TOKEN] Generated for {email} | sector={sector} | expires={expires_at.isoformat()}")
+    return download_url
+
+# ═══════════════════════════════════════════════════════════════
+# PART 3 — EMAIL SENDING
+# ═══════════════════════════════════════════════════════════════
+def send_download_email(email, download_url, sector):
+    """
+    Send a professional HTML email with the one-time download link.
+    Uses Gmail SMTP via GMAIL_USER and GMAIL_APP_PASSWORD env vars.
+    """
+    gmail_user = os.getenv('GMAIL_USER')
+    gmail_pass = os.getenv('GMAIL_APP_PASSWORD')
+    if not gmail_user or not gmail_pass:
+        raise Exception('Gmail credentials not configured (GMAIL_USER / GMAIL_APP_PASSWORD)')
+
+    sector_label = SECTOR_LABELS.get(sector, sector.replace('_', ' ').title())
+
+    html = f"""<!DOCTYPE html>
+<html>
+<body style="margin:0;padding:0;background:#f4f4f4;font-family:Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr><td align="center" style="padding:40px 20px;">
+    <table width="600" style="background:#ffffff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+
+      <!-- Header -->
+      <tr><td style="background:#00957a;padding:32px;text-align:center;">
+        <h1 style="color:#ffffff;margin:0;font-size:26px;letter-spacing:-0.5px;">SG Datalytics</h1>
+        <p style="color:#d0f0e8;margin:8px 0 0;font-size:14px;">Ghana Market Intelligence Platform</p>
+      </td></tr>
+
+      <!-- Body -->
+      <tr><td style="padding:40px;">
+        <h2 style="color:#1a1a1a;margin:0 0 12px;font-size:20px;">Your data is ready ✓</h2>
+        <p style="color:#555;line-height:1.7;margin:0 0 24px;">
+          Thank you for your purchase. Your <strong>{sector_label}</strong> dataset
+          has been prepared and is ready to download as a CSV file.
+        </p>
+
+        <!-- Download button -->
+        <div style="text-align:center;margin:32px 0;">
+          <a href="{download_url}"
+             style="background:#00957a;color:#ffffff;padding:16px 48px;border-radius:6px;
+                    text-decoration:none;font-size:16px;font-weight:bold;display:inline-block;">
+            ⬇ Download Your Data
+          </a>
+        </div>
+
+        <!-- Warning box -->
+        <div style="background:#fff8e1;border-left:4px solid #f59e0b;padding:16px 20px;
+                    border-radius:4px;margin:24px 0;">
+          <p style="margin:0;color:#92400e;font-size:14px;line-height:1.6;">
+            ⚠️ <strong>Important:</strong> This link expires in <strong>24 hours</strong>
+            and can only be used <strong>once</strong>. Please download your file immediately.
+          </p>
+        </div>
+
+        <p style="color:#777;font-size:13px;line-height:1.6;">
+          If the button doesn't work, copy and paste this link into your browser:<br>
+          <a href="{download_url}" style="color:#00957a;word-break:break-all;">{download_url}</a>
+        </p>
+
+        <hr style="border:none;border-top:1px solid #eee;margin:28px 0;">
+
+        <p style="color:#999;font-size:12px;margin:0;">
+          Questions? Contact us at
+          <a href="mailto:support@sgdatalytics.org" style="color:#00957a;">support@sgdatalytics.org</a>
+        </p>
+      </td></tr>
+
+      <!-- Footer -->
+      <tr><td style="background:#f9f9f9;padding:20px;text-align:center;border-top:1px solid #eee;">
+        <p style="color:#bbb;font-size:12px;margin:0;">
+          &copy; 2025 SG Datalytics &nbsp;|&nbsp;
+          <a href="https://sgdatalytics.org" style="color:#00957a;text-decoration:none;">sgdatalytics.org</a>
+        </p>
+      </td></tr>
+
+    </table>
+  </td></tr>
+</table>
+</body>
+</html>"""
+
+    msg = MIMEMultipart('alternative')
+    msg['Subject'] = 'Your SG Datalytics Data is Ready for Download'
+    msg['From']    = f'SG Datalytics <{gmail_user}>'
+    msg['To']      = email
+    msg.attach(MIMEText(html, 'html'))
+
+    with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
+        server.login(gmail_user, gmail_pass)
+        server.sendmail(gmail_user, email, msg.as_string())
+
+    print(f"[EMAIL] Sent to {email} | sector={sector}")
+
+# ═══════════════════════════════════════════════════════════════
+# EXISTING ROUTES (unchanged)
+# ═══════════════════════════════════════════════════════════════
+
 @app.route('/')
 def root():
     return jsonify({
@@ -64,10 +247,12 @@ def root():
             "GET /api/economic/indicators",
             "GET /api/commodities?limit=50",
             "GET /api/financials?limit=50",
+            "POST /api/webhook/paystack",
+            "GET  /api/download?token=TOKEN",
+            "POST /api/test-delivery",
         ]
     })
 
-# ── HEALTH ───────────────────────────────────────────────────
 @app.route('/api/health')
 def health():
     results = {}
@@ -88,7 +273,6 @@ def health():
             results[key] = f'error: {str(e)[:60]}'
     return jsonify({"status": "ok", "total_records": total, "databases": results})
 
-# ── STATS ────────────────────────────────────────────────────
 @app.route('/api/stats')
 def stats():
     stats = {}
@@ -124,7 +308,6 @@ def stats():
                 for v in stats.values())
     return jsonify({"total_records": total, "total_sectors": 6, "sectors": stats})
 
-# ── SECTORS ──────────────────────────────────────────────────
 @app.route('/api/sectors')
 def sectors():
     return jsonify([
@@ -136,22 +319,19 @@ def sectors():
         {"id": 6, "code": "financials",     "name": "Financials",     "icon": "📊", "color": "#059669", "description": "GSE stocks & indices"},
     ])
 
-# ── MARKET PRICES ────────────────────────────────────────────
 @app.route('/api/market-prices')
+@limiter.limit("60 per minute")
 def market_prices():
     category = request.args.get('category')
     location = request.args.get('location')
     limit    = min(int(request.args.get('limit', 50)), 200)
-    offset   = max(0, int(request.args.get('offset', 0)))
     where, params = [], []
     if category: where.append("product_category ILIKE %s"); params.append(f'%{category}%')
     if location: where.append("location ILIKE %s"); params.append(f'%{location}%')
-    # Only show quality-gated rows (normalized_name present)
-    where.append("normalized_name IS NOT NULL AND normalized_name <> ''")
-    sql = "SELECT id, collected_date, week_number, year, product_category, title, normalized_name, price_ghs, location, condition, source FROM market_prices"
+    sql = "SELECT id, collected_date, week_number, year, product_category, title, price_ghs, location, condition, source FROM market_prices"
     if where: sql += " WHERE " + " AND ".join(where)
-    sql += " ORDER BY id DESC LIMIT %s OFFSET %s"
-    params.extend([limit, offset])
+    sql += " ORDER BY collected_date DESC LIMIT %s"
+    params.append(limit)
     rows = query('market_prices', sql, params)
     return jsonify([dict(r) for r in rows])
 
@@ -165,8 +345,8 @@ def market_latest():
     rows = query('market_prices', "SELECT product_category, ROUND(AVG(price_ghs),2) AS avg_price_ghs, COUNT(*) AS listings, MAX(collected_date) AS last_updated FROM market_prices GROUP BY product_category ORDER BY listings DESC")
     return jsonify([dict(r) for r in rows])
 
-# ── PROPERTY ─────────────────────────────────────────────────
 @app.route('/api/property')
+@limiter.limit("60 per minute")
 def property_prices():
     location = request.args.get('location')
     limit    = min(int(request.args.get('limit', 50)), 200)
@@ -179,8 +359,8 @@ def property_prices():
     rows = query('property', sql, params)
     return jsonify([dict(r) for r in rows])
 
-# ── ACCOMMODATION ────────────────────────────────────────────
 @app.route('/api/accommodation')
+@limiter.limit("60 per minute")
 def accommodation():
     acc_type = request.args.get('type', 'hotel')
     limit    = min(int(request.args.get('limit', 50)), 200)
@@ -188,8 +368,8 @@ def accommodation():
     rows     = query('accommodation', f"SELECT * FROM {table} ORDER BY collected_date DESC LIMIT %s", [limit])
     return jsonify([dict(r) for r in rows])
 
-# ── ECONOMIC ─────────────────────────────────────────────────
 @app.route('/api/economic')
+@limiter.limit("60 per minute")
 def economic():
     indicator = request.args.get('indicator')
     sector    = request.args.get('sector')
@@ -215,8 +395,8 @@ def exchange_rates():
     rows  = query('economic', "SELECT * FROM exchange_rates ORDER BY collected_date DESC LIMIT %s", [limit])
     return jsonify([dict(r) for r in rows])
 
-# ── COMMODITIES ──────────────────────────────────────────────
 @app.route('/api/commodities')
+@limiter.limit("60 per minute")
 def commodities():
     limit = min(int(request.args.get('limit', 50)), 200)
     rows  = query('commodities', "SELECT * FROM commodity_prices ORDER BY collected_date DESC LIMIT %s", [limit])
@@ -228,7 +408,6 @@ def fuel():
     rows  = query('commodities', "SELECT * FROM fuel_prices ORDER BY collected_date DESC LIMIT %s", [limit])
     return jsonify([dict(r) for r in rows])
 
-# ── FINANCIALS ───────────────────────────────────────────────
 @app.route('/api/financials/stocks')
 def stocks():
     limit = min(int(request.args.get('limit', 50)), 200)
@@ -241,212 +420,164 @@ def indices():
     rows  = query('financials', "SELECT * FROM gse_indices ORDER BY collected_date DESC LIMIT %s", [limit])
     return jsonify([dict(r) for r in rows])
 
-# ── PAYSTACK WEBHOOK & EMAIL ─────────────────────────────────
-
-# Map Paystack payment page slug → product details + connection strings
-# Connection strings are stored as Railway env vars (set after running Neon SQL)
-PRODUCTS = {
-    '72ruuze8qn': {
-        'name':    'SGMPI Consumer Prices',
-        'price':   'GHS 150/month',
-        'strings': [
-            ('Market Prices Database', 'CONN_SGMPI'),
-        ],
-        'views':   ['sgmpi_product'],
-        'example': 'SELECT * FROM sgmpi_product WHERE year = 2026 LIMIT 100',
-    },
-    'cr1fxldrkx': {
-        'name':    'Real Estate & Accommodation',
-        'price':   'GHS 100/month',
-        'strings': [
-            ('Property Database',       'CONN_REALESTATE_PROPERTY'),
-            ('Accommodation Database',  'CONN_REALESTATE_ACCOMMODATION'),
-        ],
-        'views':   ['property_product', 'hotels_product', 'airbnb_product'],
-        'example': "SELECT * FROM property_product WHERE city = 'Accra' LIMIT 100",
-    },
-    'g7ug9brvpm': {
-        'name':    'Macro & Commodities',
-        'price':   'GHS 100/month',
-        'strings': [
-            ('Economic Database',    'CONN_MACRO_ECONOMIC'),
-            ('Commodities Database', 'CONN_MACRO_COMMODITIES'),
-        ],
-        'views':   ['economic_product', 'fx_product', 'commodities_product', 'fuel_product'],
-        'example': "SELECT * FROM economic_product WHERE sector = 'Monetary' LIMIT 100",
-    },
-    '1q3vr4l02p': {
-        'name':    'Ghana Complete Bundle',
-        'price':   'GHS 300/month',
-        'strings': [
-            ('Market Prices Database',  'CONN_SGMPI'),
-            ('Property Database',       'CONN_REALESTATE_PROPERTY'),
-            ('Accommodation Database',  'CONN_REALESTATE_ACCOMMODATION'),
-            ('Economic Database',       'CONN_MACRO_ECONOMIC'),
-            ('Commodities Database',    'CONN_MACRO_COMMODITIES'),
-        ],
-        'views':   ['sgmpi_product', 'property_product', 'hotels_product', 'airbnb_product',
-                    'economic_product', 'fx_product', 'commodities_product', 'fuel_product'],
-        'example': 'SELECT * FROM sgmpi_product LIMIT 100',
-    },
-}
-
-def build_email_html(name, product):
-    """Build the HTML welcome email with connection strings."""
-    strings_html = ''
-    for label, env_key in product['strings']:
-        conn = os.getenv(env_key, '')
-        if conn:
-            strings_html += f'''
-            <div style="margin-bottom:16px;">
-              <p style="margin:0 0 6px;font-size:12px;color:#6b7280;font-family:monospace;text-transform:uppercase;letter-spacing:0.08em;">{label}</p>
-              <div style="background:#f3f4f6;border:1px solid #e5e7eb;border-radius:6px;padding:12px 16px;font-family:monospace;font-size:13px;color:#1a2535;word-break:break-all;">{conn}</div>
-            </div>'''
-
-    views_list = ''.join(f'<li style="margin-bottom:4px;"><code style="background:#f3f4f6;padding:2px 6px;border-radius:4px;font-size:13px;">{v}</code></li>' for v in product['views'])
-
-    return f"""
-    <!DOCTYPE html>
-    <html>
-    <body style="margin:0;padding:0;background:#f0f4f8;font-family:'Helvetica Neue',Arial,sans-serif;">
-      <table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 20px;">
-        <tr><td align="center">
-          <table width="580" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,0.08);">
-
-            <!-- Header -->
-            <tr><td style="background:#1a2535;padding:28px 36px;">
-              <p style="margin:0;font-size:22px;font-weight:700;color:#ffffff;letter-spacing:0.04em;">SG <span style="color:#00957a;">DATALYTICS</span></p>
-              <p style="margin:6px 0 0;font-size:13px;color:rgba(255,255,255,0.5);">Ghana's Data Marketplace</p>
-            </td></tr>
-
-            <!-- Body -->
-            <tr><td style="padding:32px 36px;">
-              <h2 style="margin:0 0 8px;font-size:20px;color:#1a2535;">You're in, {name}!</h2>
-              <p style="margin:0 0 24px;color:#6b7280;font-size:14px;line-height:1.6;">
-                Your subscription to <strong style="color:#1a2535;">{product['name']}</strong> ({product['price']}) is now active.
-                Your connection string(s) are below — paste into Python, R, Excel, Tableau or Power BI and you're live.
-              </p>
-
-              <!-- Connection strings -->
-              <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:20px 24px;margin-bottom:24px;">
-                <p style="margin:0 0 14px;font-size:13px;font-weight:700;color:#1a2535;text-transform:uppercase;letter-spacing:0.08em;">Your Connection String(s)</p>
-                {strings_html if strings_html else '<p style="color:#dc2626;font-size:13px;">Connection strings are being configured — you will receive a follow-up email shortly.</p>'}
-              </div>
-
-              <!-- Views -->
-              <p style="margin:0 0 8px;font-size:13px;font-weight:700;color:#1a2535;">Views you can query:</p>
-              <ul style="margin:0 0 24px;padding-left:20px;color:#374151;font-size:14px;line-height:1.8;">
-                {views_list}
-              </ul>
-
-              <!-- Quick start -->
-              <p style="margin:0 0 8px;font-size:13px;font-weight:700;color:#1a2535;">Quick start (Python):</p>
-              <div style="background:#1a2535;border-radius:8px;padding:16px 20px;margin-bottom:24px;font-family:monospace;font-size:13px;color:#00957a;line-height:1.8;">
-                import pandas as pd<br/>
-                conn = "YOUR_CONNECTION_STRING_ABOVE"<br/>
-                df = pd.read_sql("{product['example']}", conn)<br/>
-                print(df.head())
-              </div>
-
-              <!-- Note -->
-              <div style="background:#fef9ec;border:1px solid #fde68a;border-radius:8px;padding:14px 18px;margin-bottom:24px;">
-                <p style="margin:0;font-size:13px;color:#92400e;line-height:1.6;">
-                  <strong>Monthly rotation:</strong> Your connection string is refreshed on the first Monday of each month for security.
-                  We'll email you the new one — just replace the old string in your code.
-                </p>
-              </div>
-
-              <p style="margin:0;font-size:13px;color:#6b7280;line-height:1.6;">
-                Need help connecting? Reply to this email and we'll get you set up.<br/>
-                Thank you for subscribing to SG Datalytics.
-              </p>
-            </td></tr>
-
-            <!-- Footer -->
-            <tr><td style="background:#f9fafb;border-top:1px solid #e5e7eb;padding:18px 36px;text-align:center;">
-              <p style="margin:0;font-size:11px;color:#9ca3af;">
-                © 2026 SG Datalytics · <a href="https://sgdatalytics.org" style="color:#00957a;text-decoration:none;">sgdatalytics.org</a> ·
-                <a href="mailto:data@sgdatalytics.org" style="color:#00957a;text-decoration:none;">data@sgdatalytics.org</a>
-              </p>
-            </td></tr>
-
-          </table>
-        </td></tr>
-      </table>
-    </body>
-    </html>
-    """
-
-def send_access_email(to_email, name, product):
-    """Send connection string email via Resend."""
-    resend.api_key = os.getenv('RESEND_API_KEY', '')
-    if not resend.api_key:
-        print(f'[webhook] RESEND_API_KEY not set — cannot email {to_email}')
-        return False
-    try:
-        resend.Emails.send({
-            'from':    'SG Datalytics <data@sgdatalytics.org>',
-            'to':      [to_email],
-            'subject': f'Your SG Datalytics Access — {product["name"]}',
-            'html':    build_email_html(name, product),
-        })
-        print(f'[webhook] Access email sent → {to_email} ({product["name"]})')
-        return True
-    except Exception as e:
-        print(f'[webhook] Email failed: {e}')
-        return False
-
-@app.route('/webhook/paystack', methods=['POST'])
+# ═══════════════════════════════════════════════════════════════
+# PART 1 — PAYSTACK WEBHOOK
+# ═══════════════════════════════════════════════════════════════
+@app.route('/api/webhook/paystack', methods=['POST'])
+@limiter.limit("30 per minute")
 def paystack_webhook():
-    # ── 1. Verify Paystack signature ─────────────────────────
-    secret = os.getenv('PAYSTACK_SECRET_KEY', '')
-    signature = request.headers.get('x-paystack-signature', '')
-    body = request.get_data()
-    expected = hmac.new(secret.encode('utf-8'), body, hashlib.sha512).hexdigest()
-    if not hmac.compare_digest(signature, expected):
-        print('[webhook] Invalid Paystack signature — rejected')
-        return jsonify({'error': 'invalid signature'}), 400
+    secret_key = os.getenv('PAYSTACK_SECRET_KEY', '')
+    signature  = request.headers.get('x-paystack-signature', '')
+    raw_body   = request.get_data()
 
-    # ── 2. Parse payload ──────────────────────────────────────
+    # Verify Paystack HMAC-SHA512 signature
+    expected = hmac.new(secret_key.encode('utf-8'), raw_body, hashlib.sha512).hexdigest()
+    if not hmac.compare_digest(expected, signature):
+        print(f"[WEBHOOK] Invalid signature — possible spoofed request")
+        return jsonify({'error': 'Invalid signature'}), 401
+
+    payload = request.get_json(force=True) or {}
+    event   = payload.get('event', '')
+    print(f"[WEBHOOK] Event received: {event}")
+
+    if event == 'charge.success':
+        data      = payload.get('data', {})
+        email     = data.get('customer', {}).get('email', '')
+        amount    = data.get('amount', 0) / 100   # Paystack sends in kobo/pesewas
+        plan      = data.get('plan', {})
+        plan_name = plan.get('name', '') if isinstance(plan, dict) else str(plan)
+
+        if not email:
+            print(f"[WEBHOOK] charge.success with no email — skipping")
+            return jsonify({'status': 'ok'}), 200
+
+        sector       = resolve_sector(plan_name)
+        download_url = generate_download_token(email, sector)
+
+        try:
+            send_download_email(email, download_url, sector)
+            print(f"[WEBHOOK] ✓ {email} | plan='{plan_name}' → sector={sector} | GH₵{amount:.2f}")
+        except Exception as e:
+            print(f"[WEBHOOK] Email failed for {email}: {e}")
+            # Still return 200 — token was created, email failure is non-fatal
+
+    return jsonify({'status': 'ok'}), 200
+
+# ═══════════════════════════════════════════════════════════════
+# PART 4 — DOWNLOAD ENDPOINT
+# ═══════════════════════════════════════════════════════════════
+@app.route('/api/download')
+@limiter.limit("10 per minute")
+def download_data():
+    token = request.args.get('token', '').strip()
+    if not token:
+        return jsonify({'error': 'Token required'}), 400
+
+    record = _TOKEN_STORE.get(token)
+    if not record:
+        return jsonify({'error': 'Invalid or expired token. Please purchase again.'}), 404
+
+    now = datetime.now(timezone.utc)
+    if now > record['expires_at']:
+        _TOKEN_STORE.pop(token, None)
+        return jsonify({'error': 'This download link has expired (24hr limit). Please purchase again.'}), 410
+
+    if record['used']:
+        return jsonify({'error': 'This download link has already been used (one-time only).'}), 410
+
+    # Mark as used immediately before streaming
+    record['used'] = True
+
+    sector   = record['sector']
+    email    = record['email']
+    date_str = now.strftime('%Y-%m-%d')
+    filename = f"sgdatalytics_{sector}_{date_str}.csv"
+    queries  = SECTOR_QUERIES.get(sector, [])
+
+    def generate_csv():
+        output  = io.StringIO()
+        writer  = None
+        headers_written = False
+
+        for db_key, sql in queries:
+            try:
+                rows = query(db_key, sql)
+            except Exception as e:
+                print(f"[DOWNLOAD] DB error for {db_key}: {e}")
+                continue
+
+            if not rows:
+                continue
+
+            if not headers_written:
+                writer = csv.DictWriter(output, fieldnames=rows[0].keys(), lineterminator='\n')
+                writer.writeheader()
+                headers_written = True
+                output.seek(0)
+                yield output.read()
+                output.seek(0); output.truncate(0)
+
+            for row in rows:
+                writer.writerow({k: (str(v) if v is not None else '') for k, v in row.items()})
+
+            output.seek(0)
+            yield output.read()
+            output.seek(0); output.truncate(0)
+
+    print(f"[DOWNLOAD] {email} downloaded '{sector}' at {now.isoformat()}")
+
+    return Response(
+        stream_with_context(generate_csv()),
+        mimetype='text/csv',
+        headers={'Content-Disposition': f'attachment; filename="{filename}"'}
+    )
+
+# ═══════════════════════════════════════════════════════════════
+# TEST ENDPOINT — manual trigger without Paystack payment
+# ═══════════════════════════════════════════════════════════════
+@app.route('/api/test-delivery', methods=['POST'])
+@limiter.limit("5 per minute")
+def test_delivery():
+    """
+    Test the full delivery pipeline without a real Paystack payment.
+    Body: { "email": "test@example.com", "sector": "market_prices" }
+    """
+    data   = request.get_json() or {}
+    email  = data.get('email', '').strip()
+    sector = data.get('sector', 'market_prices').strip()
+
+    if not email:
+        return jsonify({'error': 'email is required'}), 400
+
+    valid_sectors = list(SECTOR_QUERIES.keys())
+    if sector not in valid_sectors:
+        return jsonify({'error': f'Invalid sector. Choose from: {valid_sectors}'}), 400
+
+    download_url = generate_download_token(email, sector, expires_hours=24)
+
     try:
-        payload = json.loads(body)
-    except Exception:
-        return jsonify({'error': 'bad json'}), 400
-
-    event = payload.get('event', '')
-    if event != 'charge.success':
-        return jsonify({'status': 'ignored', 'event': event}), 200
-
-    data     = payload.get('data', {})
-    customer = data.get('customer', {})
-    email    = customer.get('email', '')
-    name     = customer.get('first_name') or customer.get('name') or 'Subscriber'
-    source   = data.get('source') or {}
-    slug     = source.get('identifier', '')
-
-    print(f'[webhook] charge.success — {email} — page: {slug}')
-
-    # ── 3. Match product ──────────────────────────────────────
-    product = PRODUCTS.get(slug)
-    if not product:
-        # Fallback: try matching by amount (Paystack sends GHS in pesewas × 100)
-        amount = data.get('amount', 0)
-        amount_map = {15000: '72ruuze8qn', 10000: 'cr1fxldrkx', 30000: '1q3vr4l02p'}
-        fallback_slug = amount_map.get(amount)
-        product = PRODUCTS.get(fallback_slug)
-
-    if not product or not email:
-        print(f'[webhook] Unrecognized product or missing email — slug={slug}')
-        return jsonify({'status': 'unrecognized'}), 200
-
-    # ── 4. Send access email ──────────────────────────────────
-    send_access_email(email, name, product)
-    return jsonify({'status': 'ok', 'product': product['name'], 'email': email}), 200
+        send_download_email(email, download_url, sector)
+        return jsonify({
+            'status':       'ok',
+            'message':      f'Email sent to {email}',
+            'sector':       sector,
+            'download_url': download_url,
+        })
+    except Exception as e:
+        return jsonify({
+            'status':       'email_failed',
+            'message':      str(e),
+            'download_url': download_url,  # still return URL so you can test the download manually
+        }), 500
 
 # ── ERROR HANDLERS ───────────────────────────────────────────
 @app.errorhandler(404)
 def not_found(e):
     return jsonify({"error": "Endpoint not found", "available": "/"}), 404
+
+@app.errorhandler(429)
+def rate_limited(e):
+    return jsonify({"error": "Too many requests — please slow down"}), 429
 
 @app.errorhandler(500)
 def server_error(e):

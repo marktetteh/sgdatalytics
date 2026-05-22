@@ -11,6 +11,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script src="https://js.paystack.co/v1/inline.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{
@@ -98,7 +99,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--nav-h);backgrou
 .product-price{margin-bottom:20px;}
 .product-amount{font-family:var(--font-d);font-size:2rem;color:var(--white);letter-spacing:0.04em;line-height:1;}
 .product-currency{font-family:var(--font-m);font-size:13px;color:var(--grey2);margin-top:3px;}
-.product-cta{display:block;text-align:center;padding:11px;border-radius:var(--r);font-weight:600;font-size:13px;text-decoration:none;transition:all var(--ease);cursor:pointer;border:none;font-family:var(--font-b);}
+.product-cta{display:block;text-align:center;padding:11px;border-radius:var(--r);font-weight:600;font-size:13px;text-decoration:none;transition:all var(--ease);cursor:pointer;border:none;font-family:var(--font-b);width:100%;}
 .cta-primary{background:var(--teal);color:#fff;}
 .cta-primary:hover{filter:brightness(1.08);transform:translateY(-1px);}
 .cta-secondary{background:transparent;color:var(--teal);border:1.5px solid var(--border-teal);}
@@ -116,7 +117,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--nav-h);backgrou
 .bundle-saving{font-family:var(--font-m);font-size:11px;color:var(--teal);margin-bottom:6px;}
 .bundle-amount{font-family:var(--font-d);font-size:2.8rem;color:#fff;letter-spacing:0.04em;line-height:1;}
 .bundle-period{font-family:var(--font-m);font-size:12px;color:rgba(255,255,255,0.4);margin-bottom:18px;}
-.bundle-cta{display:inline-block;padding:12px 28px;background:var(--teal);color:#fff;border-radius:var(--r);font-weight:600;font-size:13px;text-decoration:none;transition:all var(--ease);white-space:nowrap;}
+.bundle-cta{display:inline-block;padding:12px 28px;background:var(--teal);color:#fff;border-radius:var(--r);font-weight:600;font-size:13px;text-decoration:none;transition:all var(--ease);white-space:nowrap;border:none;cursor:pointer;font-family:var(--font-b);}
 .bundle-cta:hover{filter:brightness(1.08);transform:translateY(-1px);}
 
 /* ── HOW IT WORKS ── */
@@ -130,9 +131,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--nav-h);backgrou
 .step-title{font-weight:600;color:var(--white);margin-bottom:6px;}
 .step-body{font-size:13px;color:var(--grey2);line-height:1.6;}
 
-/* ── MOMO BOX ── */
+/* ── PAYSTACK INFO BOX ── */
 .momo-box{background:var(--panel);border:1.5px solid var(--border-teal);border-radius:var(--r-lg);padding:28px 32px;margin-top:24px;display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:center;}
-.momo-icon{width:56px;height:56px;background:var(--amber-dim);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;}
+.momo-icon{width:56px;height:56px;background:var(--teal-dim);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;}
 .momo-title{font-weight:600;color:var(--white);font-size:16px;margin-bottom:4px;}
 .momo-number{font-family:var(--font-d);font-size:2rem;color:var(--teal);letter-spacing:0.1em;}
 .momo-name{font-family:var(--font-m);font-size:12px;color:var(--grey2);margin-bottom:10px;}
@@ -178,22 +179,28 @@ footer a:hover{text-decoration:underline;}
   .momo-icon{width:44px;height:44px;font-size:22px;}
 }
 
-/* ── MODAL ── */
+/* ── PURCHASE MODAL ── */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(15,30,55,0.5);backdrop-filter:blur(4px);z-index:500;align-items:center;justify-content:center;padding:16px;}
 .modal-overlay.open{display:flex;}
-.modal{background:var(--panel);border-radius:var(--r-xl);padding:32px;max-width:480px;width:100%;box-shadow:0 24px 64px rgba(0,0,0,0.18);}
-.modal-title{font-family:var(--font-d);font-size:1.6rem;color:var(--white);letter-spacing:0.04em;margin-bottom:6px;}
-.modal-sub{font-size:13px;color:var(--grey2);margin-bottom:24px;}
-.modal-steps{display:flex;flex-direction:column;gap:14px;margin-bottom:24px;}
-.modal-step{display:flex;gap:14px;align-items:flex-start;}
-.modal-step-num{width:26px;height:26px;border-radius:50%;background:var(--teal);color:#fff;font-family:var(--font-d);font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
-.modal-step-text{font-size:13px;color:var(--grey1);line-height:1.6;}
-.modal-step-text strong{color:var(--white);}
-.modal-momo{background:var(--teal-dim);border:1px solid var(--border-teal);border-radius:var(--r);padding:14px 18px;margin-bottom:20px;text-align:center;}
-.modal-momo-num{font-family:var(--font-d);font-size:1.8rem;color:var(--teal);letter-spacing:0.12em;}
-.modal-momo-name{font-family:var(--font-m);font-size:11px;color:var(--grey2);}
-.modal-close{width:100%;padding:12px;background:var(--grey4);border:none;border-radius:var(--r);font-family:var(--font-b);font-size:14px;color:var(--grey2);cursor:pointer;transition:background var(--ease);}
+.modal{background:var(--panel);border-radius:var(--r-xl);padding:32px;max-width:460px;width:100%;box-shadow:0 24px 64px rgba(0,0,0,0.18);}
+.modal-title{font-family:var(--font-d);font-size:1.5rem;color:var(--white);letter-spacing:0.04em;margin-bottom:4px;}
+.modal-sub{font-size:13px;color:var(--grey2);margin-bottom:24px;line-height:1.6;}
+.modal-label{font-size:13px;color:var(--grey2);display:block;margin-bottom:6px;font-weight:500;}
+.modal-input{width:100%;padding:12px 14px;border:1.5px solid var(--border2);border-radius:var(--r);font-family:var(--font-b);font-size:14px;color:var(--grey1);background:var(--panel);outline:none;transition:border-color var(--ease);margin-bottom:6px;}
+.modal-input:focus{border-color:var(--teal);}
+.modal-error{color:#dc2626;font-size:12px;margin-bottom:14px;display:none;}
+.modal-btn-pay{width:100%;padding:13px;background:var(--teal);border:none;border-radius:var(--r);font-family:var(--font-b);font-size:14px;font-weight:600;color:#fff;cursor:pointer;transition:all var(--ease);margin-bottom:10px;}
+.modal-btn-pay:hover{filter:brightness(1.08);}
+.modal-btn-pay:disabled{opacity:0.6;cursor:not-allowed;}
+.modal-close{width:100%;padding:11px;background:var(--grey4);border:none;border-radius:var(--r);font-family:var(--font-b);font-size:13px;color:var(--grey2);cursor:pointer;transition:background var(--ease);}
 .modal-close:hover{background:var(--navy3);}
+.modal-security{display:flex;align-items:center;gap:6px;margin-top:14px;justify-content:center;}
+.modal-security span{font-size:11px;color:var(--grey3);font-family:var(--font-m);}
+
+/* ── SUCCESS TOAST ── */
+.toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(80px);background:#0f1e37;color:#fff;padding:16px 28px;border-radius:var(--r-lg);font-size:14px;z-index:600;opacity:0;transition:all 0.4s ease;max-width:90vw;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,0.3);}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast strong{color:var(--teal);}
 </style>
 </head>
 <body>
@@ -244,12 +251,12 @@ footer a:hover{text-decoration:underline;}
   <div class="hero">
     <div class="hero-label">Live Data Products</div>
     <h1 class="hero-title">Ghana's Data,<br/><span>Delivered as a Service</span></h1>
-    <p class="hero-sub">Structured, weekly-updated PostgreSQL datasets covering Ghana's consumer prices, real estate, economic indicators and more. One connection string, live forever.</p>
+    <p class="hero-sub">Structured, weekly-updated datasets covering Ghana's consumer prices, real estate, economic indicators and more — pay securely and receive your data instantly.</p>
     <div class="hero-badges">
       <span class="hero-badge">⚡ Weekly updates</span>
-      <span class="hero-badge">🐘 Live PostgreSQL access</span>
-      <span class="hero-badge">📊 Works in Python, R, Excel, Tableau</span>
-      <span class="hero-badge">🔐 Cancel anytime</span>
+      <span class="hero-badge">🔒 Secure Paystack checkout</span>
+      <span class="hero-badge">📊 CSV download — instant delivery</span>
+      <span class="hero-badge">📧 Sent to your email in seconds</span>
     </div>
   </div>
 
@@ -262,14 +269,14 @@ footer a:hover{text-decoration:underline;}
       <div class="product-name">SGMPI Consumer Prices</div>
       <p class="product-desc">Weekly retail and second-hand prices for electronics, phones, furniture, fashion and more — collected from Ghana's largest online markets and AI-enriched with brand, model and condition.</p>
       <div class="product-views">
-        <div class="product-view-label">Views included</div>
-        <span class="product-view-tag">sgmpi_product</span>
+        <div class="product-view-label">Dataset includes</div>
+        <span class="product-view-tag">market_prices</span>
       </div>
       <div class="product-price">
         <div class="product-amount">GHS 150</div>
-        <div class="product-currency">per month</div>
+        <div class="product-currency">one-time download</div>
       </div>
-      <a href="https://wa.me/233599477325?text=Hi%2C%20I%27m%20interested%20in%20the%20SGMPI%20Consumer%20Prices%20dataset%20(GHS%20150%2Fmo).%20Please%20send%20me%20payment%20details." target="_blank" class="product-cta cta-secondary">💬 Subscribe via WhatsApp</a>
+      <button onclick="openPurchaseModal('market_prices')" class="product-cta cta-primary">Buy Now — Pay with Paystack</button>
     </div>
 
     <!-- Product 2 -->
@@ -278,38 +285,35 @@ footer a:hover{text-decoration:underline;}
       <div class="product-name">Real Estate & Accommodation</div>
       <p class="product-desc">Property sale and rental listings from Ghana's largest real estate portal, enriched with neighbourhood and city data. Plus weekly hotel and Airbnb nightly rates across major Ghanaian cities.</p>
       <div class="product-views">
-        <div class="product-view-label">Views included</div>
-        <span class="product-view-tag">property_product</span>
-        <span class="product-view-tag">hotels_product</span>
-        <span class="product-view-tag">airbnb_product</span>
+        <div class="product-view-label">Datasets include</div>
+        <span class="product-view-tag">property_prices</span>
+        <span class="product-view-tag">hotel_prices</span>
+        <span class="product-view-tag">airbnb_prices</span>
       </div>
       <div class="product-price">
         <div class="product-amount">GHS 100</div>
-        <div class="product-currency">per month</div>
+        <div class="product-currency">one-time download</div>
       </div>
-      <a href="https://wa.me/233599477325?text=Hi%2C%20I%27m%20interested%20in%20the%20Real%20Estate%20%26%20Accommodation%20dataset%20(GHS%20100%2Fmo).%20Please%20send%20me%20payment%20details." target="_blank" class="product-cta cta-secondary">💬 Subscribe via WhatsApp</a>
+      <button onclick="openPurchaseModal('accommodation')" class="product-cta cta-primary">Buy Now — Pay with Paystack</button>
     </div>
 
     <!-- Product 3 -->
     <div class="product-card">
-      <div class="product-icon" style="background:var(--purple);opacity:1;" style="background:rgba(124,58,237,0.10);">
-        <span style="font-size:22px;">📈</span>
-      </div>
       <div class="product-icon" style="background:rgba(124,58,237,0.10);">📈</div>
       <div class="product-name">Macro & Commodities</div>
       <p class="product-desc">Bank of Ghana macro indicators, FX rates, sector-level economic data, commodity market prices and weekly national fuel prices — structured and ready for analysis.</p>
       <div class="product-views">
-        <div class="product-view-label">Views included</div>
-        <span class="product-view-tag">economic_product</span>
-        <span class="product-view-tag">fx_product</span>
-        <span class="product-view-tag">commodities_product</span>
-        <span class="product-view-tag">fuel_product</span>
+        <div class="product-view-label">Datasets include</div>
+        <span class="product-view-tag">economic_indicators</span>
+        <span class="product-view-tag">exchange_rates</span>
+        <span class="product-view-tag">commodity_prices</span>
+        <span class="product-view-tag">fuel_prices</span>
       </div>
       <div class="product-price">
         <div class="product-amount">GHS 100</div>
-        <div class="product-currency">per month</div>
+        <div class="product-currency">one-time download</div>
       </div>
-      <a href="https://wa.me/233599477325?text=Hi%2C%20I%27m%20interested%20in%20the%20Macro%20%26%20Commodities%20dataset%20(GHS%20100%2Fmo).%20Please%20send%20me%20payment%20details." target="_blank" class="product-cta cta-secondary">💬 Subscribe via WhatsApp</a>
+      <button onclick="openPurchaseModal('economic')" class="product-cta cta-primary">Buy Now — Pay with Paystack</button>
     </div>
 
   </div>
@@ -319,54 +323,53 @@ footer a:hover{text-decoration:underline;}
     <div class="bundle-left">
       <div class="bundle-tag">Best Value</div>
       <div class="bundle-name">Ghana Complete Data Bundle</div>
-      <p class="bundle-desc">All three products in one subscription. Full access to consumer prices, real estate, accommodation, macro indicators, FX rates, commodities and fuel — everything SG Datalytics collects, in one connection.</p>
+      <p class="bundle-desc">All datasets in one purchase. Consumer prices, real estate, accommodation, macro indicators, FX rates, commodities and fuel — everything SG Datalytics collects, delivered to your inbox instantly.</p>
       <div class="bundle-includes">
         <span class="bundle-pill">SGMPI Consumer Prices</span>
         <span class="bundle-pill">Real Estate & Accommodation</span>
         <span class="bundle-pill">Macro & Commodities</span>
-        <span class="bundle-pill">7 live views</span>
-        <span class="bundle-pill">Weekly updates</span>
+        <span class="bundle-pill">6 datasets</span>
+        <span class="bundle-pill">Instant delivery</span>
       </div>
     </div>
     <div class="bundle-right">
-      <div class="bundle-saving">Save GHS 50/mo vs buying separately</div>
+      <div class="bundle-saving">Save GHS 50 vs buying separately</div>
       <div class="bundle-amount">GHS 300</div>
-      <div class="bundle-period">per month</div>
-      <a href="https://wa.me/233599477325?text=Hi%2C%20I%27m%20interested%20in%20the%20Ghana%20Complete%20Data%20Bundle%20(GHS%20300%2Fmo).%20Please%20send%20me%20payment%20details." target="_blank" class="bundle-cta">💬 Subscribe via WhatsApp</a>
+      <div class="bundle-period">one-time purchase</div>
+      <button onclick="openPurchaseModal('bundle')" class="bundle-cta">Get Full Bundle — Pay with Paystack</button>
     </div>
   </div>
 
   <!-- HOW IT WORKS -->
   <div class="section">
     <div class="section-label">Getting started</div>
-    <h2 class="section-title">Three steps to live data</h2>
-    <p class="section-sub">No sign-up forms. No waiting. Your access is activated within 24 hours of payment.</p>
+    <h2 class="section-title">Three steps to your data</h2>
+    <p class="section-sub">No sign-up forms. No waiting. Your data is delivered to your inbox within seconds of payment.</p>
     <div class="steps">
       <div class="step">
         <div class="step-num">01</div>
-        <div class="step-title">Pick your product</div>
-        <p class="step-body">Choose the dataset that fits your work — or take the full bundle at GHS 200/month. Each product comes with specific database views listed above.</p>
+        <div class="step-title">Pick your dataset</div>
+        <p class="step-body">Choose the dataset that fits your work — or take the full bundle for maximum coverage. Click the Buy Now button on any product card above.</p>
       </div>
       <div class="step">
         <div class="step-num">02</div>
-        <div class="step-title">Message us on WhatsApp</div>
-        <p class="step-body">Click Subscribe and a WhatsApp chat opens with your chosen product already selected. We'll respond with payment instructions — MoMo, bank transfer or card. Ghana and international buyers welcome.</p>
+        <div class="step-title">Pay securely via Paystack</div>
+        <p class="step-body">Enter your email and complete payment through Paystack — Ghana's most trusted payment gateway. Accepts card, MTN MoMo, Vodafone Cash and AirtelTigo Money.</p>
       </div>
       <div class="step">
         <div class="step-num">03</div>
-        <div class="step-title">Receive your connection string</div>
-        <p class="step-body">Within 24 hours we email you a PostgreSQL connection string. Paste it into Python, R, Excel, Tableau or Power BI — your data is live immediately.</p>
+        <div class="step-title">Download from your inbox</div>
+        <p class="step-body">Immediately after payment, a secure download link is sent to your email. Click to download your CSV dataset. The link is valid for 24 hours and works once.</p>
       </div>
     </div>
 
-    <!-- WHATSAPP INFO BOX -->
+    <!-- PAYSTACK INFO BOX -->
     <div class="momo-box">
-      <div class="momo-icon">💬</div>
+      <div class="momo-icon">🔒</div>
       <div>
-        <div class="momo-title">Subscribe via WhatsApp — fast &amp; simple</div>
-        <div class="momo-number">+233 599 477 325</div>
-        <div class="momo-name" style="margin-top:4px;margin-bottom:8px;">MoMo payments: <strong>0545 597 214</strong></div>
-        <p class="momo-instruction" style="margin-top:8px;">Click any Subscribe button and a WhatsApp chat opens with your chosen product pre-filled. We accept <strong>MTN MoMo, Vodafone Cash, AirtelTigo Money</strong> and bank transfer for Ghana buyers, and <strong>international wire</strong> for overseas subscribers. You'll receive your PostgreSQL connection string within <strong>24 hours</strong> of payment. Questions? Message us or email <strong>info@sgdatalytics.org</strong></p>
+        <div class="momo-title">Secure checkout powered by Paystack</div>
+        <div class="momo-number" style="font-size:1.3rem;margin-top:4px;">Cards · MoMo · Vodafone Cash · AirtelTigo</div>
+        <p class="momo-instruction" style="margin-top:8px;">All payments are processed securely by <strong>Paystack</strong> — Ghana's leading payment infrastructure. Your card or mobile money details are never stored on our servers. After payment, your download link is sent to your email <strong>automatically within seconds</strong>. Questions? Email <strong>info@sgdatalytics.org</strong></p>
       </div>
     </div>
   </div>
@@ -375,122 +378,14 @@ footer a:hover{text-decoration:underline;}
   <div class="section">
     <div class="section-label">What's included</div>
     <h2 class="section-title">Built for analysts & developers</h2>
-    <p class="section-sub">Your connection string works everywhere PostgreSQL works.</p>
+    <p class="section-sub">Clean, structured CSV files ready for Python, R, Excel, Tableau or Power BI.</p>
     <div class="features">
       <div class="feature">
         <div class="feature-icon">⚡</div>
-        <div class="feature-title">Live weekly data</div>
-        <p class="feature-body">Data is collected and refreshed every week by our automated pipeline. Your queries always return the latest available data — no re-downloads needed.</p>
+        <div class="feature-title">Weekly-updated data</div>
+        <p class="feature-body">Data is collected and refreshed every week by our automated pipeline. Each purchase includes the most current available snapshot.</p>
       </div>
       <div class="feature">
         <div class="feature-icon">🐍</div>
         <div class="feature-title">Python & R ready</div>
-        <p class="feature-body">Connect with <code>pandas.read_sql()</code>, <code>sqlalchemy</code>, or R's <code>RPostgres</code> package. One connection string, two lines of code.</p>
-      </div>
-      <div class="feature">
-        <div class="feature-icon">📊</div>
-        <div class="feature-title">Excel, Tableau & Power BI</div>
-        <p class="feature-body">Paste the connection string directly into Excel's Get Data → PostgreSQL, or into Tableau and Power BI's database connector. No downloads, live refresh.</p>
-      </div>
-      <div class="feature">
-        <div class="feature-icon">🤖</div>
-        <div class="feature-title">AI-enriched quality</div>
-        <p class="feature-body">Market price listings are enriched with brand, model, condition (New/Used) and normalized product names via Gemini AI — structured and analysis-ready.</p>
-      </div>
-      <div class="feature">
-        <div class="feature-icon">🔐</div>
-        <div class="feature-title">Read-only & secure</div>
-        <p class="feature-body">Your credentials grant SELECT access only on curated views. You cannot modify data or access any other tables. Your connection is isolated and safe.</p>
-      </div>
-      <div class="feature">
-        <div class="feature-icon">🔄</div>
-        <div class="feature-title">Cancel anytime</div>
-        <p class="feature-body">Monthly subscriptions with no lock-in. Simply stop paying and your access is closed at the end of the billing period. No questions asked.</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- FAQ -->
-  <div class="faq section">
-    <div class="section-label">Common questions</div>
-    <h2 class="section-title">FAQ</h2>
-    <div class="faq-list">
-
-      <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">
-          What is a PostgreSQL connection string?
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-        </button>
-        <div class="faq-a">It's a single URL that tells your tool (Python, Excel, Tableau, etc.) exactly where to connect and which credentials to use. It looks like: <code>postgresql://username:password@host/database?sslmode=require</code>. You paste it once and your tool connects to the live database.</div>
-      </div>
-
-      <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">
-          Do I need to be a developer to use this?
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-        </button>
-        <div class="faq-a">Not necessarily. If you use Excel, Tableau, or Power BI, you can connect directly through the built-in PostgreSQL connector — no coding required. For Python or R users, connecting takes about two lines of code. We're happy to help you get set up after subscribing.</div>
-      </div>
-
-      <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">
-          How often is the data updated?
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-        </button>
-        <div class="faq-a">Market prices, property listings, accommodation rates and fuel prices are collected weekly, typically on Mondays. Economic indicators are updated as new data is published by the Bank of Ghana and Ghana Statistical Service. Because your connection is live, you always see the latest data automatically.</div>
-      </div>
-
-      <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">
-          Can I use the data commercially?
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-        </button>
-        <div class="faq-a">Yes. Your subscription grants you a licence to use the data for internal research, analytics, dashboards and commercial applications. You may not resell or redistribute the raw data or connection credentials to third parties. See our <a href="terms.html">Terms of Service</a> for full details.</div>
-      </div>
-
-      <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">
-          How do I cancel?
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-        </button>
-        <div class="faq-a">Email us at <strong>info@sgdatalytics.org</strong> to cancel. Your access remains active until the end of the billing period you've paid for, then closes automatically. No penalties, no questions asked.</div>
-      </div>
-
-      <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">
-          What if I need a custom dataset or enterprise access?
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-        </button>
-        <div class="faq-a">We work with banks, consultancies, NGOs and research institutions on custom data scopes, higher query limits, SLAs and additional sectors. Email us at <strong>info@sgdatalytics.org</strong> to discuss enterprise access.</div>
-      </div>
-
-    </div>
-  </div>
-
-</div><!-- /container -->
-</div><!-- /page -->
-
-<!-- FOOTER -->
-<footer>
-  <p>© 2026 SG Datalytics · <a href="marketplace.html">Marketplace</a> · <a href="products.html">Data Products</a> · <a href="insights.html">Insights</a> · <a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a> · <a href="methodology.html">Methodology</a></p>
-</footer>
-
-<script>
-// Nav hamburger
-const hamburger = document.getElementById('nav-hamburger');
-const mobileMenu = document.getElementById('mobile-menu');
-hamburger.addEventListener('click', () => {
-  hamburger.classList.toggle('open');
-  mobileMenu.classList.toggle('open');
-});
-
-// FAQ accordion
-function toggleFaq(btn) {
-  const item = btn.closest('.faq-item');
-  const isOpen = item.classList.contains('open');
-  document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
-  if (!isOpen) item.classList.add('open');
-}
-</script>
-</body>
-</html>
+        <p class="feature-body">Load your CSV with <code>pandas.read_csv()</code> or R's <code>read.csv()</code>. Clean column headers, consistent types, analysis-ready out of the box.</p>
