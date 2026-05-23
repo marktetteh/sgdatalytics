@@ -409,12 +409,19 @@ footer a:hover{text-decoration:underline;}
   transition:border-color var(--ease),transform var(--ease),box-shadow var(--ease);
   animation:fadeSlideIn 0.4s ease both;
   box-shadow:0 2px 16px rgba(0,0,0,0.18);
+  text-decoration:none;cursor:pointer;color:inherit;
 }
 .feed-card:hover{
   border-top-color:var(--teal);
   transform:translateY(-3px);
   box-shadow:0 8px 32px rgba(0,0,0,0.28);
 }
+.feed-card .feed-view-link{
+  font-family:var(--font-m);font-size:10px;color:var(--teal);
+  margin-top:auto;padding-top:8px;opacity:0;
+  transition:opacity var(--ease);
+}
+.feed-card:hover .feed-view-link{opacity:1;}
 @keyframes fadeSlideIn{
   from{opacity:0;transform:translateY(12px);}
   to{opacity:1;transform:translateY(0);}
@@ -923,77 +930,6 @@ footer a:hover{text-decoration:underline;}
   </div>
 </div>
 
-<!-- ── PRICING SECTION ───────────────────────────────────────── -->
-<div class="pricing-section">
-  <div class="pricing-inner">
-    <div style="text-align:center;margin-bottom:48px;">
-      <div class="section-label" style="justify-content:center;">Live database subscriptions</div>
-      <div class="section-title" style="margin-bottom:10px;">Access Ghana's data directly</div>
-      <div class="section-sub">Live PostgreSQL connection — query directly from Python, R, Excel or Tableau. Updated every week automatically.</div>
-    </div>
-    <div class="pricing-grid-home">
-
-      <!-- PRODUCT 1 -->
-      <div class="ph-card">
-        <div class="ph-tier">SGMPI Consumer Prices</div>
-        <div class="ph-amount"><sup style="font-size:1.2rem;">GHS</sup>150</div>
-        <div class="ph-period">per month · live PostgreSQL access</div>
-        <div class="ph-divider"></div>
-        <ul class="ph-features">
-          <li>15,000+ enriched price listings</li>
-          <li>Mobile Phones, Electronics, Vehicles</li>
-          <li>Home &amp; Furniture, Fashion, Food</li>
-          <li>Brand, model &amp; condition enriched by AI</li>
-          <li>Weekly updates — always fresh data</li>
-          <li>Works in Python, R, Excel, Tableau</li>
-          <li class="ph-no">Real estate &amp; macro data</li>
-        </ul>
-        <a href="products.html" class="btn ph-cta">Subscribe →</a>
-      </div>
-
-      <!-- PRODUCT 2 — featured -->
-      <div class="ph-card ph-featured">
-        <div class="ph-pop">Best value</div>
-        <div class="ph-tier">Ghana Complete Bundle</div>
-        <div class="ph-amount"><sup style="font-size:1.2rem;">GHS</sup>300</div>
-        <div class="ph-period">per month · all 3 products in one</div>
-        <div class="ph-divider"></div>
-        <ul class="ph-features">
-          <li>SGMPI Consumer Prices (15,000+ rows)</li>
-          <li>Real Estate &amp; Accommodation</li>
-          <li>Macro indicators, FX &amp; commodities</li>
-          <li>7 live database views included</li>
-          <li>Weekly updates across all sectors</li>
-          <li>Save GHS 50/mo vs buying separately</li>
-          <li>Pay via MoMo or international card</li>
-        </ul>
-        <a href="products.html" class="btn btn-teal ph-cta">Subscribe →</a>
-      </div>
-
-      <!-- ENTERPRISE -->
-      <div class="ph-card">
-        <div class="ph-tier">Enterprise / Custom</div>
-        <div class="ph-amount ph-custom">Custom</div>
-        <div class="ph-period">for institutions, governments &amp; research teams</div>
-        <div class="ph-divider"></div>
-        <ul class="ph-features">
-          <li>Custom data collection &amp; surveys</li>
-          <li>Dedicated data analyst support</li>
-          <li>White-label data reports</li>
-          <li>Multi-seat team access</li>
-          <li>SLA &amp; data quality guarantees</li>
-          <li>Bespoke sector dashboards</li>
-          <li>Research partnership options</li>
-        </ul>
-        <a href="marketplace.html#contact" class="btn ph-cta">Contact us</a>
-      </div>
-
-    </div>
-    <div style="text-align:center;margin-top:24px;">
-      <p style="font-family:var(--font-m);font-size:11px;color:var(--grey3);">Secure checkout via Paystack · Card, MoMo & international payments accepted · Cancel anytime · One-time CSV downloads also available — <a href="https://datalyze.gumroad.com" target="_blank" style="color:var(--teal);text-decoration:none;">Gumroad</a></p>
-    </div>
-  </div>
-</div>
 
 <footer>
   <p>© 2026 SG Datalytics · <a href="marketplace.html">Marketplace</a> · <a href="insights.html">Insights</a> · <a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a> · <a href="methodology.html">Methodology</a></p>
@@ -2255,10 +2191,11 @@ init();
       }
       grid.innerHTML = '';
       data.forEach((item, i) => {
-        const card = document.createElement('div');
+        const card = document.createElement('a');
         card.className = 'feed-card';
+        card.href = 'marketplace.html';
         card.style.animationDelay = (i * 0.05) + 's';
-        card.innerHTML = renderCard(sector, item);
+        card.innerHTML = renderCard(sector, item) + '<div class="feed-view-link">View on marketplace →</div>';
         grid.appendChild(card);
       });
     }
