@@ -695,23 +695,17 @@ def market_latest():
 # ═══════════════════════════════════════════════════════════════
 
 _GMPI_CTE = """
-WITH base_week AS (
-  SELECT week_number, year
+WITH base_medians AS (
+  -- Use the all-time median per category as the baseline (= 100).
+  -- This is more stable than a single base week because it draws on
+  -- every listing ever collected, not just the first week.
+  -- Require at least 20 total listings to include a category.
+  SELECT product_category,
+    PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY price_ghs) AS base_median
   FROM market_prices
   WHERE price_ghs > 0
-  GROUP BY week_number, year
-  ORDER BY year ASC, week_number ASC
-  LIMIT 1
-),
-base_medians AS (
-  SELECT m.product_category,
-    PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY m.price_ghs) AS base_median
-  FROM market_prices m, base_week b
-  WHERE m.week_number = b.week_number
-    AND m.year = b.year
-    AND m.price_ghs > 0
-  GROUP BY m.product_category
-  HAVING COUNT(*) >= 3
+  GROUP BY product_category
+  HAVING COUNT(*) >= 20
 ),
 weekly_medians AS (
   SELECT week_number, year, product_category,
