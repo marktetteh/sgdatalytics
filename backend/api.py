@@ -6,6 +6,8 @@ Run locally : python3 api.py
 Run on Railway: gunicorn -w 2 -b 0.0.0.0:$PORT api:app
 """
 import os, csv, io, hmac, hashlib, secrets
+import openpyxl
+from openpyxl.styles import Font, PatternFill, Alignment
 from datetime import datetime, timedelta, timezone
 from flask import Flask, jsonify, request, Response, stream_with_context
 from flask_cors import CORS
@@ -1117,56 +1119,84 @@ def download_data():
     email    = record['email']
     now      = datetime.now(timezone.utc)
     date_str = now.strftime('%Y-%m-%d')
-    filename = f"sgdatalytics_{sector}_{date_str}.csv"
+    filename = f"sgdatalytics_{sector}_{date_str}.xlsx"
     queries  = SECTOR_QUERIES.get(sector, [])
 
-    def generate_csv():
-        output      = io.StringIO()
-        first_table = True
+    # Build Excel workbook — one sheet per table
+    wb = openpyxl.Workbook()
+    wb.remove(wb.active)  # remove default blank sheet
 
-        for entry in queries:
-            db_key, sql, table_label = entry if len(entry) == 3 else (*entry, '')
-            try:
-                rows = query(db_key, sql)
-            except Exception as e:
-                print(f"[DOWNLOAD] DB error for {db_key}: {e}")
-                continue
+    header_font  = Font(bold=True, color='FFFFFF', size=11)
+    header_fill  = PatternFill(fill_type='solid', fgColor='1A1A2E')
+    header_align = Alignment(horizontal='center', vertical='center', wrap_text=True)
 
-            if not rows:
-                continue
+    # Friendly sheet name map (table_label → short Excel tab name, max 31 chars)
+    SHEET_NAMES = {
+        'market_prices_category_summary': 'Category Summary',
+        'market_prices_product_detail':   'Product Detail',
+        'hotel_prices_aggregated':        'Hotels',
+        'airbnb_prices_aggregated':       'Airbnb',
+        'property_prices_aggregated':     'Property',
+        'economic_indicators':            'Economic Indicators',
+        'exchange_rates':                 'Exchange Rates',
+        'gse_indices':                    'GSE Indices',
+        'stock_prices':                   'Stock Prices',
+        'commodity_prices':               'Commodity Prices',
+        'fuel_prices':                    'Fuel Prices',
+    }
 
-            # Separator comment between tables so analysts know where one ends
-            if not first_table:
-                output.write(f"\n# === {table_label} ===\n")
-            else:
-                if table_label:
-                    output.write(f"# === {table_label} ===\n")
-                first_table = False
+    for entry in queries:
+        db_key, sql, table_label = entry if len(entry) == 3 else (*entry, '')
+        try:
+            rows = query(db_key, sql)
+        except Exception as e:
+            print(f"[DOWNLOAD] DB error for {db_key}: {e}")
+            continue
 
-            # Fresh writer per table — each table gets its own header row
-            writer = csv.DictWriter(
-                output,
-                fieldnames=rows[0].keys(),
-                lineterminator='\n',
-                extrasaction='ignore',
-            )
-            writer.writeheader()
-            output.seek(0)
-            yield output.read()
-            output.seek(0); output.truncate(0)
+        if not rows:
+            continue
 
-            for row in rows:
-                writer.writerow({k: (str(v) if v is not None else '') for k, v in row.items()})
+        sheet_name = SHEET_NAMES.get(table_label, table_label[:31])
+        ws = wb.create_sheet(title=sheet_name)
 
-            output.seek(0)
-            yield output.read()
-            output.seek(0); output.truncate(0)
+        # Header row
+        headers = list(rows[0].keys())
+        for col_idx, col_name in enumerate(headers, start=1):
+            cell = ws.cell(row=1, column=col_idx, value=col_name.replace('_', ' ').title())
+            cell.font  = header_font
+            cell.fill  = header_fill
+            cell.alignment = header_align
+
+        # Data rows
+        for row_idx, row in enumerate(rows, start=2):
+            for col_idx, key in enumerate(headers, start=1):
+                val = row.get(key)
+                # Keep numbers as numbers so Excel can sort/sum them
+                if val is not None:
+                    try:
+                        val = float(val) if '.' in str(val) else int(val)
+                    except (ValueError, TypeError):
+                        val = str(val)
+                ws.cell(row=row_idx, column=col_idx, value=val)
+
+        # Auto-fit column widths (capped at 50)
+        for col in ws.columns:
+            max_len = max((len(str(c.value)) if c.value else 0 for c in col), default=10)
+            ws.column_dimensions[col[0].column_letter].width = min(max_len + 4, 50)
+
+        # Freeze top row
+        ws.freeze_panes = 'A2'
 
     print(f"[DOWNLOAD] {email} downloaded '{sector}' at {now.isoformat()}")
 
+    # Write workbook to bytes buffer and serve
+    buf = io.BytesIO()
+    wb.save(buf)
+    buf.seek(0)
+
     return Response(
-        stream_with_context(generate_csv()),
-        mimetype='text/csv',
+        buf.read(),
+        mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         headers={'Content-Disposition': f'attachment; filename="{filename}"'}
     )
 
