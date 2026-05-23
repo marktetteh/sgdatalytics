@@ -573,6 +573,8 @@ def root():
             "GET /api/market-prices?category=&location=&limit=50",
             "GET /api/market-prices/categories",
             "GET /api/market-prices/latest",
+            "GET /api/gmpi/latest",
+            "GET /api/gmpi",
             "GET /api/property?location=&limit=50",
             "GET /api/accommodation?type=hotel|airbnb&limit=50",
             "GET /api/economic?indicator=&sector=&limit=50",
@@ -609,7 +611,7 @@ def health():
 def stats():
     stats = {}
     try:
-        r = query('market_prices', "SELECT COUNT(*) AS n, COUNT(DISTINCT product_category) AS cats, COUNT(DISTINCT location) AS locs, MIN(collected_date) AS date_min, MAX(collected_date) AS date_max FROM market_prices", one=True)
+        r = query('market_prices', "SELECT COUNT(*) AS n, COUNT(DISTINCT product_category) AS cats, COUNT(DISTINCT COALESCE(NULLIF(location, ''), 'Ghana')) AS locs, MIN(collected_date) AS date_min, MAX(collected_date) AS date_max FROM market_prices", one=True)
         stats['market_prices'] = {'records': int(r['n']), 'categories': int(r['cats']), 'locations': int(r['locs']), 'date_min': str(r['date_min']), 'date_max': str(r['date_max'])}
     except: stats['market_prices'] = {'records': 0}
     try:
@@ -676,6 +678,122 @@ def market_categories():
 def market_latest():
     rows = query('market_prices', "SELECT product_category, ROUND(AVG(price_ghs),2) AS avg_price_ghs, COUNT(*) AS listings, MAX(collected_date) AS last_updated FROM market_prices GROUP BY product_category ORDER BY listings DESC")
     return jsonify([dict(r) for r in rows])
+
+# ═══════════════════════════════════════════════════════════════
+# GMPI — Ghana Market Price Index
+# Inspired by Numbeo's Cost of Living Index.
+#
+# Method:
+#   1. Find the earliest week in the DB → base week (index = 100)
+#   2. For every (week, category) compute the median price
+#      (median is more robust than avg against outlier listings)
+#   3. category_index = (this_week_median / base_median) × 100
+#   4. GMPI = simple average of all category indices that week
+#
+# A GMPI of 108 means prices are on average 8% higher than at
+# first collection; 95 means 5% cheaper.
+# ═══════════════════════════════════════════════════════════════
+
+_GMPI_CTE = """
+WITH base_week AS (
+  SELECT week_number, year
+  FROM market_prices
+  WHERE price_ghs > 0
+  GROUP BY week_number, year
+  ORDER BY year ASC, week_number ASC
+  LIMIT 1
+),
+base_medians AS (
+  SELECT m.product_category,
+    PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY m.price_ghs) AS base_median
+  FROM market_prices m, base_week b
+  WHERE m.week_number = b.week_number
+    AND m.year = b.year
+    AND m.price_ghs > 0
+  GROUP BY m.product_category
+  HAVING COUNT(*) >= 3
+),
+weekly_medians AS (
+  SELECT week_number, year, product_category,
+    PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY price_ghs) AS wk_median,
+    COUNT(*) AS n
+  FROM market_prices
+  WHERE price_ghs > 0
+  GROUP BY week_number, year, product_category
+  HAVING COUNT(*) >= 3
+),
+cat_idx AS (
+  SELECT wm.week_number, wm.year, wm.product_category,
+    ROUND((wm.wk_median / bm.base_median * 100)::numeric, 2) AS category_index,
+    wm.n AS products_tracked
+  FROM weekly_medians wm
+  JOIN base_medians bm USING (product_category)
+),
+gmpi AS (
+  SELECT week_number, year,
+    ROUND(AVG(category_index)::numeric, 2) AS gmpi,
+    SUM(products_tracked)::int AS products_tracked
+  FROM cat_idx
+  GROUP BY week_number, year
+)
+"""
+
+@app.route('/api/gmpi/latest')
+def gmpi_latest():
+    try:
+        sql  = _GMPI_CTE + "SELECT * FROM gmpi ORDER BY year DESC, week_number DESC LIMIT 2"
+        rows = query('market_prices', sql)
+        if not rows:
+            return jsonify({'error': 'No GMPI data yet'}), 404
+        cur        = dict(rows[0])
+        change_pct = None
+        if len(rows) >= 2:
+            prev = dict(rows[1])
+            if prev['gmpi'] and float(prev['gmpi']) != 0:
+                change_pct = round(
+                    (float(cur['gmpi']) - float(prev['gmpi'])) / float(prev['gmpi']) * 100, 2
+                )
+        return jsonify({
+            'gmpi':             float(cur['gmpi']),
+            'week':             cur['week_number'],
+            'year':             cur['year'],
+            'products_tracked': cur['products_tracked'],
+            'change_pct':       change_pct,
+        })
+    except Exception as e:
+        print(f"[GMPI/latest] {e}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/gmpi')
+def gmpi_history():
+    try:
+        # Overall: last 20 weeks newest-first (frontend reverses for sparkline)
+        overall_sql  = _GMPI_CTE + \
+            "SELECT * FROM gmpi ORDER BY year DESC, week_number DESC LIMIT 20"
+        overall_rows = query('market_prices', overall_sql)
+
+        # By-category: last 8 weeks (for the category pills)
+        cat_sql = _GMPI_CTE + """
+SELECT ci.week_number, ci.year, ci.product_category,
+       ci.category_index, ci.products_tracked
+FROM   cat_idx ci
+WHERE  (ci.year, ci.week_number) IN (
+         SELECT year, week_number
+         FROM   gmpi
+         ORDER  BY year DESC, week_number DESC
+         LIMIT  8
+       )
+ORDER  BY ci.year DESC, ci.week_number DESC, ci.category_index DESC
+"""
+        cat_rows = query('market_prices', cat_sql)
+
+        return jsonify({
+            'overall':     [dict(r) for r in overall_rows],
+            'by_category': [dict(r) for r in cat_rows],
+        })
+    except Exception as e:
+        print(f"[GMPI] {e}")
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/api/property')
 @limiter.limit("60 per minute")
