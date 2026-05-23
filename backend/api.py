@@ -67,6 +67,18 @@ SECTOR_LABELS = {
     'economic':      'Economic Indicators',
     'commodities':   'Commodities & Fuel',
     'financials':    'Financial Markets',
+    'bundle':        'Ghana Complete Data Bundle',
+}
+
+# Sectors included in the bundle purchase (4 downloadable sectors)
+BUNDLE_SECTORS = ['market_prices', 'accommodation', 'economic', 'commodities']
+
+# Exact product key → sector mapping (used with Paystack metadata.product)
+PRODUCT_SECTOR_MAP = {
+    'market_prices': 'market_prices',
+    'accommodation': 'accommodation',
+    'economic':      'economic',
+    'bundle':        'bundle',
 }
 
 SECTOR_QUERIES = {
@@ -210,6 +222,94 @@ def send_download_email(email, download_url, sector):
         raise Exception(f'Resend API error {resp.status_code}: {resp.text[:200]}')
 
     print(f"[EMAIL] Sent via Resend to {email} | sector={sector}")
+
+
+def send_bundle_email(email, sectors):
+    """
+    Send one email containing separate download links for each sector in the bundle.
+    Called when a customer purchases the 'Ghana Complete Data Bundle'.
+    """
+    import requests as req
+    api_key = os.getenv('RESEND_API_KEY', '').strip()
+    if not api_key:
+        raise Exception('RESEND_API_KEY not configured')
+
+    # Generate a token for each sector
+    links_html = ''
+    for sector in sectors:
+        url   = generate_download_token(email, sector)
+        label = SECTOR_LABELS.get(sector, sector.replace('_', ' ').title())
+        links_html += f"""
+        <tr>
+          <td style="padding:14px 0;border-bottom:1px solid #eee;">
+            <strong style="color:#1a1a1a;">{label}</strong><br>
+            <a href="{url}"
+               style="display:inline-block;margin-top:8px;background:#00957a;color:#fff;
+                      padding:10px 28px;border-radius:5px;text-decoration:none;font-size:14px;font-weight:bold;">
+              ⬇ Download
+            </a>
+          </td>
+        </tr>"""
+
+    html = f"""<!DOCTYPE html>
+<html>
+<body style="margin:0;padding:0;background:#f4f4f4;font-family:Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr><td align="center" style="padding:40px 20px;">
+    <table width="620" style="background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+      <tr><td style="background:#00957a;padding:32px;text-align:center;">
+        <h1 style="color:#fff;margin:0;font-size:26px;">SG Datalytics</h1>
+        <p style="color:#d0f0e8;margin:8px 0 0;font-size:14px;">Ghana Market Intelligence Platform</p>
+      </td></tr>
+      <tr><td style="padding:40px;">
+        <h2 style="color:#1a1a1a;margin:0 0 12px;font-size:20px;">Your Complete Bundle is Ready ✓</h2>
+        <p style="color:#555;line-height:1.7;margin:0 0 24px;">
+          Thank you for purchasing the <strong>Ghana Complete Data Bundle</strong>.
+          Below are your individual download links — one per dataset.
+        </p>
+        <div style="background:#fff8e1;border-left:4px solid #f59e0b;padding:14px 18px;
+                    border-radius:4px;margin:0 0 24px;">
+          <p style="margin:0;color:#92400e;font-size:13px;line-height:1.6;">
+            ⚠️ Each link is <strong>one-time use</strong> and expires in <strong>24 hours</strong>.
+            Download all files now.
+          </p>
+        </div>
+        <table width="100%" cellpadding="0" cellspacing="0">
+          {links_html}
+        </table>
+        <hr style="border:none;border-top:1px solid #eee;margin:28px 0;">
+        <p style="color:#999;font-size:12px;margin:0;">
+          Questions? <a href="mailto:data@sgdatalytics.org" style="color:#00957a;">data@sgdatalytics.org</a>
+        </p>
+      </td></tr>
+      <tr><td style="background:#f9f9f9;padding:20px;text-align:center;border-top:1px solid #eee;">
+        <p style="color:#bbb;font-size:12px;margin:0;">
+          &copy; 2026 SG Datalytics &nbsp;|&nbsp;
+          <a href="https://sgdatalytics.org" style="color:#00957a;text-decoration:none;">sgdatalytics.org</a>
+        </p>
+      </td></tr>
+    </table>
+  </td></tr>
+</table>
+</body>
+</html>"""
+
+    resp = req.post(
+        'https://api.resend.com/emails',
+        headers={'Authorization': f'Bearer {api_key}', 'Content-Type': 'application/json'},
+        json={
+            'from':    'SG Datalytics <data@sgdatalytics.org>',
+            'to':      [email],
+            'subject': 'Your SG Datalytics Complete Bundle — 4 Download Links Inside',
+            'html':    html,
+        },
+        timeout=15,
+    )
+    if resp.status_code not in (200, 201):
+        raise Exception(f'Resend API error {resp.status_code}: {resp.text[:200]}')
+
+    print(f"[EMAIL] Bundle sent via Resend to {email} | {len(sectors)} sectors")
+
 
 # ═══════════════════════════════════════════════════════════════
 # EXISTING ROUTES (unchanged)
@@ -430,23 +530,38 @@ def paystack_webhook():
     if event == 'charge.success':
         data      = payload.get('data', {})
         email     = data.get('customer', {}).get('email', '')
-        amount    = data.get('amount', 0) / 100   # Paystack sends in kobo/pesewas
-        plan      = data.get('plan', {})
-        plan_name = plan.get('name', '') if isinstance(plan, dict) else str(plan)
+        amount    = data.get('amount', 0) / 100   # Paystack sends in pesewas
+        meta      = data.get('metadata', {}) or {}
+
+        # Prefer exact product key from metadata (set by frontend triggerPaystack)
+        # Fall back to plan-name keyword matching for subscription-style flows
+        product_key = meta.get('product', '')
+        if product_key in PRODUCT_SECTOR_MAP:
+            sector = PRODUCT_SECTOR_MAP[product_key]
+        else:
+            plan      = data.get('plan', {})
+            plan_name = plan.get('name', '') if isinstance(plan, dict) else str(plan)
+            sector    = resolve_sector(plan_name)
 
         if not email:
             print(f"[WEBHOOK] charge.success with no email — skipping")
             return jsonify({'status': 'ok'}), 200
 
-        sector       = resolve_sector(plan_name)
-        download_url = generate_download_token(email, sector)
+        print(f"[WEBHOOK] ✓ {email} | product='{product_key}' → sector={sector} | GH₵{amount:.2f}")
 
-        try:
-            send_download_email(email, download_url, sector)
-            print(f"[WEBHOOK] ✓ {email} | plan='{plan_name}' → sector={sector} | GH₵{amount:.2f}")
-        except Exception as e:
-            print(f"[WEBHOOK] Email failed for {email}: {e}")
-            # Still return 200 — token was created, email failure is non-fatal
+        if sector == 'bundle':
+            # Send a separate download link for each sector in the bundle
+            try:
+                send_bundle_email(email, BUNDLE_SECTORS)
+            except Exception as e:
+                print(f"[WEBHOOK] Bundle email failed for {email}: {e}")
+        else:
+            download_url = generate_download_token(email, sector)
+            try:
+                send_download_email(email, download_url, sector)
+            except Exception as e:
+                print(f"[WEBHOOK] Email failed for {email}: {e}")
+                # Still return 200 — token was created, email failure is non-fatal
 
     return jsonify({'status': 'ok'}), 200
 
