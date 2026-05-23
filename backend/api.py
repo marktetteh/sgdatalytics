@@ -115,11 +115,10 @@ SECTOR_QUERIES = {
     'market_prices': [(
         'market_prices', """
         SELECT
-            collected_date,
             week_number,
             year,
             product_category,
-            COALESCE(NULLIF(normalized_name, ''), search_label)   AS normalized_name,
+            TRIM(COALESCE(NULLIF(normalized_name, ''), search_label)) AS normalized_name,
             COALESCE(NULLIF(location, ''), 'Ghana')               AS city,
             COUNT(*)                                              AS listing_count,
             ROUND(AVG(price_ghs)::numeric,    0)                  AS avg_price_ghs,
@@ -132,11 +131,11 @@ SECTOR_QUERIES = {
           AND price_ghs < 200000
           AND (normalized_name IS NOT NULL AND normalized_name <> ''
                OR search_label IS NOT NULL)
-        GROUP BY collected_date, week_number, year,
+        GROUP BY week_number, year,
                  product_category,
-                 COALESCE(NULLIF(normalized_name, ''), search_label),
+                 TRIM(COALESCE(NULLIF(normalized_name, ''), search_label)),
                  COALESCE(NULLIF(location, ''), 'Ghana')
-        ORDER BY collected_date DESC, product_category, normalized_name
+        ORDER BY year DESC, week_number DESC, product_category, normalized_name
         """, 'market_prices_aggregated',
     )],
 
@@ -144,7 +143,6 @@ SECTOR_QUERIES = {
     'accommodation': [
         ('accommodation', """
         SELECT
-            collected_date,
             week_number,
             year,
             'Hotel'                                        AS product_category,
@@ -160,13 +158,12 @@ SECTOR_QUERIES = {
             source_platform
         FROM hotel_prices
         WHERE price_per_night_usd > 0
-        GROUP BY collected_date, week_number, year, city, star_rating, source_platform
-        ORDER BY collected_date DESC, city, star_rating
+        GROUP BY week_number, year, city, star_rating, source_platform
+        ORDER BY year DESC, week_number DESC, city, star_rating
         """, 'hotel_prices_aggregated'),
 
         ('accommodation', """
         SELECT
-            collected_date,
             week_number,
             year,
             'Airbnb'                                       AS product_category,
@@ -180,13 +177,12 @@ SECTOR_QUERIES = {
             ROUND(AVG(rating)::numeric, 1)                  AS avg_rating
         FROM airbnb_prices
         WHERE price_ghs > 0
-        GROUP BY collected_date, week_number, year, city, room_type
-        ORDER BY collected_date DESC, city, room_type
+        GROUP BY week_number, year, city, room_type
+        ORDER BY year DESC, week_number DESC, city, room_type
         """, 'airbnb_prices_aggregated'),
 
         ('property', """
         SELECT
-            collected_date,
             week_number,
             year,
             'Property'                                     AS product_category,
@@ -205,9 +201,9 @@ SECTOR_QUERIES = {
             MAX(price_ghs)                                  AS max_price_ghs
         FROM property_prices
         WHERE price_ghs > 0
-        GROUP BY collected_date, week_number, year,
+        GROUP BY week_number, year,
                  property_type, listing_type, city, neighborhood, bedrooms
-        ORDER BY collected_date DESC, city, property_type, bedrooms
+        ORDER BY year DESC, week_number DESC, city, property_type, bedrooms
         """, 'property_prices_aggregated'),
     ],
 
