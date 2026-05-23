@@ -304,10 +304,10 @@ SECTOR_QUERIES = {
             week_number,
             year,
             'Agricultural Commodities'   AS product_category,
-            commodity_name || ' — ' || market
+            commodity_name || ' — ' || REPLACE(market, 'Esoko Marketplace', 'Accra Retail Prices')
                                          AS normalized_name,
             commodity_name,
-            market,
+            REPLACE(market, 'Esoko Marketplace', 'Accra Retail Prices') AS market,
             region,
             price_ghs,
             unit,
