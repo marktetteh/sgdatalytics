@@ -688,8 +688,8 @@ footer a:hover{text-decoration:underline;}
             <div style="font-family:'IBM Plex Mono',monospace;font-size:8.5px;color:rgba(255,255,255,0.32);text-transform:uppercase;letter-spacing:0.07em;margin-top:2px;">Locations</div>
           </div>
           <div style="background:rgba(255,255,255,0.03);padding:8px 6px;text-align:center;">
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:1rem;color:#00957a;line-height:1.2;">LIVE</div>
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:8.5px;color:rgba(255,255,255,0.32);text-transform:uppercase;letter-spacing:0.07em;margin-top:2px;">SGMPI</div>
+            <div id="heroGmpiValue" style="font-family:'IBM Plex Mono',monospace;font-size:1rem;color:#00957a;line-height:1.2;">—</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:8.5px;color:rgba(255,255,255,0.32);text-transform:uppercase;letter-spacing:0.07em;margin-top:2px;">GMPI</div>
           </div>
         </div>
 
@@ -698,6 +698,52 @@ footer a:hover{text-decoration:underline;}
   </div>
 </div>
 
+
+<!-- ── GMPI TICKER BAND ─────────────────────────────────────── -->
+<div id="gmpi-band" style="
+  background:#0b1829;border-top:1px solid rgba(0,149,122,0.18);
+  border-bottom:1px solid rgba(0,149,122,0.18);
+  padding:20px 5vw;margin:0;
+">
+  <div style="max-width:1160px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:20px;">
+
+    <!-- Label -->
+    <div style="flex:0 0 auto;">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#00957a;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:4px;">
+        <span style="display:inline-block;width:6px;height:6px;background:#00957a;border-radius:50%;margin-right:5px;animation:pulse 2s infinite;"></span>
+        Ghana Market Price Index
+      </div>
+      <div style="font-size:12px;color:rgba(255,255,255,0.35);font-family:'IBM Plex Mono',monospace;">GMPI · Base = 100 at first collection</div>
+    </div>
+
+    <!-- Big number -->
+    <div style="flex:0 0 auto;display:flex;align-items:baseline;gap:10px;">
+      <span id="gmpi-value" style="font-family:'Bebas Neue',sans-serif;font-size:3.2rem;color:#ffffff;line-height:1;letter-spacing:0.04em;">—</span>
+      <div>
+        <div id="gmpi-change" style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#00957a;line-height:1.3;">—</div>
+        <div id="gmpi-week"   style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:rgba(255,255,255,0.3);margin-top:2px;">Loading…</div>
+      </div>
+    </div>
+
+    <!-- Sparkline -->
+    <div style="flex:1;min-width:140px;max-width:320px;height:48px;position:relative;">
+      <canvas id="gmpi-spark" style="width:100%;height:48px;"></canvas>
+    </div>
+
+    <!-- Category pills -->
+    <div id="gmpi-cats" style="flex:1;display:flex;flex-wrap:wrap;gap:6px;min-width:200px;"></div>
+
+    <!-- CTA -->
+    <a href="products.html" style="
+      flex:0 0 auto;font-family:'IBM Plex Sans',sans-serif;font-size:12px;
+      background:rgba(0,149,122,0.15);border:1px solid rgba(0,149,122,0.35);
+      color:#00957a;padding:8px 16px;border-radius:6px;text-decoration:none;
+      white-space:nowrap;transition:all 0.2s;
+    " onmouseover="this.style.background='rgba(0,149,122,0.25)'" onmouseout="this.style.background='rgba(0,149,122,0.15)'">
+      Download Full Index →
+    </a>
+  </div>
+</div>
 
 <!-- CHARTS SECTION -->
 <div class="charts-section">
@@ -2100,6 +2146,73 @@ init();
       }
     })
     .catch(() => {});
+
+  // ── GMPI Ticker ───────────────────────────────────────────────
+  (async function loadGMPI() {
+    try {
+      // Latest single value (fast)
+      const latest = await fetch(API + '/api/gmpi/latest').then(r => r.ok ? r.json() : null).catch(() => null);
+      if (latest && latest.gmpi != null) {
+        document.getElementById('gmpi-value').textContent = latest.gmpi.toFixed(1);
+        document.getElementById('gmpi-week').textContent  = 'W' + latest.week + ' ' + latest.year + ' · ' + latest.products_tracked + ' products tracked';
+        // Hero panel GMPI stat cell
+        const heroGmpi = document.getElementById('heroGmpiValue');
+        if (heroGmpi) heroGmpi.textContent = latest.gmpi.toFixed(1);
+        // Change badge
+        if (latest.change_pct != null) {
+          const up  = latest.change_pct >= 0;
+          document.getElementById('gmpi-change').style.color = up ? '#f59e0b' : '#34d399';
+          document.getElementById('gmpi-change').textContent = (up ? '▲ +' : '▼ ') + latest.change_pct.toFixed(2) + '% wow';
+        }
+      }
+
+      // Full history for sparkline + category pills
+      const full = await fetch(API + '/api/gmpi').then(r => r.ok ? r.json() : null).catch(() => null);
+      if (full) {
+        // Sparkline (last 12 weeks, oldest → newest)
+        const hist = (full.overall || []).slice(0, 12).reverse();
+        if (hist.length > 1 && window.Chart) {
+          const ctx = document.getElementById('gmpi-spark').getContext('2d');
+          new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: hist.map(r => 'W' + r.week_number),
+              datasets: [{
+                data:           hist.map(r => r.gmpi),
+                borderColor:    '#00957a',
+                borderWidth:    2,
+                pointRadius:    0,
+                tension:        0.4,
+                fill:           true,
+                backgroundColor:'rgba(0,149,122,0.12)',
+              }]
+            },
+            options: {
+              responsive: true, maintainAspectRatio: false,
+              plugins: { legend: { display: false }, tooltip: { enabled: false } },
+              scales:  { x: { display: false }, y: { display: false } },
+              animation: { duration: 600 },
+            }
+          });
+        }
+
+        // Category pills (latest week only)
+        const latestWeek = (full.by_category || []).filter(r => r.week_number === latest.week && r.year === latest.year);
+        const pillsEl = document.getElementById('gmpi-cats');
+        if (pillsEl && latestWeek.length) {
+          pillsEl.innerHTML = latestWeek.map(c => {
+            const chg = parseFloat(c.category_index) - 100;
+            const col = chg > 5 ? '#f59e0b' : chg < -2 ? '#34d399' : 'rgba(255,255,255,0.45)';
+            return `<div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.10);
+                      border-radius:4px;padding:4px 9px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:${col};">
+                      ${c.product_category} <strong>${parseFloat(c.category_index).toFixed(1)}</strong>
+                    </div>`;
+          }).join('');
+        }
+      }
+    } catch(e) { /* silent fail — GMPI band stays hidden-ish */ }
+  })();
+
   fetch(API + '/api/stats')
     .then(r => r.ok ? r.json() : Promise.reject())
     .then(d => {
