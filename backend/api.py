@@ -81,24 +81,207 @@ PRODUCT_SECTOR_MAP = {
 # Each entry: (db_key, sql, table_label)
 # table_label is written as a section header in the CSV so analysts know where each table starts
 SECTOR_QUERIES = {
-    'market_prices': [
-        ('market_prices', 'SELECT * FROM market_prices ORDER BY collected_date DESC', 'market_prices'),
-    ],
+    # ── Consumer Market Prices ───────────────────────────────────
+    # Aggregated like Numbeo: one row per product per city per week
+    # Outliers filtered: price_ghs between GHS 1 and GHS 200,000
+    'market_prices': [(
+        'market_prices', """
+        SELECT
+            collected_date,
+            week_number,
+            year,
+            product_category,
+            COALESCE(NULLIF(normalized_name, ''), search_label)   AS normalized_name,
+            COALESCE(NULLIF(location, ''), 'Ghana')               AS city,
+            COUNT(*)                                              AS listing_count,
+            ROUND(AVG(price_ghs)::numeric,    0)                  AS avg_price_ghs,
+            MIN(price_ghs)                                        AS min_price_ghs,
+            MAX(price_ghs)                                        AS max_price_ghs,
+            ROUND(PERCENTILE_CONT(0.5) WITHIN GROUP
+                  (ORDER BY price_ghs)::numeric, 0)               AS median_price_ghs
+        FROM market_prices
+        WHERE price_ghs > 1
+          AND price_ghs < 200000
+          AND (normalized_name IS NOT NULL AND normalized_name <> ''
+               OR search_label IS NOT NULL)
+        GROUP BY collected_date, week_number, year,
+                 product_category,
+                 COALESCE(NULLIF(normalized_name, ''), search_label),
+                 COALESCE(NULLIF(location, ''), 'Ghana')
+        ORDER BY collected_date DESC, product_category, normalized_name
+        """, 'market_prices_aggregated',
+    )],
+
+    # ── Real Estate & Accommodation ──────────────────────────────
     'accommodation': [
-        ('accommodation', 'SELECT * FROM hotel_prices    ORDER BY collected_date DESC', 'hotel_prices'),
-        ('accommodation', 'SELECT * FROM airbnb_prices   ORDER BY collected_date DESC', 'airbnb_prices'),
-        ('property',      'SELECT * FROM property_prices ORDER BY collected_date DESC', 'property_prices'),
+        ('accommodation', """
+        SELECT
+            collected_date,
+            week_number,
+            year,
+            'Hotel'                                        AS product_category,
+            city || ' — ' || COALESCE(star_rating::text, '?') || '-star hotel'
+                                                           AS normalized_name,
+            city,
+            COALESCE(star_rating::text, 'Unknown')         AS star_rating,
+            COUNT(*)                                        AS hotel_count,
+            ROUND(AVG(price_per_night_usd)::numeric, 2)    AS avg_price_per_night_usd,
+            MIN(price_per_night_usd)                        AS min_price_per_night_usd,
+            MAX(price_per_night_usd)                        AS max_price_per_night_usd,
+            ROUND(AVG(review_score)::numeric, 1)            AS avg_review_score,
+            source_platform
+        FROM hotel_prices
+        WHERE price_per_night_usd > 0
+        GROUP BY collected_date, week_number, year, city, star_rating, source_platform
+        ORDER BY collected_date DESC, city, star_rating
+        """, 'hotel_prices_aggregated'),
+
+        ('accommodation', """
+        SELECT
+            collected_date,
+            week_number,
+            year,
+            'Airbnb'                                       AS product_category,
+            city || ' — ' || room_type                     AS normalized_name,
+            city,
+            room_type,
+            COUNT(*)                                        AS listing_count,
+            ROUND(AVG(price_ghs)::numeric, 0)              AS avg_price_ghs,
+            MIN(price_ghs)                                  AS min_price_ghs,
+            MAX(price_ghs)                                  AS max_price_ghs,
+            ROUND(AVG(rating)::numeric, 1)                  AS avg_rating
+        FROM airbnb_prices
+        WHERE price_ghs > 0
+        GROUP BY collected_date, week_number, year, city, room_type
+        ORDER BY collected_date DESC, city, room_type
+        """, 'airbnb_prices_aggregated'),
+
+        ('property', """
+        SELECT
+            collected_date,
+            week_number,
+            year,
+            'Property'                                     AS product_category,
+            city || ' — ' || property_type
+              || CASE WHEN bedrooms IS NOT NULL
+                      THEN ' ' || bedrooms || 'BR' ELSE '' END
+                                                           AS normalized_name,
+            property_type,
+            listing_type,
+            city,
+            neighborhood,
+            bedrooms,
+            COUNT(*)                                        AS listing_count,
+            ROUND(AVG(price_ghs)::numeric, 0)              AS avg_price_ghs,
+            MIN(price_ghs)                                  AS min_price_ghs,
+            MAX(price_ghs)                                  AS max_price_ghs
+        FROM property_prices
+        WHERE price_ghs > 0
+        GROUP BY collected_date, week_number, year,
+                 property_type, listing_type, city, neighborhood, bedrooms
+        ORDER BY collected_date DESC, city, property_type, bedrooms
+        """, 'property_prices_aggregated'),
     ],
+
+    # ── Economic, Financial & Agricultural ───────────────────────
     'economic': [
-        # Macro indicators & FX
-        ('economic',    'SELECT * FROM economic_indicators ORDER BY collected_date DESC', 'economic_indicators'),
-        ('economic',    'SELECT * FROM exchange_rates      ORDER BY collected_date DESC', 'exchange_rates'),
-        # Financial markets
-        ('financials',  'SELECT * FROM gse_indices         ORDER BY collected_date DESC', 'gse_indices'),
-        ('financials',  'SELECT * FROM stock_prices        ORDER BY collected_date DESC', 'stock_prices'),
-        # Agricultural & commodity prices
-        ('commodities', 'SELECT * FROM commodity_prices    ORDER BY collected_date DESC', 'commodity_prices'),
-        ('commodities', 'SELECT * FROM fuel_prices         ORDER BY collected_date DESC', 'fuel_prices'),
+        ('economic', """
+        SELECT
+            collected_date,
+            year,
+            month,
+            sector                 AS product_category,
+            indicator_name         AS normalized_name,
+            indicator_code,
+            value,
+            unit,
+            source
+        FROM economic_indicators
+        ORDER BY collected_date DESC, sector, indicator_name
+        """, 'economic_indicators'),
+
+        ('economic', """
+        SELECT
+            collected_date,
+            'Foreign Exchange'     AS product_category,
+            currency_pair          AS normalized_name,
+            currency_pair,
+            rate_ghs,
+            source
+        FROM exchange_rates
+        ORDER BY collected_date DESC, currency_pair
+        """, 'exchange_rates'),
+
+        ('financials', """
+        SELECT
+            collected_date,
+            week_number,
+            year,
+            'Financial Markets'    AS product_category,
+            index_name             AS normalized_name,
+            index_name,
+            value,
+            change_points,
+            change_pct,
+            source
+        FROM gse_indices
+        ORDER BY collected_date DESC, index_name
+        """, 'gse_indices'),
+
+        ('financials', """
+        SELECT
+            collected_date,
+            week_number,
+            year,
+            'Financial Markets'    AS product_category,
+            company_name || ' (' || symbol || ')'
+                                   AS normalized_name,
+            symbol,
+            company_name,
+            opening_price_ghs,
+            closing_price_ghs,
+            change_ghs,
+            change_pct,
+            volume,
+            year_high,
+            year_low,
+            source
+        FROM stock_prices
+        ORDER BY collected_date DESC, symbol
+        """, 'stock_prices'),
+
+        ('commodities', """
+        SELECT
+            collected_date,
+            week_number,
+            year,
+            'Agricultural Commodities'   AS product_category,
+            commodity_name || ' — ' || market
+                                         AS normalized_name,
+            commodity_name,
+            market,
+            region,
+            price_ghs,
+            unit,
+            source
+        FROM commodity_prices
+        ORDER BY collected_date DESC, commodity_name, market
+        """, 'commodity_prices'),
+
+        ('commodities', """
+        SELECT
+            collected_date,
+            week_number,
+            year,
+            'Energy & Fuel'        AS product_category,
+            fuel_type              AS normalized_name,
+            fuel_type,
+            price_ghs_per_litre,
+            currency,
+            source
+        FROM fuel_prices
+        ORDER BY collected_date DESC, fuel_type
+        """, 'fuel_prices'),
     ],
 }
 
@@ -574,6 +757,189 @@ def paystack_webhook():
                 # Still return 200 — token was created, email failure is non-fatal
 
     return jsonify({'status': 'ok'}), 200
+
+# ═══════════════════════════════════════════════════════════════
+# PART 3B — GHANA MARKET PRICE INDEX (GMPI)
+# ═══════════════════════════════════════════════════════════════
+
+@app.route('/api/gmpi')
+@limiter.limit("60 per minute")
+def get_gmpi():
+    """
+    Ghana Market Price Index — weekly composite price index across all tracked
+    consumer goods categories. Base week = 100 (first week of data collection).
+
+    Returns:
+      - Weekly index values (overall + per category)
+      - Week-on-week change (%)
+      - Number of products and listings tracked each week
+    """
+    # ── Overall weekly index ──────────────────────────────────
+    overall_sql = """
+    WITH weekly AS (
+        SELECT
+            week_number,
+            year,
+            collected_date,
+            product_category,
+            COALESCE(NULLIF(normalized_name,''), search_label) AS product_name,
+            AVG(price_ghs) AS avg_price
+        FROM market_prices
+        WHERE price_ghs > 1
+          AND price_ghs < 200000
+          AND (normalized_name IS NOT NULL AND normalized_name <> ''
+               OR search_label IS NOT NULL)
+        GROUP BY week_number, year, collected_date, product_category,
+                 COALESCE(NULLIF(normalized_name,''), search_label)
+    ),
+    weekly_composite AS (
+        SELECT
+            week_number,
+            year,
+            collected_date,
+            AVG(avg_price)             AS composite_avg_price,
+            COUNT(DISTINCT product_name) AS products_tracked,
+            SUM(1)                     AS category_product_count
+        FROM weekly
+        GROUP BY week_number, year, collected_date
+        ORDER BY year, week_number
+    ),
+    base AS (
+        SELECT composite_avg_price AS base_price
+        FROM weekly_composite
+        ORDER BY year, week_number
+        LIMIT 1
+    )
+    SELECT
+        w.week_number,
+        w.year,
+        w.collected_date                                    AS week_date,
+        ROUND((w.composite_avg_price / b.base_price * 100)::numeric, 2)
+                                                            AS gmpi,
+        ROUND(w.composite_avg_price::numeric, 2)            AS avg_price_ghs,
+        w.products_tracked,
+        LAG(ROUND((w.composite_avg_price / b.base_price * 100)::numeric, 2))
+            OVER (ORDER BY w.year, w.week_number)           AS prev_gmpi,
+        ROUND(
+            (ROUND((w.composite_avg_price / b.base_price * 100)::numeric, 2) -
+             LAG(ROUND((w.composite_avg_price / b.base_price * 100)::numeric, 2))
+                 OVER (ORDER BY w.year, w.week_number))
+        , 2)                                                AS gmpi_change,
+        ROUND(
+            (ROUND((w.composite_avg_price / b.base_price * 100)::numeric, 2) -
+             LAG(ROUND((w.composite_avg_price / b.base_price * 100)::numeric, 2))
+                 OVER (ORDER BY w.year, w.week_number))
+            / NULLIF(LAG(ROUND((w.composite_avg_price / b.base_price * 100)::numeric, 2))
+                 OVER (ORDER BY w.year, w.week_number), 0) * 100
+        , 2)                                                AS gmpi_change_pct
+    FROM weekly_composite w, base b
+    ORDER BY w.year DESC, w.week_number DESC
+    """
+
+    # ── Category-level index ──────────────────────────────────
+    category_sql = """
+    WITH weekly_cat AS (
+        SELECT
+            week_number,
+            year,
+            collected_date,
+            product_category,
+            AVG(price_ghs)               AS category_avg_price,
+            COUNT(DISTINCT COALESCE(NULLIF(normalized_name,''), search_label))
+                                         AS products_tracked
+        FROM market_prices
+        WHERE price_ghs > 1
+          AND price_ghs < 200000
+        GROUP BY week_number, year, collected_date, product_category
+    ),
+    base_cat AS (
+        SELECT
+            product_category,
+            FIRST_VALUE(category_avg_price)
+                OVER (PARTITION BY product_category
+                      ORDER BY year, week_number) AS base_price
+        FROM weekly_cat
+    )
+    SELECT DISTINCT
+        w.week_number,
+        w.year,
+        w.collected_date               AS week_date,
+        w.product_category,
+        ROUND((w.category_avg_price / b.base_price * 100)::numeric, 2)
+                                       AS category_index,
+        ROUND(w.category_avg_price::numeric, 2)
+                                       AS avg_price_ghs,
+        w.products_tracked
+    FROM weekly_cat w
+    JOIN base_cat b
+      ON w.product_category = b.product_category
+    ORDER BY w.year DESC, w.week_number DESC, w.product_category
+    """
+
+    try:
+        overall   = query('market_prices', overall_sql)
+        by_cat    = query('market_prices', category_sql)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+    return jsonify({
+        'index_name':  'Ghana Market Price Index (GMPI)',
+        'description': 'Composite weekly price index across all tracked consumer goods. Base = 100 at first collection week.',
+        'base_note':   'GMPI of 110 means prices are 10% higher than the base week.',
+        'overall':     overall,
+        'by_category': by_cat,
+    })
+
+
+# ── Public GMPI summary (no auth — for website display) ──────
+@app.route('/api/gmpi/latest')
+@limiter.limit("120 per minute")
+def get_gmpi_latest():
+    """Latest GMPI value + week-on-week change. Safe for public display."""
+    sql = """
+    WITH weekly AS (
+        SELECT
+            week_number, year, collected_date,
+            AVG(price_ghs) AS avg_price,
+            COUNT(DISTINCT COALESCE(NULLIF(normalized_name,''), search_label)) AS products
+        FROM market_prices
+        WHERE price_ghs > 1 AND price_ghs < 200000
+        GROUP BY week_number, year, collected_date
+        ORDER BY year, week_number
+    ),
+    base AS (SELECT avg_price AS base_price FROM weekly ORDER BY year, week_number LIMIT 1)
+    SELECT
+        w.week_number, w.year, w.collected_date AS week_date,
+        ROUND((w.avg_price / b.base_price * 100)::numeric, 2) AS gmpi,
+        w.products AS products_tracked
+    FROM weekly w, base b
+    ORDER BY w.year DESC, w.week_number DESC
+    LIMIT 2
+    """
+    try:
+        rows = query('market_prices', sql)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+    if not rows:
+        return jsonify({'gmpi': None})
+
+    latest = rows[0]
+    prev   = rows[1] if len(rows) > 1 else None
+    change = round(latest['gmpi'] - prev['gmpi'], 2) if prev else None
+    change_pct = round((change / prev['gmpi']) * 100, 2) if prev and prev['gmpi'] else None
+
+    return jsonify({
+        'gmpi':             latest['gmpi'],
+        'week':             latest['week_number'],
+        'year':             latest['year'],
+        'week_date':        str(latest['week_date']),
+        'products_tracked': latest['products_tracked'],
+        'change':           change,
+        'change_pct':       change_pct,
+        'label':            f"W{latest['week_number']} {latest['year']}",
+    })
+
 
 # ═══════════════════════════════════════════════════════════════
 # PART 4 — DOWNLOAD ENDPOINT
