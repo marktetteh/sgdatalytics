@@ -63,14 +63,12 @@ _TOKEN_STORE = {}
 SECTOR_LABELS = {
     'market_prices': 'Market Prices',
     'accommodation': 'Real Estate & Accommodation',
-    'economic':      'Economic & Financial Data',
-    'commodities':   'Commodities & Fuel',
+    'economic':      'Economic, Financial & Agricultural Data',
     'bundle':        'Ghana Complete Data Bundle',
 }
 
-# Sectors included in the bundle (accommodation now includes property;
-# economic now includes financials — so 4 links covers all 6 Neon tables)
-BUNDLE_SECTORS = ['market_prices', 'accommodation', 'economic', 'commodities']
+# Bundle now only needs 3 download links — all 8 tables are covered
+BUNDLE_SECTORS = ['market_prices', 'accommodation', 'economic']
 
 # Exact product key → sector mapping (used with Paystack metadata.product)
 PRODUCT_SECTOR_MAP = {
@@ -81,25 +79,26 @@ PRODUCT_SECTOR_MAP = {
 }
 
 # Each entry: (db_key, sql, table_label)
-# table_label is written as a comment header row so multi-schema CSVs stay readable
+# table_label is written as a section header in the CSV so analysts know where each table starts
 SECTOR_QUERIES = {
     'market_prices': [
         ('market_prices', 'SELECT * FROM market_prices ORDER BY collected_date DESC', 'market_prices'),
     ],
     'accommodation': [
-        ('accommodation', 'SELECT * FROM hotel_prices   ORDER BY collected_date DESC', 'hotel_prices'),
-        ('accommodation', 'SELECT * FROM airbnb_prices  ORDER BY collected_date DESC', 'airbnb_prices'),
+        ('accommodation', 'SELECT * FROM hotel_prices    ORDER BY collected_date DESC', 'hotel_prices'),
+        ('accommodation', 'SELECT * FROM airbnb_prices   ORDER BY collected_date DESC', 'airbnb_prices'),
         ('property',      'SELECT * FROM property_prices ORDER BY collected_date DESC', 'property_prices'),
     ],
     'economic': [
-        ('economic',   'SELECT * FROM economic_indicators ORDER BY collected_date DESC', 'economic_indicators'),
-        ('economic',   'SELECT * FROM exchange_rates      ORDER BY collected_date DESC', 'exchange_rates'),
-        ('financials', 'SELECT * FROM gse_indices         ORDER BY collected_date DESC', 'gse_indices'),
-        ('financials', 'SELECT * FROM stock_prices        ORDER BY collected_date DESC', 'stock_prices'),
-    ],
-    'commodities': [
-        ('commodities', 'SELECT * FROM commodity_prices ORDER BY collected_date DESC', 'commodity_prices'),
-        ('commodities', 'SELECT * FROM fuel_prices      ORDER BY collected_date DESC', 'fuel_prices'),
+        # Macro indicators & FX
+        ('economic',    'SELECT * FROM economic_indicators ORDER BY collected_date DESC', 'economic_indicators'),
+        ('economic',    'SELECT * FROM exchange_rates      ORDER BY collected_date DESC', 'exchange_rates'),
+        # Financial markets
+        ('financials',  'SELECT * FROM gse_indices         ORDER BY collected_date DESC', 'gse_indices'),
+        ('financials',  'SELECT * FROM stock_prices        ORDER BY collected_date DESC', 'stock_prices'),
+        # Agricultural & commodity prices
+        ('commodities', 'SELECT * FROM commodity_prices    ORDER BY collected_date DESC', 'commodity_prices'),
+        ('commodities', 'SELECT * FROM fuel_prices         ORDER BY collected_date DESC', 'fuel_prices'),
     ],
 }
 
@@ -111,7 +110,9 @@ PLAN_SECTOR_MAP = {
     'hotel':         'accommodation',
     'airbnb':        'accommodation',
     'economic':      'economic',
-    'commodit':      'commodities',
+    'commodit':      'economic',
+    'agricultur':    'economic',
+    'financial':     'economic',
     'fuel':          'commodities',
     'financial':     'financials',
     'stock':         'financials',
