@@ -2213,7 +2213,7 @@ init();
           }).join('');
         }
       }
-    } catch(e) { /* silent fail — GMPI band stays hidden-ish */ }
+    } catch(e) { console.error('[GMPI] Error loading widget:', e); }
   })();
 
   fetch(API + '/api/stats')

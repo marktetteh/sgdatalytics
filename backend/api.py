@@ -948,20 +948,22 @@ def get_gmpi():
 @limiter.limit("120 per minute")
 def get_gmpi_latest():
     """Latest GMPI value + week-on-week change. Safe for public display."""
+    # Group by week only (not collected_date) so each week = one row regardless of collection days
     sql = """
     WITH weekly AS (
         SELECT
-            week_number, year, collected_date,
+            week_number, year,
             AVG(price_ghs) AS avg_price,
-            COUNT(DISTINCT COALESCE(NULLIF(normalized_name,''), search_label)) AS products
+            COUNT(DISTINCT COALESCE(NULLIF(normalized_name,''), search_label)) AS products,
+            MIN(collected_date) AS week_date
         FROM market_prices
         WHERE price_ghs > 1 AND price_ghs < 200000
-        GROUP BY week_number, year, collected_date
+        GROUP BY week_number, year
         ORDER BY year, week_number
     ),
     base AS (SELECT avg_price AS base_price FROM weekly ORDER BY year, week_number LIMIT 1)
     SELECT
-        w.week_number, w.year, w.collected_date AS week_date,
+        w.week_number, w.year, w.week_date,
         ROUND((w.avg_price / b.base_price * 100)::numeric, 2) AS gmpi,
         w.products AS products_tracked
     FROM weekly w, base b
@@ -971,6 +973,7 @@ def get_gmpi_latest():
     try:
         rows = query('market_prices', sql)
     except Exception as e:
+        print(f"[GMPI/latest] SQL error: {e}")
         return jsonify({'error': str(e)}), 500
 
     if not rows:
@@ -978,11 +981,15 @@ def get_gmpi_latest():
 
     latest = rows[0]
     prev   = rows[1] if len(rows) > 1 else None
-    change = round(latest['gmpi'] - prev['gmpi'], 2) if prev else None
-    change_pct = round((change / prev['gmpi']) * 100, 2) if prev and prev['gmpi'] else None
+
+    # Cast Decimal to float for arithmetic
+    latest_gmpi = float(latest['gmpi'])
+    prev_gmpi   = float(prev['gmpi']) if prev else None
+    change      = round(latest_gmpi - prev_gmpi, 2) if prev_gmpi else None
+    change_pct  = round((change / prev_gmpi) * 100, 2) if prev_gmpi and change is not None else None
 
     return jsonify({
-        'gmpi':             latest['gmpi'],
+        'gmpi':             round(latest_gmpi, 2),
         'week':             latest['week_number'],
         'year':             latest['year'],
         'week_date':        str(latest['week_date']),
