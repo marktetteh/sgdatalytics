@@ -54,10 +54,38 @@ def query(db_key, sql, params=None, one=False):
     cur.close(); conn.close()
     return result
 
-# ── TOKEN STORE (in-memory) ──────────────────────────────────
-# { token: { email, sector, created_at, expires_at, used } }
-# Note: resets on Railway restart — acceptable for 24hr tokens
-_TOKEN_STORE = {}
+# ── TOKEN STORE (Neon-backed) ─────────────────────────────────
+# Tokens are persisted in the economic Neon DB so they survive Railway redeploys.
+# Table is auto-created on first use.
+
+def _get_token_conn():
+    url = os.getenv('NEON_ECONOMIC', '')
+    if not url:
+        raise Exception('NEON_ECONOMIC not configured — cannot store tokens')
+    return psycopg2.connect(url, sslmode='require')
+
+def _ensure_token_table():
+    """Create download_tokens table if it doesn't exist."""
+    try:
+        conn = _get_token_conn()
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute("""
+                    CREATE TABLE IF NOT EXISTS download_tokens (
+                        token       TEXT PRIMARY KEY,
+                        email       TEXT NOT NULL,
+                        sector      TEXT NOT NULL,
+                        created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+                        expires_at  TIMESTAMPTZ NOT NULL,
+                        used        BOOLEAN NOT NULL DEFAULT FALSE
+                    )
+                """)
+        conn.close()
+    except Exception as e:
+        print(f"[TOKEN] Warning: could not ensure token table: {e}")
+
+# Create table on startup
+_ensure_token_table()
 
 # ── SECTOR CONFIG ────────────────────────────────────────────
 SECTOR_LABELS = {
@@ -315,20 +343,24 @@ def resolve_sector(plan_name):
 # ═══════════════════════════════════════════════════════════════
 def generate_download_token(email, sector, expires_hours=24):
     """
-    Generate a secure one-time download token.
-    Stores it in memory and returns the full download URL.
+    Generate a secure one-time download token persisted in Neon.
+    Survives Railway redeploys — tokens valid for 24 hours.
     """
     token      = secrets.token_urlsafe(32)
     now        = datetime.now(timezone.utc)
     expires_at = now + timedelta(hours=expires_hours)
 
-    _TOKEN_STORE[token] = {
-        'email':      email,
-        'sector':     sector,
-        'created_at': now,
-        'expires_at': expires_at,
-        'used':       False,
-    }
+    try:
+        conn = _get_token_conn()
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute("""
+                    INSERT INTO download_tokens (token, email, sector, created_at, expires_at, used)
+                    VALUES (%s, %s, %s, %s, %s, FALSE)
+                """, (token, email, sector, now, expires_at))
+        conn.close()
+    except Exception as e:
+        print(f"[TOKEN] DB write failed: {e} — token will not persist across redeploys")
 
     download_url = f"https://sgdatalytics-production.up.railway.app/api/download?token={token}"
     print(f"[TOKEN] Generated for {email} | sector={sector} | expires={expires_at.isoformat()}")
@@ -951,20 +983,36 @@ def download_data():
     if not token:
         return jsonify({'error': 'Token required'}), 400
 
-    record = _TOKEN_STORE.get(token)
+    # Look up token in Neon (persists across redeploys)
+    try:
+        conn = _get_token_conn()
+        with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
+            cur.execute("SELECT * FROM download_tokens WHERE token = %s", (token,))
+            record = cur.fetchone()
+        conn.close()
+    except Exception as e:
+        print(f"[DOWNLOAD] Token DB lookup failed: {e}")
+        return jsonify({'error': 'Service error — please try again shortly.'}), 503
+
     if not record:
         return jsonify({'error': 'Invalid or expired token. Please purchase again.'}), 404
 
     now = datetime.now(timezone.utc)
     if now > record['expires_at']:
-        _TOKEN_STORE.pop(token, None)
         return jsonify({'error': 'This download link has expired (24hr limit). Please purchase again.'}), 410
 
     if record['used']:
         return jsonify({'error': 'This download link has already been used (one-time only).'}), 410
 
-    # Mark as used immediately before streaming
-    record['used'] = True
+    # Mark as used in Neon immediately before streaming
+    try:
+        conn = _get_token_conn()
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute("UPDATE download_tokens SET used = TRUE WHERE token = %s", (token,))
+        conn.close()
+    except Exception as e:
+        print(f"[DOWNLOAD] Failed to mark token used: {e}")
 
     sector   = record['sector']
     email    = record['email']
