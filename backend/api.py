@@ -995,33 +995,113 @@ def get_gmpi_latest():
 # ═══════════════════════════════════════════════════════════════
 # PART 4 — DOWNLOAD ENDPOINT
 # ═══════════════════════════════════════════════════════════════
-@app.route('/api/download')
-@limiter.limit("10 per minute")
-def download_data():
-    token = request.args.get('token', '').strip()
-    if not token:
-        return jsonify({'error': 'Token required'}), 400
-
-    # Look up token in Neon (persists across redeploys)
+def _lookup_token(token):
+    """Fetch token record from Neon. Returns (record, error_response)."""
     try:
         conn = _get_token_conn()
         with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
             cur.execute("SELECT * FROM download_tokens WHERE token = %s", (token,))
             record = cur.fetchone()
         conn.close()
+        return record, None
     except Exception as e:
         print(f"[DOWNLOAD] Token DB lookup failed: {e}")
-        return jsonify({'error': 'Service error — please try again shortly.'}), 503
+        return None, (jsonify({'error': 'Service error — please try again shortly.'}), 503)
 
+def _validate_token(record):
+    """Check token is valid, not expired, not used. Returns error string or None."""
     if not record:
-        return jsonify({'error': 'Invalid or expired token. Please purchase again.'}), 404
-
+        return 'Invalid or expired token. Please contact support.'
     now = datetime.now(timezone.utc)
     if now > record['expires_at']:
-        return jsonify({'error': 'This download link has expired (24hr limit). Please purchase again.'}), 410
-
+        return 'This download link has expired (valid for 24 hrs). Please purchase again.'
     if record['used']:
-        return jsonify({'error': 'This download link has already been used (one-time only).'}), 410
+        return 'This link has already been used. Check your email for your file, or contact support.'
+    return None
+
+
+@app.route('/api/download', methods=['GET'])
+@limiter.limit("30 per minute")
+def download_landing():
+    """
+    GET /api/download?token=...
+    Returns an HTML landing page with a single Download button.
+    Email pre-fetchers (Gmail, Outlook etc.) hit this URL automatically to
+    scan for malware — they read HTML but won't POST a form, so the token
+    stays valid until the real user clicks.
+    """
+    token = request.args.get('token', '').strip()
+    if not token:
+        return "<h2>Invalid link — no token provided.</h2>", 400
+
+    record, err = _lookup_token(token)
+    if err:
+        return err
+
+    error = _validate_token(record)
+    sector_label = SECTOR_LABELS.get(record['sector'] if record else '', 'Dataset') if record else 'Dataset'
+
+    if error:
+        html = f"""<!DOCTYPE html><html><head><meta charset="utf-8">
+        <title>Download — SG Datalytics</title>
+        <style>body{{font-family:Arial,sans-serif;max-width:560px;margin:80px auto;padding:0 24px;color:#1a1a2e;}}
+        h2{{color:#c0392b;}}.logo{{font-weight:700;font-size:1.2rem;color:#1a1a2e;margin-bottom:2rem;display:block;}}
+        </style></head><body>
+        <span class="logo">SG Datalytics</span>
+        <h2>Link unavailable</h2>
+        <p>{error}</p>
+        <p>Need help? Reply to your purchase confirmation email.</p>
+        </body></html>"""
+        return html, 410
+
+    html = f"""<!DOCTYPE html><html><head><meta charset="utf-8">
+    <title>Download — SG Datalytics</title>
+    <style>
+      *{{box-sizing:border-box;margin:0;padding:0;}}
+      body{{font-family:Arial,sans-serif;background:#f7f8fc;min-height:100vh;display:flex;align-items:center;justify-content:center;}}
+      .card{{background:#fff;border-radius:12px;padding:48px 40px;max-width:480px;width:100%;box-shadow:0 2px 16px rgba(0,0,0,0.08);text-align:center;}}
+      .logo{{font-weight:700;font-size:1.1rem;color:#1a1a2e;margin-bottom:2rem;display:block;letter-spacing:.5px;}}
+      .icon{{font-size:3rem;margin-bottom:1rem;}}
+      h1{{font-size:1.4rem;font-weight:700;color:#1a1a2e;margin-bottom:.5rem;}}
+      p{{color:#555;font-size:.95rem;line-height:1.6;margin-bottom:1.5rem;}}
+      form{{margin-top:1rem;}}
+      button{{background:#1a1a2e;color:#fff;border:none;padding:14px 32px;border-radius:8px;font-size:1rem;font-weight:600;cursor:pointer;width:100%;transition:background .2s;}}
+      button:hover{{background:#2d2d5e;}}
+      .note{{font-size:.8rem;color:#999;margin-top:1rem;}}
+    </style></head><body>
+    <div class="card">
+      <span class="logo">SG Datalytics</span>
+      <div class="icon">📦</div>
+      <h1>Your data is ready</h1>
+      <p><strong>{sector_label}</strong><br>Click the button below to download your CSV file. This link is valid for 24 hours.</p>
+      <form method="POST" action="/api/download?token={token}">
+        <button type="submit">⬇ Download your file</button>
+      </form>
+      <p class="note">One-time download · CSV format · Secure link</p>
+    </div>
+    </body></html>"""
+    return html
+
+
+@app.route('/api/download', methods=['POST'])
+@limiter.limit("10 per minute")
+def download_data():
+    """
+    POST /api/download?token=...
+    Triggered by the user clicking the Download button on the landing page.
+    Marks token as used and streams the CSV file.
+    """
+    token = request.args.get('token', '').strip()
+    if not token:
+        return jsonify({'error': 'Token required'}), 400
+
+    record, err = _lookup_token(token)
+    if err:
+        return err
+
+    error = _validate_token(record)
+    if error:
+        return f"<h2>{error}</h2>", 410
 
     # Mark as used in Neon immediately before streaming
     try:
@@ -1035,6 +1115,7 @@ def download_data():
 
     sector   = record['sector']
     email    = record['email']
+    now      = datetime.now(timezone.utc)
     date_str = now.strftime('%Y-%m-%d')
     filename = f"sgdatalytics_{sector}_{date_str}.csv"
     queries  = SECTOR_QUERIES.get(sector, [])
