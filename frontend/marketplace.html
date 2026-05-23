@@ -956,6 +956,42 @@ footer{
   section.pad{padding:64px 5vw;}
   .hero{padding:48px 5vw;}
 }
+
+/* ── LIVE FEED SECTION ── */
+.live-feed-section{background:#e8edf5;border-top:4px solid var(--teal);padding:56px 5vw;}
+.live-feed-inner{max-width:1160px;margin:0 auto;}
+.live-feed-hd{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:12px;}
+.live-feed-section .sec-label{color:var(--teal);}
+.live-feed-counter{display:flex;align-items:center;gap:10px;font-family:var(--font-m);font-size:11px;color:var(--grey3);}
+.live-feed-counter-num{font-family:var(--font-d);font-size:1.6rem;color:var(--teal);letter-spacing:0.06em;line-height:1;}
+.live-pulse{width:8px;height:8px;border-radius:50%;background:var(--teal);animation:pulse-ring 1.8s infinite;flex-shrink:0;}
+@keyframes pulse-ring{0%{box-shadow:0 0 0 0 rgba(0,149,122,0.5);}70%{box-shadow:0 0 0 8px rgba(0,149,122,0);}100%{box-shadow:0 0 0 0 rgba(0,149,122,0);}}
+.feed-sector-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:28px;}
+.feed-tab{font-family:var(--font-m);font-size:11px;padding:5px 14px;border-radius:100px;cursor:pointer;border:1px solid var(--border2);color:var(--grey2);background:#ffffff;transition:all var(--ease);}
+.feed-tab:hover,.feed-tab.on{background:var(--teal-dim);border-color:var(--border-teal);color:var(--teal);}
+.feed-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.feed-card{background:#0f1e37;border:1px solid rgba(255,255,255,0.09);border-top:3px solid transparent;border-radius:var(--r-lg);padding:18px 16px;display:flex;flex-direction:column;gap:10px;transition:border-color var(--ease),transform var(--ease),box-shadow var(--ease);animation:fadeSlideIn 0.4s ease both;box-shadow:0 2px 16px rgba(0,0,0,0.18);text-decoration:none;cursor:default;color:inherit;}
+.feed-card:hover{border-top-color:var(--teal);transform:translateY(-3px);box-shadow:0 8px 32px rgba(0,0,0,0.28);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+.feed-card-top{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.feed-category{font-family:var(--font-m);font-size:10px;font-weight:600;color:var(--teal);letter-spacing:0.06em;text-transform:uppercase;}
+.feed-date{font-family:var(--font-m);font-size:10px;color:rgba(255,255,255,0.35);}
+.feed-title{font-size:13px;font-weight:600;color:#ffffff;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.feed-price{font-family:var(--font-d);font-size:1.6rem;color:var(--teal);letter-spacing:0.04em;line-height:1;}
+.feed-price.no-price{color:rgba(255,255,255,0.3);font-size:1rem;font-family:var(--font-m);}
+.feed-meta{display:flex;gap:10px;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,0.08);padding-top:10px;}
+.feed-meta-item{font-family:var(--font-m);font-size:10px;color:rgba(255,255,255,0.45);display:flex;align-items:center;gap:4px;}
+.feed-empty{grid-column:1/-1;text-align:center;padding:48px;color:var(--grey3);font-family:var(--font-m);font-size:12px;}
+.feed-loading{grid-column:1/-1;display:flex;align-items:center;justify-content:center;gap:10px;padding:48px;font-family:var(--font-m);font-size:12px;color:var(--grey3);}
+.feed-load-more{text-align:center;margin-top:28px;}
+.feed-stats-bar{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.09);border-radius:var(--r-lg);overflow:hidden;margin-bottom:18px;box-shadow:0 2px 16px rgba(0,0,0,0.18);}
+.feed-stat{background:#0f1e37;padding:12px 14px;text-align:center;}
+.feed-stat-num{font-family:var(--font-d);font-size:1.6rem;color:var(--teal);letter-spacing:0.06em;line-height:1;margin-bottom:4px;}
+.feed-stat-label{font-family:var(--font-m);font-size:9.5px;color:rgba(255,255,255,0.38);text-transform:uppercase;letter-spacing:0.1em;}
+@keyframes skel-pulse{0%,100%{opacity:0.45;}50%{opacity:0.9;}}
+.stat-skel{display:inline-block;width:56px;height:1em;border-radius:4px;background:rgba(0,149,122,0.35);animation:skel-pulse 1.4s ease-in-out infinite;vertical-align:middle;}
+@media(max-width:900px){.feed-grid{grid-template-columns:1fr 1fr;}.feed-stats-bar{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:600px){.feed-grid{grid-template-columns:1fr;}.feed-stats-bar{grid-template-columns:repeat(2,1fr);}}
 </style>
 <script>
   // ── SG Datalytics API Configuration ──────────────────────────
@@ -1122,6 +1158,58 @@ footer{
   </div>
 </section>
 
+<!-- ── LIVE MARKET PRICES FEED ── -->
+<div class="live-feed-section">
+  <div class="live-feed-inner">
+
+    <div class="live-feed-hd">
+      <div>
+        <div class="sec-label" style="display:flex;align-items:center;gap:8px;">
+          <div class="live-pulse"></div>
+          Live data feed — updated weekly
+        </div>
+        <h2 class="sec-title" style="font-size:clamp(1.6rem,3vw,2.4rem);margin-bottom:6px;">Latest Ghana Market Prices</h2>
+        <p style="font-size:0.9rem;color:var(--grey2);font-weight:300;">Real listings collected from across Ghana by our automated pipeline.</p>
+      </div>
+      <div class="live-feed-counter">
+        <div>
+          <div class="live-feed-counter-num" id="feed-total"><span class="stat-skel"></span></div>
+          <div style="font-family:var(--font-m);font-size:9.5px;color:var(--grey3);text-transform:uppercase;letter-spacing:0.08em;margin-top:2px;">Total records</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats bar -->
+    <div class="feed-stats-bar">
+      <div class="feed-stat"><div class="feed-stat-num" id="fst-market"><span class="stat-skel"></span></div><div class="feed-stat-label">Market listings</div></div>
+      <div class="feed-stat"><div class="feed-stat-num" id="fst-property"><span class="stat-skel"></span></div><div class="feed-stat-label">Property</div></div>
+      <div class="feed-stat"><div class="feed-stat-num" id="fst-accommodation"><span class="stat-skel"></span></div><div class="feed-stat-label">Accommodation</div></div>
+      <div class="feed-stat"><div class="feed-stat-num" id="fst-economic"><span class="stat-skel"></span></div><div class="feed-stat-label">Economic</div></div>
+      <div class="feed-stat"><div class="feed-stat-num" id="fst-commodities"><span class="stat-skel"></span></div><div class="feed-stat-label">Commodities</div></div>
+      <div class="feed-stat"><div class="feed-stat-num" id="fst-locations"><span class="stat-skel"></span></div><div class="feed-stat-label">Locations</div></div>
+    </div>
+
+    <!-- Sector tabs -->
+    <div class="feed-sector-tabs">
+      <div class="feed-tab on" data-feed="market_prices">🛒 Market Prices</div>
+      <div class="feed-tab" data-feed="property">🏠 Property</div>
+      <div class="feed-tab" data-feed="accommodation">🏨 Accommodation</div>
+      <div class="feed-tab" data-feed="economic">📈 Economic</div>
+      <div class="feed-tab" data-feed="commodities">⛽ Commodities</div>
+    </div>
+
+    <!-- Feed grid -->
+    <div class="feed-grid" id="feed-grid">
+      <div class="feed-loading"><div class="live-pulse"></div>Loading latest data…</div>
+    </div>
+
+    <div class="feed-load-more">
+      <a href="products.html" class="btn btn-teal">Get the data →</a>
+    </div>
+
+  </div>
+</div>
+
 <!-- KEY STATS -->
 <div class="stat-ticker">
   <div class="stat-ticker-inner">
@@ -1133,60 +1221,6 @@ footer{
     <div class="stat-tile rev d1"><div class="stat-tile-num">100%</div><div class="stat-tile-label">Ghana sourced</div></div>
   </div>
 </div>
-
-<!-- PRICING -->
-<section class="pricing pad" id="pricing">
-  <div class="inner">
-    <div class="rev" style="text-align:center;margin-bottom:48px;">
-      <div class="sec-label" style="justify-content:center;">One-time purchase · Instant download</div>
-      <h2 class="sec-title">Get the data you need</h2>
-      <p class="sec-sub" style="margin:0 auto;text-align:center;">No subscriptions. Buy once, download instantly via Gumroad. Re-download anytime from your purchase link.</p>
-    </div>
-    <div class="pricing-grid">
-
-      <!-- PRODUCT 1 -->
-      <div class="price-card rev">
-        <div class="price-tier">SGMPI Market Prices</div>
-        <div class="price-amount"><sup>$</sup>15</div>
-        <div class="price-period">one-time purchase · instant CSV download</div>
-        <div class="price-divider"></div>
-        <ul class="price-features">
-          <li>8 CSV files — real Ghana market prices</li>
-          <li>Mobile Phones, Vehicles, Electronics</li>
-          <li>Home &amp; Furniture, Food &amp; Agriculture</li>
-          <li>Property, Fashion, Commercial Equipment</li>
-          <li>15,000+ enriched listings with price, condition &amp; region</li>
-          <li>Updated monthly — re-download free</li>
-          <li class="no">BoG / GSS / World Bank data</li>
-        </ul>
-        <a href="https://datalyze.gumroad.com/l/mcrmty" target="_blank" rel="noopener" class="btn btn-navy price-cta">Buy on Gumroad →</a>
-      </div>
-
-      <!-- PRODUCT 2 -->
-      <div class="price-card featured rev d1">
-        <div class="price-pop">Best value</div>
-        <div class="price-tier">Ghana Data Full Bundle</div>
-        <div class="price-amount"><sup>$</sup>29</div>
-        <div class="price-period">one-time purchase · all 31 datasets in one zip</div>
-        <div class="price-divider"></div>
-        <ul class="price-features">
-          <li>Everything in SGMPI (8 files)</li>
-          <li>Bank of Ghana — FX, CPI, GDP, Indicators</li>
-          <li>GSS StatsBank — 13 datasets (back to 1971)</li>
-          <li>World Bank Ghana — 6 annual datasets</li>
-          <li>31 clean CSVs in a single zip archive</li>
-          <li>Consistent headers &amp; date formats</li>
-          <li>Updated monthly — re-download free</li>
-        </ul>
-        <a href="https://datalyze.gumroad.com/l/fjxiy" target="_blank" rel="noopener" class="btn btn-teal price-cta">Buy on Gumroad →</a>
-      </div>
-
-    </div>
-    <div style="text-align:center;margin-top:28px;">
-      <p style="font-family:var(--font-m);font-size:11px;color:var(--grey3);">Prices in USD · Secure checkout via Gumroad · Academic discount available — contact us</p>
-    </div>
-  </div>
-</section>
 
 <!-- HOW IT WORKS -->
 <section class="how pad" id="how">
@@ -2252,6 +2286,129 @@ function prefillContact(datasetName){
     })
     .catch(() => {});
 
+})();
+</script>
+
+<script>
+/* ── Live Market Prices Feed ── */
+(function(){
+  const API = 'https://sgdatalytics-production.up.railway.app';
+
+  function fmt(n) { return n == null ? '—' : Number(n).toLocaleString(); }
+  function fmtDate(d) { if (!d) return ''; try { return new Date(d).toLocaleDateString('en-GB',{day:'numeric',month:'short'}); } catch(e){ return d; } }
+  function fmtPrice(p) { return 'GHS ' + Number(p).toLocaleString('en-GH',{minimumFractionDigits:0,maximumFractionDigits:0}); }
+
+  // Load stats bar
+  fetch(API + '/api/stats')
+    .then(r => r.ok ? r.json() : Promise.reject())
+    .then(d => {
+      const s = d.sectors || {};
+      document.getElementById('feed-total').textContent        = fmt(d.total_records);
+      document.getElementById('fst-market').textContent        = fmt(s.market_prices ? s.market_prices.records : 0);
+      document.getElementById('fst-property').textContent      = fmt(s.property ? s.property.records : 0);
+      document.getElementById('fst-accommodation').textContent = fmt(((s.accommodation ? s.accommodation.hotel_records : 0)||0)+((s.accommodation ? s.accommodation.airbnb_records : 0)||0));
+      document.getElementById('fst-economic').textContent      = fmt(s.economic ? s.economic.records : 0);
+      document.getElementById('fst-commodities').textContent   = fmt(((s.commodities ? s.commodities.commodity_records : 0)||0)+((s.commodities ? s.commodities.fuel_records : 0)||0));
+      document.getElementById('fst-locations').textContent     = fmt(s.market_prices ? s.market_prices.locations : 0);
+    }).catch(() => {});
+
+  let activeFeed = 'market_prices';
+  const _daysSinceEpoch = Math.floor(Date.now() / 86400000);
+  const _dailyOffset    = (_daysSinceEpoch * 9) % 15000;
+
+  function loadFeed(sector) {
+    const grid = document.getElementById('feed-grid');
+    grid.innerHTML = '<div class="feed-loading"><div class="live-pulse"></div>Loading latest data…</div>';
+
+    const endpoints = {
+      market_prices: API + '/api/market-prices?limit=9&offset=' + _dailyOffset,
+      property:      API + '/api/property?limit=9',
+      economic:      API + '/api/economic?limit=9',
+      commodities:   API + '/api/commodities?limit=9',
+    };
+
+    function renderGrid(data) {
+      if (!data || !data.length) { grid.innerHTML = '<div class="feed-empty">No data available yet for this sector.</div>'; return; }
+      grid.innerHTML = '';
+      data.forEach((item, i) => {
+        const card = document.createElement('div');
+        card.className = 'feed-card';
+        card.style.animationDelay = (i * 0.05) + 's';
+        card.innerHTML = renderCard(sector, item);
+        grid.appendChild(card);
+      });
+    }
+
+    if (sector === 'accommodation') {
+      Promise.all([
+        fetch(API + '/api/accommodation?type=hotel&limit=5').then(r => r.ok ? r.json() : []).catch(() => []),
+        fetch(API + '/api/accommodation?type=airbnb&limit=4').then(r => r.ok ? r.json() : []).catch(() => [])
+      ]).then(([hotels, airbnbs]) => {
+        const combined = [];
+        const max = Math.max(hotels.length, airbnbs.length);
+        for (let i = 0; i < max; i++) { if (hotels[i]) combined.push(hotels[i]); if (airbnbs[i]) combined.push(airbnbs[i]); }
+        renderGrid(combined.slice(0, 9));
+      }).catch(() => { grid.innerHTML = '<div class="feed-empty">Could not load accommodation data.</div>'; });
+      return;
+    }
+
+    fetch(endpoints[sector])
+      .then(r => r.ok ? r.json() : Promise.reject())
+      .then(data => renderGrid(data))
+      .catch(() => { grid.innerHTML = '<div class="feed-empty">Could not load data — please try again.</div>'; });
+  }
+
+  function renderCard(sector, item) {
+    if (sector === 'market_prices') {
+      return `<div class="feed-card-top"><div class="feed-category">${item.product_category || 'General'}</div><div class="feed-date">${fmtDate(item.collected_date)}</div></div>
+        <div class="feed-title">${item.normalized_name || item.title || '—'}</div>
+        <div class="feed-price ${item.price_ghs ? '' : 'no-price'}">${item.price_ghs ? fmtPrice(item.price_ghs) : 'Price on request'}</div>
+        <div class="feed-meta">${item.location ? `<div class="feed-meta-item">📍 ${item.location}</div>` : ''}${item.condition ? `<div class="feed-meta-item">🏷️ ${item.condition}</div>` : ''}${item.source ? `<div class="feed-meta-item">🔗 ${item.source}</div>` : ''}</div>`;
+    }
+    if (sector === 'property') {
+      return `<div class="feed-card-top"><div class="feed-category">Property</div><div class="feed-date">${fmtDate(item.collected_date)}</div></div>
+        <div class="feed-title">${item.title || item.property_type || '—'}</div>
+        <div class="feed-price ${item.price_ghs ? '' : 'no-price'}">${item.price_ghs ? fmtPrice(item.price_ghs) : 'Price on request'}</div>
+        <div class="feed-meta">${item.location ? `<div class="feed-meta-item">📍 ${item.location}</div>` : ''}${item.bedrooms ? `<div class="feed-meta-item">🛏️ ${item.bedrooms} beds</div>` : ''}</div>`;
+    }
+    if (sector === 'accommodation') {
+      const platform = (item.collection_method || item.source_platform || '').toLowerCase();
+      const isAirbnb = platform.includes('airbnb') || !!(item.room_type || item.listing_name);
+      const title    = item.listing_name || item.hotel_name || item.name || item.title || '—';
+      const priceUsd = item.price_per_night_usd || item.price_usd;
+      const priceGhs = item.price_ghs || item.price_per_night_ghs;
+      const priceLabel = priceGhs ? fmtPrice(priceGhs) + '/night' : (priceUsd ? 'US$' + Number(priceUsd).toFixed(0) + '/night' : 'Price on request');
+      const hasPrice = !!(priceGhs || priceUsd);
+      return `<div class="feed-card-top"><div class="feed-category">${isAirbnb ? 'Airbnb' : 'Hotel'}</div><div class="feed-date">${fmtDate(item.collected_date)}</div></div>
+        <div class="feed-title">${title}</div>
+        <div class="feed-price ${hasPrice ? '' : 'no-price'}">${priceLabel}</div>
+        <div class="feed-meta">${item.city||item.location ? `<div class="feed-meta-item">📍 ${item.city||item.location}</div>` : ''}${item.star_rating ? `<div class="feed-meta-item">⭐ ${item.star_rating} stars</div>` : ''}</div>`;
+    }
+    if (sector === 'economic') {
+      return `<div class="feed-card-top"><div class="feed-category">${item.sector || 'Economic'}</div><div class="feed-date">${fmtDate(item.collected_date)}</div></div>
+        <div class="feed-title">${item.indicator_name || '—'}</div>
+        <div class="feed-price">${item.value ? Number(item.value).toLocaleString() + (item.unit ? ' ' + item.unit : '') : '—'}</div>
+        <div class="feed-meta">${item.source ? `<div class="feed-meta-item">🔗 ${item.source}</div>` : ''}${item.year ? `<div class="feed-meta-item">📅 ${item.year}</div>` : ''}</div>`;
+    }
+    if (sector === 'commodities') {
+      return `<div class="feed-card-top"><div class="feed-category">Commodity</div><div class="feed-date">${fmtDate(item.collected_date)}</div></div>
+        <div class="feed-title">${item.commodity_name || item.name || '—'}</div>
+        <div class="feed-price ${item.price_ghs ? '' : 'no-price'}">${item.price_ghs ? fmtPrice(item.price_ghs) : (item.price_usd ? '$' + item.price_usd : '—')}</div>
+        <div class="feed-meta">${item.unit ? `<div class="feed-meta-item">📦 per ${item.unit}</div>` : ''}${item.source ? `<div class="feed-meta-item">🔗 ${item.source}</div>` : ''}</div>`;
+    }
+    return '<div class="feed-title">—</div>';
+  }
+
+  document.querySelectorAll('.feed-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.feed-tab').forEach(t => t.classList.remove('on'));
+      tab.classList.add('on');
+      activeFeed = tab.dataset.feed;
+      loadFeed(activeFeed);
+    });
+  });
+
+  loadFeed('market_prices');
 })();
 </script>
 
