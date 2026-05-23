@@ -62,15 +62,14 @@ _TOKEN_STORE = {}
 # ── SECTOR CONFIG ────────────────────────────────────────────
 SECTOR_LABELS = {
     'market_prices': 'Market Prices',
-    'property':      'Property',
-    'accommodation': 'Accommodation',
-    'economic':      'Economic Indicators',
+    'accommodation': 'Real Estate & Accommodation',
+    'economic':      'Economic & Financial Data',
     'commodities':   'Commodities & Fuel',
-    'financials':    'Financial Markets',
     'bundle':        'Ghana Complete Data Bundle',
 }
 
-# Sectors included in the bundle purchase (4 downloadable sectors)
+# Sectors included in the bundle (accommodation now includes property;
+# economic now includes financials — so 4 links covers all 6 Neon tables)
 BUNDLE_SECTORS = ['market_prices', 'accommodation', 'economic', 'commodities']
 
 # Exact product key → sector mapping (used with Paystack metadata.product)
@@ -81,17 +80,27 @@ PRODUCT_SECTOR_MAP = {
     'bundle':        'bundle',
 }
 
+# Each entry: (db_key, sql, table_label)
+# table_label is written as a comment header row so multi-schema CSVs stay readable
 SECTOR_QUERIES = {
-    'market_prices':  [('market_prices', 'SELECT * FROM market_prices ORDER BY collected_date DESC')],
-    'property':       [('property',      'SELECT * FROM property_prices ORDER BY collected_date DESC')],
-    'accommodation':  [('accommodation', 'SELECT * FROM hotel_prices ORDER BY collected_date DESC'),
-                       ('accommodation', 'SELECT * FROM airbnb_prices ORDER BY collected_date DESC')],
-    'economic':       [('economic',      'SELECT * FROM economic_indicators ORDER BY collected_date DESC'),
-                       ('economic',      'SELECT * FROM exchange_rates ORDER BY collected_date DESC')],
-    'commodities':    [('commodities',   'SELECT * FROM commodity_prices ORDER BY collected_date DESC'),
-                       ('commodities',   'SELECT * FROM fuel_prices ORDER BY collected_date DESC')],
-    'financials':     [('financials',    'SELECT * FROM gse_indices ORDER BY collected_date DESC'),
-                       ('financials',    'SELECT * FROM stock_prices ORDER BY collected_date DESC')],
+    'market_prices': [
+        ('market_prices', 'SELECT * FROM market_prices ORDER BY collected_date DESC', 'market_prices'),
+    ],
+    'accommodation': [
+        ('accommodation', 'SELECT * FROM hotel_prices   ORDER BY collected_date DESC', 'hotel_prices'),
+        ('accommodation', 'SELECT * FROM airbnb_prices  ORDER BY collected_date DESC', 'airbnb_prices'),
+        ('property',      'SELECT * FROM property_prices ORDER BY collected_date DESC', 'property_prices'),
+    ],
+    'economic': [
+        ('economic',   'SELECT * FROM economic_indicators ORDER BY collected_date DESC', 'economic_indicators'),
+        ('economic',   'SELECT * FROM exchange_rates      ORDER BY collected_date DESC', 'exchange_rates'),
+        ('financials', 'SELECT * FROM gse_indices         ORDER BY collected_date DESC', 'gse_indices'),
+        ('financials', 'SELECT * FROM stock_prices        ORDER BY collected_date DESC', 'stock_prices'),
+    ],
+    'commodities': [
+        ('commodities', 'SELECT * FROM commodity_prices ORDER BY collected_date DESC', 'commodity_prices'),
+        ('commodities', 'SELECT * FROM fuel_prices      ORDER BY collected_date DESC', 'fuel_prices'),
+    ],
 }
 
 # Maps Paystack plan name keywords → sector codes
@@ -597,11 +606,11 @@ def download_data():
     queries  = SECTOR_QUERIES.get(sector, [])
 
     def generate_csv():
-        output  = io.StringIO()
-        writer  = None
-        headers_written = False
+        output      = io.StringIO()
+        first_table = True
 
-        for db_key, sql in queries:
+        for entry in queries:
+            db_key, sql, table_label = entry if len(entry) == 3 else (*entry, '')
             try:
                 rows = query(db_key, sql)
             except Exception as e:
@@ -611,13 +620,25 @@ def download_data():
             if not rows:
                 continue
 
-            if not headers_written:
-                writer = csv.DictWriter(output, fieldnames=rows[0].keys(), lineterminator='\n')
-                writer.writeheader()
-                headers_written = True
-                output.seek(0)
-                yield output.read()
-                output.seek(0); output.truncate(0)
+            # Separator comment between tables so analysts know where one ends
+            if not first_table:
+                output.write(f"\n# === {table_label} ===\n")
+            else:
+                if table_label:
+                    output.write(f"# === {table_label} ===\n")
+                first_table = False
+
+            # Fresh writer per table — each table gets its own header row
+            writer = csv.DictWriter(
+                output,
+                fieldnames=rows[0].keys(),
+                lineterminator='\n',
+                extrasaction='ignore',
+            )
+            writer.writeheader()
+            output.seek(0)
+            yield output.read()
+            output.seek(0); output.truncate(0)
 
             for row in rows:
                 writer.writerow({k: (str(v) if v is not None else '') for k, v in row.items()})
