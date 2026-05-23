@@ -179,11 +179,10 @@ SECTOR_QUERIES = {
             ROUND(AVG(price_per_night_usd)::numeric, 2)    AS avg_price_per_night_usd,
             MIN(price_per_night_usd)                        AS min_price_per_night_usd,
             MAX(price_per_night_usd)                        AS max_price_per_night_usd,
-            ROUND(AVG(review_score)::numeric, 1)            AS avg_review_score,
-            source_platform
+            ROUND(AVG(review_score)::numeric, 1)            AS avg_review_score
         FROM hotel_prices
         WHERE price_per_night_usd > 0
-        GROUP BY week_number, year, city, star_rating, source_platform
+        GROUP BY week_number, year, city, star_rating
         ORDER BY year DESC, week_number DESC, city, star_rating
         """, 'hotel_prices_aggregated'),
 
