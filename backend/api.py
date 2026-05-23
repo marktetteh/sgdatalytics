@@ -696,14 +696,15 @@ def market_latest():
 
 _GMPI_CTE = """
 WITH base_medians AS (
-  -- Use the all-time median per category as the baseline (= 100).
-  -- This is more stable than a single base week because it draws on
-  -- every listing ever collected, not just the first week.
-  -- Require at least 20 total listings to include a category.
+  -- All-time median per category = baseline (GMPI 100).
+  -- Excludes Real Estate and Vehicles (capital goods, not consumer prices).
+  -- Price cap of GHS 50,000 removes outlier listings that distort medians.
+  -- Requires at least 20 total listings for a category to be included.
   SELECT product_category,
     PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY price_ghs) AS base_median
   FROM market_prices
-  WHERE price_ghs > 0
+  WHERE price_ghs BETWEEN 1 AND 50000
+    AND product_category NOT IN ('Real Estate', 'Vehicles')
   GROUP BY product_category
   HAVING COUNT(*) >= 20
 ),
@@ -712,7 +713,8 @@ weekly_medians AS (
     PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY price_ghs) AS wk_median,
     COUNT(*) AS n
   FROM market_prices
-  WHERE price_ghs > 0
+  WHERE price_ghs BETWEEN 1 AND 50000
+    AND product_category NOT IN ('Real Estate', 'Vehicles')
   GROUP BY week_number, year, product_category
   HAVING COUNT(*) >= 3
 ),
