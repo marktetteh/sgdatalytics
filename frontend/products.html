@@ -300,12 +300,13 @@ footer a:hover{text-decoration:underline;}
     <!-- Product 3 -->
     <div class="product-card">
       <div class="product-icon" style="background:rgba(124,58,237,0.10);">📈</div>
-      <div class="product-name">Macro & Commodities</div>
-      <p class="product-desc">Bank of Ghana macro indicators, FX rates, sector-level economic data, commodity market prices and weekly national fuel prices — structured and ready for analysis.</p>
+      <div class="product-name">Economic, Financial & Agricultural Data</div>
+      <p class="product-desc">Bank of Ghana macro indicators, FX rates, GSE stock indices, agricultural commodity prices (maize, rice, palm oil, vegetables and more) and weekly national fuel prices — all in one dataset.</p>
       <div class="product-views">
         <div class="product-view-label">Datasets include</div>
         <span class="product-view-tag">economic_indicators</span>
         <span class="product-view-tag">exchange_rates</span>
+        <span class="product-view-tag">gse_indices</span>
         <span class="product-view-tag">commodity_prices</span>
         <span class="product-view-tag">fuel_prices</span>
       </div>
@@ -323,12 +324,12 @@ footer a:hover{text-decoration:underline;}
     <div class="bundle-left">
       <div class="bundle-tag">Best Value</div>
       <div class="bundle-name">Ghana Complete Data Bundle</div>
-      <p class="bundle-desc">All datasets in one purchase. Consumer prices, real estate, accommodation, macro indicators, FX rates, commodities and fuel — everything SG Datalytics collects, delivered to your inbox instantly.</p>
+      <p class="bundle-desc">All datasets in one purchase. Consumer prices, real estate, hotel & Airbnb accommodation, property listings, macro indicators, FX rates, GSE financials, agricultural commodity prices and fuel — everything SG Datalytics collects, delivered to your inbox instantly.</p>
       <div class="bundle-includes">
         <span class="bundle-pill">SGMPI Consumer Prices</span>
         <span class="bundle-pill">Real Estate & Accommodation</span>
-        <span class="bundle-pill">Macro & Commodities</span>
-        <span class="bundle-pill">6 datasets</span>
+        <span class="bundle-pill">Economic, Financial & Agricultural</span>
+        <span class="bundle-pill">8 datasets · 3 files</span>
         <span class="bundle-pill">Instant delivery</span>
       </div>
     </div>
@@ -392,81 +393,74 @@ footer a:hover{text-decoration:underline;}
       </div>
       <div class="feature">
         <div class="feature-icon">📊</div>
-        <div class="feature-title">Excel, Tableau & Power BI</div>
-        <p class="feature-body">Open directly in Excel or import into Tableau and Power BI. No database connection needed — just open the file and start analysing.</p>
+        <div class="feature-title">Excel & BI tools</div>
+        <p class="feature-body">Import directly into Excel, Google Sheets, Tableau or Power BI. No transformation needed — columns are named and typed for immediate use.</p>
       </div>
       <div class="feature">
-        <div class="feature-icon">🤖</div>
-        <div class="feature-title">AI-enriched quality</div>
-        <p class="feature-body">Market price listings are enriched with brand, model, condition (New/Used) and normalized product names via Gemini AI — structured and analysis-ready.</p>
+        <div class="feature-icon">🗂️</div>
+        <div class="feature-title">Structured & clean</div>
+        <p class="feature-body">Every dataset is validated, deduplicated and AI-enriched before delivery. Consistent column names, no merged cells, no formatting noise.</p>
       </div>
       <div class="feature">
-        <div class="feature-icon">📧</div>
-        <div class="feature-title">Instant email delivery</div>
-        <p class="feature-body">Your secure download link arrives within seconds of payment confirmation. No manual processing, no waiting for a human to respond.</p>
+        <div class="feature-icon">📅</div>
+        <div class="feature-title">Date & week indexed</div>
+        <p class="feature-body">Every row carries a <code>scraped_date</code>, <code>week_number</code> and <code>year</code> column so you can track price changes over time with a simple group-by.</p>
       </div>
       <div class="feature">
-        <div class="feature-icon">🔐</div>
-        <div class="feature-title">One-time secure links</div>
-        <p class="feature-body">Each download link is unique, expires after 24 hours, and works only once — keeping your purchase secure and preventing unauthorised redistribution.</p>
+        <div class="feature-icon">🔍</div>
+        <div class="feature-title">AI-enriched fields</div>
+        <p class="feature-body">Market price rows include brand, model, condition and a normalised product name — extracted from raw listing titles using Gemini AI, ready for like-for-like comparison.</p>
       </div>
     </div>
   </div>
 
   <!-- FAQ -->
-  <div class="faq section">
+  <div class="faq">
     <div class="section-label">Common questions</div>
     <h2 class="section-title">FAQ</h2>
     <div class="faq-list">
-
       <div class="faq-item">
         <button class="faq-q" onclick="toggleFaq(this)">
-          What format is the data delivered in?
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-        </button>
-        <div class="faq-a">All datasets are delivered as CSV files — the universal format that works in Python (<code>pandas.read_csv()</code>), R, Excel, Google Sheets, Tableau, Power BI and any data tool. The file is sent as a secure download link to your email immediately after payment.</div>
-      </div>
-
-      <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">
-          How quickly do I receive my data after paying?
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          How quickly will I receive my data?
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
         </button>
         <div class="faq-a">Instantly. As soon as Paystack confirms your payment, our system automatically generates your secure download link and emails it to you — typically within 5–10 seconds. Check your inbox (and spam folder) right after paying.</div>
       </div>
-
       <div class="faq-item">
         <button class="faq-q" onclick="toggleFaq(this)">
-          How often is the data updated?
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          What format is the data in?
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
         </button>
-        <div class="faq-a">Market prices, property listings, accommodation rates and fuel prices are collected weekly, typically on Mondays. Economic indicators are updated as new data is published by the Bank of Ghana and Ghana Statistical Service. Each purchase gives you the latest available snapshot at the time of purchase.</div>
+        <div class="faq-a">All datasets are delivered as CSV files. They open in Excel, Google Sheets, R, Python (pandas), Tableau, Power BI and any other standard data tool. Column headers are clean and consistent across all tables.</div>
       </div>
-
       <div class="faq-item">
         <button class="faq-q" onclick="toggleFaq(this)">
-          Can I use the data commercially?
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          How current is the data?
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
         </button>
-        <div class="faq-a">Yes. Your purchase grants you a licence to use the data for internal research, analytics, dashboards and commercial applications. You may not resell or redistribute the raw data to third parties. See our <a href="terms.html">Terms of Service</a> for full details.</div>
+        <div class="faq-a">Data is collected weekly by our automated pipeline. Each purchase delivers the latest available snapshot. The <code>scraped_date</code> and <code>week_number</code> columns in every row show exactly when the data was collected.</div>
       </div>
-
       <div class="faq-item">
         <button class="faq-q" onclick="toggleFaq(this)">
-          My download link expired. What do I do?
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          Can I use this for commercial projects?
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
         </button>
-        <div class="faq-a">Download links expire after 24 hours and work only once. If your link expired before you could download, email us at <strong>info@sgdatalytics.org</strong> with your payment reference and we'll issue a new link promptly.</div>
+        <div class="faq-a">Yes. Each purchase grants you a licence to use the dataset in your own projects, reports and applications. Reselling or redistributing the raw data is not permitted. See our <a href="licensing.html" style="color:var(--teal);">licensing page</a> for full terms.</div>
       </div>
-
       <div class="faq-item">
         <button class="faq-q" onclick="toggleFaq(this)">
-          What if I need a custom dataset or enterprise access?
-          <svg width="16" height="16" viewBox="0 0 24 atalytics" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          What payment methods are accepted?
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
         </button>
-        <div class="faq-a">We work with banks, consultancies, NGOs and research institutions on custom data scopes, recurring data feeds, API access and additional sectors. Email us at <strong>info@sgdatalytics.org</strong> to discuss enterprise access.</div>
+        <div class="faq-a">Paystack accepts Visa, Mastercard, MTN Mobile Money, Vodafone Cash and AirtelTigo Money. Ghana buyers can use any of these. International buyers can pay by card.</div>
       </div>
-
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          My download link expired — what do I do?
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-a">Download links are valid for 24 hours and can only be used once. If yours expired before you could use it, email us at <strong>info@sgdatalytics.org</strong> with your payment receipt and we'll issue a new link at no charge.</div>
+      </div>
     </div>
   </div>
 
@@ -475,19 +469,19 @@ footer a:hover{text-decoration:underline;}
 
 <!-- FOOTER -->
 <footer>
-  <p>© 2026 SG Datalytics · <a href="marketplace.html">Marketplace</a> · <a href="products.html">Data Products</a> · <a href="insights.html">Insights</a> · <a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a> · <a href="methodology.html">Methodology</a></p>
+  <p>© 2025 SG Datalytics &nbsp;·&nbsp; <a href="privacy.html">Privacy</a> &nbsp;·&nbsp; <a href="terms.html">Terms</a> &nbsp;·&nbsp; <a href="licensing.html">Licensing</a> &nbsp;·&nbsp; <a href="mailto:info@sgdatalytics.org">info@sgdatalytics.org</a></p>
 </footer>
 
 <!-- PURCHASE MODAL -->
-<div class="modal-overlay" id="purchase-modal">
+<div class="modal-overlay" id="purchase-modal" onclick="if(event.target===this)closePurchaseModal()">
   <div class="modal">
-    <div class="modal-title" id="modal-product-name">Buy Dataset</div>
-    <p class="modal-sub">Enter your email address — your secure download link will be sent there automatically after payment.</p>
-    <label class="modal-label" for="purchase-email">Email address</label>
-    <input type="email" id="purchase-email" class="modal-input" placeholder="you@example.com"
-      onkeydown="if(event.key==='Enter') triggerPaystack()"
-    />
-    <div class="modal-error" id="email-error">Please enter a valid email address.</div>
+    <div class="modal-title" id="modal-title">Buy Dataset</div>
+    <div class="modal-sub" id="modal-sub">Enter your email to receive your secure download link instantly after payment.</div>
+    <label class="modal-label" for="modal-email">Your email address</label>
+    <input class="modal-input" type="email" id="modal-email" placeholder="you@example.com"
+      oninput="document.getElementById('modal-error').style.display='none'"
+      onkeydown="if(event.key==='Enter') triggerPaystack()"/>
+    <div class="modal-error" id="modal-error">Please enter a valid email address.</div>
     <button class="modal-btn-pay" id="pay-btn" onclick="triggerPaystack()">
       🔒 Pay Securely with Paystack
     </button>
@@ -499,12 +493,12 @@ footer a:hover{text-decoration:underline;}
 </div>
 
 <!-- SUCCESS TOAST -->
-<div class="toast" id="success-toast">
-  ✅ Payment confirmed! <strong>Check your email</strong> for your download link.
+<div class="toast" id="toast">
+  <strong>Payment confirmed!</strong> Check your inbox — your download link is on its way.
 </div>
 
 <script>
-// ── Nav ───────────────────────────────────────────────────────
+// ── NAV HAMBURGER ─────────────────────────────────────────────
 const hamburger = document.getElementById('nav-hamburger');
 const mobileMenu = document.getElementById('mobile-menu');
 hamburger.addEventListener('click', () => {
@@ -512,89 +506,85 @@ hamburger.addEventListener('click', () => {
   mobileMenu.classList.toggle('open');
 });
 
-// ── FAQ ───────────────────────────────────────────────────────
+// ── FAQ ACCORDION ─────────────────────────────────────────────
 function toggleFaq(btn) {
   const item = btn.closest('.faq-item');
   const isOpen = item.classList.contains('open');
-  document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+  document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
   if (!isOpen) item.classList.add('open');
 }
 
 // ── Paystack ──────────────────────────────────────────────────
 // Replace with your Paystack Live Public Key from dashboard → Settings → API Keys
-const PAYSTACK_PUBLIC_KEY = 'pk_live_YOUR_KEY_HERE';
+const PAYSTACK_PUBLIC_KEY = 'pk_live_86fece21c2df386e4a081c1e418000d8cb0441dd';
 
 const PRODUCTS = {
-  'market_prices':  { name: 'SGMPI Consumer Prices',       amount: 150 },
-  'accommodation':  { name: 'Real Estate & Accommodation',  amount: 100 },
-  'economic':       { name: 'Macro & Commodities',          amount: 100 },
-  'bundle':         { name: 'Ghana Complete Data Bundle',   amount: 300 },
+  market_prices: { name: 'SGMPI Consumer Prices',        amount: 150 },
+  accommodation: { name: 'Real Estate & Accommodation',  amount: 100 },
+  economic:      { name: 'Economic, Financial & Agricultural Data', amount: 100 },
+  bundle:        { name: 'Ghana Complete Data Bundle',   amount: 300 },
 };
 
-let _activePlan = null;
+let _currentProduct = null;
 
 function openPurchaseModal(productKey) {
-  _activePlan = PRODUCTS[productKey];
-  if (!_activePlan) return;
-  document.getElementById('modal-product-name').textContent =
-    _activePlan.name + ' — GHS ' + _activePlan.amount;
-  document.getElementById('purchase-email').value = '';
-  document.getElementById('email-error').style.display = 'none';
-  document.getElementById('pay-btn').disabled = false;
+  _currentProduct = productKey;
+  const p = PRODUCTS[productKey];
+  document.getElementById('modal-title').textContent = p.name;
+  document.getElementById('modal-sub').textContent =
+    `GHS ${p.amount} · One-time purchase · CSV delivered to your inbox instantly`;
+  document.getElementById('modal-email').value = '';
+  document.getElementById('modal-error').style.display = 'none';
   document.getElementById('pay-btn').textContent = '🔒 Pay Securely with Paystack';
+  document.getElementById('pay-btn').disabled = false;
   document.getElementById('purchase-modal').classList.add('open');
-  setTimeout(() => document.getElementById('purchase-email').focus(), 150);
+  setTimeout(() => document.getElementById('modal-email').focus(), 100);
 }
 
 function closePurchaseModal() {
   document.getElementById('purchase-modal').classList.remove('open');
-}
-
-// Close on overlay click
-document.getElementById('purchase-modal').addEventListener('click', function(e) {
-  if (e.target === this) closePurchaseModal();
-});
-
-function showToast(msg) {
-  const toast = document.getElementById('success-toast');
-  toast.innerHTML = msg;
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 6000);
+  _currentProduct = null;
 }
 
 function triggerPaystack() {
-  const emailEl = document.getElementById('purchase-email');
-  const errorEl = document.getElementById('email-error');
-  const payBtn  = document.getElementById('pay-btn');
-  const email   = emailEl.value.trim();
+  const email = document.getElementById('modal-email').value.trim();
+  const errEl = document.getElementById('modal-error');
+  const payBtn = document.getElementById('pay-btn');
 
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    errorEl.style.display = 'block';
-    emailEl.focus();
+    errEl.style.display = 'block';
+    errEl.textContent = 'Please enter a valid email address.';
     return;
   }
-  errorEl.style.display = 'none';
+  errEl.style.display = 'none';
+
+  const p = PRODUCTS[_currentProduct];
   payBtn.disabled = true;
   payBtn.textContent = 'Opening Paystack…';
 
-  closePurchaseModal();
-
   const handler = PaystackPop.setup({
-    key:      PAYSTACK_PUBLIC_KEY,
-    email:    email,
-    amount:   _activePlan.amount * 100,  // GHS → pesewas
-    currency: 'GHS',
-    label:    _activePlan.name,
-    metadata: { plan_name: _activePlan.name },
+    key:       PAYSTACK_PUBLIC_KEY,
+    email:     email,
+    amount:    p.amount * 100,  // Paystack uses pesewas
+    currency:  'GHS',
+    ref:       'SGD-' + Date.now(),
+    metadata:  { product: _currentProduct, product_name: p.name },
     callback: function(response) {
-      showToast('✅ Payment confirmed! <strong>Check your email</strong> (' + email + ') for your download link.');
+      closePurchaseModal();
+      showToast();
     },
     onClose: function() {
       payBtn.disabled = false;
       payBtn.textContent = '🔒 Pay Securely with Paystack';
-    },
+    }
   });
   handler.openIframe();
+}
+
+function showToast() {
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 6000);
 }
 </script>
 </body>

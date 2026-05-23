@@ -108,15 +108,15 @@ nav{
 
 /* ── HERO ── */
 .hero{
-  padding:calc(var(--nav-h) + 72px) 5vw 56px;
+  padding:calc(var(--nav-h) + 36px) 5vw 32px;
   max-width:1160px;margin:0 auto;
-  display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:64px;
+  display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:40px;
 }
 .hero-left{}
 .hero-kicker{
   font-family:var(--font-m);font-size:11px;font-weight:500;
   color:var(--teal);letter-spacing:0.12em;text-transform:uppercase;
-  margin-bottom:20px;display:flex;align-items:center;gap:10px;
+  margin-bottom:12px;display:flex;align-items:center;gap:10px;
 }
 .hero-kicker::before{content:'';width:28px;height:1px;background:var(--teal);}
 .hero h1{
@@ -126,9 +126,9 @@ nav{
   color:var(--white);margin-bottom:24px;
 }
 .hero h1 .hl{color:var(--teal);}
-.hero-sub{font-size:1rem;color:var(--grey2);max-width:420px;line-height:1.75;margin-bottom:36px;font-weight:300;}
+.hero-sub{font-size:1rem;color:var(--grey2);max-width:420px;line-height:1.65;margin-bottom:24px;font-weight:300;}
 .hero-btns{display:flex;gap:12px;flex-wrap:wrap;}
-.hero-trust{display:flex;gap:20px;flex-wrap:wrap;margin-top:28px;}
+.hero-trust{display:flex;gap:20px;flex-wrap:wrap;margin-top:16px;}
 .trust-item{font-family:var(--font-m);font-size:10.5px;color:var(--grey3);display:flex;align-items:center;gap:6px;}
 .trust-item::before{content:'✓';color:var(--teal);font-size:10px;}
 
@@ -204,8 +204,8 @@ nav{
 .kpi-caption{font-family:var(--font-m);font-size:10px;color:var(--grey3);margin-top:2px;}
 
 /* ── CHART TABS SECTION ── */
-.charts-section{max-width:1160px;margin:0 auto;padding:64px 5vw;}
-.section-hd{margin-bottom:32px;}
+.charts-section{max-width:1160px;margin:0 auto;padding:36px 5vw;}
+.section-hd{margin-bottom:20px;}
 .section-label{
   font-family:var(--font-m);font-size:10.5px;font-weight:500;
   letter-spacing:0.14em;text-transform:uppercase;
@@ -219,7 +219,7 @@ nav{
 /* tabs */
 .tab-nav{
   display:flex;gap:0;border-bottom:1px solid var(--border);
-  margin-bottom:28px;overflow-x:auto;scrollbar-width:none;
+  margin-bottom:16px;overflow-x:auto;scrollbar-width:none;
 }
 .tab-nav::-webkit-scrollbar{display:none;}
 .tab-btn{
@@ -235,38 +235,39 @@ nav{
 .tab-panel.active{display:block;}
 
 /* chart cards */
-.chart-row{display:grid;gap:20px;margin-bottom:20px;}
+.chart-row{display:grid;gap:14px;margin-bottom:14px;}
 .chart-row.two{grid-template-columns:1fr 1fr;}
 .chart-row.one{grid-template-columns:1fr;}
 .chart-row.three{grid-template-columns:1fr 1fr 1fr;}
 .chart-card{
-  background:var(--panel);border:1px solid var(--border);
+  background:#0f1e37;border:1px solid rgba(255,255,255,0.09);
   border-radius:var(--r-lg);padding:22px 22px 18px;
+  box-shadow:0 4px 24px rgba(0,0,0,0.18);
 }
 .chart-card-hd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px;gap:12px;}
-.cc-title{font-size:13.5px;font-weight:600;color:var(--white);}
-.cc-sub{font-size:11px;color:var(--grey3);margin-top:3px;}
+.cc-title{font-size:13.5px;font-weight:600;color:#ffffff;}
+.cc-sub{font-size:11px;color:rgba(255,255,255,0.38);margin-top:3px;}
 .badge{font-family:var(--font-m);font-size:10px;padding:3px 9px;border-radius:4px;white-space:nowrap;}
-.badge-teal{background:var(--teal-dim);color:var(--teal);border:1px solid var(--border-teal);}
-.badge-amber{background:var(--amber-dim);color:var(--amber);}
-.badge-blue{background:var(--blue-dim);color:var(--blue);}
-.badge-red{background:var(--red-dim);color:var(--red);}
-.badge-green{background:rgba(16,185,129,0.12);color:var(--green);}
+.badge-teal{background:rgba(0,149,122,0.2);color:#00c9a7;border:1px solid rgba(0,201,167,0.3);}
+.badge-amber{background:rgba(245,158,11,0.18);color:#f59e0b;border:1px solid rgba(245,158,11,0.3);}
+.badge-blue{background:rgba(59,130,246,0.18);color:#60a5fa;border:1px solid rgba(59,130,246,0.3);}
+.badge-red{background:rgba(220,38,38,0.18);color:#f87171;border:1px solid rgba(220,38,38,0.3);}
+.badge-green{background:rgba(16,185,129,0.18);color:#34d399;border:1px solid rgba(16,185,129,0.3);}
 .chart-wrap{position:relative;}
 .chart-wrap.h260{height:260px;}
 .chart-wrap.h300{height:300px;}
 .chart-wrap.h340{height:340px;}
 canvas{display:block;}
-.chart-loading{display:flex;align-items:center;justify-content:center;height:100%;color:var(--grey3);font-size:12px;font-family:var(--font-m);}
-.source-note{font-family:var(--font-m);font-size:10px;color:var(--grey3);margin-top:12px;padding-top:10px;border-top:1px solid var(--border);}
+.chart-loading{display:flex;align-items:center;justify-content:center;height:100%;color:rgba(255,255,255,0.3);font-size:12px;font-family:var(--font-m);}
+.source-note{font-family:var(--font-m);font-size:10px;color:rgba(255,255,255,0.28);margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.08);}
 .chart-legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;}
-.legend-item{display:flex;align-items:center;gap:5px;font-family:var(--font-m);font-size:10px;color:var(--grey3);}
+.legend-item{display:flex;align-items:center;gap:5px;font-family:var(--font-m);font-size:10px;color:rgba(255,255,255,0.45);}
 .legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
 
 /* ── DATASETS SECTION ── */
-.datasets-section{background:var(--navy2);border-top:1px solid var(--border);padding:64px 5vw;}
+.datasets-section{background:var(--navy2);border-top:1px solid var(--border);padding:36px 5vw;}
 .ds-inner{max-width:1160px;margin:0 auto;}
-.filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px;}
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
 .fpill{
   font-family:var(--font-m);font-size:11px;padding:5px 14px;
   border-radius:100px;cursor:pointer;border:1px solid var(--border2);
@@ -307,60 +308,63 @@ canvas{display:block;}
 
 /* ── FOOTER ── */
 /* ── Pricing section ── */
-.pricing-section{background:var(--navy2);border-top:1px solid var(--border);padding:72px 5vw;}
+.pricing-section{background:var(--navy2);border-top:1px solid var(--border);padding:36px 5vw;}
 .pricing-inner{max-width:1100px;margin:0 auto;}
 .pricing-grid-home{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;}
 @media(max-width:860px){.pricing-grid-home{grid-template-columns:1fr;}}
 .ph-card{
-  background:var(--panel);border:1px solid var(--border);
+  background:#0f1e37;border:1px solid rgba(255,255,255,0.09);
   border-radius:var(--r-lg);padding:34px 28px;
   position:relative;overflow:hidden;
   transition:transform var(--ease),box-shadow var(--ease);
   display:flex;flex-direction:column;
 }
-.ph-card:hover{transform:translateY(-4px);box-shadow:0 20px 50px rgba(0,0,0,0.4);}
-.ph-featured{border-color:var(--teal);background:linear-gradient(135deg,var(--panel) 0%,rgba(0,201,167,0.04) 100%);}
+.ph-card:hover{transform:translateY(-4px);box-shadow:0 20px 50px rgba(0,0,0,0.5);}
+.ph-featured{border-color:var(--teal);background:linear-gradient(135deg,#0f1e37 0%,rgba(0,149,122,0.12) 100%);}
 .ph-pop{
   position:absolute;top:18px;right:18px;
   background:var(--teal);color:var(--navy);
   font-family:var(--font-m);font-size:10px;font-weight:500;
   padding:3px 10px;border-radius:100px;letter-spacing:0.06em;
 }
-.ph-tier{font-family:var(--font-m);font-size:11px;color:var(--grey3);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:14px;}
+.ph-tier{font-family:var(--font-m);font-size:11px;color:rgba(255,255,255,0.4);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:14px;}
 .ph-featured .ph-tier{color:var(--teal);}
-.ph-amount{font-family:var(--font-d);font-size:3.2rem;color:var(--white);letter-spacing:0.04em;line-height:1;margin-bottom:4px;}
-.ph-amount sup{font-size:1.4rem;vertical-align:super;color:var(--grey2);}
+.ph-amount{font-family:var(--font-d);font-size:3.2rem;color:#ffffff;letter-spacing:0.04em;line-height:1;margin-bottom:4px;}
+.ph-amount sup{font-size:1.4rem;vertical-align:super;color:rgba(255,255,255,0.5);}
 .ph-custom{font-size:2.4rem;}
-.ph-period{font-size:12px;color:var(--grey3);margin-bottom:24px;}
-.ph-divider{height:1px;background:var(--border);margin-bottom:22px;}
+.ph-period{font-size:12px;color:rgba(255,255,255,0.4);margin-bottom:24px;}
+.ph-divider{height:1px;background:rgba(255,255,255,0.08);margin-bottom:22px;}
 .ph-features{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:28px;flex:1;}
-.ph-features li{font-size:13px;color:var(--grey2);display:flex;align-items:flex-start;gap:9px;line-height:1.45;}
+.ph-features li{font-size:13px;color:rgba(255,255,255,0.7);display:flex;align-items:flex-start;gap:9px;line-height:1.45;}
 .ph-features li::before{content:'✓';color:var(--teal);font-size:11px;margin-top:2px;flex-shrink:0;}
-.ph-no{color:var(--grey3) !important;}
-.ph-no::before{content:'—' !important;color:var(--grey4) !important;}
+.ph-no{color:rgba(255,255,255,0.25) !important;}
+.ph-no::before{content:'—' !important;color:rgba(255,255,255,0.18) !important;}
 .ph-cta{width:100%;text-align:center;justify-content:center;display:block;margin-top:auto;
   padding:13px 20px;border-radius:var(--r);font-size:14px;font-weight:500;
-  background:#1a2535;border:1px solid #1a2535;color:#ffffff;text-decoration:none;
+  background:#1a2e47;border:1px solid rgba(255,255,255,0.12);color:#ffffff;text-decoration:none;
   transition:background var(--ease),border-color var(--ease);}
-.ph-cta:hover{background:#2a3a50;border-color:#2a3a50;}
+.ph-cta:hover{background:#243e5c;border-color:rgba(255,255,255,0.2);}
 .ph-featured .ph-cta{background:var(--teal);border-color:var(--teal);color:#ffffff;font-weight:600;}
 .ph-featured .ph-cta:hover{filter:brightness(1.08);}
 
-footer{border-top:1px solid var(--border);padding:28px 4vw;text-align:center;font-size:12px;color:var(--grey3);}
+footer{border-top:1px solid var(--border);padding:18px 4vw;text-align:center;font-size:12px;color:var(--grey3);}
 footer a{color:var(--teal);text-decoration:none;}
 footer a:hover{text-decoration:underline;}
 
-/* ── LIVE FEED SECTION ── */
+/* ── LIVE FEED SECTION — WARM GREY ── */
 .live-feed-section{
-  background:var(--navy);
-  border-top:1px solid var(--border);
-  padding:64px 5vw;
+  background:#e8edf5;
+  border-top:4px solid var(--teal);
+  padding:36px 5vw;
 }
 .live-feed-inner{max-width:1160px;margin:0 auto;}
 .live-feed-hd{
   display:flex;align-items:flex-end;justify-content:space-between;
-  margin-bottom:32px;flex-wrap:wrap;gap:16px;
+  margin-bottom:18px;flex-wrap:wrap;gap:12px;
 }
+.live-feed-section .section-label{color:var(--teal);}
+.live-feed-section .section-title{color:var(--white);}
+.live-feed-section .section-sub{color:var(--grey2);}
 .live-feed-counter{
   display:flex;align-items:center;gap:10px;
   font-family:var(--font-m);font-size:11px;color:var(--grey3);
@@ -387,7 +391,7 @@ footer a:hover{text-decoration:underline;}
   font-family:var(--font-m);font-size:11px;
   padding:5px 14px;border-radius:100px;cursor:pointer;
   border:1px solid var(--border2);color:var(--grey2);
-  background:transparent;transition:all var(--ease);
+  background:#ffffff;transition:all var(--ease);
 }
 .feed-tab:hover,.feed-tab.on{
   background:var(--teal-dim);border-color:var(--border-teal);color:var(--teal);
@@ -397,13 +401,27 @@ footer a:hover{text-decoration:underline;}
   gap:16px;
 }
 .feed-card{
-  background:var(--panel);border:1px solid var(--border);
+  background:#0f1e37;
+  border:1px solid rgba(255,255,255,0.09);
+  border-top:3px solid transparent;
   border-radius:var(--r-lg);padding:18px 16px;
   display:flex;flex-direction:column;gap:10px;
-  transition:border-color var(--ease),transform var(--ease);
+  transition:border-color var(--ease),transform var(--ease),box-shadow var(--ease);
   animation:fadeSlideIn 0.4s ease both;
+  box-shadow:0 2px 16px rgba(0,0,0,0.18);
+  text-decoration:none;cursor:pointer;color:inherit;
 }
-.feed-card:hover{border-color:var(--border-teal);transform:translateY(-2px);}
+.feed-card:hover{
+  border-top-color:var(--teal);
+  transform:translateY(-3px);
+  box-shadow:0 8px 32px rgba(0,0,0,0.28);
+}
+.feed-card .feed-view-link{
+  font-family:var(--font-m);font-size:10px;color:var(--teal);
+  margin-top:auto;padding-top:8px;opacity:0;
+  transition:opacity var(--ease);
+}
+.feed-card:hover .feed-view-link{opacity:1;}
 @keyframes fadeSlideIn{
   from{opacity:0;transform:translateY(12px);}
   to{opacity:1;transform:translateY(0);}
@@ -413,23 +431,23 @@ footer a:hover{text-decoration:underline;}
   font-family:var(--font-m);font-size:10px;font-weight:600;
   color:var(--teal);letter-spacing:0.06em;text-transform:uppercase;
 }
-.feed-date{font-family:var(--font-m);font-size:10px;color:var(--grey3);}
+.feed-date{font-family:var(--font-m);font-size:10px;color:rgba(255,255,255,0.35);}
 .feed-title{
-  font-size:13px;font-weight:600;color:var(--white);
+  font-size:13px;font-weight:600;color:#ffffff;
   line-height:1.35;display:-webkit-box;
   -webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
 }
 .feed-price{
   font-family:var(--font-d);font-size:1.6rem;
-  color:var(--amber);letter-spacing:0.04em;line-height:1;
+  color:var(--teal);letter-spacing:0.04em;line-height:1;
 }
-.feed-price.no-price{color:var(--grey3);font-size:1rem;font-family:var(--font-m);}
+.feed-price.no-price{color:rgba(255,255,255,0.3);font-size:1rem;font-family:var(--font-m);}
 .feed-meta{
   display:flex;gap:10px;flex-wrap:wrap;
-  border-top:1px solid var(--border);padding-top:10px;
+  border-top:1px solid rgba(255,255,255,0.08);padding-top:10px;
 }
 .feed-meta-item{
-  font-family:var(--font-m);font-size:10px;color:var(--grey3);
+  font-family:var(--font-m);font-size:10px;color:rgba(255,255,255,0.45);
   display:flex;align-items:center;gap:4px;
 }
 .feed-empty{
@@ -447,22 +465,51 @@ footer a:hover{text-decoration:underline;}
 }
 .feed-stats-bar{
   display:grid;grid-template-columns:repeat(6,1fr);
-  gap:1px;background:var(--border);
-  border:1px solid var(--border);border-radius:var(--r-lg);
-  overflow:hidden;margin-bottom:32px;
+  gap:1px;background:rgba(255,255,255,0.07);
+  border:1px solid rgba(255,255,255,0.09);border-radius:var(--r-lg);
+  overflow:hidden;margin-bottom:18px;
+  box-shadow:0 2px 16px rgba(0,0,0,0.18);
 }
 .feed-stat{
-  background:var(--navy2);padding:18px 14px;text-align:center;
+  background:#0f1e37;padding:12px 14px;text-align:center;
 }
 .feed-stat-num{
   font-family:var(--font-d);font-size:1.6rem;
   color:var(--teal);letter-spacing:0.06em;
   line-height:1;margin-bottom:4px;
 }
+@keyframes skel-pulse{0%,100%{opacity:0.45;}50%{opacity:0.9;}}
+.stat-skel{
+  display:inline-block;width:56px;height:1em;
+  border-radius:4px;background:rgba(0,149,122,0.35);
+  animation:skel-pulse 1.4s ease-in-out infinite;
+  vertical-align:middle;
+}
 .feed-stat-label{
   font-family:var(--font-m);font-size:9.5px;
-  color:var(--grey3);text-transform:uppercase;letter-spacing:0.1em;
+  color:rgba(255,255,255,0.38);text-transform:uppercase;letter-spacing:0.1em;
 }
+
+/* ── PRODUCTS PRICING SECTION ── */
+.products-pricing{background:var(--navy2);border-top:1px solid var(--border);padding:64px 5vw 56px;}
+.products-pricing-inner{max-width:1100px;margin:0 auto;}
+.products-grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:20px;}
+.product-tile{background:var(--panel);border:1px solid var(--border);border-radius:var(--r-lg);padding:26px 22px;display:flex;flex-direction:column;transition:border-color var(--ease),box-shadow var(--ease);}
+.product-tile:hover{border-color:var(--border-teal);box-shadow:0 4px 20px rgba(0,149,122,0.08);}
+.product-tile-icon{font-size:22px;margin-bottom:12px;}
+.product-tile-name{font-family:var(--font-d);font-size:1.2rem;color:var(--white);letter-spacing:0.04em;margin-bottom:7px;}
+.product-tile-desc{font-size:12.5px;color:var(--grey2);line-height:1.55;flex:1;margin-bottom:16px;}
+.product-tile-price{font-family:var(--font-d);font-size:1.8rem;color:var(--white);letter-spacing:0.04em;margin-bottom:3px;}
+.product-tile-period{font-family:var(--font-m);font-size:10.5px;color:var(--grey3);margin-bottom:16px;}
+.bundle-tile{background:linear-gradient(135deg,var(--teal-dim) 0%,rgba(0,149,122,0.03) 100%);border:2px solid var(--teal);border-radius:var(--r-lg);padding:30px 32px;display:flex;align-items:center;justify-content:space-between;gap:28px;flex-wrap:wrap;}
+.bundle-tile-left{flex:1;min-width:220px;}
+.bundle-tile-badge{display:inline-block;background:var(--teal);color:#fff;font-family:var(--font-m);font-size:10px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;padding:3px 12px;border-radius:20px;margin-bottom:10px;}
+.bundle-tile-name{font-family:var(--font-d);font-size:1.5rem;color:var(--white);letter-spacing:0.04em;margin-bottom:7px;}
+.bundle-tile-desc{font-size:13px;color:var(--grey2);line-height:1.6;margin-bottom:10px;}
+.bundle-tile-perks{font-family:var(--font-m);font-size:11px;color:var(--teal);}
+.bundle-tile-right{text-align:center;flex-shrink:0;}
+.bundle-tile-price{font-family:var(--font-d);font-size:2.8rem;color:var(--white);letter-spacing:0.04em;line-height:1;}
+.bundle-tile-period{font-family:var(--font-m);font-size:10.5px;color:var(--grey3);margin-bottom:14px;}
 
 /* ── RESPONSIVE ── */
 @media(max-width:900px){
@@ -475,6 +522,7 @@ footer a:hover{text-decoration:underline;}
   .kpi-strip-item:nth-child(2){border-right:none;}
   .chart-row.two,.chart-row.three{grid-template-columns:1fr;}
   .ds-grid{grid-template-columns:1fr 1fr;}
+  .products-grid-3{grid-template-columns:1fr 1fr;}
 }
 @media(max-width:520px){
   /* Tighten overview card layout on narrow phones */
@@ -487,7 +535,57 @@ footer a:hover{text-decoration:underline;}
   .kpi-strip-inner{grid-template-columns:1fr 1fr;}
   .ds-grid{grid-template-columns:1fr;}
   .kpi-grid{grid-template-columns:1fr 1fr;}
+  .products-pricing{padding:40px 5vw 36px;}
+  .products-grid-3{grid-template-columns:1fr;}
+  .bundle-tile{padding:22px 20px;flex-direction:column;align-items:flex-start;}
+  .bundle-tile-right{width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+  .bundle-tile-price{font-size:2.2rem;}
+  .bundle-tile-perks{font-size:10px;}
 }
+
+/* ── AI ADVISOR HERO ── */
+.adv-hero{background:var(--navy2);border-bottom:1px solid var(--border);padding:28px 5vw;}
+.adv-hero-inner{max-width:1100px;margin:0 auto;display:flex;flex-direction:column;align-items:center;text-align:center;background:#0b1829;border-radius:16px;padding:32px 40px;box-shadow:0 8px 32px rgba(15,30,55,0.14);}
+.adv-hero-label{font-family:var(--font-m);font-size:11px;color:var(--teal);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:12px;}
+.adv-hero-title{font-family:var(--font-d);font-size:3.4rem;color:#ffffff;letter-spacing:0.05em;line-height:1.05;margin-bottom:10px;}
+.adv-hero-sub{font-size:14px;color:rgba(255,255,255,0.45);margin-bottom:20px;line-height:1.6;max-width:520px;}
+/* Statista-style search bar */
+.adv-searchbar{width:100%;display:flex;background:#ffffff;border-radius:10px;overflow:hidden;box-shadow:0 6px 36px rgba(0,0,0,0.4);margin-bottom:18px;}
+.adv-searchbar textarea{flex:1;border:none;outline:none;padding:14px 18px;font-size:15px;font-family:var(--font-b);color:#1a2535;resize:none;height:52px;max-height:120px;overflow-y:auto;line-height:1.5;background:transparent;}
+.adv-searchbar textarea::placeholder{color:#9aa5b4;}
+.adv-searchbar-btn{background:var(--teal);color:#ffffff;border:none;padding:0 26px;font-family:var(--font-b);font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px;transition:filter 0.15s;white-space:nowrap;flex-shrink:0;}
+.adv-searchbar-btn:hover{filter:brightness(1.1);}
+.adv-searchbar-btn:disabled{background:#2a6e60;cursor:not-allowed;}
+.adv-searchbar-btn svg{width:16px;height:16px;fill:white;}
+/* Chips */
+.adv-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-bottom:0;}
+.adv-chip{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.7);border-radius:20px;padding:5px 14px;font-size:12px;cursor:pointer;transition:all 0.15s;font-family:var(--font-b);}
+.adv-chip:hover{background:var(--teal);border-color:var(--teal);color:#ffffff;}
+/* Messages (hidden until first send) */
+.adv-messages-wrap{display:none;width:100%;margin-bottom:16px;}
+.adv-messages{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:10px;max-height:260px;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:8px;scroll-behavior:smooth;text-align:left;}
+.adv-messages::-webkit-scrollbar{width:4px;}
+.adv-messages::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.12);border-radius:4px;}
+.adv-bubble{max-width:82%;padding:9px 13px;border-radius:14px;font-size:13px;line-height:1.5;word-break:break-word;}
+.adv-bubble.user{background:var(--teal);color:#ffffff;align-self:flex-end;border-bottom-right-radius:3px;}
+.adv-bubble.assistant{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.09);color:rgba(255,255,255,0.85);align-self:flex-start;border-bottom-left-radius:3px;}
+.adv-bubble.typing{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.09);align-self:flex-start;border-bottom-left-radius:3px;display:flex;gap:5px;align-items:center;padding:10px 14px;}
+.adv-dot{width:6px;height:6px;background:var(--teal);border-radius:50%;animation:advBounce 1.2s infinite;}
+.adv-dot:nth-child(2){animation-delay:0.2s;}
+.adv-dot:nth-child(3){animation-delay:0.4s;}
+@keyframes advBounce{0%,80%,100%{transform:translateY(0);}40%{transform:translateY(-5px);}}
+.adv-dataset-cards{display:flex;flex-direction:column;gap:6px;align-self:flex-start;width:100%;}
+.adv-dataset-card{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.09);border-left:3px solid var(--teal);border-radius:8px;padding:10px 12px;}
+.adv-dataset-card h4{font-size:12px;color:#ffffff;margin-bottom:3px;}
+.adv-dataset-card p{font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:5px;line-height:1.4;}
+.adv-dataset-card .adv-tags{display:flex;flex-wrap:wrap;gap:4px;}
+.adv-tag{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.6);border-radius:4px;padding:1px 7px;font-size:11px;}
+.adv-dataset-card a{display:inline-block;margin-top:6px;font-size:11px;color:var(--teal);text-decoration:none;font-weight:600;}
+.adv-dataset-card a:hover{text-decoration:underline;}
+.adv-footer-link{margin-top:14px;}
+.adv-footer-link a{font-size:12px;color:rgba(255,255,255,0.3);text-decoration:none;transition:color 0.15s;}
+.adv-footer-link a:hover{color:var(--teal);}
+@media(max-width:600px){.adv-hero-title{font-size:2.4rem;}.adv-searchbar-btn span{display:none;}.adv-messages{max-height:200px;}}
 </style>
 </head>
 <body>
@@ -501,6 +599,7 @@ footer a:hover{text-decoration:underline;}
   <ul class="nav-links">
     <li><a href="index.html" class="active">Home</a></li>
     <li><a href="marketplace.html">Marketplace</a></li>
+    <li><a href="products.html">Data Products</a></li>
     <li><a href="insights.html">Insights</a></li>
     <li><a href="about.html">About</a></li>
   </ul>
@@ -520,6 +619,36 @@ footer a:hover{text-decoration:underline;}
   <a href="about.html">About</a>
   <div class="mobile-menu-actions">
     <a href="marketplace.html" class="btn btn-teal">Browse Datasets</a>
+  </div>
+</div>
+
+<!-- ADVISOR -->
+<div class="adv-hero">
+  <div class="adv-hero-inner">
+    <div class="adv-hero-label">AI-Powered · Ghana Datasets</div>
+    <div class="adv-hero-title">Find Ghana Data</div>
+    <div class="adv-hero-sub">Describe your research topic or business need — our AI advisor will recommend the right datasets from our catalog</div>
+    <!-- Messages expand here once conversation starts -->
+    <div class="adv-messages-wrap" id="advMessagesWrap">
+      <div class="adv-messages" id="advMessages"></div>
+    </div>
+    <!-- Statista-style search bar -->
+    <div class="adv-searchbar">
+      <textarea id="advInput" placeholder="e.g. I need inflation and exchange rate data for a research paper…" rows="1" onkeydown="advHandleKey(event)" oninput="advAutoResize(this)"></textarea>
+      <button class="adv-searchbar-btn" id="advSendBtn" onclick="advSendMessage()">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+        <span>Ask Advisor</span>
+      </button>
+    </div>
+    <!-- Quick topic chips -->
+    <div class="adv-chips" id="advChips">
+      <button class="adv-chip" onclick="advSendQuick(this)">Inflation &amp; exchange rates</button>
+      <button class="adv-chip" onclick="advSendQuick(this)">Pricing data for my business</button>
+      <button class="adv-chip" onclick="advSendQuick(this)">Education thesis in Ghana</button>
+      <button class="adv-chip" onclick="advSendQuick(this)">Agricultural production</button>
+      <button class="adv-chip" onclick="advSendQuick(this)">Poverty &amp; development</button>
+    </div>
+    <div class="adv-footer-link"><a href="advisor.html">Open full advisor experience →</a></div>
   </div>
 </div>
 
@@ -594,8 +723,8 @@ footer a:hover{text-decoration:underline;}
             <div style="font-family:'IBM Plex Mono',monospace;font-size:8.5px;color:rgba(255,255,255,0.32);text-transform:uppercase;letter-spacing:0.07em;margin-top:2px;">Locations</div>
           </div>
           <div style="background:rgba(255,255,255,0.03);padding:8px 6px;text-align:center;">
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:1rem;color:#00957a;line-height:1.2;">LIVE</div>
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:8.5px;color:rgba(255,255,255,0.32);text-transform:uppercase;letter-spacing:0.07em;margin-top:2px;">SGMPI</div>
+            <div id="heroGmpiValue" style="font-family:'IBM Plex Mono',monospace;font-size:1rem;color:#00957a;line-height:1.2;">—</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:8.5px;color:rgba(255,255,255,0.32);text-transform:uppercase;letter-spacing:0.07em;margin-top:2px;">GMPI</div>
           </div>
         </div>
 
@@ -604,6 +733,56 @@ footer a:hover{text-decoration:underline;}
   </div>
 </div>
 
+
+<!-- ── GMPI TICKER BAND ─────────────────────────────────────── -->
+<div id="gmpi-band" style="padding:0 5vw 32px;background:var(--navy);">
+  <div style="max-width:1160px;margin:0 auto;">
+    <div style="
+      background:#0f1e37;border:1px solid rgba(0,149,122,0.22);
+      border-radius:14px;padding:20px 28px;
+      display:flex;flex-wrap:wrap;align-items:center;gap:20px;
+      box-shadow:0 2px 16px rgba(0,0,0,0.12);
+    ">
+
+      <!-- Label -->
+      <div style="flex:0 0 auto;">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#00957a;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:4px;">
+          <span style="display:inline-block;width:6px;height:6px;background:#00957a;border-radius:50%;margin-right:5px;animation:pulse 2s infinite;"></span>
+          Ghana Market Price Index
+        </div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.35);font-family:'IBM Plex Mono',monospace;">GMPI · Base = 100 at first collection</div>
+      </div>
+
+      <!-- Big number -->
+      <div style="flex:0 0 auto;display:flex;align-items:baseline;gap:10px;">
+        <span id="gmpi-value" style="font-family:'Bebas Neue',sans-serif;font-size:3.2rem;color:#ffffff;line-height:1;letter-spacing:0.04em;">—</span>
+        <div>
+          <div id="gmpi-change" style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#00957a;line-height:1.3;">—</div>
+          <div id="gmpi-week"   style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:rgba(255,255,255,0.3);margin-top:2px;">Loading…</div>
+        </div>
+      </div>
+
+      <!-- Sparkline -->
+      <div style="flex:1;min-width:140px;max-width:320px;height:48px;position:relative;">
+        <canvas id="gmpi-spark" style="width:100%;height:48px;"></canvas>
+      </div>
+
+      <!-- Category pills -->
+      <div id="gmpi-cats" style="flex:1;display:flex;flex-wrap:wrap;gap:6px;min-width:200px;"></div>
+
+      <!-- CTA -->
+      <a href="products.html" style="
+        flex:0 0 auto;font-family:'IBM Plex Sans',sans-serif;font-size:12px;
+        background:rgba(0,149,122,0.15);border:1px solid rgba(0,149,122,0.35);
+        color:#00957a;padding:8px 16px;border-radius:6px;text-decoration:none;
+        white-space:nowrap;transition:all 0.2s;
+      " onmouseover="this.style.background='rgba(0,149,122,0.25)'" onmouseout="this.style.background='rgba(0,149,122,0.15)'">
+        Download Full Index →
+      </a>
+
+    </div>
+  </div>
+</div>
 
 <!-- CHARTS SECTION -->
 <div class="charts-section">
@@ -615,39 +794,12 @@ footer a:hover{text-decoration:underline;}
 
   <!-- Tab nav -->
   <div class="tab-nav">
-    <button class="tab-btn active" data-tab="macro">Prices &amp; FX</button>
-    <button class="tab-btn" data-tab="sectors">GDP &amp; Sectors</button>
-    <button class="tab-btn" data-tab="market">Market Prices</button>
-    <button class="tab-btn" data-tab="rates">Interest Rates</button>
+    <button class="tab-btn active" data-tab="sectors">GDP &amp; Sectors</button>
+    <button class="tab-btn" data-tab="macro">Prices &amp; FX</button>
   </div>
 
-  <!-- Tab: Prices & FX -->
-  <div class="tab-panel active" id="tab-macro">
-    <div class="chart-row one">
-      <div class="chart-card">
-        <div class="chart-card-hd">
-          <div>
-            <div class="cc-title">Inflation Rate &amp; Exchange Rate</div>
-            <div class="cc-sub">Year-on-year CPI (%) vs USD / GHS — last 5 years · monthly</div>
-          </div>
-          <div style="display:flex;gap:8px;align-items:center;">
-            <div style="display:flex;align-items:center;gap:5px;font-family:var(--font-m);font-size:10px;color:var(--grey2);">
-              <span style="width:10px;height:3px;border-radius:2px;background:#f59e0b;display:inline-block;"></span>Inflation (%)
-            </div>
-            <div style="display:flex;align-items:center;gap:5px;font-family:var(--font-m);font-size:10px;color:var(--grey2);">
-              <span style="width:10px;height:3px;border-radius:2px;background:#00c9a7;display:inline-block;"></span>USD/GHS
-            </div>
-            <span class="badge badge-amber">Monthly</span>
-          </div>
-        </div>
-        <div class="chart-wrap h300" data-anim-chart><canvas id="cInflFX"></canvas></div>
-        <div class="source-note">Sources: Ghana Statistical Service (CPI) · Bank of Ghana (FX)</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Tab: GDP & Sectors -->
-  <div class="tab-panel" id="tab-sectors">
+  <!-- Tab: GDP & Sectors (moved to first/active) -->
+  <div class="tab-panel active" id="tab-sectors">
     <div class="chart-row two">
       <div class="chart-card">
         <div class="chart-card-hd">
@@ -679,37 +831,31 @@ footer a:hover{text-decoration:underline;}
     </div>
   </div>
 
-  <!-- Tab: Market Prices -->
-  <div class="tab-panel" id="tab-market">
+  <!-- Tab: Prices & FX -->
+  <div class="tab-panel" id="tab-macro">
     <div class="chart-row one">
       <div class="chart-card">
         <div class="chart-card-hd">
-          <div><div class="cc-title">SG Market Price Index — Platform Comparison</div><div class="cc-sub">Median listing price in GHS by category (Platform A vs Platform B)</div></div>
-          <span class="badge badge-teal">Weekly</span>
+          <div>
+            <div class="cc-title">Inflation Rate &amp; Exchange Rate</div>
+            <div class="cc-sub">Year-on-year CPI (%) vs USD / GHS — last 5 years · monthly</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <div style="display:flex;align-items:center;gap:5px;font-family:var(--font-m);font-size:10px;color:var(--grey2);">
+              <span style="width:10px;height:3px;border-radius:2px;background:#f59e0b;display:inline-block;"></span>Inflation (%)
+            </div>
+            <div style="display:flex;align-items:center;gap:5px;font-family:var(--font-m);font-size:10px;color:var(--grey2);">
+              <span style="width:10px;height:3px;border-radius:2px;background:#00c9a7;display:inline-block;"></span>USD/GHS
+            </div>
+            <span class="badge badge-amber">Monthly</span>
+          </div>
         </div>
-        <div class="chart-wrap h340"><canvas id="cMarket"></canvas></div>
-        <div class="source-note">Source: SG Datalytics Market Price Index — compiled from public online classifieds in Ghana</div>
+        <div class="chart-wrap h300" data-anim-chart><canvas id="cInflFX"></canvas></div>
+        <div class="source-note">Sources: Ghana Statistical Service (CPI) · Bank of Ghana (FX)</div>
       </div>
     </div>
   </div>
 
-  <!-- Tab: Interest Rates -->
-  <div class="tab-panel" id="tab-rates">
-    <div class="chart-row one">
-      <div class="chart-card">
-        <div class="chart-card-hd">
-          <div><div class="cc-title">Ghana Key Interest Rates</div><div class="cc-sub">Monetary Policy Rate vs 91-Day T-Bill Rate (%)</div></div>
-          <span class="badge badge-blue">Monthly</span>
-        </div>
-        <div class="chart-wrap h340"><canvas id="cRates"></canvas></div>
-        <div class="chart-legend">
-          <div class="legend-item"><div class="legend-dot" style="background:#3b82f6"></div>Policy Rate</div>
-          <div class="legend-item"><div class="legend-dot" style="background:#00c9a7"></div>91-Day T-Bill</div>
-        </div>
-        <div class="source-note">Source: Bank of Ghana Statistical Bulletin</div>
-      </div>
-    </div>
-  </div>
 </div>
 
 <!-- DATASETS SECTION REMOVED -->
@@ -742,149 +888,69 @@ footer a:hover{text-decoration:underline;}
   </div>
 </div>
 
-<!-- ── LIVE SGMPI DATA FEED ───────────────────────────────────── -->
-<div class="live-feed-section">
-  <div class="live-feed-inner">
 
-    <!-- Section header -->
-    <div class="live-feed-hd">
-      <div>
-        <div class="section-label">
-          <div class="live-pulse"></div>
-          Live data feed — auto-updating
-        </div>
-        <div class="section-title">Latest Ghana Market Prices</div>
-        <div class="section-sub">Real listings collected from across Ghana — updated weekly by our automated pipeline.</div>
-      </div>
-      <div class="live-feed-counter">
-        <div>
-          <div class="live-feed-counter-num" id="feed-total">—</div>
-          <div style="font-family:var(--font-m);font-size:9.5px;color:var(--grey3);text-transform:uppercase;letter-spacing:0.08em;margin-top:2px;">Total records</div>
-        </div>
-      </div>
+
+<!-- ── PRODUCTS PRICING ───────────────────────────────────────── -->
+<div class="products-pricing">
+  <div class="products-pricing-inner">
+
+    <div style="text-align:center;margin-bottom:40px;">
+      <div class="section-label" style="justify-content:center;">Ghana data products</div>
+      <div class="section-title" style="margin-bottom:10px;">Buy the data you need</div>
+      <div class="section-sub" style="margin:0 auto;text-align:center;">One-time purchase · Instant delivery to your inbox · Pay with MoMo or card via Paystack</div>
     </div>
 
-    <!-- Live stats bar -->
-    <div class="feed-stats-bar">
-      <div class="feed-stat">
-        <div class="feed-stat-num" id="fst-market">—</div>
-        <div class="feed-stat-label">Market listings</div>
-      </div>
-      <div class="feed-stat">
-        <div class="feed-stat-num" id="fst-property">—</div>
-        <div class="feed-stat-label">Property</div>
-      </div>
-      <div class="feed-stat">
-        <div class="feed-stat-num" id="fst-accommodation">—</div>
-        <div class="feed-stat-label">Accommodation</div>
-      </div>
-      <div class="feed-stat">
-        <div class="feed-stat-num" id="fst-economic">—</div>
-        <div class="feed-stat-label">Economic records</div>
-      </div>
-      <div class="feed-stat">
-        <div class="feed-stat-num" id="fst-commodities">—</div>
-        <div class="feed-stat-label">Commodities</div>
-      </div>
-      <div class="feed-stat">
-        <div class="feed-stat-num" id="fst-locations">—</div>
-        <div class="feed-stat-label">Locations</div>
-      </div>
-    </div>
+    <!-- 3 individual products -->
+    <div class="products-grid-3">
 
-    <!-- Sector filter tabs -->
-    <div class="feed-sector-tabs">
-      <div class="feed-tab on" data-feed="market_prices">🛒 Market Prices</div>
-      <div class="feed-tab" data-feed="property">🏠 Property</div>
-      <div class="feed-tab" data-feed="accommodation">🏨 Accommodation</div>
-      <div class="feed-tab" data-feed="economic">📈 Economic</div>
-      <div class="feed-tab" data-feed="commodities">⛽ Commodities</div>
-    </div>
-
-    <!-- Feed grid -->
-    <div class="feed-grid" id="feed-grid">
-      <div class="feed-loading">
-        <div class="live-pulse"></div>
-        Loading latest data…
-      </div>
-    </div>
-
-    <div class="feed-load-more">
-      <a href="marketplace.html" class="btn btn-teal">Browse Full Marketplace →</a>
-    </div>
-
-  </div>
-</div>
-
-<!-- ── PRICING SECTION ───────────────────────────────────────── -->
-<div class="pricing-section">
-  <div class="pricing-inner">
-    <div style="text-align:center;margin-bottom:48px;">
-      <div class="section-label" style="justify-content:center;">One-time purchase · Instant download</div>
-      <div class="section-title" style="margin-bottom:10px;">Get the data you need</div>
-      <div class="section-sub">No subscriptions. Buy once, download instantly via Gumroad. Re-download anytime.</div>
-    </div>
-    <div class="pricing-grid-home">
-
-      <!-- PRODUCT 1 -->
-      <div class="ph-card">
-        <div class="ph-tier">SGMPI Market Prices</div>
-        <div class="ph-amount"><sup>$</sup>15</div>
-        <div class="ph-period">one-time purchase · instant CSV download</div>
-        <div class="ph-divider"></div>
-        <ul class="ph-features">
-          <li>8 CSV files — real Ghana market prices</li>
-          <li>Mobile Phones, Vehicles, Electronics</li>
-          <li>Home &amp; Furniture, Food &amp; Agriculture</li>
-          <li>Property, Fashion, Commercial Equipment</li>
-          <li>3,715 rows with price, condition &amp; region</li>
-          <li>Updated monthly — re-download free</li>
-          <li class="ph-no">BoG / GSS / World Bank data</li>
-        </ul>
-        <a href="https://datalyze.gumroad.com/l/mcrmty" target="_blank" rel="noopener" class="btn ph-cta">Buy on Gumroad →</a>
+      <div class="product-tile">
+        <div class="product-tile-icon">🛒</div>
+        <div class="product-tile-name">SGMPI Consumer Prices</div>
+        <p class="product-tile-desc">Electronics, phones, furniture, fashion and more — collected from Ghana's largest online markets, AI-enriched with brand, model and condition.</p>
+        <div class="product-tile-price">GHS 150</div>
+        <div class="product-tile-period">one-time download</div>
+        <a href="products.html" class="btn btn-teal" style="text-align:center;justify-content:center;">Get this dataset →</a>
       </div>
 
-      <!-- PRODUCT 2 — featured -->
-      <div class="ph-card ph-featured">
-        <div class="ph-pop">Best value</div>
-        <div class="ph-tier">Ghana Data Full Bundle</div>
-        <div class="ph-amount"><sup>$</sup>29</div>
-        <div class="ph-period">one-time purchase · all 31 datasets in one zip</div>
-        <div class="ph-divider"></div>
-        <ul class="ph-features">
-          <li>Everything in SGMPI (8 files)</li>
-          <li>Bank of Ghana — FX, CPI, GDP, Indicators</li>
-          <li>GSS StatsBank — 13 datasets (back to 1971)</li>
-          <li>World Bank Ghana — 6 annual datasets</li>
-          <li>31 clean CSVs in a single zip archive</li>
-          <li>Consistent headers &amp; date formats</li>
-          <li>Updated monthly — re-download free</li>
-        </ul>
-        <a href="https://datalyze.gumroad.com/l/fjxiy" target="_blank" rel="noopener" class="btn btn-teal ph-cta">Buy on Gumroad →</a>
+      <div class="product-tile">
+        <div class="product-tile-icon">🏠</div>
+        <div class="product-tile-name">Real Estate &amp; Accommodation</div>
+        <p class="product-tile-desc">Property listings, rental prices, hotel and Airbnb nightly rates across Ghana's major cities — enriched with neighbourhood and city data.</p>
+        <div class="product-tile-price">GHS 100</div>
+        <div class="product-tile-period">one-time download</div>
+        <a href="products.html" class="btn btn-teal" style="text-align:center;justify-content:center;">Get this dataset →</a>
       </div>
 
-      <!-- ENTERPRISE -->
-      <div class="ph-card">
-        <div class="ph-tier">Enterprise / Custom</div>
-        <div class="ph-amount ph-custom">Custom</div>
-        <div class="ph-period">for institutions, governments &amp; research teams</div>
-        <div class="ph-divider"></div>
-        <ul class="ph-features">
-          <li>Custom data collection &amp; surveys</li>
-          <li>Dedicated data analyst support</li>
-          <li>White-label data reports</li>
-          <li>Multi-seat team access</li>
-          <li>SLA &amp; data quality guarantees</li>
-          <li>Bespoke sector dashboards</li>
-          <li>Research partnership options</li>
-        </ul>
-        <a href="marketplace.html#contact" class="btn ph-cta">Contact us</a>
+      <div class="product-tile">
+        <div class="product-tile-icon">📈</div>
+        <div class="product-tile-name">Economic, Financial &amp; Agricultural</div>
+        <p class="product-tile-desc">BoG macro indicators, FX rates, GSE stock indices, agricultural commodity prices and weekly fuel prices — all in one dataset.</p>
+        <div class="product-tile-price">GHS 100</div>
+        <div class="product-tile-period">one-time download</div>
+        <a href="products.html" class="btn btn-teal" style="text-align:center;justify-content:center;">Get this dataset →</a>
       </div>
 
     </div>
-    <div style="text-align:center;margin-top:24px;">
-      <p style="font-family:var(--font-m);font-size:11px;color:var(--grey3);">Prices in USD · Secure checkout via Gumroad · Academic discount available — <a href="marketplace.html#contact" style="color:var(--teal);text-decoration:none;">contact us</a></p>
+
+    <!-- Bundle card -->
+    <div class="bundle-tile">
+      <div class="bundle-tile-left">
+        <div class="bundle-tile-badge">Best Value</div>
+        <div class="bundle-tile-name">Ghana Complete Data Bundle</div>
+        <p class="bundle-tile-desc">All 3 datasets in one purchase — consumer prices, real estate &amp; accommodation, economic &amp; financial data. Instant delivery, no subscription required.</p>
+        <div class="bundle-tile-perks">✓ Save GHS 50 vs buying separately &nbsp;·&nbsp; ✓ Instant email delivery &nbsp;·&nbsp; ✓ MoMo &amp; card accepted</div>
+      </div>
+      <div class="bundle-tile-right">
+        <div class="bundle-tile-price">GHS 300</div>
+        <div class="bundle-tile-period">one-time purchase · all 3 datasets</div>
+        <a href="products.html" class="btn btn-teal" style="font-size:14px;padding:12px 32px;white-space:nowrap;">Buy the Bundle →</a>
+      </div>
     </div>
+
+    <div style="text-align:center;margin-top:18px;">
+      <p style="font-family:var(--font-m);font-size:11px;color:var(--grey3);">Secure checkout via Paystack · MoMo, card &amp; international payments accepted · Questions? <a href="marketplace.html#contact" style="color:var(--teal);text-decoration:none;">Contact us</a></p>
+    </div>
+
   </div>
 </div>
 
@@ -893,11 +959,16 @@ footer a:hover{text-decoration:underline;}
 </footer>
 
 <script>
-// ── Chart.js defaults ─────────────────────────────────────────
-Chart.defaults.color = 'rgba(15,30,55,0.50)';
-Chart.defaults.borderColor = 'rgba(15,30,55,0.08)';
+// ── Chart.js defaults — dark card theme ───────────────────────
+Chart.defaults.color = 'rgba(255,255,255,0.45)';
+Chart.defaults.borderColor = 'rgba(255,255,255,0.08)';
 Chart.defaults.font.family = "'IBM Plex Mono', monospace";
 Chart.defaults.font.size = 10;
+Chart.defaults.plugins.tooltip.backgroundColor = '#1a2e47';
+Chart.defaults.plugins.tooltip.titleColor = 'rgba(255,255,255,0.85)';
+Chart.defaults.plugins.tooltip.bodyColor  = 'rgba(255,255,255,0.7)';
+Chart.defaults.plugins.tooltip.borderColor = 'rgba(255,255,255,0.12)';
+Chart.defaults.plugins.tooltip.borderWidth = 1;
 
 const TEAL   = '#00c9a7';
 const AMBER  = '#f59e0b';
@@ -1169,11 +1240,11 @@ async function init() {
         loadCSV('data/gss_cpi_inflation.csv'),
         loadCSV('data/bog_fx_rates.csv'),
         loadCSV('data/wb_ghana_macroeconomic.csv'),
-        loadCSV('data/market_prices_summary.csv'),
+        Promise.resolve([]),
         loadCSV('data/bog_gdp.csv'),
         loadCSV('data/catalogue.csv'),
-        loadCSV('data/gss_interest_rates.csv'),
-        loadCSV('data/policy_rate_extended.csv'),
+        Promise.resolve([]),
+        Promise.resolve([]),
         loadCSV('data/bog_key_indicators.csv'),
         loadCSV('data/gss_commodity_prices.csv'),
       ]),
@@ -1185,8 +1256,6 @@ async function init() {
     buildGDPGrowth(wb);
     buildGDPInflation(wb);
     buildSectors(gdp);
-    buildMarket(market);
-    buildRates(rates, ratesExt);
     buildDatasets(cat);
   } catch(e) {
     console.error('Data load error', e);
@@ -1433,11 +1502,6 @@ function buildInflFX(cpi, bogFx) {
       plugins: {
         legend: { display: false },
         tooltip: {
-          backgroundColor:'rgba(240,244,248,0.96)',
-          borderColor:'rgba(15,30,55,0.15)',
-          borderWidth:1,
-          titleColor:'rgba(15,30,55,0.55)',
-          bodyColor:'rgba(15,30,55,0.85)',
           padding:10,
           callbacks: {
             label: c => c.datasetIndex===0
@@ -2041,6 +2105,76 @@ init();
       }
     })
     .catch(() => {});
+
+  // ── GMPI Ticker ───────────────────────────────────────────────
+  (async function loadGMPI() {
+    try {
+      // Latest single value (fast)
+      const latest = await fetch(API + '/api/gmpi/latest').then(r => r.ok ? r.json() : null).catch(() => null);
+      if (latest && latest.gmpi != null) {
+        const gmpiVal = parseFloat(latest.gmpi);
+        const chngPct = parseFloat(latest.change_pct);
+        document.getElementById('gmpi-value').textContent = gmpiVal.toFixed(1);
+        document.getElementById('gmpi-week').textContent  = 'W' + latest.week + ' ' + latest.year + ' · ' + latest.products_tracked + ' products tracked';
+        // Hero panel GMPI stat cell
+        const heroGmpi = document.getElementById('heroGmpiValue');
+        if (heroGmpi) heroGmpi.textContent = gmpiVal.toFixed(1);
+        // Change badge
+        if (!isNaN(chngPct)) {
+          const up = chngPct >= 0;
+          document.getElementById('gmpi-change').style.color = up ? '#f59e0b' : '#34d399';
+          document.getElementById('gmpi-change').textContent = (up ? '▲ +' : '▼ ') + Math.abs(chngPct).toFixed(2) + '% wow';
+        }
+      }
+
+      // Full history for sparkline + category pills
+      const full = await fetch(API + '/api/gmpi').then(r => r.ok ? r.json() : null).catch(() => null);
+      if (full) {
+        // Sparkline (last 12 weeks, oldest → newest)
+        const hist = (full.overall || []).slice(0, 12).reverse();
+        if (hist.length > 1 && window.Chart) {
+          const ctx = document.getElementById('gmpi-spark').getContext('2d');
+          new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: hist.map(r => 'W' + r.week_number),
+              datasets: [{
+                data:           hist.map(r => r.gmpi),
+                borderColor:    '#00957a',
+                borderWidth:    2,
+                pointRadius:    0,
+                tension:        0.4,
+                fill:           true,
+                backgroundColor:'rgba(0,149,122,0.12)',
+              }]
+            },
+            options: {
+              responsive: true, maintainAspectRatio: false,
+              plugins: { legend: { display: false }, tooltip: { enabled: false } },
+              scales:  { x: { display: false }, y: { display: false } },
+              animation: { duration: 600 },
+            }
+          });
+        }
+
+        // Category pills (latest week only)
+        const latestWeek = (full.by_category || []).filter(r => r.week_number === latest.week && r.year === latest.year);
+        const pillsEl = document.getElementById('gmpi-cats');
+        if (pillsEl && latestWeek.length) {
+          pillsEl.innerHTML = latestWeek.map(c => {
+            const idx = parseFloat(c.category_index);
+            const chg = idx - 100;
+            const col = chg > 5 ? '#f59e0b' : chg < -2 ? '#34d399' : 'rgba(255,255,255,0.45)';
+            return `<div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.10);
+                      border-radius:4px;padding:4px 9px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:${col};">
+                      ${c.product_category} <strong>${idx.toFixed(1)}</strong>
+                    </div>`;
+          }).join('');
+        }
+      }
+    } catch(e) { console.error('[GMPI] Error loading widget:', e); }
+  })();
+
   fetch(API + '/api/stats')
     .then(r => r.ok ? r.json() : Promise.reject())
     .then(d => {
@@ -2058,12 +2192,16 @@ init();
   // ── Feed rendering ────────────────────────────────────────────
   let activeFeed = 'market_prices';
 
+  // Daily offset — cycles 9 new products every day across the full dataset
+  const _daysSinceEpoch = Math.floor(Date.now() / 86400000);
+  const _dailyOffset    = (_daysSinceEpoch * 9) % 15000;
+
   function loadFeed(sector) {
     const grid = document.getElementById('feed-grid');
     grid.innerHTML = '<div class="feed-loading"><div class="live-pulse"></div>Loading latest data…</div>';
 
     const endpoints = {
-      market_prices: API + '/api/market-prices?limit=9',
+      market_prices: API + '/api/market-prices?limit=9&offset=' + _dailyOffset,
       property:      API + '/api/property?limit=9',
       economic:      API + '/api/economic?limit=9',
       commodities:   API + '/api/commodities?limit=9',
@@ -2076,10 +2214,11 @@ init();
       }
       grid.innerHTML = '';
       data.forEach((item, i) => {
-        const card = document.createElement('div');
+        const card = document.createElement('a');
         card.className = 'feed-card';
+        card.href = 'marketplace.html';
         card.style.animationDelay = (i * 0.05) + 's';
-        card.innerHTML = renderCard(sector, item);
+        card.innerHTML = renderCard(sector, item) + '<div class="feed-view-link">View on marketplace →</div>';
         grid.appendChild(card);
       });
     }
@@ -2118,7 +2257,7 @@ init();
           <div class="feed-category">${item.product_category || 'General'}</div>
           <div class="feed-date">${fmtDate(item.collected_date)}</div>
         </div>
-        <div class="feed-title">${item.title || '—'}</div>
+        <div class="feed-title">${item.normalized_name || item.title || '—'}</div>
         <div class="feed-price ${item.price_ghs ? '' : 'no-price'}">${item.price_ghs ? fmtPrice(item.price_ghs) : 'Price on request'}</div>
         <div class="feed-meta">
           ${item.location ? `<div class="feed-meta-item">📍 ${item.location}</div>` : ''}
@@ -2210,6 +2349,157 @@ init();
 
   // ── Initial load ──────────────────────────────────────────────
   loadFeed('market_prices');
+
+})();
+</script>
+
+<script>
+/* ── SG Data Advisor strip ── */
+(function() {
+  var ADV_WORKER = "https://sg-advisor-api-production.up.railway.app/chat";
+  var advHistory = [];
+  var advThinking = false;
+
+  function advEsc(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+  function advMd(text) {
+    return advEsc(text)
+      .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+      .replace(/^[*-] (.+)$/gm,'<li>$1</li>')
+      .replace(/(<li>.*<\/li>\n?)+/g,function(m){return '<ul style="margin:0.3rem 0 0.3rem 1rem;padding:0">'+m+'</ul>';})
+      .replace(/\n/g,'<br>');
+  }
+  function advScroll() {
+    var el = document.getElementById('advMessages');
+    if (el) el.scrollTop = el.scrollHeight;
+  }
+  function advAppend(role, html) {
+    var c = document.getElementById('advMessages');
+    var b = document.createElement('div');
+    b.className = 'adv-bubble ' + role;
+    b.innerHTML = html;
+    c.appendChild(b);
+    advScroll();
+    return b;
+  }
+  function advShowTyping() {
+    var c = document.getElementById('advMessages');
+    var el = document.createElement('div');
+    el.className = 'adv-bubble typing';
+    el.id = 'adv-typing-' + Date.now();
+    el.innerHTML = "<div class='adv-dot'></div><div class='adv-dot'></div><div class='adv-dot'></div>";
+    c.appendChild(el);
+    advScroll();
+    return el.id;
+  }
+  function advRemoveTyping(id) {
+    var el = document.getElementById(id);
+    if (el) el.remove();
+  }
+  function advRenderCards(datasets) {
+    var c = document.getElementById('advMessages');
+    var w = document.createElement('div');
+    w.className = 'adv-dataset-cards';
+    datasets.forEach(function(d) {
+      var card = document.createElement('div');
+      card.className = 'adv-dataset-card';
+      var methods = (d.suggested_methods || []).slice(0,2);
+      var sector = d.sector || '';
+      card.innerHTML = '<h4>' + advEsc(d.name || d.id) + '</h4>' +
+        '<p>' + advEsc(d.description || sector) + '</p>' +
+        '<div class="adv-tags">' +
+        methods.map(function(m){return '<span class="adv-tag">'+advEsc(m)+'</span>';}).join('') +
+        (sector ? '<span class="adv-tag">'+advEsc(sector)+'</span>' : '') +
+        '</div>' +
+        '<a href="' + advEsc(d.marketplace_link || 'marketplace.html') + '" target="_blank">View on Marketplace →</a>';
+      w.appendChild(card);
+    });
+    c.appendChild(w);
+    advScroll();
+  }
+
+  function advRenderLiveData(liveData) {
+    var c = document.getElementById('advMessages');
+    var wrapper = document.createElement('div');
+    wrapper.style.cssText = 'margin:8px 0 4px 0;width:100%';
+    Object.entries(liveData).forEach(function([key, info]) {
+      if (!info || !info.rows || info.rows.length === 0) return;
+      var section = document.createElement('div');
+      section.style.cssText = 'background:#f0f7ff;border:1px solid #c8dfff;border-radius:10px;padding:12px 14px;margin-bottom:8px;font-size:0.82rem';
+      var label = info.label || key;
+      var total = info.total || info.rows.length;
+      var rows = info.rows.slice(0, 5);
+      var cols = Object.keys(rows[0] || {}).filter(function(col){ return !['id','created_at','updated_at','search_label'].includes(col); }).slice(0, 5);
+      var html = '<div style="font-weight:600;color:#1a4d8a;margin-bottom:6px">📊 ' + advEsc(label) + ' — ' + total.toLocaleString() + ' matching records found</div>';
+      html += '<table style="width:100%;border-collapse:collapse;font-size:0.78rem">';
+      html += '<thead><tr>' + cols.map(function(col){ return '<th style="text-align:left;padding:3px 6px;border-bottom:1px solid #c8dfff;color:#555;text-transform:capitalize">' + advEsc(col.replace(/_/g,' ')) + '</th>'; }).join('') + '</tr></thead>';
+      html += '<tbody>';
+      rows.forEach(function(row) {
+        html += '<tr>' + cols.map(function(col) {
+          var val = row[col];
+          var display = (val === null || val === undefined) ? '—' : String(val).slice(0, 40);
+          return '<td style="padding:3px 6px;border-bottom:1px solid #e8f0fe;color:#222">' + advEsc(display) + '</td>';
+        }).join('') + '</tr>';
+      });
+      html += '</tbody></table>';
+      if (total > 5) {
+        html += '<div style="margin-top:6px;color:#555;font-size:0.76rem">Showing 5 of ' + total.toLocaleString() + ' results. <a href="https://sgdatalytics.org/marketplace.html" target="_blank" style="color:#1a4d8a">Get full dataset →</a></div>';
+      }
+      section.innerHTML = html;
+      wrapper.appendChild(section);
+    });
+    if (wrapper.children.length > 0) { c.appendChild(wrapper); advScroll(); }
+  }
+
+  window.advSendQuick = function(btn) {
+    document.getElementById('advInput').value = btn.textContent.trim();
+    advSendMessage();
+  };
+  window.advAutoResize = function(el) {
+    el.style.height = '40px';
+    el.style.height = Math.min(el.scrollHeight, 100) + 'px';
+  };
+  window.advHandleKey = function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); advSendMessage(); }
+  };
+  window.advSendMessage = async function() {
+    if (advThinking) return;
+    var input = document.getElementById('advInput');
+    var text = input.value.trim();
+    if (!text) return;
+    var chips = document.getElementById('advChips');
+    if (chips) chips.style.display = 'none';
+    var wrap = document.getElementById('advMessagesWrap');
+    if (wrap) wrap.style.display = 'block';
+    advAppend('user', advEsc(text).replace(/\n/g,'<br>'));
+    advHistory.push({ role: 'user', content: text });
+    input.value = '';
+    input.style.height = '40px';
+    advThinking = true;
+    var btn = document.getElementById('advSendBtn');
+    if (btn) btn.disabled = true;
+    var tid = advShowTyping();
+    try {
+      var resp = await fetch(ADV_WORKER, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: advHistory })
+      });
+      if (!resp.ok) { var er = await resp.json().catch(function(){return {};}); throw new Error(er.error || 'Server error ' + resp.status); }
+      var data = await resp.json();
+      advRemoveTyping(tid);
+      if (data.live_data && Object.keys(data.live_data).length > 0) advRenderLiveData(data.live_data);
+      advAppend('assistant', advMd(data.reply || 'No response received.'));
+      advHistory.push({ role: 'assistant', content: data.reply });
+      if (data.datasets_found && data.datasets_found.length > 0) advRenderCards(data.datasets_found);
+    } catch(err) {
+      advRemoveTyping(tid);
+      advAppend('assistant', '⚠️ ' + advEsc(err.message || 'Could not reach the advisor. Please try again.'));
+    }
+    advThinking = false;
+    if (btn) btn.disabled = false;
+  };
 
 })();
 </script>

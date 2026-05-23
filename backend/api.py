@@ -5,10 +5,10 @@ Connects to 6 Neon databases serving real Ghana market price data.
 Run locally : python3 api.py
 Run on Railway: gunicorn -w 2 -b 0.0.0.0:$PORT api:app
 """
-import os, csv, io, hmac, hashlib, secrets, smtplib
+import os, csv, io, hmac, hashlib, secrets
+import openpyxl
+from openpyxl.styles import Font, PatternFill, Alignment
 from datetime import datetime, timedelta, timezone
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
 from flask import Flask, jsonify, request, Response, stream_with_context
 from flask_cors import CORS
 from flask_limiter import Limiter
@@ -56,32 +56,281 @@ def query(db_key, sql, params=None, one=False):
     cur.close(); conn.close()
     return result
 
-# ── TOKEN STORE (in-memory) ──────────────────────────────────
-# { token: { email, sector, created_at, expires_at, used } }
-# Note: resets on Railway restart — acceptable for 24hr tokens
-_TOKEN_STORE = {}
+# ── TOKEN STORE (Neon-backed) ─────────────────────────────────
+# Tokens are persisted in the economic Neon DB so they survive Railway redeploys.
+# Table is auto-created on first use.
+
+def _get_token_conn():
+    url = os.getenv('NEON_ECONOMIC', '')
+    if not url:
+        raise Exception('NEON_ECONOMIC not configured — cannot store tokens')
+    return psycopg2.connect(url, sslmode='require')
+
+def _ensure_token_table():
+    """Create download_tokens table if it doesn't exist."""
+    try:
+        conn = _get_token_conn()
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute("""
+                    CREATE TABLE IF NOT EXISTS download_tokens (
+                        token       TEXT PRIMARY KEY,
+                        email       TEXT NOT NULL,
+                        sector      TEXT NOT NULL,
+                        created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+                        expires_at  TIMESTAMPTZ NOT NULL,
+                        used        BOOLEAN NOT NULL DEFAULT FALSE
+                    )
+                """)
+        conn.close()
+    except Exception as e:
+        print(f"[TOKEN] Warning: could not ensure token table: {e}")
+
+# Create table on startup
+_ensure_token_table()
 
 # ── SECTOR CONFIG ────────────────────────────────────────────
 SECTOR_LABELS = {
     'market_prices': 'Market Prices',
-    'property':      'Property',
-    'accommodation': 'Accommodation',
-    'economic':      'Economic Indicators',
-    'commodities':   'Commodities & Fuel',
-    'financials':    'Financial Markets',
+    'accommodation': 'Real Estate & Accommodation',
+    'economic':      'Economic, Financial & Agricultural Data',
+    'bundle':        'Ghana Complete Data Bundle',
 }
 
+# Bundle now only needs 3 download links — all 8 tables are covered
+BUNDLE_SECTORS = ['market_prices', 'accommodation', 'economic']
+
+# Exact product key → sector mapping (used with Paystack metadata.product)
+PRODUCT_SECTOR_MAP = {
+    'market_prices': 'market_prices',
+    'accommodation': 'accommodation',
+    'economic':      'economic',
+    'bundle':        'bundle',
+}
+
+# Each entry: (db_key, sql, table_label)
+# table_label is written as a section header in the CSV so analysts know where each table starts
 SECTOR_QUERIES = {
-    'market_prices':  [('market_prices', 'SELECT * FROM market_prices ORDER BY collected_date DESC')],
-    'property':       [('property',      'SELECT * FROM property_prices ORDER BY collected_date DESC')],
-    'accommodation':  [('accommodation', 'SELECT * FROM hotel_prices ORDER BY collected_date DESC'),
-                       ('accommodation', 'SELECT * FROM airbnb_prices ORDER BY collected_date DESC')],
-    'economic':       [('economic',      'SELECT * FROM economic_indicators ORDER BY collected_date DESC'),
-                       ('economic',      'SELECT * FROM exchange_rates ORDER BY collected_date DESC')],
-    'commodities':    [('commodities',   'SELECT * FROM commodity_prices ORDER BY collected_date DESC'),
-                       ('commodities',   'SELECT * FROM fuel_prices ORDER BY collected_date DESC')],
-    'financials':     [('financials',    'SELECT * FROM gse_indices ORDER BY collected_date DESC'),
-                       ('financials',    'SELECT * FROM stock_prices ORDER BY collected_date DESC')],
+    # ── Consumer Market Prices ───────────────────────────────────
+    # Aggregated like Numbeo: one row per product per city per week
+    # Outliers filtered: price_ghs between GHS 1 and GHS 200,000
+    'market_prices': [
+        # Table 1 — Category summary: one row per category per city per week
+        ('market_prices', """
+        SELECT
+            week_number,
+            year,
+            product_category,
+            COALESCE(NULLIF(location, ''), 'Ghana')               AS city,
+            COUNT(*)                                              AS listing_count,
+            ROUND(AVG(price_ghs)::numeric,    0)                  AS avg_price_ghs,
+            MIN(price_ghs)                                        AS min_price_ghs,
+            MAX(price_ghs)                                        AS max_price_ghs,
+            ROUND(PERCENTILE_CONT(0.5) WITHIN GROUP
+                  (ORDER BY price_ghs)::numeric, 0)               AS median_price_ghs
+        FROM market_prices
+        WHERE price_ghs > 1
+          AND price_ghs < 200000
+        GROUP BY week_number, year,
+                 product_category,
+                 COALESCE(NULLIF(location, ''), 'Ghana')
+        ORDER BY year DESC, week_number DESC, product_category, city
+        """, 'market_prices_category_summary'),
+
+        # Table 2 — Product detail: one row per product name per city per week
+        ('market_prices', """
+        SELECT
+            week_number,
+            year,
+            product_category,
+            TRIM(COALESCE(NULLIF(normalized_name, ''), search_label)) AS normalized_name,
+            COALESCE(NULLIF(location, ''), 'Ghana')               AS city,
+            COUNT(*)                                              AS listing_count,
+            ROUND(AVG(price_ghs)::numeric,    0)                  AS avg_price_ghs,
+            MIN(price_ghs)                                        AS min_price_ghs,
+            MAX(price_ghs)                                        AS max_price_ghs,
+            ROUND(PERCENTILE_CONT(0.5) WITHIN GROUP
+                  (ORDER BY price_ghs)::numeric, 0)               AS median_price_ghs
+        FROM market_prices
+        WHERE price_ghs > 1
+          AND price_ghs < 200000
+          AND (normalized_name IS NOT NULL AND normalized_name <> ''
+               OR search_label IS NOT NULL)
+        GROUP BY week_number, year,
+                 product_category,
+                 TRIM(COALESCE(NULLIF(normalized_name, ''), search_label)),
+                 COALESCE(NULLIF(location, ''), 'Ghana')
+        ORDER BY year DESC, week_number DESC, product_category, normalized_name
+        """, 'market_prices_product_detail'),
+    ],
+
+    # ── Real Estate & Accommodation ──────────────────────────────
+    'accommodation': [
+        ('accommodation', """
+        SELECT
+            week_number,
+            year,
+            'Hotel'                                        AS product_category,
+            city || ' — ' || COALESCE(star_rating::text, '?') || '-star hotel'
+                                                           AS normalized_name,
+            city,
+            COALESCE(star_rating::text, 'Unknown')         AS star_rating,
+            COUNT(*)                                        AS hotel_count,
+            ROUND(AVG(price_per_night_usd)::numeric, 2)    AS avg_price_per_night_usd,
+            MIN(price_per_night_usd)                        AS min_price_per_night_usd,
+            MAX(price_per_night_usd)                        AS max_price_per_night_usd,
+            ROUND(AVG(review_score)::numeric, 1)            AS avg_review_score
+        FROM hotel_prices
+        WHERE price_per_night_usd > 0
+        GROUP BY week_number, year, city, star_rating
+        ORDER BY year DESC, week_number DESC, city, star_rating
+        """, 'hotel_prices_aggregated'),
+
+        ('accommodation', """
+        SELECT
+            week_number,
+            year,
+            'Airbnb'                                       AS product_category,
+            city || ' — ' || room_type                     AS normalized_name,
+            city,
+            room_type,
+            COUNT(*)                                        AS listing_count,
+            ROUND(AVG(price_ghs)::numeric, 0)              AS avg_price_ghs,
+            MIN(price_ghs)                                  AS min_price_ghs,
+            MAX(price_ghs)                                  AS max_price_ghs,
+            ROUND(AVG(rating)::numeric, 1)                  AS avg_rating
+        FROM airbnb_prices
+        WHERE price_ghs > 0
+        GROUP BY week_number, year, city, room_type
+        ORDER BY year DESC, week_number DESC, city, room_type
+        """, 'airbnb_prices_aggregated'),
+
+        ('property', """
+        SELECT
+            week_number,
+            year,
+            'Property'                                     AS product_category,
+            city || ' — ' || property_type
+              || CASE WHEN bedrooms IS NOT NULL
+                      THEN ' ' || bedrooms || 'BR' ELSE '' END
+                                                           AS normalized_name,
+            property_type,
+            listing_type,
+            city,
+            neighborhood,
+            bedrooms,
+            COUNT(*)                                        AS listing_count,
+            ROUND(AVG(price_ghs)::numeric, 0)              AS avg_price_ghs,
+            MIN(price_ghs)                                  AS min_price_ghs,
+            MAX(price_ghs)                                  AS max_price_ghs
+        FROM property_prices
+        WHERE price_ghs > 0
+        GROUP BY week_number, year,
+                 property_type, listing_type, city, neighborhood, bedrooms
+        ORDER BY year DESC, week_number DESC, city, property_type, bedrooms
+        """, 'property_prices_aggregated'),
+    ],
+
+    # ── Economic, Financial & Agricultural ───────────────────────
+    'economic': [
+        ('economic', """
+        SELECT
+            collected_date,
+            year,
+            month,
+            sector                 AS product_category,
+            indicator_name         AS normalized_name,
+            indicator_code,
+            value,
+            unit,
+            source
+        FROM economic_indicators
+        ORDER BY collected_date DESC, sector, indicator_name
+        """, 'economic_indicators'),
+
+        ('economic', """
+        SELECT
+            collected_date,
+            'Foreign Exchange'     AS product_category,
+            currency_pair          AS normalized_name,
+            currency_pair,
+            rate_ghs,
+            source
+        FROM exchange_rates
+        ORDER BY collected_date DESC, currency_pair
+        """, 'exchange_rates'),
+
+        ('financials', """
+        SELECT
+            collected_date,
+            week_number,
+            year,
+            'Financial Markets'    AS product_category,
+            index_name             AS normalized_name,
+            index_name,
+            value,
+            change_points,
+            change_pct,
+            source
+        FROM gse_indices
+        ORDER BY collected_date DESC, index_name
+        """, 'gse_indices'),
+
+        ('financials', """
+        SELECT
+            collected_date,
+            week_number,
+            year,
+            'Financial Markets'    AS product_category,
+            company_name || ' (' || symbol || ')'
+                                   AS normalized_name,
+            symbol,
+            company_name,
+            opening_price_ghs,
+            closing_price_ghs,
+            change_ghs,
+            change_pct,
+            volume,
+            year_high,
+            year_low,
+            source
+        FROM stock_prices
+        ORDER BY collected_date DESC, symbol
+        """, 'stock_prices'),
+
+        ('commodities', """
+        SELECT
+            collected_date,
+            week_number,
+            year,
+            'Agricultural Commodities'   AS product_category,
+            commodity_name || ' — ' || REPLACE(market, 'Esoko Marketplace', 'Accra Retail Prices')
+                                         AS normalized_name,
+            commodity_name,
+            REPLACE(market, 'Esoko Marketplace', 'Accra Retail Prices') AS market,
+            region,
+            price_ghs,
+            unit,
+            source
+        FROM commodity_prices
+        ORDER BY collected_date DESC, commodity_name, market
+        """, 'commodity_prices'),
+
+        ('commodities', """
+        SELECT
+            collected_date,
+            week_number,
+            year,
+            'Energy & Fuel'        AS product_category,
+            fuel_type              AS normalized_name,
+            fuel_type,
+            price_ghs_per_litre,
+            currency,
+            source
+        FROM fuel_prices
+        ORDER BY collected_date DESC, fuel_type
+        """, 'fuel_prices'),
+    ],
 }
 
 # Maps Paystack plan name keywords → sector codes
@@ -92,7 +341,9 @@ PLAN_SECTOR_MAP = {
     'hotel':         'accommodation',
     'airbnb':        'accommodation',
     'economic':      'economic',
-    'commodit':      'commodities',
+    'commodit':      'economic',
+    'agricultur':    'economic',
+    'financial':     'economic',
     'fuel':          'commodities',
     'financial':     'financials',
     'stock':         'financials',
@@ -112,20 +363,24 @@ def resolve_sector(plan_name):
 # ═══════════════════════════════════════════════════════════════
 def generate_download_token(email, sector, expires_hours=24):
     """
-    Generate a secure one-time download token.
-    Stores it in memory and returns the full download URL.
+    Generate a secure one-time download token persisted in Neon.
+    Survives Railway redeploys — tokens valid for 24 hours.
     """
     token      = secrets.token_urlsafe(32)
     now        = datetime.now(timezone.utc)
     expires_at = now + timedelta(hours=expires_hours)
 
-    _TOKEN_STORE[token] = {
-        'email':      email,
-        'sector':     sector,
-        'created_at': now,
-        'expires_at': expires_at,
-        'used':       False,
-    }
+    try:
+        conn = _get_token_conn()
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute("""
+                    INSERT INTO download_tokens (token, email, sector, created_at, expires_at, used)
+                    VALUES (%s, %s, %s, %s, %s, FALSE)
+                """, (token, email, sector, now, expires_at))
+        conn.close()
+    except Exception as e:
+        print(f"[TOKEN] DB write failed: {e} — token will not persist across redeploys")
 
     download_url = f"https://sgdatalytics-production.up.railway.app/api/download?token={token}"
     print(f"[TOKEN] Generated for {email} | sector={sector} | expires={expires_at.isoformat()}")
@@ -137,12 +392,12 @@ def generate_download_token(email, sector, expires_hours=24):
 def send_download_email(email, download_url, sector):
     """
     Send a professional HTML email with the one-time download link.
-    Uses Gmail SMTP via GMAIL_USER and GMAIL_APP_PASSWORD env vars.
+    Uses Resend HTTP API (RESEND_API_KEY env var) — no SMTP, Railway-safe.
     """
-    gmail_user = os.getenv('GMAIL_USER')
-    gmail_pass = os.getenv('GMAIL_APP_PASSWORD')
-    if not gmail_user or not gmail_pass:
-        raise Exception('Gmail credentials not configured (GMAIL_USER / GMAIL_APP_PASSWORD)')
+    import requests as req
+    api_key = os.getenv('RESEND_API_KEY', '').strip()
+    if not api_key:
+        raise Exception('RESEND_API_KEY not configured')
 
     sector_label = SECTOR_LABELS.get(sector, sector.replace('_', ' ').title())
 
@@ -152,22 +407,16 @@ def send_download_email(email, download_url, sector):
 <table width="100%" cellpadding="0" cellspacing="0">
   <tr><td align="center" style="padding:40px 20px;">
     <table width="600" style="background:#ffffff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
-
-      <!-- Header -->
       <tr><td style="background:#00957a;padding:32px;text-align:center;">
         <h1 style="color:#ffffff;margin:0;font-size:26px;letter-spacing:-0.5px;">SG Datalytics</h1>
         <p style="color:#d0f0e8;margin:8px 0 0;font-size:14px;">Ghana Market Intelligence Platform</p>
       </td></tr>
-
-      <!-- Body -->
       <tr><td style="padding:40px;">
         <h2 style="color:#1a1a1a;margin:0 0 12px;font-size:20px;">Your data is ready ✓</h2>
         <p style="color:#555;line-height:1.7;margin:0 0 24px;">
           Thank you for your purchase. Your <strong>{sector_label}</strong> dataset
           has been prepared and is ready to download as a CSV file.
         </p>
-
-        <!-- Download button -->
         <div style="text-align:center;margin:32px 0;">
           <a href="{download_url}"
              style="background:#00957a;color:#ffffff;padding:16px 48px;border-radius:6px;
@@ -175,8 +424,6 @@ def send_download_email(email, download_url, sector):
             ⬇ Download Your Data
           </a>
         </div>
-
-        <!-- Warning box -->
         <div style="background:#fff8e1;border-left:4px solid #f59e0b;padding:16px 20px;
                     border-radius:4px;margin:24px 0;">
           <p style="margin:0;color:#92400e;font-size:14px;line-height:1.6;">
@@ -184,45 +431,130 @@ def send_download_email(email, download_url, sector):
             and can only be used <strong>once</strong>. Please download your file immediately.
           </p>
         </div>
-
         <p style="color:#777;font-size:13px;line-height:1.6;">
           If the button doesn't work, copy and paste this link into your browser:<br>
           <a href="{download_url}" style="color:#00957a;word-break:break-all;">{download_url}</a>
         </p>
-
         <hr style="border:none;border-top:1px solid #eee;margin:28px 0;">
-
         <p style="color:#999;font-size:12px;margin:0;">
-          Questions? Contact us at
-          <a href="mailto:support@sgdatalytics.org" style="color:#00957a;">support@sgdatalytics.org</a>
+          Questions? <a href="mailto:data@sgdatalytics.org" style="color:#00957a;">data@sgdatalytics.org</a>
         </p>
       </td></tr>
-
-      <!-- Footer -->
       <tr><td style="background:#f9f9f9;padding:20px;text-align:center;border-top:1px solid #eee;">
         <p style="color:#bbb;font-size:12px;margin:0;">
-          &copy; 2025 SG Datalytics &nbsp;|&nbsp;
+          &copy; 2026 SG Datalytics &nbsp;|&nbsp;
           <a href="https://sgdatalytics.org" style="color:#00957a;text-decoration:none;">sgdatalytics.org</a>
         </p>
       </td></tr>
-
     </table>
   </td></tr>
 </table>
 </body>
 </html>"""
 
-    msg = MIMEMultipart('alternative')
-    msg['Subject'] = 'Your SG Datalytics Data is Ready for Download'
-    msg['From']    = f'SG Datalytics <{gmail_user}>'
-    msg['To']      = email
-    msg.attach(MIMEText(html, 'html'))
+    resp = req.post(
+        'https://api.resend.com/emails',
+        headers={'Authorization': f'Bearer {api_key}', 'Content-Type': 'application/json'},
+        json={
+            'from':    'SG Datalytics <data@sgdatalytics.org>',
+            'to':      [email],
+            'subject': f'Your SG Datalytics Data is Ready — {sector_label}',
+            'html':    html,
+        },
+        timeout=15,
+    )
+    if resp.status_code not in (200, 201):
+        raise Exception(f'Resend API error {resp.status_code}: {resp.text[:200]}')
 
-    with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
-        server.login(gmail_user, gmail_pass)
-        server.sendmail(gmail_user, email, msg.as_string())
+    print(f"[EMAIL] Sent via Resend to {email} | sector={sector}")
 
-    print(f"[EMAIL] Sent to {email} | sector={sector}")
+
+def send_bundle_email(email, sectors):
+    """
+    Send one email containing separate download links for each sector in the bundle.
+    Called when a customer purchases the 'Ghana Complete Data Bundle'.
+    """
+    import requests as req
+    api_key = os.getenv('RESEND_API_KEY', '').strip()
+    if not api_key:
+        raise Exception('RESEND_API_KEY not configured')
+
+    # Generate a token for each sector
+    links_html = ''
+    for sector in sectors:
+        url   = generate_download_token(email, sector)
+        label = SECTOR_LABELS.get(sector, sector.replace('_', ' ').title())
+        links_html += f"""
+        <tr>
+          <td style="padding:14px 0;border-bottom:1px solid #eee;">
+            <strong style="color:#1a1a1a;">{label}</strong><br>
+            <a href="{url}"
+               style="display:inline-block;margin-top:8px;background:#00957a;color:#fff;
+                      padding:10px 28px;border-radius:5px;text-decoration:none;font-size:14px;font-weight:bold;">
+              ⬇ Download
+            </a>
+          </td>
+        </tr>"""
+
+    html = f"""<!DOCTYPE html>
+<html>
+<body style="margin:0;padding:0;background:#f4f4f4;font-family:Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr><td align="center" style="padding:40px 20px;">
+    <table width="620" style="background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+      <tr><td style="background:#00957a;padding:32px;text-align:center;">
+        <h1 style="color:#fff;margin:0;font-size:26px;">SG Datalytics</h1>
+        <p style="color:#d0f0e8;margin:8px 0 0;font-size:14px;">Ghana Market Intelligence Platform</p>
+      </td></tr>
+      <tr><td style="padding:40px;">
+        <h2 style="color:#1a1a1a;margin:0 0 12px;font-size:20px;">Your Complete Bundle is Ready ✓</h2>
+        <p style="color:#555;line-height:1.7;margin:0 0 24px;">
+          Thank you for purchasing the <strong>Ghana Complete Data Bundle</strong>.
+          Below are your individual download links — one per dataset.
+        </p>
+        <div style="background:#fff8e1;border-left:4px solid #f59e0b;padding:14px 18px;
+                    border-radius:4px;margin:0 0 24px;">
+          <p style="margin:0;color:#92400e;font-size:13px;line-height:1.6;">
+            ⚠️ Each link is <strong>one-time use</strong> and expires in <strong>24 hours</strong>.
+            Download all files now.
+          </p>
+        </div>
+        <table width="100%" cellpadding="0" cellspacing="0">
+          {links_html}
+        </table>
+        <hr style="border:none;border-top:1px solid #eee;margin:28px 0;">
+        <p style="color:#999;font-size:12px;margin:0;">
+          Questions? <a href="mailto:data@sgdatalytics.org" style="color:#00957a;">data@sgdatalytics.org</a>
+        </p>
+      </td></tr>
+      <tr><td style="background:#f9f9f9;padding:20px;text-align:center;border-top:1px solid #eee;">
+        <p style="color:#bbb;font-size:12px;margin:0;">
+          &copy; 2026 SG Datalytics &nbsp;|&nbsp;
+          <a href="https://sgdatalytics.org" style="color:#00957a;text-decoration:none;">sgdatalytics.org</a>
+        </p>
+      </td></tr>
+    </table>
+  </td></tr>
+</table>
+</body>
+</html>"""
+
+    resp = req.post(
+        'https://api.resend.com/emails',
+        headers={'Authorization': f'Bearer {api_key}', 'Content-Type': 'application/json'},
+        json={
+            'from':    'SG Datalytics <data@sgdatalytics.org>',
+            'to':      [email],
+            'subject': 'Your SG Datalytics Complete Bundle — 4 Download Links Inside',
+            'html':    html,
+        },
+        timeout=15,
+    )
+    if resp.status_code not in (200, 201):
+        raise Exception(f'Resend API error {resp.status_code}: {resp.text[:200]}')
+
+    print(f"[EMAIL] Bundle sent via Resend to {email} | {len(sectors)} sectors")
+
 
 # ═══════════════════════════════════════════════════════════════
 # EXISTING ROUTES (unchanged)
@@ -443,92 +775,434 @@ def paystack_webhook():
     if event == 'charge.success':
         data      = payload.get('data', {})
         email     = data.get('customer', {}).get('email', '')
-        amount    = data.get('amount', 0) / 100   # Paystack sends in kobo/pesewas
-        plan      = data.get('plan', {})
-        plan_name = plan.get('name', '') if isinstance(plan, dict) else str(plan)
+        amount    = data.get('amount', 0) / 100   # Paystack sends in pesewas
+        meta      = data.get('metadata', {}) or {}
+
+        # Prefer exact product key from metadata (set by frontend triggerPaystack)
+        # Fall back to plan-name keyword matching for subscription-style flows
+        product_key = meta.get('product', '')
+        if product_key in PRODUCT_SECTOR_MAP:
+            sector = PRODUCT_SECTOR_MAP[product_key]
+        else:
+            plan      = data.get('plan', {})
+            plan_name = plan.get('name', '') if isinstance(plan, dict) else str(plan)
+            sector    = resolve_sector(plan_name)
 
         if not email:
             print(f"[WEBHOOK] charge.success with no email — skipping")
             return jsonify({'status': 'ok'}), 200
 
-        sector       = resolve_sector(plan_name)
-        download_url = generate_download_token(email, sector)
+        print(f"[WEBHOOK] ✓ {email} | product='{product_key}' → sector={sector} | GH₵{amount:.2f}")
 
-        try:
-            send_download_email(email, download_url, sector)
-            print(f"[WEBHOOK] ✓ {email} | plan='{plan_name}' → sector={sector} | GH₵{amount:.2f}")
-        except Exception as e:
-            print(f"[WEBHOOK] Email failed for {email}: {e}")
-            # Still return 200 — token was created, email failure is non-fatal
+        if sector == 'bundle':
+            # Send a separate download link for each sector in the bundle
+            try:
+                send_bundle_email(email, BUNDLE_SECTORS)
+            except Exception as e:
+                print(f"[WEBHOOK] Bundle email failed for {email}: {e}")
+        else:
+            download_url = generate_download_token(email, sector)
+            try:
+                send_download_email(email, download_url, sector)
+            except Exception as e:
+                print(f"[WEBHOOK] Email failed for {email}: {e}")
+                # Still return 200 — token was created, email failure is non-fatal
 
     return jsonify({'status': 'ok'}), 200
 
 # ═══════════════════════════════════════════════════════════════
+# PART 3B — GHANA MARKET PRICE INDEX (GMPI)
+# ═══════════════════════════════════════════════════════════════
+
+@app.route('/api/gmpi')
+@limiter.limit("60 per minute")
+def get_gmpi():
+    """
+    Ghana Market Price Index — weekly composite price index across all tracked
+    consumer goods categories. Base week = 100 (first week of data collection).
+
+    Returns:
+      - Weekly index values (overall + per category)
+      - Week-on-week change (%)
+      - Number of products and listings tracked each week
+    """
+    # ── Overall weekly index ──────────────────────────────────
+    overall_sql = """
+    WITH weekly AS (
+        SELECT
+            week_number,
+            year,
+            collected_date,
+            product_category,
+            COALESCE(NULLIF(normalized_name,''), search_label) AS product_name,
+            AVG(price_ghs) AS avg_price
+        FROM market_prices
+        WHERE price_ghs > 1
+          AND price_ghs < 200000
+          AND (normalized_name IS NOT NULL AND normalized_name <> ''
+               OR search_label IS NOT NULL)
+        GROUP BY week_number, year, collected_date, product_category,
+                 COALESCE(NULLIF(normalized_name,''), search_label)
+    ),
+    weekly_composite AS (
+        SELECT
+            week_number,
+            year,
+            collected_date,
+            AVG(avg_price)             AS composite_avg_price,
+            COUNT(DISTINCT product_name) AS products_tracked,
+            SUM(1)                     AS category_product_count
+        FROM weekly
+        GROUP BY week_number, year, collected_date
+        ORDER BY year, week_number
+    ),
+    base AS (
+        SELECT composite_avg_price AS base_price
+        FROM weekly_composite
+        ORDER BY year, week_number
+        LIMIT 1
+    )
+    SELECT
+        w.week_number,
+        w.year,
+        w.collected_date                                    AS week_date,
+        ROUND((w.composite_avg_price / b.base_price * 100)::numeric, 2)
+                                                            AS gmpi,
+        ROUND(w.composite_avg_price::numeric, 2)            AS avg_price_ghs,
+        w.products_tracked,
+        LAG(ROUND((w.composite_avg_price / b.base_price * 100)::numeric, 2))
+            OVER (ORDER BY w.year, w.week_number)           AS prev_gmpi,
+        ROUND(
+            (ROUND((w.composite_avg_price / b.base_price * 100)::numeric, 2) -
+             LAG(ROUND((w.composite_avg_price / b.base_price * 100)::numeric, 2))
+                 OVER (ORDER BY w.year, w.week_number))
+        , 2)                                                AS gmpi_change,
+        ROUND(
+            (ROUND((w.composite_avg_price / b.base_price * 100)::numeric, 2) -
+             LAG(ROUND((w.composite_avg_price / b.base_price * 100)::numeric, 2))
+                 OVER (ORDER BY w.year, w.week_number))
+            / NULLIF(LAG(ROUND((w.composite_avg_price / b.base_price * 100)::numeric, 2))
+                 OVER (ORDER BY w.year, w.week_number), 0) * 100
+        , 2)                                                AS gmpi_change_pct
+    FROM weekly_composite w, base b
+    ORDER BY w.year DESC, w.week_number DESC
+    """
+
+    # ── Category-level index ──────────────────────────────────
+    category_sql = """
+    WITH weekly_cat AS (
+        SELECT
+            week_number,
+            year,
+            collected_date,
+            product_category,
+            AVG(price_ghs)               AS category_avg_price,
+            COUNT(DISTINCT COALESCE(NULLIF(normalized_name,''), search_label))
+                                         AS products_tracked
+        FROM market_prices
+        WHERE price_ghs > 1
+          AND price_ghs < 200000
+        GROUP BY week_number, year, collected_date, product_category
+    ),
+    base_cat AS (
+        SELECT
+            product_category,
+            FIRST_VALUE(category_avg_price)
+                OVER (PARTITION BY product_category
+                      ORDER BY year, week_number) AS base_price
+        FROM weekly_cat
+    )
+    SELECT DISTINCT
+        w.week_number,
+        w.year,
+        w.collected_date               AS week_date,
+        w.product_category,
+        ROUND((w.category_avg_price / b.base_price * 100)::numeric, 2)
+                                       AS category_index,
+        ROUND(w.category_avg_price::numeric, 2)
+                                       AS avg_price_ghs,
+        w.products_tracked
+    FROM weekly_cat w
+    JOIN base_cat b
+      ON w.product_category = b.product_category
+    ORDER BY w.year DESC, w.week_number DESC, w.product_category
+    """
+
+    try:
+        overall   = query('market_prices', overall_sql)
+        by_cat    = query('market_prices', category_sql)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+    return jsonify({
+        'index_name':  'Ghana Market Price Index (GMPI)',
+        'description': 'Composite weekly price index across all tracked consumer goods. Base = 100 at first collection week.',
+        'base_note':   'GMPI of 110 means prices are 10% higher than the base week.',
+        'overall':     overall,
+        'by_category': by_cat,
+    })
+
+
+# ── Public GMPI summary (no auth — for website display) ──────
+@app.route('/api/gmpi/latest')
+@limiter.limit("120 per minute")
+def get_gmpi_latest():
+    """Latest GMPI value + week-on-week change. Safe for public display."""
+    # Group by week only (not collected_date) so each week = one row regardless of collection days
+    sql = """
+    WITH weekly AS (
+        SELECT
+            week_number, year,
+            AVG(price_ghs) AS avg_price,
+            COUNT(DISTINCT COALESCE(NULLIF(normalized_name,''), search_label)) AS products,
+            MIN(collected_date) AS week_date
+        FROM market_prices
+        WHERE price_ghs > 1 AND price_ghs < 200000
+        GROUP BY week_number, year
+        ORDER BY year, week_number
+    ),
+    base AS (SELECT avg_price AS base_price FROM weekly ORDER BY year, week_number LIMIT 1)
+    SELECT
+        w.week_number, w.year, w.week_date,
+        ROUND((w.avg_price / b.base_price * 100)::numeric, 2) AS gmpi,
+        w.products AS products_tracked
+    FROM weekly w, base b
+    ORDER BY w.year DESC, w.week_number DESC
+    LIMIT 2
+    """
+    try:
+        rows = query('market_prices', sql)
+    except Exception as e:
+        print(f"[GMPI/latest] SQL error: {e}")
+        return jsonify({'error': str(e)}), 500
+
+    if not rows:
+        return jsonify({'gmpi': None})
+
+    latest = rows[0]
+    prev   = rows[1] if len(rows) > 1 else None
+
+    # Cast Decimal to float for arithmetic
+    latest_gmpi = float(latest['gmpi'])
+    prev_gmpi   = float(prev['gmpi']) if prev else None
+    change      = round(latest_gmpi - prev_gmpi, 2) if prev_gmpi else None
+    change_pct  = round((change / prev_gmpi) * 100, 2) if prev_gmpi and change is not None else None
+
+    return jsonify({
+        'gmpi':             round(latest_gmpi, 2),
+        'week':             latest['week_number'],
+        'year':             latest['year'],
+        'week_date':        str(latest['week_date']),
+        'products_tracked': latest['products_tracked'],
+        'change':           change,
+        'change_pct':       change_pct,
+        'label':            f"W{latest['week_number']} {latest['year']}",
+    })
+
+
+# ═══════════════════════════════════════════════════════════════
 # PART 4 — DOWNLOAD ENDPOINT
 # ═══════════════════════════════════════════════════════════════
-@app.route('/api/download')
+def _lookup_token(token):
+    """Fetch token record from Neon. Returns (record, error_response)."""
+    try:
+        conn = _get_token_conn()
+        with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
+            cur.execute("SELECT * FROM download_tokens WHERE token = %s", (token,))
+            record = cur.fetchone()
+        conn.close()
+        return record, None
+    except Exception as e:
+        print(f"[DOWNLOAD] Token DB lookup failed: {e}")
+        return None, (jsonify({'error': 'Service error — please try again shortly.'}), 503)
+
+def _validate_token(record):
+    """Check token is valid, not expired, not used. Returns error string or None."""
+    if not record:
+        return 'Invalid or expired token. Please contact support.'
+    now = datetime.now(timezone.utc)
+    if now > record['expires_at']:
+        return 'This download link has expired (valid for 24 hrs). Please purchase again.'
+    if record['used']:
+        return 'This link has already been used. Check your email for your file, or contact support.'
+    return None
+
+
+@app.route('/api/download', methods=['GET'])
+@limiter.limit("30 per minute")
+def download_landing():
+    """
+    GET /api/download?token=...
+    Returns an HTML landing page with a single Download button.
+    Email pre-fetchers (Gmail, Outlook etc.) hit this URL automatically to
+    scan for malware — they read HTML but won't POST a form, so the token
+    stays valid until the real user clicks.
+    """
+    token = request.args.get('token', '').strip()
+    if not token:
+        return "<h2>Invalid link — no token provided.</h2>", 400
+
+    record, err = _lookup_token(token)
+    if err:
+        return err
+
+    error = _validate_token(record)
+    sector_label = SECTOR_LABELS.get(record['sector'] if record else '', 'Dataset') if record else 'Dataset'
+
+    if error:
+        html = f"""<!DOCTYPE html><html><head><meta charset="utf-8">
+        <title>Download — SG Datalytics</title>
+        <style>body{{font-family:Arial,sans-serif;max-width:560px;margin:80px auto;padding:0 24px;color:#1a1a2e;}}
+        h2{{color:#c0392b;}}.logo{{font-weight:700;font-size:1.2rem;color:#1a1a2e;margin-bottom:2rem;display:block;}}
+        </style></head><body>
+        <span class="logo">SG Datalytics</span>
+        <h2>Link unavailable</h2>
+        <p>{error}</p>
+        <p>Need help? Reply to your purchase confirmation email.</p>
+        </body></html>"""
+        return html, 410
+
+    html = f"""<!DOCTYPE html><html><head><meta charset="utf-8">
+    <title>Download — SG Datalytics</title>
+    <style>
+      *{{box-sizing:border-box;margin:0;padding:0;}}
+      body{{font-family:Arial,sans-serif;background:#f7f8fc;min-height:100vh;display:flex;align-items:center;justify-content:center;}}
+      .card{{background:#fff;border-radius:12px;padding:48px 40px;max-width:480px;width:100%;box-shadow:0 2px 16px rgba(0,0,0,0.08);text-align:center;}}
+      .logo{{font-weight:700;font-size:1.1rem;color:#1a1a2e;margin-bottom:2rem;display:block;letter-spacing:.5px;}}
+      .icon{{font-size:3rem;margin-bottom:1rem;}}
+      h1{{font-size:1.4rem;font-weight:700;color:#1a1a2e;margin-bottom:.5rem;}}
+      p{{color:#555;font-size:.95rem;line-height:1.6;margin-bottom:1.5rem;}}
+      form{{margin-top:1rem;}}
+      button{{background:#1a1a2e;color:#fff;border:none;padding:14px 32px;border-radius:8px;font-size:1rem;font-weight:600;cursor:pointer;width:100%;transition:background .2s;}}
+      button:hover{{background:#2d2d5e;}}
+      .note{{font-size:.8rem;color:#999;margin-top:1rem;}}
+    </style></head><body>
+    <div class="card">
+      <span class="logo">SG Datalytics</span>
+      <div class="icon">📦</div>
+      <h1>Your data is ready</h1>
+      <p><strong>{sector_label}</strong><br>Click the button below to download your CSV file. This link is valid for 24 hours.</p>
+      <form method="POST" action="/api/download?token={token}">
+        <button type="submit">⬇ Download your file</button>
+      </form>
+      <p class="note">One-time download · CSV format · Secure link</p>
+    </div>
+    </body></html>"""
+    return html
+
+
+@app.route('/api/download', methods=['POST'])
 @limiter.limit("10 per minute")
 def download_data():
+    """
+    POST /api/download?token=...
+    Triggered by the user clicking the Download button on the landing page.
+    Marks token as used and streams the CSV file.
+    """
     token = request.args.get('token', '').strip()
     if not token:
         return jsonify({'error': 'Token required'}), 400
 
-    record = _TOKEN_STORE.get(token)
-    if not record:
-        return jsonify({'error': 'Invalid or expired token. Please purchase again.'}), 404
+    record, err = _lookup_token(token)
+    if err:
+        return err
 
-    now = datetime.now(timezone.utc)
-    if now > record['expires_at']:
-        _TOKEN_STORE.pop(token, None)
-        return jsonify({'error': 'This download link has expired (24hr limit). Please purchase again.'}), 410
+    error = _validate_token(record)
+    if error:
+        return f"<h2>{error}</h2>", 410
 
-    if record['used']:
-        return jsonify({'error': 'This download link has already been used (one-time only).'}), 410
-
-    # Mark as used immediately before streaming
-    record['used'] = True
+    # Mark as used in Neon immediately before streaming
+    try:
+        conn = _get_token_conn()
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute("UPDATE download_tokens SET used = TRUE WHERE token = %s", (token,))
+        conn.close()
+    except Exception as e:
+        print(f"[DOWNLOAD] Failed to mark token used: {e}")
 
     sector   = record['sector']
     email    = record['email']
+    now      = datetime.now(timezone.utc)
     date_str = now.strftime('%Y-%m-%d')
-    filename = f"sgdatalytics_{sector}_{date_str}.csv"
+    filename = f"sgdatalytics_{sector}_{date_str}.xlsx"
     queries  = SECTOR_QUERIES.get(sector, [])
 
-    def generate_csv():
-        output  = io.StringIO()
-        writer  = None
-        headers_written = False
+    # Build Excel workbook — one sheet per table
+    wb = openpyxl.Workbook()
+    wb.remove(wb.active)  # remove default blank sheet
 
-        for db_key, sql in queries:
-            try:
-                rows = query(db_key, sql)
-            except Exception as e:
-                print(f"[DOWNLOAD] DB error for {db_key}: {e}")
-                continue
+    header_font  = Font(bold=True, color='FFFFFF', size=11)
+    header_fill  = PatternFill(fill_type='solid', fgColor='1A1A2E')
+    header_align = Alignment(horizontal='center', vertical='center', wrap_text=True)
 
-            if not rows:
-                continue
+    # Friendly sheet name map (table_label → short Excel tab name, max 31 chars)
+    SHEET_NAMES = {
+        'market_prices_category_summary': 'Category Summary',
+        'market_prices_product_detail':   'Product Detail',
+        'hotel_prices_aggregated':        'Hotels',
+        'airbnb_prices_aggregated':       'Airbnb',
+        'property_prices_aggregated':     'Property',
+        'economic_indicators':            'Economic Indicators',
+        'exchange_rates':                 'Exchange Rates',
+        'gse_indices':                    'GSE Indices',
+        'stock_prices':                   'Stock Prices',
+        'commodity_prices':               'Commodity Prices',
+        'fuel_prices':                    'Fuel Prices',
+    }
 
-            if not headers_written:
-                writer = csv.DictWriter(output, fieldnames=rows[0].keys(), lineterminator='\n')
-                writer.writeheader()
-                headers_written = True
-                output.seek(0)
-                yield output.read()
-                output.seek(0); output.truncate(0)
+    for entry in queries:
+        db_key, sql, table_label = entry if len(entry) == 3 else (*entry, '')
+        try:
+            rows = query(db_key, sql)
+        except Exception as e:
+            print(f"[DOWNLOAD] DB error for {db_key}: {e}")
+            continue
 
-            for row in rows:
-                writer.writerow({k: (str(v) if v is not None else '') for k, v in row.items()})
+        if not rows:
+            continue
 
-            output.seek(0)
-            yield output.read()
-            output.seek(0); output.truncate(0)
+        sheet_name = SHEET_NAMES.get(table_label, table_label[:31])
+        ws = wb.create_sheet(title=sheet_name)
+
+        # Header row
+        headers = list(rows[0].keys())
+        for col_idx, col_name in enumerate(headers, start=1):
+            cell = ws.cell(row=1, column=col_idx, value=col_name.replace('_', ' ').title())
+            cell.font  = header_font
+            cell.fill  = header_fill
+            cell.alignment = header_align
+
+        # Data rows
+        for row_idx, row in enumerate(rows, start=2):
+            for col_idx, key in enumerate(headers, start=1):
+                val = row.get(key)
+                # Keep numbers as numbers so Excel can sort/sum them
+                if val is not None:
+                    try:
+                        val = float(val) if '.' in str(val) else int(val)
+                    except (ValueError, TypeError):
+                        val = str(val)
+                ws.cell(row=row_idx, column=col_idx, value=val)
+
+        # Auto-fit column widths (capped at 50)
+        for col in ws.columns:
+            max_len = max((len(str(c.value)) if c.value else 0 for c in col), default=10)
+            ws.column_dimensions[col[0].column_letter].width = min(max_len + 4, 50)
+
+        # Freeze top row
+        ws.freeze_panes = 'A2'
 
     print(f"[DOWNLOAD] {email} downloaded '{sector}' at {now.isoformat()}")
 
+    # Write workbook to bytes buffer and serve
+    buf = io.BytesIO()
+    wb.save(buf)
+    buf.seek(0)
+
     return Response(
-        stream_with_context(generate_csv()),
-        mimetype='text/csv',
+        buf.read(),
+        mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         headers={'Content-Disposition': f'attachment; filename="{filename}"'}
     )
 

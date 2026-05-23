@@ -271,7 +271,10 @@
 </div>
 
 <script>
-  const WORKER_URL = "https://frosty-shape-8539.marktetteh07.workers.dev";
+  // ── Config ──────────────────────────────────────────────────────────────────
+  const API_BASE = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+    ? "http://localhost:8000"                           // local dev
+    : "https://sg-advisor-api-production.up.railway.app"; // Railway (live Neon DB catalog)
 
   let conversationHistory = [];
   let isThinking = false;
@@ -285,11 +288,10 @@
     const bubble = document.createElement("div");
     bubble.className = "bubble assistant";
     bubble.innerHTML = `
-      👋 Hello! I'm your <strong>SG Data Advisor</strong>, powered by Gemini.<br><br>
-      Tell me about your research topic, business problem, or the analysis you want to do —
-      and I'll search our Ghana dataset catalog, recommend the right data, suggest analysis methods,
-      and generate research objectives for you.<br><br>
-      <em style="color:#888">Example: "I'm writing a thesis on inflation and SME performance in Ghana."</em>
+      👋 Hello! I'm your <strong>SG Data Advisor</strong>, powered by SG Datalytics' live Ghana market database.<br><br>
+      Search for any product, category, or market — I'll pull live records directly from our database
+      and show you what data is available, with a preview of real listings.<br><br>
+      <em style="color:#888">Try: "iPhone prices", "Toyota vehicles", "rice Accra", "3 bedroom Accra"</em>
     `;
     container.appendChild(bubble);
   }
@@ -328,7 +330,7 @@
     const typingId = showTyping();
 
     try {
-      const response = await fetch(WORKER_URL, {
+      const response = await fetch(`${API_BASE}/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ messages: conversationHistory }),
@@ -341,6 +343,11 @@
 
       const data = await response.json();
       removeTyping(typingId);
+
+      // Show live DB results FIRST (before AI reply)
+      if (data.live_data && Object.keys(data.live_data).length > 0) {
+        renderLiveData(data.live_data);
+      }
 
       if (data.tool_calls && data.tool_calls.length > 0) {
         showToolStrip(data.tool_calls);
@@ -421,13 +428,55 @@
     const strip = document.createElement("div");
     strip.className = "tool-strip";
     const labels = {
+      search_market_data: "🔍 Searched live Ghana database",
       search_datasets: "🔍 Searched datasets",
       get_dataset_details: "📋 Retrieved dataset details",
-      recommend_analysis: "🧪 Generated analysis plan",
     };
     const used = [...new Set(toolCalls.map(t => labels[t.tool] || t.tool))];
     strip.innerHTML = used.map(l => "<span>" + l + "</span>").join(" · ");
     container.appendChild(strip);
+  }
+
+  function renderLiveData(liveData) {
+    const container = document.getElementById("chatMessages");
+    const wrapper = document.createElement("div");
+    wrapper.style.cssText = "margin:8px 0 4px 0;width:100%";
+
+    Object.entries(liveData).forEach(([key, info]) => {
+      if (!info || !info.rows || info.rows.length === 0) return;
+
+      const section = document.createElement("div");
+      section.style.cssText = "background:#f0f7ff;border:1px solid #c8dfff;border-radius:10px;padding:12px 14px;margin-bottom:8px;font-size:0.85rem";
+
+      const label = info.label || key;
+      const total = info.total || info.rows.length;
+      const rows = info.rows.slice(0, 5);
+      const cols = Object.keys(rows[0] || {}).filter(c => !["id","created_at","updated_at","search_label"].includes(c)).slice(0, 5);
+
+      let html = `<div style="font-weight:600;color:#1a4d8a;margin-bottom:6px">📊 ${escapeHtml(label)} — ${total.toLocaleString()} matching records found</div>`;
+      html += `<table style="width:100%;border-collapse:collapse;font-size:0.8rem">`;
+      html += `<thead><tr>${cols.map(c => `<th style="text-align:left;padding:3px 6px;border-bottom:1px solid #c8dfff;color:#555;text-transform:capitalize">${escapeHtml(c.replace(/_/g,' '))}</th>`).join("")}</tr></thead>`;
+      html += `<tbody>`;
+      rows.forEach(row => {
+        html += `<tr>` + cols.map(c => {
+          const val = row[c];
+          const display = val === null || val === undefined ? "—" : String(val).slice(0, 40);
+          return `<td style="padding:3px 6px;border-bottom:1px solid #e8f0fe;color:#222">${escapeHtml(display)}</td>`;
+        }).join("") + `</tr>`;
+      });
+      html += `</tbody></table>`;
+      if (total > 5) {
+        html += `<div style="margin-top:6px;color:#555;font-size:0.78rem">Showing 5 of ${total.toLocaleString()} results. <a href="https://sgdatalytics.org/marketplace.html" target="_blank" style="color:#1a4d8a">Get full dataset →</a></div>`;
+      }
+
+      section.innerHTML = html;
+      wrapper.appendChild(section);
+    });
+
+    if (wrapper.children.length > 0) {
+      container.appendChild(wrapper);
+      scrollToBottom();
+    }
   }
 
   function renderDatasetCards(datasets) {

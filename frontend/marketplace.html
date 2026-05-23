@@ -7,21 +7,21 @@
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-H5K8LEJ6RC');</script>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>SG Datalytics — Ghana's Data Marketplace</title>
-<meta name="description" content="Ghana's premier data marketplace. Browse 560+ curated datasets across education, business, health, sustainability, agriculture, and economy. Built for researchers, analysts, and governments."/>
+<meta name="description" content="Ghana's premier data marketplace. Browse 31 curated datasets across market prices, economics, property, agriculture, and finance. Built for researchers, analysts, and businesses."/>
 <meta name="keywords" content="Ghana data, datasets, data marketplace, Ghana statistics, SME data, education data, health data, sustainability, agriculture data, research data Ghana"/>
 <meta name="author" content="SG Datalytics"/>
 <link rel="canonical" href="https://sgdatalytics.org/marketplace.html"/>
 <!-- Open Graph -->
 <meta property="og:type" content="website"/>
 <meta property="og:title" content="SG Datalytics — Ghana's Data Marketplace"/>
-<meta property="og:description" content="Browse 560+ curated, Ghana-specific datasets across 6 sectors. Trusted by researchers, analysts, businesses, and governments."/>
+<meta property="og:description" content="Browse 31 curated, Ghana-specific datasets across 6 sectors. Trusted by researchers, analysts, businesses, and governments."/>
 <meta property="og:url" content="https://sgdatalytics.org/marketplace.html"/>
 <meta property="og:site_name" content="SG Datalytics"/>
 <meta property="og:locale" content="en_GH"/>
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:title" content="SG Datalytics — Ghana's Data Marketplace"/>
-<meta name="twitter:description" content="Browse 560+ curated, Ghana-specific datasets across 6 sectors. Trusted by researchers, analysts, businesses, and governments."/>
+<meta name="twitter:description" content="Browse 31 curated, Ghana-specific datasets across 6 sectors. Trusted by researchers, analysts, businesses, and governments."/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
@@ -640,7 +640,7 @@ section.pad{padding:96px 5vw;}
 
 /* ─── PRICING ─── */
 .pricing{background:var(--navy2);border-top:1px solid var(--border);}
-.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.pricing-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;max-width:720px;margin:0 auto;}
 .price-card{
   background:var(--panel);
   border:1px solid var(--border);
@@ -956,6 +956,42 @@ footer{
   section.pad{padding:64px 5vw;}
   .hero{padding:48px 5vw;}
 }
+
+/* ── LIVE FEED SECTION ── */
+.live-feed-section{background:#e8edf5;border-top:4px solid var(--teal);padding:56px 5vw;}
+.live-feed-inner{max-width:1160px;margin:0 auto;}
+.live-feed-hd{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:12px;}
+.live-feed-section .sec-label{color:var(--teal);}
+.live-feed-counter{display:flex;align-items:center;gap:10px;font-family:var(--font-m);font-size:11px;color:var(--grey3);}
+.live-feed-counter-num{font-family:var(--font-d);font-size:1.6rem;color:var(--teal);letter-spacing:0.06em;line-height:1;}
+.live-pulse{width:8px;height:8px;border-radius:50%;background:var(--teal);animation:pulse-ring 1.8s infinite;flex-shrink:0;}
+@keyframes pulse-ring{0%{box-shadow:0 0 0 0 rgba(0,149,122,0.5);}70%{box-shadow:0 0 0 8px rgba(0,149,122,0);}100%{box-shadow:0 0 0 0 rgba(0,149,122,0);}}
+.feed-sector-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:28px;}
+.feed-tab{font-family:var(--font-m);font-size:11px;padding:5px 14px;border-radius:100px;cursor:pointer;border:1px solid var(--border2);color:var(--grey2);background:#ffffff;transition:all var(--ease);}
+.feed-tab:hover,.feed-tab.on{background:var(--teal-dim);border-color:var(--border-teal);color:var(--teal);}
+.feed-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.feed-card{background:#0f1e37;border:1px solid rgba(255,255,255,0.09);border-top:3px solid transparent;border-radius:var(--r-lg);padding:18px 16px;display:flex;flex-direction:column;gap:10px;transition:border-color var(--ease),transform var(--ease),box-shadow var(--ease);animation:fadeSlideIn 0.4s ease both;box-shadow:0 2px 16px rgba(0,0,0,0.18);text-decoration:none;cursor:default;color:inherit;}
+.feed-card:hover{border-top-color:var(--teal);transform:translateY(-3px);box-shadow:0 8px 32px rgba(0,0,0,0.28);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+.feed-card-top{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.feed-category{font-family:var(--font-m);font-size:10px;font-weight:600;color:var(--teal);letter-spacing:0.06em;text-transform:uppercase;}
+.feed-date{font-family:var(--font-m);font-size:10px;color:rgba(255,255,255,0.35);}
+.feed-title{font-size:13px;font-weight:600;color:#ffffff;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.feed-price{font-family:var(--font-d);font-size:1.6rem;color:var(--teal);letter-spacing:0.04em;line-height:1;}
+.feed-price.no-price{color:rgba(255,255,255,0.3);font-size:1rem;font-family:var(--font-m);}
+.feed-meta{display:flex;gap:10px;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,0.08);padding-top:10px;}
+.feed-meta-item{font-family:var(--font-m);font-size:10px;color:rgba(255,255,255,0.45);display:flex;align-items:center;gap:4px;}
+.feed-empty{grid-column:1/-1;text-align:center;padding:48px;color:var(--grey3);font-family:var(--font-m);font-size:12px;}
+.feed-loading{grid-column:1/-1;display:flex;align-items:center;justify-content:center;gap:10px;padding:48px;font-family:var(--font-m);font-size:12px;color:var(--grey3);}
+.feed-load-more{text-align:center;margin-top:28px;}
+.feed-stats-bar{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.09);border-radius:var(--r-lg);overflow:hidden;margin-bottom:18px;box-shadow:0 2px 16px rgba(0,0,0,0.18);}
+.feed-stat{background:#0f1e37;padding:12px 14px;text-align:center;}
+.feed-stat-num{font-family:var(--font-d);font-size:1.6rem;color:var(--teal);letter-spacing:0.06em;line-height:1;margin-bottom:4px;}
+.feed-stat-label{font-family:var(--font-m);font-size:9.5px;color:rgba(255,255,255,0.38);text-transform:uppercase;letter-spacing:0.1em;}
+@keyframes skel-pulse{0%,100%{opacity:0.45;}50%{opacity:0.9;}}
+.stat-skel{display:inline-block;width:56px;height:1em;border-radius:4px;background:rgba(0,149,122,0.35);animation:skel-pulse 1.4s ease-in-out infinite;vertical-align:middle;}
+@media(max-width:900px){.feed-grid{grid-template-columns:1fr 1fr;}.feed-stats-bar{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:600px){.feed-grid{grid-template-columns:1fr;}.feed-stats-bar{grid-template-columns:repeat(2,1fr);}}
 </style>
 <script>
   // ── SG Datalytics API Configuration ──────────────────────────
@@ -981,6 +1017,7 @@ footer{
   <ul class="nav-links">
     <li><a href="index.html">Home</a></li>
     <li><a href="marketplace.html" class="active">Marketplace</a></li>
+    <li><a href="products.html">Data Products</a></li>
     <li><a href="insights.html">Insights</a></li>
     <li><a href="about.html">About</a></li>
   </ul>
@@ -1010,12 +1047,12 @@ footer{
 <!-- TICKER -->
 <div class="ticker">
   <div class="ticker-inner">
-    <div class="ticker-item"><div class="ticker-dot"></div>NEW: SGMPI Ghana Market Price Index — 8 categories, 3,715 rows</div>
+    <div class="ticker-item"><div class="ticker-dot"></div>NEW: SGMPI Ghana Market Price Index — 15,000+ enriched listings across 13 categories</div>
     <div class="ticker-item"><div class="ticker-dot"></div>Bank of Ghana GDP — Quarterly sectoral breakdown 2006–2025</div>
     <div class="ticker-item"><div class="ticker-dot"></div>GSS Interest Rates — Monthly data back to 1971</div>
     <div class="ticker-item"><div class="ticker-dot"></div>BoG FX Rates — USD, GBP, EUR vs GHS (2005–2025)</div>
     <div class="ticker-item"><div class="ticker-dot"></div>World Bank Ghana — 6 datasets: macro, trade, agriculture, energy</div>
-    <div class="ticker-item"><div class="ticker-dot"></div>NEW: SGMPI Ghana Market Price Index — 8 categories, 3,715 rows</div>
+    <div class="ticker-item"><div class="ticker-dot"></div>NEW: SGMPI Ghana Market Price Index — 15,000+ enriched listings across 13 categories</div>
     <div class="ticker-item"><div class="ticker-dot"></div>Bank of Ghana GDP — Quarterly sectoral breakdown 2006–2025</div>
     <div class="ticker-item"><div class="ticker-dot"></div>GSS Interest Rates — Monthly data back to 1971</div>
     <div class="ticker-item"><div class="ticker-dot"></div>BoG FX Rates — USD, GBP, EUR vs GHS (2005–2025)</div>
@@ -1046,7 +1083,7 @@ footer{
     <div class="data-panel">
       <div class="data-panel-header">
         <div class="data-panel-title"><div class="live-dot"></div>DATA WAREHOUSE — LIVE</div>
-        <div class="data-panel-meta">Updated Apr 2026</div>
+        <div class="data-panel-meta">Updated May 2026</div>
       </div>
       <div class="data-panel-body">
         <div class="panel-stats">
@@ -1076,50 +1113,58 @@ footer{
   </div>
 </section>
 
-<!-- CATALOG STRIP -->
-<div class="catalog-strip" id="catalog">
-  <div class="catalog-tabs" id="source-tabs">
-    <div class="cat-tab active" data-src="all" onclick="filterSrc(this,'all')"><span class="cat-tab-icon">⚡</span>All Sources<span class="cat-tab-count" id="cnt-all">31</span></div>
-    <div class="cat-tab" data-src="sgmpi" onclick="filterSrc(this,'sgmpi')"><span class="cat-tab-icon">📈</span>SG Market Price Index<span class="cat-tab-count" id="cnt-sgmpi">8</span></div>
-    <div class="cat-tab" data-src="gss" onclick="filterSrc(this,'gss')"><span class="cat-tab-icon">📊</span>GSS StatsBank<span class="cat-tab-count" id="cnt-gss">13</span></div>
-    <div class="cat-tab" data-src="bog" onclick="filterSrc(this,'bog')"><span class="cat-tab-icon">🏦</span>Bank of Ghana<span class="cat-tab-count" id="cnt-bog">4</span></div>
-    <div class="cat-tab" data-src="worldbank" onclick="filterSrc(this,'worldbank')"><span class="cat-tab-icon">🌍</span>World Bank<span class="cat-tab-count" id="cnt-worldbank">6</span></div>
-  </div>
-</div>
 
-<!-- AI ADVISOR CALLOUT -->
-<div style="background:linear-gradient(135deg,#1a3a6b 0%,#2d5a9e 100%);padding:1.2rem 2rem;text-align:center;">
-  <span style="color:#b8cfee;font-size:0.9rem;">Not sure which dataset fits your research?</span>
-  <a href="advisor.html" style="margin-left:1rem;background:#f0a500;color:#1a2535;font-weight:600;font-size:0.88rem;padding:0.45rem 1.1rem;border-radius:8px;text-decoration:none;display:inline-block;">🤖 Ask the AI Advisor →</a>
-</div>
+<!-- ── LIVE MARKET PRICES FEED ── -->
+<div class="live-feed-section">
+  <div class="live-feed-inner">
 
-<!-- DATASETS -->
-<section class="datasets pad" id="datasets">
-  <div class="inner">
-    <div class="datasets-header">
+    <div class="live-feed-hd">
       <div>
-        <div class="sec-label rev">Real, authenticated datasets</div>
-        <h2 class="sec-title rev">Browse the catalog</h2>
+        <div class="sec-label" style="display:flex;align-items:center;gap:8px;">
+          <div class="live-pulse"></div>
+          Live data feed — updated weekly
+        </div>
+        <h2 class="sec-title" style="font-size:clamp(1.6rem,3vw,2.4rem);margin-bottom:6px;">Latest Ghana Market Prices</h2>
+        <p style="font-size:0.9rem;color:var(--grey2);font-weight:300;">Real listings collected from across Ghana by our automated pipeline.</p>
       </div>
-      <div class="datasets-filters">
-        <div class="filter-pill on" data-freq="all">All frequencies</div>
-        <div class="filter-pill" data-freq="Weekly">Weekly</div>
-        <div class="filter-pill" data-freq="Monthly">Monthly</div>
-        <div class="filter-pill" data-freq="Annual">Annual</div>
+      <div class="live-feed-counter">
+        <div>
+          <div class="live-feed-counter-num" id="feed-total"><span class="stat-skel"></span></div>
+          <div style="font-family:var(--font-m);font-size:9.5px;color:var(--grey3);text-transform:uppercase;letter-spacing:0.08em;margin-top:2px;">Total records</div>
+        </div>
       </div>
     </div>
-    <div class="datasets-grid" id="ds-grid">
-      <div style="grid-column:1/-1;text-align:center;padding:48px 0;color:rgba(15,30,55,0.35);font-family:'IBM Plex Mono',monospace;font-size:13px;" id="ds-loading">Loading datasets…</div>
 
-      <!-- Dataset cards injected by JS from data/catalogue.csv -->
+    <!-- Stats bar -->
+    <div class="feed-stats-bar">
+      <div class="feed-stat"><div class="feed-stat-num" id="fst-market"><span class="stat-skel"></span></div><div class="feed-stat-label">Market listings</div></div>
+      <div class="feed-stat"><div class="feed-stat-num" id="fst-property"><span class="stat-skel"></span></div><div class="feed-stat-label">Property</div></div>
+      <div class="feed-stat"><div class="feed-stat-num" id="fst-accommodation"><span class="stat-skel"></span></div><div class="feed-stat-label">Accommodation</div></div>
+      <div class="feed-stat"><div class="feed-stat-num" id="fst-economic"><span class="stat-skel"></span></div><div class="feed-stat-label">Economic</div></div>
+      <div class="feed-stat"><div class="feed-stat-num" id="fst-commodities"><span class="stat-skel"></span></div><div class="feed-stat-label">Commodities</div></div>
+      <div class="feed-stat"><div class="feed-stat-num" id="fst-locations"><span class="stat-skel"></span></div><div class="feed-stat-label">Locations</div></div>
+    </div>
 
+    <!-- Sector tabs -->
+    <div class="feed-sector-tabs">
+      <div class="feed-tab on" data-feed="market_prices">🛒 Market Prices</div>
+      <div class="feed-tab" data-feed="property">🏠 Property</div>
+      <div class="feed-tab" data-feed="accommodation">🏨 Accommodation</div>
+      <div class="feed-tab" data-feed="economic">📈 Economic</div>
+      <div class="feed-tab" data-feed="commodities">⛽ Commodities</div>
     </div>
-    <div style="text-align:center;margin-top:40px;" id="ds-footer-cta">
-      <a href="insights.html" class="btn btn-ghost" style="font-size:14px;padding:12px 32px;margin-right:12px;">View Ghana Insights Charts →</a>
-      <a href="#contact" class="btn btn-teal" style="font-size:14px;padding:12px 32px;">Request a dataset →</a>
+
+    <!-- Feed grid -->
+    <div class="feed-grid" id="feed-grid">
+      <div class="feed-loading"><div class="live-pulse"></div>Loading latest data…</div>
     </div>
+
+    <div class="feed-load-more">
+      <a href="products.html" class="btn btn-teal">Get the data →</a>
+    </div>
+
   </div>
-</section>
+</div>
 
 <!-- KEY STATS -->
 <div class="stat-ticker">
@@ -1133,106 +1178,34 @@ footer{
   </div>
 </div>
 
-<!-- PRICING -->
-<section class="pricing pad" id="pricing">
-  <div class="inner">
-    <div class="rev" style="text-align:center;margin-bottom:48px;">
-      <div class="sec-label" style="justify-content:center;">One-time purchase · Instant download</div>
-      <h2 class="sec-title">Get the data you need</h2>
-      <p class="sec-sub" style="margin:0 auto;text-align:center;">No subscriptions. Buy once, download instantly via Gumroad. Re-download anytime from your purchase link.</p>
-    </div>
-    <div class="pricing-grid">
-
-      <!-- PRODUCT 1 -->
-      <div class="price-card rev">
-        <div class="price-tier">SGMPI Market Prices</div>
-        <div class="price-amount"><sup>$</sup>15</div>
-        <div class="price-period">one-time purchase · instant CSV download</div>
-        <div class="price-divider"></div>
-        <ul class="price-features">
-          <li>8 CSV files — real Ghana market prices</li>
-          <li>Mobile Phones, Vehicles, Electronics</li>
-          <li>Home &amp; Furniture, Food &amp; Agriculture</li>
-          <li>Property, Fashion, Commercial Equipment</li>
-          <li>3,715 rows with price, condition &amp; region</li>
-          <li>Updated monthly — re-download free</li>
-          <li class="no">BoG / GSS / World Bank data</li>
-        </ul>
-        <a href="https://datalyze.gumroad.com/l/mcrmty" target="_blank" rel="noopener" class="btn btn-navy price-cta">Buy on Gumroad →</a>
-      </div>
-
-      <!-- PRODUCT 2 -->
-      <div class="price-card featured rev d1">
-        <div class="price-pop">Best value</div>
-        <div class="price-tier">Ghana Data Full Bundle</div>
-        <div class="price-amount"><sup>$</sup>29</div>
-        <div class="price-period">one-time purchase · all 31 datasets in one zip</div>
-        <div class="price-divider"></div>
-        <ul class="price-features">
-          <li>Everything in SGMPI (8 files)</li>
-          <li>Bank of Ghana — FX, CPI, GDP, Indicators</li>
-          <li>GSS StatsBank — 13 datasets (back to 1971)</li>
-          <li>World Bank Ghana — 6 annual datasets</li>
-          <li>31 clean CSVs in a single zip archive</li>
-          <li>Consistent headers &amp; date formats</li>
-          <li>Updated monthly — re-download free</li>
-        </ul>
-        <a href="https://datalyze.gumroad.com/l/fjxiy" target="_blank" rel="noopener" class="btn btn-teal price-cta">Buy on Gumroad →</a>
-      </div>
-
-      <!-- ENTERPRISE -->
-      <div class="price-card rev d2">
-        <div class="price-tier">Enterprise / Custom</div>
-        <div class="price-amount" style="font-size:2.2rem;">Custom</div>
-        <div class="price-period">for institutions, governments &amp; research teams</div>
-        <div class="price-divider"></div>
-        <ul class="price-features">
-          <li>Custom data collection &amp; surveys</li>
-          <li>Dedicated data analyst support</li>
-          <li>White-label data reports</li>
-          <li>Multi-seat team access</li>
-          <li>SLA &amp; data quality guarantees</li>
-          <li>Bespoke sector dashboards</li>
-          <li>Research partnership options</li>
-        </ul>
-        <a href="#contact" class="btn btn-ghost price-cta">Contact us</a>
-      </div>
-
-    </div>
-    <div style="text-align:center;margin-top:28px;">
-      <p style="font-family:var(--font-m);font-size:11px;color:var(--grey3);">Prices in USD · Secure checkout via Gumroad · Academic discount available — contact us</p>
-    </div>
-  </div>
-</section>
-
 <!-- HOW IT WORKS -->
 <section class="how pad" id="how">
   <div class="inner">
     <div class="rev" style="text-align:center;margin-bottom:48px;">
       <div class="sec-label" style="justify-content:center;">How it works</div>
       <h2 class="sec-title">From warehouse to your workflow</h2>
-      <p class="sec-sub" style="margin:0 auto;text-align:center;">Our data warehouse continuously collects, cleans, and curates Ghana-specific data so you get publication-ready files on demand.</p>
+      <p class="sec-sub" style="margin:0 auto;text-align:center;">Our automated pipeline collects, cleans, and curates Ghana-specific data every week — so you always get fresh, publication-ready files.</p>
     </div>
     <div class="how-steps">
       <div class="how-step rev">
         <div class="how-step-num" data-n="01">01</div>
-        <h4>Choose your bundle</h4>
-        <p>Pick the SGMPI Market Price bundle ($15) or the Ghana Data Full Bundle ($29) — all 31 datasets.</p>
+        <h4>Browse live prices</h4>
+        <p>Explore the latest Ghana market prices above — real listings across consumer goods, property, accommodation, commodities and economic indicators, updated every week.</p>
       </div>
       <div class="how-step rev d1">
         <div class="how-step-num" data-n="02">02</div>
-        <h4>Browse the catalog</h4>
-        <p>Filter 31 datasets by source — BoG, GSS, World Bank, or our proprietary SGMPI market price data.</p>
+        <h4>Choose your dataset</h4>
+        <p>Pick from 3 individual datasets (SGMPI Consumer Prices, Real Estate & Accommodation, Economic & Financial) or save with the Ghana Complete Data Bundle.</p>
       </div>
       <div class="how-step rev d2">
         <div class="how-step-num" data-n="03">03</div>
-        <h4>Instant download</h4>
-        <p>Download in your preferred format — CSV, Excel, JSON, SPSS, or Shapefile. Datasets are citation-ready.</p>
+        <h4>Pay securely</h4>
+        <p>Checkout via Paystack — pay with MTN MoMo, Vodafone Cash, AirtelTigo Money, or any international debit/credit card. One-time payment, no subscription.</p>
       </div>
       <div class="how-step rev d3">
         <div class="how-step-num" data-n="04">04</div>
-        <h4>Analyse & publish</h4>
-        <p>Use the data in your research, reports, dashboards, or business decisions. New datasets ship monthly.</p>
+        <h4>Get your data instantly</h4>
+        <p>Your Excel dataset is delivered to your inbox immediately after payment. Clean headers, consistent formats, and ready to use in Python, R, Excel or Tableau.</p>
       </div>
     </div>
     <div class="how-connectors rev">
@@ -1294,9 +1267,9 @@ footer{
 <!-- CTA BAND -->
 <div class="cta-band">
   <h2>READY TO ACCESS GHANA'S DATA?</h2>
-  <p>Buy once, download instantly. 31 clean datasets from BoG, GSS, World Bank, and SGMPI.</p>
+  <p>Subscribe for live database access. 31 clean datasets from BoG, GSS, World Bank, and SGMPI — updated weekly.</p>
   <div class="cta-band-actions">
-    <a href="https://datalyze.gumroad.com/l/fjxiy" target="_blank" rel="noopener" class="btn btn-white btn-lg">Buy on Gumroad →</a>
+    <a href="products.html" class="btn btn-white btn-lg">View Products →</a>
     <a href="#contact" class="btn btn-navy btn-lg">Talk to us first</a>
   </div>
 </div>
@@ -1386,12 +1359,12 @@ footer{
     </div>
     <div class="footer-col">
       <h5>Catalog</h5>
-      <a href="#catalog">Education datasets</a>
-      <a href="#catalog">Business & SMEs</a>
-      <a href="#catalog">Health & Demographics</a>
-      <a href="#catalog">Sustainability</a>
-      <a href="#catalog">Economy & Finance</a>
-      <a href="#catalog">Agriculture</a>
+      <a href="#catalog">Market Prices (SGMPI)</a>
+      <a href="#catalog">Bank of Ghana data</a>
+      <a href="#catalog">GSS Statistics</a>
+      <a href="#catalog">World Bank Ghana</a>
+      <a href="#catalog">Property & Accommodation</a>
+      <a href="#catalog">Commodities & Agriculture</a>
     </div>
     <div class="footer-col">
       <h5>Company</h5>
@@ -2269,6 +2242,129 @@ function prefillContact(datasetName){
     })
     .catch(() => {});
 
+})();
+</script>
+
+<script>
+/* ── Live Market Prices Feed ── */
+(function(){
+  const API = 'https://sgdatalytics-production.up.railway.app';
+
+  function fmt(n) { return n == null ? '—' : Number(n).toLocaleString(); }
+  function fmtDate(d) { if (!d) return ''; try { return new Date(d).toLocaleDateString('en-GB',{day:'numeric',month:'short'}); } catch(e){ return d; } }
+  function fmtPrice(p) { return 'GHS ' + Number(p).toLocaleString('en-GH',{minimumFractionDigits:0,maximumFractionDigits:0}); }
+
+  // Load stats bar
+  fetch(API + '/api/stats')
+    .then(r => r.ok ? r.json() : Promise.reject())
+    .then(d => {
+      const s = d.sectors || {};
+      document.getElementById('feed-total').textContent        = fmt(d.total_records);
+      document.getElementById('fst-market').textContent        = fmt(s.market_prices ? s.market_prices.records : 0);
+      document.getElementById('fst-property').textContent      = fmt(s.property ? s.property.records : 0);
+      document.getElementById('fst-accommodation').textContent = fmt(((s.accommodation ? s.accommodation.hotel_records : 0)||0)+((s.accommodation ? s.accommodation.airbnb_records : 0)||0));
+      document.getElementById('fst-economic').textContent      = fmt(s.economic ? s.economic.records : 0);
+      document.getElementById('fst-commodities').textContent   = fmt(((s.commodities ? s.commodities.commodity_records : 0)||0)+((s.commodities ? s.commodities.fuel_records : 0)||0));
+      document.getElementById('fst-locations').textContent     = fmt(s.market_prices ? s.market_prices.locations : 0);
+    }).catch(() => {});
+
+  let activeFeed = 'market_prices';
+  const _daysSinceEpoch = Math.floor(Date.now() / 86400000);
+  const _dailyOffset    = (_daysSinceEpoch * 9) % 15000;
+
+  function loadFeed(sector) {
+    const grid = document.getElementById('feed-grid');
+    grid.innerHTML = '<div class="feed-loading"><div class="live-pulse"></div>Loading latest data…</div>';
+
+    const endpoints = {
+      market_prices: API + '/api/market-prices?limit=9&offset=' + _dailyOffset,
+      property:      API + '/api/property?limit=9',
+      economic:      API + '/api/economic?limit=9',
+      commodities:   API + '/api/commodities?limit=9',
+    };
+
+    function renderGrid(data) {
+      if (!data || !data.length) { grid.innerHTML = '<div class="feed-empty">No data available yet for this sector.</div>'; return; }
+      grid.innerHTML = '';
+      data.forEach((item, i) => {
+        const card = document.createElement('div');
+        card.className = 'feed-card';
+        card.style.animationDelay = (i * 0.05) + 's';
+        card.innerHTML = renderCard(sector, item);
+        grid.appendChild(card);
+      });
+    }
+
+    if (sector === 'accommodation') {
+      Promise.all([
+        fetch(API + '/api/accommodation?type=hotel&limit=5').then(r => r.ok ? r.json() : []).catch(() => []),
+        fetch(API + '/api/accommodation?type=airbnb&limit=4').then(r => r.ok ? r.json() : []).catch(() => [])
+      ]).then(([hotels, airbnbs]) => {
+        const combined = [];
+        const max = Math.max(hotels.length, airbnbs.length);
+        for (let i = 0; i < max; i++) { if (hotels[i]) combined.push(hotels[i]); if (airbnbs[i]) combined.push(airbnbs[i]); }
+        renderGrid(combined.slice(0, 9));
+      }).catch(() => { grid.innerHTML = '<div class="feed-empty">Could not load accommodation data.</div>'; });
+      return;
+    }
+
+    fetch(endpoints[sector])
+      .then(r => r.ok ? r.json() : Promise.reject())
+      .then(data => renderGrid(data))
+      .catch(() => { grid.innerHTML = '<div class="feed-empty">Could not load data — please try again.</div>'; });
+  }
+
+  function renderCard(sector, item) {
+    if (sector === 'market_prices') {
+      return `<div class="feed-card-top"><div class="feed-category">${item.product_category || 'General'}</div><div class="feed-date">${fmtDate(item.collected_date)}</div></div>
+        <div class="feed-title">${item.normalized_name || item.title || '—'}</div>
+        <div class="feed-price ${item.price_ghs ? '' : 'no-price'}">${item.price_ghs ? fmtPrice(item.price_ghs) : 'Price on request'}</div>
+        <div class="feed-meta">${item.location ? `<div class="feed-meta-item">📍 ${item.location}</div>` : ''}${item.condition ? `<div class="feed-meta-item">🏷️ ${item.condition}</div>` : ''}${item.source ? `<div class="feed-meta-item">🔗 ${item.source}</div>` : ''}</div>`;
+    }
+    if (sector === 'property') {
+      return `<div class="feed-card-top"><div class="feed-category">Property</div><div class="feed-date">${fmtDate(item.collected_date)}</div></div>
+        <div class="feed-title">${item.title || item.property_type || '—'}</div>
+        <div class="feed-price ${item.price_ghs ? '' : 'no-price'}">${item.price_ghs ? fmtPrice(item.price_ghs) : 'Price on request'}</div>
+        <div class="feed-meta">${item.location ? `<div class="feed-meta-item">📍 ${item.location}</div>` : ''}${item.bedrooms ? `<div class="feed-meta-item">🛏️ ${item.bedrooms} beds</div>` : ''}</div>`;
+    }
+    if (sector === 'accommodation') {
+      const platform = (item.collection_method || item.source_platform || '').toLowerCase();
+      const isAirbnb = platform.includes('airbnb') || !!(item.room_type || item.listing_name);
+      const title    = item.listing_name || item.hotel_name || item.name || item.title || '—';
+      const priceUsd = item.price_per_night_usd || item.price_usd;
+      const priceGhs = item.price_ghs || item.price_per_night_ghs;
+      const priceLabel = priceGhs ? fmtPrice(priceGhs) + '/night' : (priceUsd ? 'US$' + Number(priceUsd).toFixed(0) + '/night' : 'Price on request');
+      const hasPrice = !!(priceGhs || priceUsd);
+      return `<div class="feed-card-top"><div class="feed-category">${isAirbnb ? 'Airbnb' : 'Hotel'}</div><div class="feed-date">${fmtDate(item.collected_date)}</div></div>
+        <div class="feed-title">${title}</div>
+        <div class="feed-price ${hasPrice ? '' : 'no-price'}">${priceLabel}</div>
+        <div class="feed-meta">${item.city||item.location ? `<div class="feed-meta-item">📍 ${item.city||item.location}</div>` : ''}${item.star_rating ? `<div class="feed-meta-item">⭐ ${item.star_rating} stars</div>` : ''}</div>`;
+    }
+    if (sector === 'economic') {
+      return `<div class="feed-card-top"><div class="feed-category">${item.sector || 'Economic'}</div><div class="feed-date">${fmtDate(item.collected_date)}</div></div>
+        <div class="feed-title">${item.indicator_name || '—'}</div>
+        <div class="feed-price">${item.value ? Number(item.value).toLocaleString() + (item.unit ? ' ' + item.unit : '') : '—'}</div>
+        <div class="feed-meta">${item.source ? `<div class="feed-meta-item">🔗 ${item.source}</div>` : ''}${item.year ? `<div class="feed-meta-item">📅 ${item.year}</div>` : ''}</div>`;
+    }
+    if (sector === 'commodities') {
+      return `<div class="feed-card-top"><div class="feed-category">Commodity</div><div class="feed-date">${fmtDate(item.collected_date)}</div></div>
+        <div class="feed-title">${item.commodity_name || item.name || '—'}</div>
+        <div class="feed-price ${item.price_ghs ? '' : 'no-price'}">${item.price_ghs ? fmtPrice(item.price_ghs) : (item.price_usd ? '$' + item.price_usd : '—')}</div>
+        <div class="feed-meta">${item.unit ? `<div class="feed-meta-item">📦 per ${item.unit}</div>` : ''}${item.source ? `<div class="feed-meta-item">🔗 ${item.source}</div>` : ''}</div>`;
+    }
+    return '<div class="feed-title">—</div>';
+  }
+
+  document.querySelectorAll('.feed-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.feed-tab').forEach(t => t.classList.remove('on'));
+      tab.classList.add('on');
+      activeFeed = tab.dataset.feed;
+      loadFeed(activeFeed);
+    });
+  });
+
+  loadFeed('market_prices');
 })();
 </script>
 
