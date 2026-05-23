@@ -2153,16 +2153,18 @@ init();
       // Latest single value (fast)
       const latest = await fetch(API + '/api/gmpi/latest').then(r => r.ok ? r.json() : null).catch(() => null);
       if (latest && latest.gmpi != null) {
-        document.getElementById('gmpi-value').textContent = latest.gmpi.toFixed(1);
+        const gmpiVal = parseFloat(latest.gmpi);
+        const chngPct = parseFloat(latest.change_pct);
+        document.getElementById('gmpi-value').textContent = gmpiVal.toFixed(1);
         document.getElementById('gmpi-week').textContent  = 'W' + latest.week + ' ' + latest.year + ' · ' + latest.products_tracked + ' products tracked';
         // Hero panel GMPI stat cell
         const heroGmpi = document.getElementById('heroGmpiValue');
-        if (heroGmpi) heroGmpi.textContent = latest.gmpi.toFixed(1);
+        if (heroGmpi) heroGmpi.textContent = gmpiVal.toFixed(1);
         // Change badge
-        if (latest.change_pct != null) {
-          const up  = latest.change_pct >= 0;
+        if (!isNaN(chngPct)) {
+          const up = chngPct >= 0;
           document.getElementById('gmpi-change').style.color = up ? '#f59e0b' : '#34d399';
-          document.getElementById('gmpi-change').textContent = (up ? '▲ +' : '▼ ') + latest.change_pct.toFixed(2) + '% wow';
+          document.getElementById('gmpi-change').textContent = (up ? '▲ +' : '▼ ') + Math.abs(chngPct).toFixed(2) + '% wow';
         }
       }
 
@@ -2201,11 +2203,12 @@ init();
         const pillsEl = document.getElementById('gmpi-cats');
         if (pillsEl && latestWeek.length) {
           pillsEl.innerHTML = latestWeek.map(c => {
-            const chg = parseFloat(c.category_index) - 100;
+            const idx = parseFloat(c.category_index);
+            const chg = idx - 100;
             const col = chg > 5 ? '#f59e0b' : chg < -2 ? '#34d399' : 'rgba(255,255,255,0.45)';
             return `<div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.10);
                       border-radius:4px;padding:4px 9px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:${col};">
-                      ${c.product_category} <strong>${parseFloat(c.category_index).toFixed(1)}</strong>
+                      ${c.product_category} <strong>${idx.toFixed(1)}</strong>
                     </div>`;
           }).join('');
         }
