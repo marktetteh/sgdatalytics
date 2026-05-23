@@ -112,8 +112,31 @@ SECTOR_QUERIES = {
     # ── Consumer Market Prices ───────────────────────────────────
     # Aggregated like Numbeo: one row per product per city per week
     # Outliers filtered: price_ghs between GHS 1 and GHS 200,000
-    'market_prices': [(
-        'market_prices', """
+    'market_prices': [
+        # Table 1 — Category summary: one row per category per city per week
+        ('market_prices', """
+        SELECT
+            week_number,
+            year,
+            product_category,
+            COALESCE(NULLIF(location, ''), 'Ghana')               AS city,
+            COUNT(*)                                              AS listing_count,
+            ROUND(AVG(price_ghs)::numeric,    0)                  AS avg_price_ghs,
+            MIN(price_ghs)                                        AS min_price_ghs,
+            MAX(price_ghs)                                        AS max_price_ghs,
+            ROUND(PERCENTILE_CONT(0.5) WITHIN GROUP
+                  (ORDER BY price_ghs)::numeric, 0)               AS median_price_ghs
+        FROM market_prices
+        WHERE price_ghs > 1
+          AND price_ghs < 200000
+        GROUP BY week_number, year,
+                 product_category,
+                 COALESCE(NULLIF(location, ''), 'Ghana')
+        ORDER BY year DESC, week_number DESC, product_category, city
+        """, 'market_prices_category_summary'),
+
+        # Table 2 — Product detail: one row per product name per city per week
+        ('market_prices', """
         SELECT
             week_number,
             year,
@@ -136,8 +159,8 @@ SECTOR_QUERIES = {
                  TRIM(COALESCE(NULLIF(normalized_name, ''), search_label)),
                  COALESCE(NULLIF(location, ''), 'Ghana')
         ORDER BY year DESC, week_number DESC, product_category, normalized_name
-        """, 'market_prices_aggregated',
-    )],
+        """, 'market_prices_product_detail'),
+    ],
 
     # ── Real Estate & Accommodation ──────────────────────────────
     'accommodation': [
