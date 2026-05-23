@@ -490,6 +490,27 @@ footer a:hover{text-decoration:underline;}
   color:rgba(255,255,255,0.38);text-transform:uppercase;letter-spacing:0.1em;
 }
 
+/* ── PRODUCTS PRICING SECTION ── */
+.products-pricing{background:var(--navy2);border-top:1px solid var(--border);padding:64px 5vw 56px;}
+.products-pricing-inner{max-width:1100px;margin:0 auto;}
+.products-grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:20px;}
+.product-tile{background:var(--panel);border:1px solid var(--border);border-radius:var(--r-lg);padding:26px 22px;display:flex;flex-direction:column;transition:border-color var(--ease),box-shadow var(--ease);}
+.product-tile:hover{border-color:var(--border-teal);box-shadow:0 4px 20px rgba(0,149,122,0.08);}
+.product-tile-icon{font-size:22px;margin-bottom:12px;}
+.product-tile-name{font-family:var(--font-d);font-size:1.2rem;color:var(--white);letter-spacing:0.04em;margin-bottom:7px;}
+.product-tile-desc{font-size:12.5px;color:var(--grey2);line-height:1.55;flex:1;margin-bottom:16px;}
+.product-tile-price{font-family:var(--font-d);font-size:1.8rem;color:var(--white);letter-spacing:0.04em;margin-bottom:3px;}
+.product-tile-period{font-family:var(--font-m);font-size:10.5px;color:var(--grey3);margin-bottom:16px;}
+.bundle-tile{background:linear-gradient(135deg,var(--teal-dim) 0%,rgba(0,149,122,0.03) 100%);border:2px solid var(--teal);border-radius:var(--r-lg);padding:30px 32px;display:flex;align-items:center;justify-content:space-between;gap:28px;flex-wrap:wrap;}
+.bundle-tile-left{flex:1;min-width:220px;}
+.bundle-tile-badge{display:inline-block;background:var(--teal);color:#fff;font-family:var(--font-m);font-size:10px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;padding:3px 12px;border-radius:20px;margin-bottom:10px;}
+.bundle-tile-name{font-family:var(--font-d);font-size:1.5rem;color:var(--white);letter-spacing:0.04em;margin-bottom:7px;}
+.bundle-tile-desc{font-size:13px;color:var(--grey2);line-height:1.6;margin-bottom:10px;}
+.bundle-tile-perks{font-family:var(--font-m);font-size:11px;color:var(--teal);}
+.bundle-tile-right{text-align:center;flex-shrink:0;}
+.bundle-tile-price{font-family:var(--font-d);font-size:2.8rem;color:var(--white);letter-spacing:0.04em;line-height:1;}
+.bundle-tile-period{font-family:var(--font-m);font-size:10.5px;color:var(--grey3);margin-bottom:14px;}
+
 /* ── RESPONSIVE ── */
 @media(max-width:900px){
   .feed-grid{grid-template-columns:1fr 1fr;}
@@ -501,6 +522,7 @@ footer a:hover{text-decoration:underline;}
   .kpi-strip-item:nth-child(2){border-right:none;}
   .chart-row.two,.chart-row.three{grid-template-columns:1fr;}
   .ds-grid{grid-template-columns:1fr 1fr;}
+  .products-grid-3{grid-template-columns:1fr 1fr;}
 }
 @media(max-width:520px){
   /* Tighten overview card layout on narrow phones */
@@ -513,6 +535,12 @@ footer a:hover{text-decoration:underline;}
   .kpi-strip-inner{grid-template-columns:1fr 1fr;}
   .ds-grid{grid-template-columns:1fr;}
   .kpi-grid{grid-template-columns:1fr 1fr;}
+  .products-pricing{padding:40px 5vw 36px;}
+  .products-grid-3{grid-template-columns:1fr;}
+  .bundle-tile{padding:22px 20px;flex-direction:column;align-items:flex-start;}
+  .bundle-tile-right{width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+  .bundle-tile-price{font-size:2.2rem;}
+  .bundle-tile-perks{font-size:10px;}
 }
 
 /* ── AI ADVISOR HERO ── */
@@ -863,66 +891,63 @@ footer a:hover{text-decoration:underline;}
 
 
 <!-- ── PRODUCTS PRICING ───────────────────────────────────────── -->
-<div style="background:var(--navy2);border-top:1px solid var(--border);padding:72px 5vw;">
-  <div style="max-width:1100px;margin:0 auto;">
+<div class="products-pricing">
+  <div class="products-pricing-inner">
 
-    <div style="text-align:center;margin-bottom:48px;">
+    <div style="text-align:center;margin-bottom:40px;">
       <div class="section-label" style="justify-content:center;">Ghana data products</div>
       <div class="section-title" style="margin-bottom:10px;">Buy the data you need</div>
       <div class="section-sub" style="margin:0 auto;text-align:center;">One-time purchase · Instant delivery to your inbox · Pay with MoMo or card via Paystack</div>
     </div>
 
     <!-- 3 individual products -->
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:20px;">
+    <div class="products-grid-3">
 
-      <!-- Product 1 -->
-      <div style="background:var(--panel);border:1px solid var(--border);border-radius:var(--r-lg);padding:28px 24px;display:flex;flex-direction:column;transition:border-color var(--ease),box-shadow var(--ease);" onmouseover="this.style.borderColor='var(--border-teal)'" onmouseout="this.style.borderColor='var(--border)'">
-        <div style="font-size:24px;margin-bottom:14px;">🛒</div>
-        <div style="font-family:var(--font-d);font-size:1.3rem;color:var(--white);letter-spacing:0.04em;margin-bottom:8px;">SGMPI Consumer Prices</div>
-        <p style="font-size:13px;color:var(--grey2);line-height:1.55;flex:1;margin-bottom:18px;">Electronics, phones, furniture, fashion and more — collected from Ghana's largest online markets, AI-enriched with brand, model and condition.</p>
-        <div style="font-family:var(--font-d);font-size:2rem;color:var(--white);letter-spacing:0.04em;margin-bottom:4px;">GHS 150</div>
-        <div style="font-family:var(--font-m);font-size:11px;color:var(--grey3);margin-bottom:18px;">one-time download</div>
+      <div class="product-tile">
+        <div class="product-tile-icon">🛒</div>
+        <div class="product-tile-name">SGMPI Consumer Prices</div>
+        <p class="product-tile-desc">Electronics, phones, furniture, fashion and more — collected from Ghana's largest online markets, AI-enriched with brand, model and condition.</p>
+        <div class="product-tile-price">GHS 150</div>
+        <div class="product-tile-period">one-time download</div>
         <a href="products.html" class="btn btn-teal" style="text-align:center;justify-content:center;">Get this dataset →</a>
       </div>
 
-      <!-- Product 2 -->
-      <div style="background:var(--panel);border:1px solid var(--border);border-radius:var(--r-lg);padding:28px 24px;display:flex;flex-direction:column;transition:border-color var(--ease),box-shadow var(--ease);" onmouseover="this.style.borderColor='var(--border-teal)'" onmouseout="this.style.borderColor='var(--border)'">
-        <div style="font-size:24px;margin-bottom:14px;">🏠</div>
-        <div style="font-family:var(--font-d);font-size:1.3rem;color:var(--white);letter-spacing:0.04em;margin-bottom:8px;">Real Estate &amp; Accommodation</div>
-        <p style="font-size:13px;color:var(--grey2);line-height:1.55;flex:1;margin-bottom:18px;">Property listings, rental prices, hotel and Airbnb nightly rates across Ghana's major cities — enriched with neighbourhood and city data.</p>
-        <div style="font-family:var(--font-d);font-size:2rem;color:var(--white);letter-spacing:0.04em;margin-bottom:4px;">GHS 100</div>
-        <div style="font-family:var(--font-m);font-size:11px;color:var(--grey3);margin-bottom:18px;">one-time download</div>
+      <div class="product-tile">
+        <div class="product-tile-icon">🏠</div>
+        <div class="product-tile-name">Real Estate &amp; Accommodation</div>
+        <p class="product-tile-desc">Property listings, rental prices, hotel and Airbnb nightly rates across Ghana's major cities — enriched with neighbourhood and city data.</p>
+        <div class="product-tile-price">GHS 100</div>
+        <div class="product-tile-period">one-time download</div>
         <a href="products.html" class="btn btn-teal" style="text-align:center;justify-content:center;">Get this dataset →</a>
       </div>
 
-      <!-- Product 3 -->
-      <div style="background:var(--panel);border:1px solid var(--border);border-radius:var(--r-lg);padding:28px 24px;display:flex;flex-direction:column;transition:border-color var(--ease),box-shadow var(--ease);" onmouseover="this.style.borderColor='var(--border-teal)'" onmouseout="this.style.borderColor='var(--border)'">
-        <div style="font-size:24px;margin-bottom:14px;">📈</div>
-        <div style="font-family:var(--font-d);font-size:1.3rem;color:var(--white);letter-spacing:0.04em;margin-bottom:8px;">Economic, Financial &amp; Agricultural</div>
-        <p style="font-size:13px;color:var(--grey2);line-height:1.55;flex:1;margin-bottom:18px;">BoG macro indicators, FX rates, GSE stock indices, agricultural commodity prices and weekly fuel prices — all in one dataset.</p>
-        <div style="font-family:var(--font-d);font-size:2rem;color:var(--white);letter-spacing:0.04em;margin-bottom:4px;">GHS 100</div>
-        <div style="font-family:var(--font-m);font-size:11px;color:var(--grey3);margin-bottom:18px;">one-time download</div>
+      <div class="product-tile">
+        <div class="product-tile-icon">📈</div>
+        <div class="product-tile-name">Economic, Financial &amp; Agricultural</div>
+        <p class="product-tile-desc">BoG macro indicators, FX rates, GSE stock indices, agricultural commodity prices and weekly fuel prices — all in one dataset.</p>
+        <div class="product-tile-price">GHS 100</div>
+        <div class="product-tile-period">one-time download</div>
         <a href="products.html" class="btn btn-teal" style="text-align:center;justify-content:center;">Get this dataset →</a>
       </div>
 
     </div>
 
     <!-- Bundle card -->
-    <div style="background:linear-gradient(135deg,var(--teal-dim) 0%,rgba(0,149,122,0.03) 100%);border:2px solid var(--teal);border-radius:var(--r-lg);padding:32px 36px;display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap;">
-      <div style="flex:1;min-width:260px;">
-        <div style="display:inline-block;background:var(--teal);color:#fff;font-family:var(--font-m);font-size:10px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;padding:3px 12px;border-radius:20px;margin-bottom:12px;">Best Value</div>
-        <div style="font-family:var(--font-d);font-size:1.6rem;color:var(--white);letter-spacing:0.04em;margin-bottom:8px;">Ghana Complete Data Bundle</div>
-        <p style="font-size:13px;color:var(--grey2);line-height:1.6;margin-bottom:12px;">All 3 datasets in one purchase — consumer prices, real estate &amp; accommodation, economic &amp; financial data. Instant delivery, no subscription required.</p>
-        <div style="font-family:var(--font-m);font-size:11.5px;color:var(--teal);">✓ Save GHS 50 vs buying separately &nbsp;·&nbsp; ✓ Instant email delivery &nbsp;·&nbsp; ✓ MoMo &amp; card accepted</div>
+    <div class="bundle-tile">
+      <div class="bundle-tile-left">
+        <div class="bundle-tile-badge">Best Value</div>
+        <div class="bundle-tile-name">Ghana Complete Data Bundle</div>
+        <p class="bundle-tile-desc">All 3 datasets in one purchase — consumer prices, real estate &amp; accommodation, economic &amp; financial data. Instant delivery, no subscription required.</p>
+        <div class="bundle-tile-perks">✓ Save GHS 50 vs buying separately &nbsp;·&nbsp; ✓ Instant email delivery &nbsp;·&nbsp; ✓ MoMo &amp; card accepted</div>
       </div>
-      <div style="text-align:center;flex-shrink:0;">
-        <div style="font-family:var(--font-d);font-size:3rem;color:var(--white);letter-spacing:0.04em;line-height:1;">GHS 300</div>
-        <div style="font-family:var(--font-m);font-size:11px;color:var(--grey3);margin-bottom:16px;">one-time purchase · all 3 datasets</div>
-        <a href="products.html" class="btn btn-teal" style="font-size:14px;padding:12px 32px;">Buy the Bundle →</a>
+      <div class="bundle-tile-right">
+        <div class="bundle-tile-price">GHS 300</div>
+        <div class="bundle-tile-period">one-time purchase · all 3 datasets</div>
+        <a href="products.html" class="btn btn-teal" style="font-size:14px;padding:12px 32px;white-space:nowrap;">Buy the Bundle →</a>
       </div>
     </div>
 
-    <div style="text-align:center;margin-top:20px;">
+    <div style="text-align:center;margin-top:18px;">
       <p style="font-family:var(--font-m);font-size:11px;color:var(--grey3);">Secure checkout via Paystack · MoMo, card &amp; international payments accepted · Questions? <a href="marketplace.html#contact" style="color:var(--teal);text-decoration:none;">Contact us</a></p>
     </div>
 
