@@ -151,6 +151,7 @@
       <div class="nbhd-list" id="nbhd-list">
         <div class="loading">Loading…</div>
       </div>
+      <div style="margin-top:10px;font-size:10px;color:var(--grey3);font-family:var(--font-m);line-height:1.5;">Showing neighbourhoods with 200+ listings only. Small-sample areas are hidden to ensure reliability.</div>
     </div>
   </div>
 </div>
@@ -376,18 +377,24 @@ function addMarkers(nbhds, regions) {
   });
 }
 
+// ── Minimum records threshold ─────────────────────────────────
+const MIN_RECORDS = 200;
+
 // ── Main load ─────────────────────────────────────────────────
 (async function load() {
   try {
     const data = await fetch(API + '/api/gmpi/regional').then(r => r.json());
     const { regions = [], neighbourhoods = [] } = data;
 
+    // Only show neighbourhoods with enough listings to be reliable
+    const reliableNbhds = neighbourhoods.filter(n => n.records >= MIN_RECORDS);
+
     renderRegionCards(regions);
-    renderNbhdList(neighbourhoods);
-    addMarkers(neighbourhoods, regions);
+    renderNbhdList(reliableNbhds);
+    addMarkers(reliableNbhds, regions);
 
     // Zoom to fit all visible markers if any exist
-    const mapped = neighbourhoods.filter(n => COORDS[n.name]);
+    const mapped = reliableNbhds.filter(n => COORDS[n.name]);
     if (mapped.length) {
       const bounds = L.latLngBounds(mapped.map(n => COORDS[n.name]));
       map.fitBounds(bounds, { padding: [30, 30] });
