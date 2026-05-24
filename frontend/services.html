@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-H5K8LEJ6RC"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-H5K8LEJ6RC');</script>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Services — SG Datalytics</title>
+<meta name="description" content="SG Datalytics provides data collection, market price intelligence, analytics consulting, and live API feeds for businesses and researchers focused on Ghana."/>
+<link rel="canonical" href="https://sgdatalytics.org/services.html"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --navy:#f0f4f8;--navy2:#e8edf3;--navy3:#dde4ed;--navy4:#cfd8e3;
+  --panel:#ffffff;
+  --teal:#00957a;--teal-dim:rgba(0,149,122,0.10);
+  --amber:#c77c00;--blue:#2563eb;--purple:#7c3aed;--green:#059669;
+  --white:#1a2535;
+  --grey1:rgba(15,30,55,0.88);--grey2:rgba(15,30,55,0.60);
+  --grey3:rgba(15,30,55,0.38);--grey4:rgba(15,30,55,0.08);
+  --border:rgba(15,30,55,0.10);--border2:rgba(15,30,55,0.16);
+  --border-teal:rgba(0,149,122,0.30);
+  --r:8px;--r-lg:14px;--nav-h:64px;
+  --font-d:'Bebas Neue',sans-serif;
+  --font-b:'IBM Plex Sans',sans-serif;
+  --font-m:'IBM Plex Mono',monospace;
+  --ease:0.22s cubic-bezier(0.4,0,0.2,1);
+}
+html{scroll-behavior:smooth;}
+body{font-family:var(--font-b);background:var(--navy);color:var(--grey1);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--navy);}::-webkit-scrollbar-thumb{background:var(--navy4);border-radius:4px;}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;height:var(--nav-h);
+  background:rgba(240,244,248,0.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 4vw;
+}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;margin-right:auto;}
+.nav-mark{width:32px;height:32px;border-radius:6px;background:var(--teal);display:flex;align-items:center;justify-content:center;}
+.nav-mark svg{width:16px;height:16px;}
+.nav-name{font-family:var(--font-d);font-size:18px;letter-spacing:0.08em;color:var(--white);}
+.nav-name span{color:var(--teal);}
+.nav-links{display:flex;list-style:none;gap:2px;margin-right:24px;}
+.nav-links a{font-size:13px;color:var(--grey2);text-decoration:none;padding:5px 13px;border-radius:5px;transition:color var(--ease),background var(--ease);}
+.nav-links a:hover,.nav-links a.active{color:var(--white);background:var(--grey4);}
+.nav-links a.active{color:var(--teal);}
+.nav-actions{display:flex;gap:8px;}
+.btn{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-b);font-size:13px;font-weight:500;padding:8px 18px;border-radius:var(--r);cursor:pointer;text-decoration:none;border:none;transition:all var(--ease);}
+.btn-ghost{background:transparent;color:var(--grey2);border:1px solid var(--border2);}
+.btn-ghost:hover{color:var(--white);border-color:var(--grey3);}
+.btn-teal{background:var(--teal);color:#fff;font-weight:600;}
+.btn-teal:hover{filter:brightness(1.08);transform:translateY(-1px);}
+.nav-hamburger{
+  display:none;flex-direction:column;justify-content:center;align-items:center;
+  width:36px;height:36px;gap:5px;background:transparent;border:1px solid var(--border2);
+  border-radius:var(--r);cursor:pointer;padding:0;transition:border-color var(--ease);margin-left:8px;
+}
+.nav-hamburger:hover{border-color:var(--teal);}
+.nav-hamburger span{display:block;width:16px;height:1.5px;background:var(--grey2);border-radius:2px;transition:all 0.25s ease;transform-origin:center;}
+.nav-hamburger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);}
+.nav-hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0);}
+.nav-hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
+.mobile-menu{
+  display:none;position:fixed;top:var(--nav-h);left:0;right:0;z-index:199;
+  background:rgba(240,244,248,0.98);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);padding:16px 5vw 24px;
+  flex-direction:column;gap:4px;transform:translateY(-8px);opacity:0;
+  transition:opacity 0.2s ease,transform 0.2s ease;
+}
+.mobile-menu.open{display:flex;opacity:1;transform:translateY(0);}
+.mobile-menu a{font-size:15px;color:var(--grey2);text-decoration:none;padding:11px 8px;border-bottom:1px solid var(--border);transition:color var(--ease);}
+.mobile-menu a:last-of-type{border-bottom:none;}
+.mobile-menu a:hover{color:var(--teal);}
+.mobile-menu-actions{display:flex;gap:10px;margin-top:12px;}
+.mobile-menu-actions .btn{flex:1;justify-content:center;padding:11px;}
+@media(max-width:640px){.nav-links,.nav-actions{display:none;}.nav-hamburger{display:flex;}}
+
+/* ── PAGE HERO ── */
+.hero{
+  padding:calc(var(--nav-h) + 64px) 5vw 56px;
+  max-width:1200px;margin:0 auto;
+  display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;
+}
+.hero-left{}
+.section-label{
+  font-family:var(--font-m);font-size:11px;font-weight:500;color:var(--teal);
+  letter-spacing:0.12em;text-transform:uppercase;margin-bottom:14px;
+  display:flex;align-items:center;gap:10px;
+}
+.section-label::before{content:'';width:24px;height:1px;background:var(--teal);}
+.hero-h1{font-family:var(--font-d);font-size:clamp(2.4rem,4.5vw,3.6rem);letter-spacing:0.04em;color:var(--white);line-height:1.05;margin-bottom:18px;}
+.hero-h1 span{color:var(--teal);}
+.hero-sub{font-size:15px;color:var(--grey2);line-height:1.75;max-width:480px;margin-bottom:28px;}
+.hero-cta{display:flex;gap:12px;flex-wrap:wrap;}
+.hero-right{
+  background:var(--panel);border:1px solid var(--border);border-radius:var(--r-lg);
+  padding:28px;display:flex;flex-direction:column;gap:16px;
+}
+.hero-stat{display:flex;align-items:center;gap:14px;}
+.hero-stat-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.hero-stat-val{font-family:var(--font-d);font-size:1.5rem;color:var(--white);line-height:1;}
+.hero-stat-lbl{font-size:12px;color:var(--grey3);font-family:var(--font-m);}
+.hero-divider{height:1px;background:var(--border);}
+
+/* ── SERVICES GRID ── */
+.services-section{background:var(--navy2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:72px 5vw;}
+.services-inner{max-width:1200px;margin:0 auto;}
+.services-hd{text-align:center;margin-bottom:52px;}
+.services-h2{font-family:var(--font-d);font-size:clamp(2rem,3.5vw,2.8rem);letter-spacing:0.04em;color:var(--white);margin-bottom:10px;}
+.services-sub{font-size:14px;color:var(--grey2);max-width:520px;margin:0 auto;}
+.services-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.svc-card{
+  background:var(--panel);border:1px solid var(--border);border-radius:var(--r-lg);
+  padding:32px;display:flex;flex-direction:column;gap:0;
+  transition:border-color var(--ease),box-shadow var(--ease),transform var(--ease);
+  position:relative;overflow:hidden;
+}
+.svc-card:hover{border-color:var(--border-teal);box-shadow:0 8px 32px rgba(0,149,122,0.08);transform:translateY(-2px);}
+.svc-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  border-radius:var(--r-lg) var(--r-lg) 0 0;
+}
+.svc-card.teal::before{background:var(--teal);}
+.svc-card.amber::before{background:var(--amber);}
+.svc-card.blue::before{background:var(--blue);}
+.svc-card.purple::before{background:var(--purple);}
+.svc-icon{font-size:2rem;margin-bottom:18px;}
+.svc-title{font-family:var(--font-d);font-size:1.55rem;letter-spacing:0.04em;color:var(--white);margin-bottom:10px;}
+.svc-desc{font-size:14px;color:var(--grey2);line-height:1.75;margin-bottom:22px;flex:1;}
+.svc-bullets{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:24px;}
+.svc-bullets li{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--grey2);}
+.svc-bullets li::before{content:'→';color:var(--teal);font-family:var(--font-m);font-size:12px;flex-shrink:0;margin-top:2px;}
+.svc-tag-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:24px;}
+.svc-tag{font-family:var(--font-m);font-size:10px;padding:3px 10px;border-radius:4px;background:var(--grey4);color:var(--grey3);}
+.svc-link{font-size:13px;font-weight:600;color:var(--teal);text-decoration:none;display:flex;align-items:center;gap:6px;transition:gap var(--ease);}
+.svc-link:hover{gap:10px;}
+
+/* ── HOW IT WORKS ── */
+.how-section{padding:72px 5vw;}
+.how-inner{max-width:1200px;margin:0 auto;}
+.how-hd{text-align:center;margin-bottom:52px;}
+.how-h2{font-family:var(--font-d);font-size:clamp(1.8rem,3vw,2.5rem);letter-spacing:0.04em;color:var(--white);margin-bottom:10px;}
+.how-sub{font-size:14px;color:var(--grey2);max-width:480px;margin:0 auto;}
+.how-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;position:relative;}
+.how-steps::before{
+  content:'';position:absolute;top:28px;left:calc(12.5% + 20px);right:calc(12.5% + 20px);
+  height:1px;background:var(--border2);z-index:0;
+}
+.how-step{text-align:center;position:relative;z-index:1;}
+.how-num{
+  width:56px;height:56px;border-radius:50%;border:2px solid var(--border2);
+  background:var(--panel);display:flex;align-items:center;justify-content:center;
+  margin:0 auto 16px;font-family:var(--font-d);font-size:1.4rem;color:var(--teal);
+  transition:border-color var(--ease),background var(--ease);
+}
+.how-step:hover .how-num{border-color:var(--teal);background:var(--teal-dim);}
+.how-step-title{font-size:14px;font-weight:600;color:var(--white);margin-bottom:6px;}
+.how-step-desc{font-size:12px;color:var(--grey3);line-height:1.6;}
+
+/* ── CTA BAND ── */
+.cta-band{background:var(--white);padding:64px 5vw;}
+.cta-inner{max-width:760px;margin:0 auto;text-align:center;}
+.cta-h2{font-family:var(--font-d);font-size:clamp(1.8rem,3.5vw,2.8rem);letter-spacing:0.04em;color:var(--navy);margin-bottom:12px;}
+.cta-sub{font-size:14px;color:rgba(240,244,248,0.65);margin-bottom:32px;line-height:1.7;}
+.cta-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+.btn-white{background:#fff;color:var(--white);font-weight:600;border:none;}
+.btn-white:hover{background:var(--navy2);transform:translateY(-1px);}
+.btn-outline-white{background:transparent;color:rgba(240,244,248,0.75);border:1px solid rgba(240,244,248,0.25);}
+.btn-outline-white:hover{color:#fff;border-color:rgba(240,244,248,0.5);}
+
+/* ── FOOTER ── */
+footer{border-top:1px solid var(--border);padding:26px 4vw;text-align:center;font-size:12px;color:var(--grey3);}
+footer a{color:var(--teal);text-decoration:none;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr;}
+  .hero-right{display:none;}
+  .services-grid{grid-template-columns:1fr;}
+  .how-steps{grid-template-columns:1fr 1fr;}
+  .how-steps::before{display:none;}
+}
+@media(max-width:500px){
+  .how-steps{grid-template-columns:1fr;}
+  .cta-btns{flex-direction:column;align-items:center;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-brand" href="index.html">
+    <div class="nav-mark"><svg viewBox="0 0 24 24" fill="none" stroke="#1a2535" stroke-width="2.5" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+    <span class="nav-name">SG <span>Datalytics</span></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="marketplace.html">Marketplace</a></li>
+    <li><a href="services.html" class="active">Services</a></li>
+    <li><a href="insights.html">Insights</a></li>
+    <li><a href="about.html">About</a></li>
+  </ul>
+  <div class="nav-actions">
+    <a href="mailto:hello@sgdatalytics.org" class="btn btn-teal">Get in Touch</a>
+  </div>
+  <button class="nav-hamburger" id="nav-hamburger" aria-label="Toggle menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobile-menu" role="navigation">
+  <a href="index.html">Home</a>
+  <a href="marketplace.html">Marketplace</a>
+  <a href="services.html">Services</a>
+  <a href="insights.html">Insights</a>
+  <a href="about.html">About</a>
+  <div class="mobile-menu-actions">
+    <a href="mailto:hello@sgdatalytics.org" class="btn btn-teal">Get in Touch</a>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-left">
+    <div class="section-label">What We Do</div>
+    <h1 class="hero-h1">Ghana Data,<br><span>Your Way</span></h1>
+    <p class="hero-sub">We collect, clean, and deliver Ghana's most reliable market and economic data — as ready-to-use datasets, live API feeds, or custom research projects tailored to your exact needs.</p>
+    <div class="hero-cta">
+      <a href="mailto:hello@sgdatalytics.org" class="btn btn-teal">Start a Project →</a>
+      <a href="marketplace.html" class="btn btn-ghost">Browse Datasets</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-stat">
+      <div class="hero-stat-icon" style="background:rgba(0,149,122,0.10);">📊</div>
+      <div>
+        <div class="hero-stat-val">37,000+</div>
+        <div class="hero-stat-lbl">Market listings tracked</div>
+      </div>
+    </div>
+    <div class="hero-divider"></div>
+    <div class="hero-stat">
+      <div class="hero-stat-icon" style="background:rgba(37,99,235,0.10);">🗺️</div>
+      <div>
+        <div class="hero-stat-val">20+</div>
+        <div class="hero-stat-lbl">Greater Accra neighbourhoods</div>
+      </div>
+    </div>
+    <div class="hero-divider"></div>
+    <div class="hero-stat">
+      <div class="hero-stat-icon" style="background:rgba(199,124,0,0.10);">🔄</div>
+      <div>
+        <div class="hero-stat-val">Weekly</div>
+        <div class="hero-stat-lbl">Data collection cadence</div>
+      </div>
+    </div>
+    <div class="hero-divider"></div>
+    <div class="hero-stat">
+      <div class="hero-stat-icon" style="background:rgba(5,150,105,0.10);">🌍</div>
+      <div>
+        <div class="hero-stat-val">8+</div>
+        <div class="hero-stat-lbl">Product categories covered</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SERVICES GRID -->
+<div class="services-section">
+  <div class="services-inner">
+    <div class="services-hd">
+      <div class="section-label" style="justify-content:center;">Our Services</div>
+      <h2 class="services-h2">What We Offer</h2>
+      <p class="services-sub">Four core service areas — each built around Ghana's unique data landscape and the real needs of businesses and researchers operating here.</p>
+    </div>
+
+    <div class="services-grid">
+
+      <!-- 1. Data Collection -->
+      <div class="svc-card teal">
+        <div class="svc-icon">🕷️</div>
+        <div class="svc-title">Data Collection &amp; Scraping</div>
+        <p class="svc-desc">We build and run automated pipelines that gather structured data from Ghana's online marketplaces, government portals, and public sources — cleaned and delivered on your schedule.</p>
+        <ul class="svc-bullets">
+          <li>Custom scraping rigs for any Ghanaian website or marketplace</li>
+          <li>Automated weekly or daily collection runs</li>
+          <li>Deduplication, cleaning, and validation built in</li>
+          <li>Delivered as CSV, JSON, or direct database transfer</li>
+        </ul>
+        <div class="svc-tag-row">
+          <span class="svc-tag">Web Scraping</span>
+          <span class="svc-tag">Automation</span>
+          <span class="svc-tag">ETL Pipelines</span>
+          <span class="svc-tag">Custom Cadence</span>
+        </div>
+        <a class="svc-link" href="mailto:hello@sgdatalytics.org">Request a custom dataset →</a>
+      </div>
+
+      <!-- 2. Market Price Intelligence -->
+      <div class="svc-card amber">
+        <div class="svc-icon">📈</div>
+        <div class="svc-title">Market Price Intelligence</div>
+        <p class="svc-desc">Track how prices move across Ghana's consumer and commercial markets. Our SG Market Price Index (SGMPI) covers electronics, real estate, vehicles, food, fashion, and more — updated every week.</p>
+        <ul class="svc-bullets">
+          <li>Weekly price snapshots across 8+ product categories</li>
+          <li>Platform A vs Platform B comparisons</li>
+          <li>Ghana Market Price Index (GMPI) — neighbourhood level</li>
+          <li>Historical trends going back to 2024</li>
+        </ul>
+        <div class="svc-tag-row">
+          <span class="svc-tag">SGMPI</span>
+          <span class="svc-tag">Price Tracking</span>
+          <span class="svc-tag">Competitive Intel</span>
+          <span class="svc-tag">Weekly Updates</span>
+        </div>
+        <a class="svc-link" href="marketplace.html">Browse price datasets →</a>
+      </div>
+
+      <!-- 3. Analytics & Consulting -->
+      <div class="svc-card blue">
+        <div class="svc-icon">🔍</div>
+        <div class="svc-title">Data Analytics &amp; Consulting</div>
+        <p class="svc-desc">We turn raw data into decisions. Whether you need a one-off market study, a recurring dashboard, or help making sense of your own data, we bring the analytical firepower and Ghana-specific context.</p>
+        <ul class="svc-bullets">
+          <li>Market entry and competitive landscape reports</li>
+          <li>Price benchmarking and trend analysis</li>
+          <li>Interactive dashboards tailored to your KPIs</li>
+          <li>Sector deep-dives: real estate, fintech, agriculture, retail</li>
+        </ul>
+        <div class="svc-tag-row">
+          <span class="svc-tag">Dashboards</span>
+          <span class="svc-tag">Market Research</span>
+          <span class="svc-tag">Reports</span>
+          <span class="svc-tag">Consulting</span>
+        </div>
+        <a class="svc-link" href="mailto:hello@sgdatalytics.org">Talk to our team →</a>
+      </div>
+
+      <!-- 4. API & Data Feeds -->
+      <div class="svc-card purple">
+        <div class="svc-icon">⚡</div>
+        <div class="svc-title">API &amp; Live Data Feeds</div>
+        <p class="svc-desc">Plug Ghana market data directly into your product, model, or internal tool via our REST API. Get fresh price data, economic indicators, and the GMPI delivered programmatically — no spreadsheet wrangling required.</p>
+        <ul class="svc-bullets">
+          <li>REST API with JSON responses — easy to integrate</li>
+          <li>GMPI endpoint: national, regional, and neighbourhood level</li>
+          <li>Economic indicators: inflation, FX, GDP, commodity prices</li>
+          <li>Webhook support for automated updates</li>
+        </ul>
+        <div class="svc-tag-row">
+          <span class="svc-tag">REST API</span>
+          <span class="svc-tag">JSON</span>
+          <span class="svc-tag">Webhooks</span>
+          <span class="svc-tag">Developer-Friendly</span>
+        </div>
+        <a class="svc-link" href="mailto:hello@sgdatalytics.org">Request API access →</a>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<div class="how-section">
+  <div class="how-inner">
+    <div class="how-hd">
+      <div class="section-label" style="justify-content:center;">Process</div>
+      <h2 class="how-h2">How We Work</h2>
+      <p class="how-sub">From first conversation to delivered data — a straightforward process built around your timeline.</p>
+    </div>
+    <div class="how-steps">
+      <div class="how-step">
+        <div class="how-num">01</div>
+        <div class="how-step-title">Tell Us What You Need</div>
+        <div class="how-step-desc">Describe your data need, research question, or business problem. We'll scope it and come back with a clear proposal.</div>
+      </div>
+      <div class="how-step">
+        <div class="how-num">02</div>
+        <div class="how-step-title">We Build the Pipeline</div>
+        <div class="how-step-desc">Our team sets up collection, cleaning, and validation — configured for Ghana's specific sources and data quirks.</div>
+      </div>
+      <div class="how-step">
+        <div class="how-num">03</div>
+        <div class="how-step-title">Data Delivered</div>
+        <div class="how-step-desc">You receive clean, structured data in your preferred format — CSV, JSON, dashboard, or live API endpoint.</div>
+      </div>
+      <div class="how-step">
+        <div class="how-num">04</div>
+        <div class="how-step-title">Ongoing Updates</div>
+        <div class="how-step-desc">Set it and forget it. We keep the pipeline running and deliver fresh data on your chosen cadence — weekly, monthly, or live.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA BAND -->
+<div class="cta-band">
+  <div class="cta-inner">
+    <h2 class="cta-h2">Ready to Work With Us?</h2>
+    <p class="cta-sub">Whether you need a one-off dataset or an ongoing data partnership, we're a message away. Tell us what you're building and we'll figure out the rest.</p>
+    <div class="cta-btns">
+      <a href="mailto:hello@sgdatalytics.org" class="btn btn-white" style="color:var(--white);">Send Us a Message →</a>
+      <a href="marketplace.html" class="btn btn-outline-white">Browse Datasets</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>© 2026 SG Datalytics · <a href="index.html">Home</a> · <a href="marketplace.html">Marketplace</a> · <a href="services.html">Services</a> · <a href="insights.html">Insights</a></p>
+</footer>
+
+<script>
+(function(){
+  const hamburger  = document.getElementById('nav-hamburger');
+  const mobileMenu = document.getElementById('mobile-menu');
+  if(!hamburger||!mobileMenu) return;
+  hamburger.addEventListener('click',function(){
+    const isOpen = mobileMenu.classList.contains('open');
+    mobileMenu.classList.toggle('open');
+    hamburger.classList.toggle('open');
+    hamburger.setAttribute('aria-expanded',String(!isOpen));
+  });
+  mobileMenu.querySelectorAll('a').forEach(function(link){
+    link.addEventListener('click',function(){
+      mobileMenu.classList.remove('open');
+      hamburger.classList.remove('open');
+      hamburger.setAttribute('aria-expanded','false');
+    });
+  });
+  document.addEventListener('click',function(e){
+    if(!hamburger.contains(e.target)&&!mobileMenu.contains(e.target)){
+      mobileMenu.classList.remove('open');
+      hamburger.classList.remove('open');
+      hamburger.setAttribute('aria-expanded','false');
+    }
+  });
+})();
+</script>
+</body>
+</html>
