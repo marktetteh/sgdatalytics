@@ -772,93 +772,29 @@ footer a:hover{text-decoration:underline;}
       <!-- Category pills -->
       <div id="gmpi-cats" style="flex:1;display:flex;flex-wrap:wrap;gap:6px;min-width:200px;"></div>
 
-      <!-- CTA -->
-      <a href="products.html" style="
-        flex:0 0 auto;font-family:'IBM Plex Sans',sans-serif;font-size:12px;
-        background:rgba(0,149,122,0.15);border:1px solid rgba(0,149,122,0.35);
-        color:#00957a;padding:8px 16px;border-radius:6px;text-decoration:none;
-        white-space:nowrap;transition:all 0.2s;
-      " onmouseover="this.style.background='rgba(0,149,122,0.25)'" onmouseout="this.style.background='rgba(0,149,122,0.15)'">
-        Download Full Index →
-      </a>
+      <!-- CTAs -->
+      <div style="flex:0 0 auto;display:flex;flex-direction:column;gap:8px;">
+        <a href="insights.html" style="
+          font-family:'IBM Plex Sans',sans-serif;font-size:12px;
+          background:rgba(0,149,122,0.15);border:1px solid rgba(0,149,122,0.35);
+          color:#00957a;padding:8px 16px;border-radius:6px;text-decoration:none;
+          white-space:nowrap;transition:all 0.2s;text-align:center;
+        " onmouseover="this.style.background='rgba(0,149,122,0.25)'" onmouseout="this.style.background='rgba(0,149,122,0.15)'">
+          View Charts →
+        </a>
+        <a href="products.html" style="
+          font-family:'IBM Plex Sans',sans-serif;font-size:11px;
+          color:rgba(255,255,255,0.35);text-decoration:none;text-align:center;
+          transition:color 0.2s;
+        " onmouseover="this.style.color='rgba(255,255,255,0.7)'" onmouseout="this.style.color='rgba(255,255,255,0.35)'">
+          Download Full Index
+        </a>
+      </div>
 
     </div>
   </div>
 </div>
 
-<!-- CHARTS SECTION -->
-<div class="charts-section">
-  <div class="section-hd">
-    <div class="section-label">Economic Intelligence</div>
-    <div class="section-title">Ghana at a Glance</div>
-    <div class="section-sub">Interactive charts from authenticated official sources — updated regularly</div>
-  </div>
-
-  <!-- Tab nav -->
-  <div class="tab-nav">
-    <button class="tab-btn active" data-tab="sectors">GDP &amp; Sectors</button>
-    <button class="tab-btn" data-tab="macro">Prices &amp; FX</button>
-  </div>
-
-  <!-- Tab: GDP & Sectors (moved to first/active) -->
-  <div class="tab-panel active" id="tab-sectors">
-    <div class="chart-row two">
-      <div class="chart-card">
-        <div class="chart-card-hd">
-          <div><div class="cc-title">Annual GDP Growth Rate</div><div class="cc-sub">Real GDP growth (%) — last 15 years</div></div>
-          <span class="badge badge-blue">Annual</span>
-        </div>
-        <div class="chart-wrap h260"><canvas id="cGDPGrowth"></canvas></div>
-        <div class="source-note">Source: World Bank Open Data</div>
-      </div>
-      <div class="chart-card">
-        <div class="chart-card-hd">
-          <div><div class="cc-title">GDP vs Inflation</div><div class="cc-sub">Annual growth vs inflation (%)</div></div>
-          <span class="badge badge-amber">Annual</span>
-        </div>
-        <div class="chart-wrap h260"><canvas id="cGDPInflation"></canvas></div>
-        <div class="source-note">Source: World Bank Open Data</div>
-      </div>
-    </div>
-    <div class="chart-row one">
-      <div class="chart-card">
-        <div class="chart-card-hd">
-          <div><div class="cc-title">Sectoral Composition of GDP</div><div class="cc-sub">Agriculture · Industry · Services (quarterly, GHS billions)</div></div>
-          <span class="badge badge-green">Quarterly</span>
-        </div>
-        <div class="chart-wrap h300"><canvas id="cSectors"></canvas></div>
-        <div class="chart-legend" id="sectorLegend"></div>
-        <div class="source-note">Source: Bank of Ghana Statistical Bulletin — Table 29</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Tab: Prices & FX -->
-  <div class="tab-panel" id="tab-macro">
-    <div class="chart-row one">
-      <div class="chart-card">
-        <div class="chart-card-hd">
-          <div>
-            <div class="cc-title">Inflation Rate &amp; Exchange Rate</div>
-            <div class="cc-sub">Year-on-year CPI (%) vs USD / GHS — last 5 years · monthly</div>
-          </div>
-          <div style="display:flex;gap:8px;align-items:center;">
-            <div style="display:flex;align-items:center;gap:5px;font-family:var(--font-m);font-size:10px;color:var(--grey2);">
-              <span style="width:10px;height:3px;border-radius:2px;background:#f59e0b;display:inline-block;"></span>Inflation (%)
-            </div>
-            <div style="display:flex;align-items:center;gap:5px;font-family:var(--font-m);font-size:10px;color:var(--grey2);">
-              <span style="width:10px;height:3px;border-radius:2px;background:#00c9a7;display:inline-block;"></span>USD/GHS
-            </div>
-            <span class="badge badge-amber">Monthly</span>
-          </div>
-        </div>
-        <div class="chart-wrap h300" data-anim-chart><canvas id="cInflFX"></canvas></div>
-        <div class="source-note">Sources: Ghana Statistical Service (CPI) · Bank of Ghana (FX)</div>
-      </div>
-    </div>
-  </div>
-
-</div>
 
 <!-- DATASETS SECTION REMOVED -->
 <div class="datasets-section" style="display:none;">
@@ -1224,26 +1160,16 @@ function sortBoGAsc(rows, col) {
   return [...rows].filter(r=>parseBoGDate(r[col])).sort((a,b)=>parseBoGDate(a[col])-parseBoGDate(b[col]));
 }
 
-// ── Tab switching ─────────────────────────────────────────────
-document.querySelectorAll('.tab-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
-  });
-});
-
 // ── Main init ─────────────────────────────────────────────────
 async function init() {
   try {
-    const [[cpi, bogFx, wb, market, gdp, cat, rates, ratesExt, ki, commodities], snap] = await Promise.all([
+    const [[cpi, bogFx, , , , cat, , , ki, commodities], snap] = await Promise.all([
       Promise.all([
         loadCSV('data/gss_cpi_inflation.csv'),
         loadCSV('data/bog_fx_rates.csv'),
-        loadCSV('data/wb_ghana_macroeconomic.csv'),
         Promise.resolve([]),
-        loadCSV('data/bog_gdp.csv'),
+        Promise.resolve([]),
+        Promise.resolve([]),
         loadCSV('data/catalogue.csv'),
         Promise.resolve([]),
         Promise.resolve([]),
@@ -1254,10 +1180,6 @@ async function init() {
     ]);
 
     fillKPIs(cpi, bogFx, commodities, ki, snap);
-    buildInflFX(cpi, bogFx);
-    buildGDPGrowth(wb);
-    buildGDPInflation(wb);
-    buildSectors(gdp);
     buildDatasets(cat);
   } catch(e) {
     console.error('Data load error', e);
@@ -1415,212 +1337,6 @@ function startKPIRotation() {
   }, KPI_INTERVAL);
 }
 
-// ── Chart: Inflation (animated draw) ─────────────────────────
-// ── Chart: Inflation + FX combined (dual y-axis) ──────────────
-function buildInflFX(cpi, bogFx) {
-  // --- CPI: last 60 months, GSS year-on-year inflation ---
-  const cpiRows = sortGSSAsc(
-    cpi.filter(r => r['Indicator']==='Year-on-year inflation (%)' && parseFloat(r['Consumer Price Index and Inflation'])>0),
-    'Month'
-  ).slice(-60);
-
-  // Convert GSS month (2021M01) → YYYY-MM key
-  function gssToKey(m) { return m.replace('M','-'); } // "2021M01" → "2021-01"
-  // Convert BoG date to YYYY-MM key (already YYYY-MM or YYYY-Mon)
-  function bogToKey(d) {
-    if (!d) return '';
-    if (/^\d{4}-\d{2}$/.test(d)) return d;
-    // "2021-Jan" style
-    const months = {Jan:'01',Feb:'02',Mar:'03',Apr:'04',May:'05',Jun:'06',Jul:'07',Aug:'08',Sep:'09',Oct:'10',Nov:'11',Dec:'12'};
-    const [y,mon] = d.split('-');
-    return y + '-' + (months[mon]||'00');
-  }
-
-  // Build inflation map: key → value
-  const cpiMap = {};
-  cpiRows.forEach(r => { cpiMap[gssToKey(r['Month'])] = parseFloat(r['Consumer Price Index and Inflation']); });
-
-  // FX filtered & sorted
-  const fxAllRows = sortBoGAsc(bogFx.filter(r => parseFloat(r['USD_GHS_End_Period'])>0), 'Date');
-
-  // Use the CPI date range as the shared x-axis (last 60 months)
-  const labels = cpiRows.map(r => fmtGSSMonth(r['Month']));
-  const keys   = cpiRows.map(r => gssToKey(r['Month']));
-
-  // Build FX map
-  const fxMap = {};
-  fxAllRows.forEach(r => { fxMap[bogToKey(r['Date'])] = parseFloat(r['USD_GHS_End_Period']); });
-
-  const inflData = keys.map(k => cpiMap[k] ?? null);
-  const fxData   = keys.map(k => fxMap[k] ?? null);
-
-  const canvas = document.getElementById('cInflFX');
-  const ctx = canvas.getContext('2d');
-
-  // Two separate gradients for each dataset
-  function gradLeft(ctx, color) {
-    const g = ctx.createLinearGradient(0,0,0,300);
-    g.addColorStop(0, color.replace(')',',0.25)').replace('rgb','rgba'));
-    g.addColorStop(1, color.replace(')',',0.00)').replace('rgb','rgba'));
-    return g;
-  }
-
-  // Simple rgba helpers
-  const amberFill = 'rgba(245,158,11,0.15)';
-  const tealFill  = 'rgba(0,201,167,0.12)';
-
-  const chart = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels,
-      datasets: [
-        {
-          label: 'Inflation (%)',
-          data: inflData,
-          borderColor: AMBER,
-          backgroundColor: amberFill,
-          borderWidth: 2.5,
-          pointRadius: 0, pointHoverRadius: 5,
-          fill: true, tension: 0.35,
-          yAxisID: 'yInfl',
-        },
-        {
-          label: 'USD / GHS',
-          data: fxData,
-          borderColor: TEAL,
-          backgroundColor: tealFill,
-          borderWidth: 2.5,
-          pointRadius: 0, pointHoverRadius: 5,
-          fill: true, tension: 0.35,
-          yAxisID: 'yFX',
-        },
-      ]
-    },
-    options: {
-      animation: false,
-      responsive: true,
-      maintainAspectRatio: false,
-      interaction: { mode:'index', intersect:false },
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          padding:10,
-          callbacks: {
-            label: c => c.datasetIndex===0
-              ? ` Inflation: ${c.parsed.y?.toFixed(1)}%`
-              : ` USD/GHS: GH₵ ${c.parsed.y?.toFixed(2)}`
-          }
-        }
-      },
-      scales: {
-        x: {
-          ticks: { color:'rgba(15,30,55,0.38)', font:{size:10,family:'IBM Plex Mono'}, maxRotation:40, maxTicksLimit:10 },
-          grid:  { color:'rgba(15,30,55,0.07)' },
-          border:{ color:'rgba(15,30,55,0.08)' },
-        },
-        yInfl: {
-          type: 'linear', position: 'left',
-          ticks: { color: AMBER, font:{size:10,family:'IBM Plex Mono'}, callback: v=>`${v}%` },
-          grid:  { color:'rgba(15,30,55,0.07)' },
-          border:{ color:'rgba(15,30,55,0.08)' },
-          title: { display:true, text:'Inflation (%)', color:AMBER, font:{size:9,family:'IBM Plex Mono'} },
-        },
-        yFX: {
-          type: 'linear', position: 'right',
-          ticks: { color: TEAL, font:{size:10,family:'IBM Plex Mono'}, callback: v=>`GH₵${v}` },
-          grid:  { drawOnChartArea: false },
-          border:{ color:'rgba(15,30,55,0.08)' },
-          title: { display:true, text:'GHS per USD', color:TEAL, font:{size:9,family:'IBM Plex Mono'} },
-        }
-      }
-    }
-  });
-
-  // Register for the LTR curtain animation
-  const wrap = canvas.closest('[data-anim-chart]') || canvas.parentElement;
-  wrap.dataset.animChart = 'inflFX';
-  chart._tracerSuffix = '%';
-  window._animCharts['inflFX'] = { chart, duration:22000, delay:0 };
-  chartObserver.observe(wrap);
-}
-
-// ── Chart: GDP Growth ─────────────────────────────────────────
-function buildGDPGrowth(wb) {
-  const rows = [...wb]
-    .filter(r => r['year'] && r['gdp_growth_rate'] && !isNaN(parseFloat(r['gdp_growth_rate'])))
-    .sort((a,b)=>a['year']-b['year']).slice(-15);
-  const vals = rows.map(r=>parseFloat(r['gdp_growth_rate']));
-  const ctx = document.getElementById('cGDPGrowth').getContext('2d');
-  new Chart(ctx, { type:'bar', data:{
-    labels: rows.map(r=>r['year']),
-    datasets:[{ data:vals,
-      backgroundColor: vals.map(v=>v>=0?'rgba(59,130,246,0.6)':'rgba(239,68,68,0.6)'),
-      borderColor: vals.map(v=>v>=0?BLUE:RED),
-      borderWidth:1, borderRadius:3 }]
-  }, options:{...baseOpts('%'), plugins:{...baseOpts('%').plugins, tooltip:{...baseOpts('%').plugins.tooltip, callbacks:{label:c=>` ${c.parsed.y.toFixed(1)}%`}}}}});
-}
-
-// ── Chart: GDP + Inflation ────────────────────────────────────
-function buildGDPInflation(wb) {
-  const rows = [...wb]
-    .filter(r => r['year'] && r['gdp_growth_rate'] && r['inflation_rate_cpi'])
-    .sort((a,b)=>a['year']-b['year']).slice(-18);
-  const ctx = document.getElementById('cGDPInflation').getContext('2d');
-  new Chart(ctx, { type:'line', data:{
-    labels: rows.map(r=>r['year']),
-    datasets:[
-      { label:'GDP Growth', data:rows.map(r=>parseFloat(r['gdp_growth_rate'])),
-        borderColor:BLUE, backgroundColor:'transparent', borderWidth:2, pointRadius:3, pointHoverRadius:5, tension:0.3 },
-      { label:'Inflation', data:rows.map(r=>parseFloat(r['inflation_rate_cpi'])),
-        borderColor:AMBER, backgroundColor:'transparent', borderWidth:2, pointRadius:3, pointHoverRadius:5, tension:0.3 }
-    ]
-  }, options:{...baseOpts('%'), plugins:{
-    legend:{display:true, position:'top', labels:{boxWidth:8, padding:16, color:'rgba(15,30,55,0.50)', font:{size:10}}},
-    tooltip:{...baseOpts('%').plugins.tooltip}
-  }}});
-}
-
-// ── Chart: GDP Sectors ────────────────────────────────────────
-function buildSectors(gdp) {
-  const rows = [...gdp]
-    .filter(r => r['period'] && r['agriculture'] && r['industry'] && r['services'])
-    .sort((a,b)=>a['period']>b['period']?1:-1).slice(-24);  // last 24 quarters
-  const total = rows.map(r => {
-    const a = parseFloat(r['agriculture'])||0;
-    const i = parseFloat(r['industry'])||0;
-    const s = parseFloat(r['services'])||0;
-    return a+i+s;
-  });
-  const ctx = document.getElementById('cSectors').getContext('2d');
-  new Chart(ctx, { type:'bar', data:{
-    labels: rows.map(r=>r['period'].replace('_','‑')),
-    datasets:[
-      { label:'Agriculture', data:rows.map((r,idx) => (parseFloat(r['agriculture'])||0)/total[idx]*100),
-        backgroundColor:'rgba(16,185,129,0.75)', borderWidth:0, borderRadius:0 },
-      { label:'Industry', data:rows.map((r,idx) => (parseFloat(r['industry'])||0)/total[idx]*100),
-        backgroundColor:'rgba(59,130,246,0.75)', borderWidth:0, borderRadius:0 },
-      { label:'Services', data:rows.map((r,idx) => (parseFloat(r['services'])||0)/total[idx]*100),
-        backgroundColor:'rgba(0,201,167,0.75)', borderWidth:0, borderRadius:0 },
-    ]
-  }, options:{
-    responsive:true, maintainAspectRatio:false,
-    interaction:{mode:'index', intersect:false},
-    plugins:{
-      legend:{display:true, position:'top', labels:{boxWidth:10, padding:16, color:'rgba(15,30,55,0.50)', font:{size:10}}},
-      tooltip:{backgroundColor:'rgba(240,244,248,0.97)', borderColor:'rgba(0,149,122,0.30)', borderWidth:1, padding:11,
-        titleFont:{size:11}, bodyFont:{size:11},
-        callbacks:{label:c=>` ${c.dataset.label}: ${c.parsed.y.toFixed(1)}%`}}
-    },
-    scales:{
-      x:{ stacked:true, grid:{color:'rgba(15,30,55,0.07)'}, ticks:{maxTicksLimit:8} },
-      y:{ stacked:true, max:100, grid:{color:'rgba(15,30,55,0.07)'},
-          ticks:{maxTicksLimit:5, callback:v=>v+'%'},
-          title:{display:true, text:'Share of GDP (%)', color:'rgba(15,30,55,0.38)', font:{size:10}} }
-    }
-  }});
-}
-
-// ── Chart: Market Prices ──────────────────────────────────────
 // ── Chart: Market Prices (home page — consumer goods only) ────
 // Property & Vehicles excluded — they're on a completely different price scale
 function buildMarket(market) {
