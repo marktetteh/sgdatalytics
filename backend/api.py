@@ -674,6 +674,40 @@ def market_categories():
     rows = query('market_prices', "SELECT DISTINCT product_category, COUNT(*) AS count FROM market_prices GROUP BY product_category ORDER BY count DESC")
     return jsonify([dict(r) for r in rows])
 
+@app.route('/api/market-prices/locations')
+def market_locations():
+    """
+    Diagnostic endpoint — shows how many records have each location value.
+    Useful for assessing whether a regional GMPI is feasible.
+    """
+    rows = query('market_prices', """
+        SELECT
+          CASE
+            WHEN location IS NULL OR TRIM(location) = '' THEN '(no location)'
+            ELSE TRIM(location)
+          END AS location,
+          COUNT(*)                                        AS total_records,
+          COUNT(CASE WHEN price_ghs > 0 THEN 1 END)      AS priced_records,
+          COUNT(DISTINCT product_category)                AS categories
+        FROM market_prices
+        GROUP BY 1
+        ORDER BY total_records DESC
+        LIMIT 100
+    """)
+    total = query('market_prices', "SELECT COUNT(*) AS n FROM market_prices", one=True)
+    blank = query('market_prices',
+        "SELECT COUNT(*) AS n FROM market_prices WHERE location IS NULL OR TRIM(location) = ''",
+        one=True)
+    return jsonify({
+        'summary': {
+            'total_records':         int(total['n']),
+            'records_with_location': int(total['n']) - int(blank['n']),
+            'records_without_location': int(blank['n']),
+            'pct_with_location': round((int(total['n']) - int(blank['n'])) / int(total['n']) * 100, 1)
+        },
+        'locations': [dict(r) for r in rows]
+    })
+
 @app.route('/api/market-prices/latest')
 def market_latest():
     rows = query('market_prices', "SELECT product_category, ROUND(AVG(price_ghs),2) AS avg_price_ghs, COUNT(*) AS listings, MAX(collected_date) AS last_updated FROM market_prices GROUP BY product_category ORDER BY listings DESC")
@@ -1113,6 +1147,113 @@ def get_gmpi_latest():
         'label':            f"W{latest['week_number']} {latest['year']}",
     })
 
+
+# ── Regional GMPI — powers the price map page ────────────────
+@app.route('/api/gmpi/regional')
+@limiter.limit("60 per minute")
+def gmpi_regional():
+    """
+    Returns GMPI broken down by Ghana region and by Greater Accra neighbourhood.
+    Consumer goods only (excludes Real Estate & Vehicles, price cap GHS 50k).
+    Base = all-time median per category.
+    Powers the interactive price map page.
+    """
+    base_cte = """
+    WITH base_medians AS (
+      SELECT product_category,
+        PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY price_ghs) AS base_median
+      FROM market_prices
+      WHERE price_ghs BETWEEN 1 AND 50000
+        AND product_category NOT IN ('Real Estate', 'Vehicles')
+      GROUP BY product_category
+      HAVING COUNT(*) >= 20
+    )
+    """
+
+    # ── Regional GMPI ─────────────────────────────────────────
+    regional_sql = base_cte + """
+    , regional_medians AS (
+      SELECT
+        CASE
+          WHEN location ILIKE 'Greater Accra%' THEN 'Greater Accra'
+          WHEN location ILIKE 'Ashanti%'       THEN 'Ashanti'
+          WHEN location ILIKE 'Western%'       THEN 'Western Region'
+          WHEN location ILIKE 'Central%'       THEN 'Central Region'
+          WHEN location ILIKE 'Eastern%'       THEN 'Eastern Region'
+          WHEN location ILIKE 'Northern%'      THEN 'Northern Region'
+          WHEN location ILIKE 'Brong%'         THEN 'Brong Ahafo'
+        END AS region,
+        product_category,
+        PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY price_ghs) AS wk_median,
+        COUNT(*) AS n
+      FROM market_prices
+      WHERE price_ghs BETWEEN 1 AND 50000
+        AND product_category NOT IN ('Real Estate', 'Vehicles')
+        AND location NOT ILIKE 'Nationwide%'
+        AND TRIM(location) != ''
+      GROUP BY 1, 2
+      HAVING COUNT(*) >= 10
+    ),
+    regional_cat_idx AS (
+      SELECT rm.region, rm.product_category,
+        ROUND((rm.wk_median / bm.base_median * 100)::numeric, 2) AS category_index,
+        rm.n
+      FROM regional_medians rm
+      JOIN base_medians bm USING (product_category)
+      WHERE rm.region IS NOT NULL
+    )
+    SELECT region AS name,
+      ROUND(AVG(category_index)::numeric, 2) AS gmpi,
+      SUM(n)::int AS records,
+      COUNT(DISTINCT product_category)::int AS categories
+    FROM regional_cat_idx
+    GROUP BY region
+    HAVING COUNT(DISTINCT product_category) >= 3
+    ORDER BY records DESC
+    """
+
+    # ── Neighbourhood GMPI (Greater Accra only) ───────────────
+    nbhd_sql = base_cte + """
+    , nbhd_medians AS (
+      SELECT
+        TRIM(SPLIT_PART(location, ', ', 2)) AS neighbourhood,
+        product_category,
+        PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY price_ghs) AS wk_median,
+        COUNT(*) AS n
+      FROM market_prices
+      WHERE price_ghs BETWEEN 1 AND 50000
+        AND product_category NOT IN ('Real Estate', 'Vehicles')
+        AND location ILIKE 'Greater Accra, %'
+      GROUP BY 1, 2
+      HAVING COUNT(*) >= 5
+    ),
+    nbhd_cat_idx AS (
+      SELECT nm.neighbourhood, nm.product_category,
+        ROUND((nm.wk_median / bm.base_median * 100)::numeric, 2) AS category_index,
+        nm.n
+      FROM nbhd_medians nm
+      JOIN base_medians bm USING (product_category)
+    )
+    SELECT neighbourhood AS name,
+      ROUND(AVG(category_index)::numeric, 2) AS gmpi,
+      SUM(n)::int AS records,
+      COUNT(DISTINCT product_category)::int AS categories
+    FROM nbhd_cat_idx
+    GROUP BY neighbourhood
+    HAVING COUNT(DISTINCT product_category) >= 3
+    ORDER BY records DESC
+    """
+
+    try:
+        regional_rows = query('market_prices', regional_sql)
+        nbhd_rows     = query('market_prices', nbhd_sql)
+        return jsonify({
+            'regions':        [dict(r) for r in regional_rows],
+            'neighbourhoods': [dict(r) for r in nbhd_rows],
+        })
+    except Exception as e:
+        print(f"[GMPI/regional] {e}")
+        return jsonify({'error': str(e)}), 500
 
 # ═══════════════════════════════════════════════════════════════
 # PART 4 — DOWNLOAD ENDPOINT
