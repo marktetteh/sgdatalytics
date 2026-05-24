@@ -575,6 +575,7 @@ def root():
             "GET /api/market-prices/latest",
             "GET /api/gmpi/latest",
             "GET /api/gmpi",
+            "GET /api/gmpi/regional",
             "GET /api/property?location=&limit=50",
             "GET /api/accommodation?type=hotel|airbnb&limit=50",
             "GET /api/economic?indicator=&sector=&limit=50",
