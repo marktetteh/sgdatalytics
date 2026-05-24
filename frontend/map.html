@@ -102,6 +102,24 @@
 </head>
 <body>
 
+<!-- Embed mode: hide nav/hero/footer when loaded as iframe -->
+<script>
+(function(){
+  const isEmbed = window.location !== window.parent.location ||
+                  new URLSearchParams(window.location.search).has('embed');
+  if(isEmbed){
+    document.documentElement.classList.add('embed-mode');
+    const style = document.createElement('style');
+    style.textContent = `
+      .embed-mode .nav, .embed-mode .hero, .embed-mode footer { display:none!important; }
+      .embed-mode body { min-height:unset; background:transparent; }
+      .embed-mode .region-bar { padding-top: 16px; }
+    `;
+    document.head.appendChild(style);
+  }
+})();
+</script>
+
 <!-- NAV -->
 <nav class="nav">
   <div class="nav-inner">
@@ -110,7 +128,6 @@
       <a href="marketplace.html">Marketplace</a>
       <a href="products.html">Products</a>
       <a href="insights.html">Insights</a>
-      <a href="map.html" class="active">Price Map</a>
       <a href="contact.html" class="btn-teal btn">Contact</a>
     </div>
     <button class="hamburger" aria-label="Menu">☰</button>
