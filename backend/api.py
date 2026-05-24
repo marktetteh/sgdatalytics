@@ -1064,13 +1064,13 @@ def gmpi_regional():
     , regional_medians AS (
       SELECT
         CASE
-          WHEN location ILIKE 'Greater Accra%' THEN 'Greater Accra'
-          WHEN location ILIKE 'Ashanti%'       THEN 'Ashanti'
-          WHEN location ILIKE 'Western%'       THEN 'Western Region'
-          WHEN location ILIKE 'Central%'       THEN 'Central Region'
-          WHEN location ILIKE 'Eastern%'       THEN 'Eastern Region'
-          WHEN location ILIKE 'Northern%'      THEN 'Northern Region'
-          WHEN location ILIKE 'Brong%'         THEN 'Brong Ahafo'
+          WHEN location ILIKE 'Greater Accra%%' THEN 'Greater Accra'
+          WHEN location ILIKE 'Ashanti%%'       THEN 'Ashanti'
+          WHEN location ILIKE 'Western%%'       THEN 'Western Region'
+          WHEN location ILIKE 'Central%%'       THEN 'Central Region'
+          WHEN location ILIKE 'Eastern%%'       THEN 'Eastern Region'
+          WHEN location ILIKE 'Northern%%'      THEN 'Northern Region'
+          WHEN location ILIKE 'Brong%%'         THEN 'Brong Ahafo'
         END AS region,
         product_category,
         PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY price_ghs) AS wk_median,
@@ -1078,7 +1078,7 @@ def gmpi_regional():
       FROM market_prices
       WHERE price_ghs BETWEEN 1 AND 50000
         AND product_category NOT IN ('Real Estate', 'Vehicles')
-        AND location NOT ILIKE 'Nationwide%'
+        AND location NOT ILIKE 'Nationwide%%'
         AND TRIM(location) != ''
       GROUP BY 1, 2
       HAVING COUNT(*) >= 10
@@ -1112,7 +1112,7 @@ def gmpi_regional():
       FROM market_prices
       WHERE price_ghs BETWEEN 1 AND 50000
         AND product_category NOT IN ('Real Estate', 'Vehicles')
-        AND location ILIKE 'Greater Accra, %'
+        AND location ILIKE 'Greater Accra, %%'
       GROUP BY 1, 2
       HAVING COUNT(*) >= 5
     ),
