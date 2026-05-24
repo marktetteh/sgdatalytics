@@ -65,13 +65,19 @@ nav{
 .nav-hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0);}
 .nav-hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
 .mobile-menu{
-  display:none;position:fixed;top:var(--nav-h);left:0;right:0;z-index:199;
+  display:flex;flex-direction:column;gap:4px;
+  position:fixed;top:var(--nav-h);left:0;right:0;z-index:1000;
   background:rgba(240,244,248,0.98);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
   border-bottom:1px solid var(--border);padding:16px 5vw 24px;
-  flex-direction:column;gap:4px;transform:translateY(-8px);opacity:0;
-  transition:opacity 0.2s ease,transform 0.2s ease;
+  visibility:hidden;opacity:0;pointer-events:none;
+  transform:translateY(-6px);
+  transition:opacity 0.2s ease,transform 0.2s ease,visibility 0s linear 0.2s;
 }
-.mobile-menu.open{display:flex;opacity:1;transform:translateY(0);}
+.mobile-menu.open{
+  visibility:visible;opacity:1;pointer-events:auto;
+  transform:translateY(0);
+  transition:opacity 0.2s ease,transform 0.2s ease,visibility 0s linear 0s;
+}
 .mobile-menu a{font-size:15px;color:var(--grey2);text-decoration:none;padding:11px 8px;border-bottom:1px solid var(--border);transition:color var(--ease);}
 .mobile-menu a:last-of-type{border-bottom:none;}
 .mobile-menu a:hover{color:var(--teal);}
@@ -206,7 +212,7 @@ footer a{color:var(--teal);text-decoration:none;}
     <li><a href="about.html">About</a></li>
   </ul>
   <div class="nav-actions">
-    <a href="mailto:hello@sgdatalytics.org" class="btn btn-teal">Get in Touch</a>
+    <a href="mailto:info@sgdatalytics.org" class="btn btn-teal">Get in Touch</a>
   </div>
   <button class="nav-hamburger" id="nav-hamburger" aria-label="Toggle menu" aria-expanded="false">
     <span></span><span></span><span></span>
@@ -221,7 +227,7 @@ footer a{color:var(--teal);text-decoration:none;}
   <a href="insights.html">Insights</a>
   <a href="about.html">About</a>
   <div class="mobile-menu-actions">
-    <a href="mailto:hello@sgdatalytics.org" class="btn btn-teal">Get in Touch</a>
+    <a href="mailto:info@sgdatalytics.org" class="btn btn-teal">Get in Touch</a>
   </div>
 </div>
 
@@ -232,7 +238,7 @@ footer a{color:var(--teal);text-decoration:none;}
     <h1 class="hero-h1">Ghana Data,<br><span>Your Way</span></h1>
     <p class="hero-sub">We collect, clean, and deliver Ghana's most reliable market and economic data — as ready-to-use datasets, live API feeds, or custom research projects tailored to your exact needs.</p>
     <div class="hero-cta">
-      <a href="mailto:hello@sgdatalytics.org" class="btn btn-teal">Start a Project →</a>
+      <a href="mailto:info@sgdatalytics.org" class="btn btn-teal">Start a Project →</a>
       <a href="marketplace.html" class="btn btn-ghost">Browse Datasets</a>
     </div>
   </div>
@@ -299,7 +305,7 @@ footer a{color:var(--teal);text-decoration:none;}
           <span class="svc-tag">ETL Pipelines</span>
           <span class="svc-tag">Custom Cadence</span>
         </div>
-        <a class="svc-link" href="mailto:hello@sgdatalytics.org">Request a custom dataset →</a>
+        <a class="svc-link" href="mailto:info@sgdatalytics.org">Request a custom dataset →</a>
       </div>
 
       <!-- 2. Market Price Intelligence -->
@@ -339,7 +345,7 @@ footer a{color:var(--teal);text-decoration:none;}
           <span class="svc-tag">Reports</span>
           <span class="svc-tag">Consulting</span>
         </div>
-        <a class="svc-link" href="mailto:hello@sgdatalytics.org">Talk to our team →</a>
+        <a class="svc-link" href="mailto:info@sgdatalytics.org">Talk to our team →</a>
       </div>
 
       <!-- 4. API & Data Feeds -->
@@ -359,7 +365,7 @@ footer a{color:var(--teal);text-decoration:none;}
           <span class="svc-tag">Webhooks</span>
           <span class="svc-tag">Developer-Friendly</span>
         </div>
-        <a class="svc-link" href="mailto:hello@sgdatalytics.org">Request API access →</a>
+        <a class="svc-link" href="mailto:info@sgdatalytics.org">Request API access →</a>
       </div>
 
     </div>
@@ -405,7 +411,7 @@ footer a{color:var(--teal);text-decoration:none;}
     <h2 class="cta-h2">Ready to Work With Us?</h2>
     <p class="cta-sub">Whether you need a one-off dataset or an ongoing data partnership, we're a message away. Tell us what you're building and we'll figure out the rest.</p>
     <div class="cta-btns">
-      <a href="mailto:hello@sgdatalytics.org" class="btn btn-white" style="color:var(--white);">Send Us a Message →</a>
+      <a href="mailto:info@sgdatalytics.org" class="btn btn-white" style="color:var(--white);">Send Us a Message →</a>
       <a href="marketplace.html" class="btn btn-outline-white">Browse Datasets</a>
     </div>
   </div>
