@@ -13,6 +13,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{
@@ -490,6 +492,42 @@ footer a:hover{text-decoration:underline;}
   color:rgba(255,255,255,0.38);text-transform:uppercase;letter-spacing:0.1em;
 }
 
+/* ── PRICE MAP SECTION ── */
+.map-section{padding:56px 0 0;}
+.map-section-inner{max-width:1200px;margin:0 auto;padding:0 5vw;}
+.map-hd{margin-bottom:24px;}
+.map-region-bar{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px;}
+.map-region-card{background:var(--panel);border:1px solid var(--border);border-radius:var(--r-lg);padding:12px 18px;flex:1;min-width:130px;}
+.map-region-card .mrc-name{font-size:10px;font-family:var(--font-m);color:var(--grey3);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:4px;}
+.map-region-card .mrc-val{font-family:var(--font-d);font-size:1.7rem;line-height:1;margin-bottom:2px;}
+.map-region-card .mrc-meta{font-size:10px;color:var(--grey3);font-family:var(--font-m);}
+.map-body{display:grid;grid-template-columns:1fr 260px;gap:16px;align-items:start;}
+#homeMap{height:500px;border-radius:var(--r-lg);border:1px solid var(--border);overflow:hidden;box-shadow:0 2px 12px rgba(15,30,55,0.07);}
+.map-side{display:flex;flex-direction:column;gap:12px;max-height:500px;}
+.map-panel{background:var(--panel);border:1px solid var(--border);border-radius:var(--r-lg);padding:14px 16px;}
+.map-panel-title{font-family:var(--font-m);font-size:10px;color:var(--teal);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:10px;}
+.map-leg-row{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--grey2);margin-bottom:5px;}
+.map-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.map-nbhd-list{overflow-y:auto;flex:1;}
+.map-nbhd-list::-webkit-scrollbar{width:3px;}
+.map-nbhd-list::-webkit-scrollbar-thumb{background:var(--navy4);border-radius:2px;}
+.map-nbhd-row{display:flex;align-items:center;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:11px;}
+.map-nbhd-row:last-child{border-bottom:none;}
+.map-nbhd-name{color:var(--grey2);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:6px;}
+.map-nbhd-gmpi{font-family:var(--font-m);font-weight:500;font-size:11px;flex-shrink:0;}
+.map-loading-sm{font-size:12px;color:var(--grey3);font-family:var(--font-m);padding:8px 0;}
+/* Leaflet popup overrides for light theme */
+.map-section .leaflet-popup-content-wrapper{background:#fff;border:1px solid var(--border);border-radius:8px;box-shadow:0 4px 16px rgba(15,30,55,0.12);}
+.map-section .leaflet-popup-content{color:var(--white);font-family:var(--font-b);margin:10px 14px;}
+.map-section .leaflet-popup-tip{background:#fff;}
+.map-section .leaflet-popup-close-button{color:var(--grey3)!important;}
+@media(max-width:900px){
+  .map-body{grid-template-columns:1fr;}
+  #homeMap{height:360px;}
+  .map-side{max-height:none;flex-direction:row;flex-wrap:wrap;}
+  .map-panel{flex:1;min-width:200px;}
+}
+
 /* ── PRODUCTS PRICING SECTION ── */
 .products-pricing{background:var(--navy2);border-top:1px solid var(--border);padding:64px 5vw 56px;}
 .products-pricing-inner{max-width:1100px;margin:0 auto;}
@@ -795,24 +833,48 @@ footer a:hover{text-decoration:underline;}
 
 
 <!-- ── PRICE MAP SECTION ───────────────────────────────────────── -->
-<div style="max-width:1200px;margin:0 auto;padding:48px 5vw 0;">
-  <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;margin-bottom:24px;">
-    <div>
-      <div style="font-family:var(--font-m);font-size:11px;color:var(--teal);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:10px;">
-        <span style="width:24px;height:1px;background:var(--teal);display:inline-block;"></span>Interactive Price Map
+<div class="map-section">
+  <div class="map-section-inner">
+
+    <!-- Header -->
+    <div class="map-hd">
+      <div>
+        <div class="section-label">Interactive Price Map</div>
+        <div class="section-title" style="margin-bottom:6px;">Ghana Market Prices <span style="color:var(--teal);">By Location</span></div>
+        <div class="section-sub">Consumer goods price index across Greater Accra neighbourhoods and Ghana regions. GMPI&nbsp;100 = historical average.</div>
       </div>
-      <div style="font-family:var(--font-d);font-size:clamp(1.6rem,3vw,2.4rem);letter-spacing:0.04em;color:var(--white);margin-bottom:6px;">Ghana Market Prices <span style="color:var(--teal);">By Location</span></div>
-      <div style="font-size:13px;color:var(--grey2);max-width:580px;">Consumer goods price index across Greater Accra neighbourhoods and Ghana regions. GMPI 100 = historical average.</div>
     </div>
-  </div>
-  <div style="border-radius:14px;overflow:hidden;border:1px solid var(--border);box-shadow:0 4px 24px rgba(15,30,55,0.08);">
-    <iframe
-      src="map.html?embed=1"
-      title="Ghana Price Map"
-      style="width:100%;height:640px;border:none;display:block;"
-      loading="lazy"
-      scrolling="no">
-    </iframe>
+
+    <!-- Region cards -->
+    <div class="map-region-bar" id="mapRegionBar">
+      <div class="map-loading-sm">Loading regional data…</div>
+    </div>
+
+    <!-- Map + sidebar -->
+    <div class="map-body">
+      <div class="map-tile" id="homeMap"></div>
+      <div class="map-side">
+        <!-- Legend -->
+        <div class="map-panel">
+          <div class="map-panel-title">Price Level</div>
+          <div class="map-leg-row"><span class="map-dot" style="background:#22c55e"></span>Below average (&lt; 90)</div>
+          <div class="map-leg-row"><span class="map-dot" style="background:#84cc16"></span>Near average (90–105)</div>
+          <div class="map-leg-row"><span class="map-dot" style="background:#eab308"></span>Moderately above (105–120)</div>
+          <div class="map-leg-row"><span class="map-dot" style="background:#f97316"></span>Elevated (120–140)</div>
+          <div class="map-leg-row"><span class="map-dot" style="background:#ef4444"></span>Well above average (&gt; 140)</div>
+          <div style="margin-top:10px;font-size:10px;color:var(--grey3);font-family:var(--font-m);">Bubble size = number of listings</div>
+        </div>
+        <!-- Neighbourhood ranking -->
+        <div class="map-panel" style="flex:1;display:flex;flex-direction:column;min-height:0;">
+          <div class="map-panel-title">Greater Accra Neighbourhoods</div>
+          <div class="map-nbhd-list" id="mapNbhdList">
+            <div class="map-loading-sm">Loading…</div>
+          </div>
+          <div style="margin-top:10px;font-size:10px;color:var(--grey3);font-family:var(--font-m);line-height:1.5;">200+ listings only · small-sample areas hidden</div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -1509,6 +1571,128 @@ init();
   });
 })();
 </script>
+<!-- ── PRICE MAP SCRIPT ───────────────────────────────────────── -->
+<script>
+(function(){
+  const MAP_API = 'https://sgdatalytics-production.up.railway.app';
+  const MIN_RECORDS = 200;
+
+  function gmpiColor(v){
+    if(v<90)  return '#22c55e';
+    if(v<105) return '#84cc16';
+    if(v<120) return '#eab308';
+    if(v<140) return '#f97316';
+    return '#ef4444';
+  }
+  function gmpiLabel(v){
+    if(v<90)  return 'Below average';
+    if(v<105) return 'Near average';
+    if(v<120) return 'Moderately above avg';
+    if(v<140) return 'Elevated';
+    return 'Well above average';
+  }
+
+  const COORDS = {
+    'Accra Metropolitan':[5.5502,-0.2174],'Adabraka':[5.5616,-0.2071],'Circle':[5.5567,-0.2040],
+    'Lapaz':[5.6149,-0.2425],'Achimota':[5.6266,-0.2345],'East Legon':[5.6281,-0.1686],
+    'Spintex':[5.6281,-0.1186],'Tema Metropolitan':[5.6698,-0.0166],'Adenta':[5.7036,-0.1886],
+    'Kokomlemle':[5.5716,-0.2145],'Madina':[5.6742,-0.2045],'Accra New Town':[5.5766,-0.2245],
+    'Dansoman':[5.5281,-0.2525],'Osu':[5.5502,-0.1786],'Darkuman':[5.5616,-0.2345],
+    'Airport Residential Area':[5.5997,-0.1886],'Weija':[5.5381,-0.3225],'Avenor Area':[5.5516,-0.2271],
+    'Alajo':[5.5816,-0.2245],'Tesano':[5.5966,-0.2145],'Dzorwulu':[5.6066,-0.1986],
+    'Kasoa':[5.5281,-0.4086],'Kaneshie':[5.5567,-0.2374],'Pokuase':[5.7216,-0.2745],
+    'Ashaley Botwe':[5.6516,-0.1545],'Ablekuma':[5.5566,-0.2645],'Awoshie':[5.5766,-0.2545],
+    'Teshie':[5.5302,-0.1325],'Mamprobi':[5.5302,-0.2174],'Haatso':[5.6516,-0.2045],
+    'Abelemkpe':[5.5866,-0.2086],'Kotobabi':[5.5816,-0.2145],'Cantonments':[5.5697,-0.1786],
+    'Nungua':[5.5302,-0.1125],'Anyaa':[5.5866,-0.2745],'Nima':[5.5816,-0.2045],
+    'Odorkor':[5.5416,-0.2645],'West Legon':[5.6481,-0.2145],'Labone':[5.5597,-0.1686],
+    'Roman Ridge':[5.5797,-0.1886],'Kwashieman':[5.5966,-0.2345],'Taifa-Burkina':[5.6316,-0.2645],
+    'South Shiashie':[5.6281,-0.1786],'Okponglo':[5.6381,-0.1845],'Agbogba':[5.6716,-0.2045],
+  };
+
+  const REGION_COORDS = {
+    'Greater Accra':[5.5502,-0.2174],'Ashanti':[6.6884,-1.6244],
+    'Western Region':[4.8975,-1.7566],'Central Region':[5.1054,-1.2466],
+    'Eastern Region':[6.1054,-0.5466],'Northern Region':[9.4008,-0.8393],'Brong Ahafo':[7.3359,-2.3259],
+  };
+
+  // Init map with light tiles
+  const map = L.map('homeMap',{zoomControl:true,scrollWheelZoom:false}).setView([5.60,-0.22],11);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{
+    attribution:'© OpenStreetMap © CARTO',subdomains:'abcd',maxZoom:18
+  }).addTo(map);
+
+  function bubbleRadius(n){ return Math.min(28,Math.max(7,Math.sqrt(n)*0.44)); }
+
+  function renderRegionCards(regions){
+    const bar = document.getElementById('mapRegionBar');
+    if(!regions.length){ bar.innerHTML='<div class="map-loading-sm">No regional data.</div>'; return; }
+    bar.innerHTML = regions.map(r=>{
+      const g = parseFloat(r.gmpi), col = gmpiColor(g);
+      return `<div class="map-region-card">
+        <div class="mrc-name">${r.name}</div>
+        <div class="mrc-val" style="color:${col}">${g.toFixed(1)}</div>
+        <div class="mrc-meta">${r.records.toLocaleString()} listings</div>
+      </div>`;
+    }).join('');
+  }
+
+  function renderNbhdList(nbhds){
+    const el = document.getElementById('mapNbhdList');
+    const sorted = [...nbhds].sort((a,b)=>parseFloat(b.gmpi)-parseFloat(a.gmpi));
+    if(!sorted.length){ el.innerHTML='<div class="map-loading-sm">No neighbourhood data.</div>'; return; }
+    el.innerHTML = sorted.map(n=>{
+      const g = parseFloat(n.gmpi), col = gmpiColor(g);
+      return `<div class="map-nbhd-row">
+        <span class="map-nbhd-name" title="${n.name}">${n.name}</span>
+        <span class="map-nbhd-gmpi" style="color:${col}">${g.toFixed(1)}</span>
+      </div>`;
+    }).join('');
+  }
+
+  function addMarkers(nbhds, regions){
+    nbhds.forEach(n=>{
+      const coords = COORDS[n.name]; if(!coords) return;
+      const g = parseFloat(n.gmpi), col = gmpiColor(g);
+      L.circleMarker(coords,{radius:bubbleRadius(n.records),fillColor:col,color:col,weight:1.5,opacity:0.9,fillOpacity:0.45})
+       .addTo(map)
+       .bindPopup(`<strong style="font-size:13px;color:#1a2535">${n.name}</strong><br>
+         <span style="font-size:1.5rem;font-family:'Bebas Neue',sans-serif;color:${col}">${g.toFixed(1)}</span><br>
+         <span style="font-size:10px;color:#888;font-family:monospace">${gmpiLabel(g)}</span><br>
+         <span style="font-size:10px;color:#888;font-family:monospace">${n.records.toLocaleString()} listings · ${n.categories} categories</span>`);
+    });
+    regions.filter(r=>r.name!=='Greater Accra').forEach(r=>{
+      const coords = REGION_COORDS[r.name]; if(!coords) return;
+      const g = parseFloat(r.gmpi), col = gmpiColor(g);
+      L.circleMarker(coords,{radius:14,fillColor:col,color:'#fff',weight:2,opacity:0.9,fillOpacity:0.6})
+       .addTo(map)
+       .bindPopup(`<strong style="font-size:13px;color:#1a2535">${r.name}</strong><br>
+         <span style="font-size:1.5rem;font-family:'Bebas Neue',sans-serif;color:${col}">${g.toFixed(1)}</span><br>
+         <span style="font-size:10px;color:#888;font-family:monospace">${gmpiLabel(g)}</span><br>
+         <span style="font-size:10px;color:#888;font-family:monospace">${r.records.toLocaleString()} listings</span>`);
+    });
+  }
+
+  fetch(MAP_API+'/api/gmpi/regional')
+    .then(r=>r.json())
+    .then(data=>{
+      const regions = data.regions||[];
+      const nbhds   = (data.neighbourhoods||[]).filter(n=>n.records>=MIN_RECORDS);
+      renderRegionCards(regions);
+      renderNbhdList(nbhds);
+      addMarkers(nbhds, regions);
+      const mapped = nbhds.filter(n=>COORDS[n.name]);
+      if(mapped.length){
+        map.fitBounds(L.latLngBounds(mapped.map(n=>COORDS[n.name])),{padding:[24,24]});
+      }
+    })
+    .catch(()=>{
+      document.getElementById('mapRegionBar').innerHTML='<div class="map-loading-sm">Could not load price data.</div>';
+      document.getElementById('mapNbhdList').innerHTML='<div class="map-loading-sm">Error loading data.</div>';
+    });
+})();
+</script>
+
 <!-- ── LIVE SGMPI FEED SCRIPT ─────────────────────────────────── -->
 <script>
 (function(){
