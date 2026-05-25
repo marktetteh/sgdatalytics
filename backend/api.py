@@ -855,114 +855,95 @@ def paystack_webhook():
 @limiter.limit("60 per minute")
 def get_gmpi():
     """
-    Ghana Market Price Index — weekly composite price index across all tracked
-    consumer goods categories. Base week = 100 (first week of data collection).
-
-    Returns:
-      - Weekly index values (overall + per category)
-      - Week-on-week change (%)
-      - Number of products and listings tracked each week
+    Ghana Market Price Index — weekly composite price index.
+    Consumer goods only: Real Estate & Vehicles excluded, price cap GHS 50k.
+    Base = all-time median per category (same methodology as /api/gmpi/latest and /api/gmpi/regional).
     """
-    # ── Overall weekly index ──────────────────────────────────
+    # ── Overall weekly GMPI ───────────────────────────────────
     overall_sql = """
-    WITH weekly AS (
-        SELECT
-            week_number,
-            year,
-            collected_date,
-            product_category,
-            COALESCE(NULLIF(normalized_name,''), search_label) AS product_name,
-            AVG(price_ghs) AS avg_price
-        FROM market_prices
-        WHERE price_ghs > 1
-          AND price_ghs < 200000
-          AND (normalized_name IS NOT NULL AND normalized_name <> ''
-               OR search_label IS NOT NULL)
-        GROUP BY week_number, year, collected_date, product_category,
-                 COALESCE(NULLIF(normalized_name,''), search_label)
+    WITH base_medians AS (
+      SELECT product_category,
+        PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY price_ghs) AS base_median
+      FROM market_prices
+      WHERE price_ghs BETWEEN 1 AND 50000
+        AND product_category NOT IN ('Real Estate', 'Vehicles')
+      GROUP BY product_category
+      HAVING COUNT(*) >= 20
     ),
-    weekly_composite AS (
-        SELECT
-            week_number,
-            year,
-            collected_date,
-            AVG(avg_price)             AS composite_avg_price,
-            COUNT(DISTINCT product_name) AS products_tracked,
-            SUM(1)                     AS category_product_count
-        FROM weekly
-        GROUP BY week_number, year, collected_date
-        ORDER BY year, week_number
+    weekly_medians AS (
+      SELECT
+        week_number, year,
+        MIN(collected_date) AS week_date,
+        product_category,
+        PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY price_ghs) AS wk_median,
+        COUNT(*) AS n
+      FROM market_prices
+      WHERE price_ghs BETWEEN 1 AND 50000
+        AND product_category NOT IN ('Real Estate', 'Vehicles')
+      GROUP BY week_number, year, product_category
+      HAVING COUNT(*) >= 5
     ),
-    base AS (
-        SELECT composite_avg_price AS base_price
-        FROM weekly_composite
-        ORDER BY year, week_number
-        LIMIT 1
+    weekly_cat_idx AS (
+      SELECT wm.week_number, wm.year, wm.week_date,
+        ROUND((wm.wk_median / bm.base_median * 100)::numeric, 2) AS category_index,
+        wm.product_category
+      FROM weekly_medians wm
+      JOIN base_medians bm USING (product_category)
+    ),
+    weekly_gmpi AS (
+      SELECT week_number, year,
+        MIN(week_date) AS week_date,
+        ROUND(AVG(category_index)::numeric, 2) AS gmpi,
+        COUNT(DISTINCT product_category) AS categories_tracked
+      FROM weekly_cat_idx
+      GROUP BY week_number, year
+      HAVING COUNT(DISTINCT product_category) >= 3
     )
     SELECT
-        w.week_number,
-        w.year,
-        w.collected_date                                    AS week_date,
-        ROUND((w.composite_avg_price / b.base_price * 100)::numeric, 2)
-                                                            AS gmpi,
-        ROUND(w.composite_avg_price::numeric, 2)            AS avg_price_ghs,
-        w.products_tracked,
-        LAG(ROUND((w.composite_avg_price / b.base_price * 100)::numeric, 2))
-            OVER (ORDER BY w.year, w.week_number)           AS prev_gmpi,
-        ROUND(
-            (ROUND((w.composite_avg_price / b.base_price * 100)::numeric, 2) -
-             LAG(ROUND((w.composite_avg_price / b.base_price * 100)::numeric, 2))
-                 OVER (ORDER BY w.year, w.week_number))
-        , 2)                                                AS gmpi_change,
-        ROUND(
-            (ROUND((w.composite_avg_price / b.base_price * 100)::numeric, 2) -
-             LAG(ROUND((w.composite_avg_price / b.base_price * 100)::numeric, 2))
-                 OVER (ORDER BY w.year, w.week_number))
-            / NULLIF(LAG(ROUND((w.composite_avg_price / b.base_price * 100)::numeric, 2))
-                 OVER (ORDER BY w.year, w.week_number), 0) * 100
-        , 2)                                                AS gmpi_change_pct
-    FROM weekly_composite w, base b
-    ORDER BY w.year DESC, w.week_number DESC
+      week_number, year, week_date, gmpi, categories_tracked,
+      LAG(gmpi) OVER (ORDER BY year, week_number) AS prev_gmpi,
+      ROUND((gmpi - LAG(gmpi) OVER (ORDER BY year, week_number))::numeric, 2) AS gmpi_change,
+      ROUND(
+        (gmpi - LAG(gmpi) OVER (ORDER BY year, week_number))
+        / NULLIF(LAG(gmpi) OVER (ORDER BY year, week_number), 0) * 100
+      ::numeric, 2) AS gmpi_change_pct
+    FROM weekly_gmpi
+    ORDER BY year DESC, week_number DESC
     """
 
-    # ── Category-level index ──────────────────────────────────
+    # ── Per-category weekly index ─────────────────────────────
     category_sql = """
-    WITH weekly_cat AS (
-        SELECT
-            week_number,
-            year,
-            collected_date,
-            product_category,
-            AVG(price_ghs)               AS category_avg_price,
-            COUNT(DISTINCT COALESCE(NULLIF(normalized_name,''), search_label))
-                                         AS products_tracked
-        FROM market_prices
-        WHERE price_ghs > 1
-          AND price_ghs < 200000
-        GROUP BY week_number, year, collected_date, product_category
+    WITH base_medians AS (
+      SELECT product_category,
+        PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY price_ghs) AS base_median
+      FROM market_prices
+      WHERE price_ghs BETWEEN 1 AND 50000
+        AND product_category NOT IN ('Real Estate', 'Vehicles')
+      GROUP BY product_category
+      HAVING COUNT(*) >= 20
     ),
-    base_cat AS (
-        SELECT
-            product_category,
-            FIRST_VALUE(category_avg_price)
-                OVER (PARTITION BY product_category
-                      ORDER BY year, week_number) AS base_price
-        FROM weekly_cat
+    weekly_medians AS (
+      SELECT
+        week_number, year,
+        MIN(collected_date) AS week_date,
+        product_category,
+        PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY price_ghs) AS wk_median,
+        COUNT(*) AS n
+      FROM market_prices
+      WHERE price_ghs BETWEEN 1 AND 50000
+        AND product_category NOT IN ('Real Estate', 'Vehicles')
+      GROUP BY week_number, year, product_category
+      HAVING COUNT(*) >= 5
     )
-    SELECT DISTINCT
-        w.week_number,
-        w.year,
-        w.collected_date               AS week_date,
-        w.product_category,
-        ROUND((w.category_avg_price / b.base_price * 100)::numeric, 2)
-                                       AS category_index,
-        ROUND(w.category_avg_price::numeric, 2)
-                                       AS avg_price_ghs,
-        w.products_tracked
-    FROM weekly_cat w
-    JOIN base_cat b
-      ON w.product_category = b.product_category
-    ORDER BY w.year DESC, w.week_number DESC, w.product_category
+    SELECT
+      wm.week_number, wm.year, wm.week_date,
+      wm.product_category,
+      ROUND((wm.wk_median / bm.base_median * 100)::numeric, 2) AS category_index,
+      ROUND(wm.wk_median::numeric, 2) AS median_price_ghs,
+      wm.n AS listings_count
+    FROM weekly_medians wm
+    JOIN base_medians bm USING (product_category)
+    ORDER BY wm.year DESC, wm.week_number DESC, wm.product_category
     """
 
     try:
@@ -973,8 +954,8 @@ def get_gmpi():
 
     return jsonify({
         'index_name':  'Ghana Market Price Index (GMPI)',
-        'description': 'Composite weekly price index across all tracked consumer goods. Base = 100 at first collection week.',
-        'base_note':   'GMPI of 110 means prices are 10% higher than the base week.',
+        'description': 'Consumer goods only. Real Estate and Vehicles excluded. Base = all-time historical median per category.',
+        'base_note':   'GMPI of 110 means prices are 10%% above the historical median.',
         'overall':     overall,
         'by_category': by_cat,
     })
@@ -984,28 +965,59 @@ def get_gmpi():
 @app.route('/api/gmpi/latest')
 @limiter.limit("120 per minute")
 def get_gmpi_latest():
-    """Latest GMPI value + week-on-week change. Safe for public display."""
-    # Group by week only (not collected_date) so each week = one row regardless of collection days
+    """
+    Latest GMPI value + week-on-week change. Safe for public display.
+    Methodology: all-time median per category = base (100).
+    Consumer goods only — Real Estate & Vehicles excluded, price cap GHS 50k.
+    Same methodology as /api/gmpi/regional.
+    """
     sql = """
-    WITH weekly AS (
-        SELECT
-            week_number, year,
-            AVG(price_ghs) AS avg_price,
-            COUNT(DISTINCT COALESCE(NULLIF(normalized_name,''), search_label)) AS products,
-            MIN(collected_date) AS week_date
-        FROM market_prices
-        WHERE price_ghs > 1 AND price_ghs < 200000
-        GROUP BY week_number, year
-        ORDER BY year, week_number
+    WITH base_medians AS (
+      -- All-time median per category = base (index 100)
+      SELECT product_category,
+        PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY price_ghs) AS base_median
+      FROM market_prices
+      WHERE price_ghs BETWEEN 1 AND 50000
+        AND product_category NOT IN ('Real Estate', 'Vehicles')
+      GROUP BY product_category
+      HAVING COUNT(*) >= 20
     ),
-    base AS (SELECT avg_price AS base_price FROM weekly ORDER BY year, week_number LIMIT 1)
-    SELECT
-        w.week_number, w.year, w.week_date,
-        ROUND((w.avg_price / b.base_price * 100)::numeric, 2) AS gmpi,
-        w.products AS products_tracked
-    FROM weekly w, base b
-    ORDER BY w.year DESC, w.week_number DESC
-    LIMIT 2
+    weekly_medians AS (
+      -- Per-week, per-category median
+      SELECT
+        week_number, year,
+        MIN(collected_date) AS week_date,
+        product_category,
+        PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY price_ghs) AS wk_median,
+        COUNT(*) AS n
+      FROM market_prices
+      WHERE price_ghs BETWEEN 1 AND 50000
+        AND product_category NOT IN ('Real Estate', 'Vehicles')
+      GROUP BY week_number, year, product_category
+      HAVING COUNT(*) >= 5
+    ),
+    weekly_cat_idx AS (
+      -- Category index per week = (week median / base median) * 100
+      SELECT wm.week_number, wm.year, wm.week_date,
+        ROUND((wm.wk_median / bm.base_median * 100)::numeric, 2) AS category_index,
+        wm.product_category
+      FROM weekly_medians wm
+      JOIN base_medians bm USING (product_category)
+    ),
+    weekly_gmpi AS (
+      -- GMPI per week = average of category indices (equal-weighted)
+      SELECT week_number, year,
+        MIN(week_date) AS week_date,
+        ROUND(AVG(category_index)::numeric, 2) AS gmpi,
+        COUNT(DISTINCT product_category) AS categories_tracked
+      FROM weekly_cat_idx
+      GROUP BY week_number, year
+      HAVING COUNT(DISTINCT product_category) >= 3
+      ORDER BY year DESC, week_number DESC
+      LIMIT 2
+    )
+    SELECT * FROM weekly_gmpi
+    ORDER BY year DESC, week_number DESC
     """
     try:
         rows = query('market_prices', sql)
@@ -1019,21 +1031,20 @@ def get_gmpi_latest():
     latest = rows[0]
     prev   = rows[1] if len(rows) > 1 else None
 
-    # Cast Decimal to float for arithmetic
     latest_gmpi = float(latest['gmpi'])
     prev_gmpi   = float(prev['gmpi']) if prev else None
     change      = round(latest_gmpi - prev_gmpi, 2) if prev_gmpi else None
     change_pct  = round((change / prev_gmpi) * 100, 2) if prev_gmpi and change is not None else None
 
     return jsonify({
-        'gmpi':             round(latest_gmpi, 2),
-        'week':             latest['week_number'],
-        'year':             latest['year'],
-        'week_date':        str(latest['week_date']),
-        'products_tracked': latest['products_tracked'],
-        'change':           change,
-        'change_pct':       change_pct,
-        'label':            f"W{latest['week_number']} {latest['year']}",
+        'gmpi':               round(latest_gmpi, 2),
+        'week':               latest['week_number'],
+        'year':               latest['year'],
+        'week_date':          str(latest['week_date']),
+        'categories_tracked': latest['categories_tracked'],
+        'change':             change,
+        'change_pct':         change_pct,
+        'label':              f"W{latest['week_number']} {latest['year']}",
     })
 
 
