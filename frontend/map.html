@@ -46,15 +46,24 @@
 
     /* ── REGION CARDS ── */
     .region-bar{max-width:1200px;margin:0 auto 24px;padding:0 24px;display:flex;flex-wrap:wrap;gap:12px;}
-    .region-card{background:var(--navy2);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:14px 20px;min-width:160px;flex:1;cursor:default;transition:border-color 0.2s;}
-    .region-card:hover{border-color:rgba(0,149,122,0.4);}
+    .region-card{background:var(--navy2);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:14px 20px;min-width:160px;flex:1;cursor:pointer;transition:border-color 0.2s,transform 0.15s;}
+    .region-card:hover{border-color:rgba(0,149,122,0.4);transform:translateY(-2px);}
     .region-card .rc-name{font-size:12px;color:var(--grey2);margin-bottom:4px;font-family:var(--font-m);}
     .region-card .rc-gmpi{font-family:'Bebas Neue',sans-serif;font-size:2rem;line-height:1;margin-bottom:2px;}
+    .region-card .rc-badge{display:inline-block;font-size:10px;padding:2px 8px;border-radius:20px;font-family:var(--font-m);margin-bottom:4px;font-weight:500;}
     .region-card .rc-meta{font-family:var(--font-m);font-size:10px;color:var(--grey3);}
 
     /* ── MAP LAYOUT ── */
     .map-wrap{max-width:1200px;margin:0 auto;padding:0 24px 48px;display:grid;grid-template-columns:1fr 300px;gap:20px;align-items:start;}
-    #map{height:560px;border-radius:12px;border:1px solid rgba(255,255,255,0.08);overflow:hidden;}
+    .map-container{position:relative;}
+    #map{height:580px;border-radius:12px;border:1px solid rgba(255,255,255,0.08);overflow:hidden;}
+
+    /* ── MAP TOGGLE BUTTON ── */
+    .map-toggle{position:absolute;top:12px;right:12px;z-index:500;
+      background:var(--navy2);border:1px solid rgba(255,255,255,0.15);color:var(--white);
+      padding:8px 14px;border-radius:8px;font-size:12px;font-family:var(--font-m);
+      cursor:pointer;transition:background 0.2s;letter-spacing:0.04em;}
+    .map-toggle:hover{background:rgba(0,149,122,0.3);}
 
     /* ── SIDEBAR ── */
     .sidebar{display:flex;flex-direction:column;gap:16px;}
@@ -63,10 +72,10 @@
 
     /* ── LEGEND ── */
     .legend-row{display:flex;align-items:center;gap:10px;margin-bottom:7px;font-size:12px;color:var(--grey2);}
-    .legend-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0;}
+    .legend-swatch{width:32px;height:12px;border-radius:3px;flex-shrink:0;}
 
     /* ── NEIGHBOURHOOD TABLE ── */
-    .nbhd-list{max-height:340px;overflow-y:auto;}
+    .nbhd-list{max-height:300px;overflow-y:auto;}
     .nbhd-list::-webkit-scrollbar{width:4px;}
     .nbhd-list::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:2px;}
     .nbhd-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:12px;}
@@ -84,6 +93,14 @@
     .popup-gmpi{font-family:'Bebas Neue',sans-serif;font-size:2rem;line-height:1;margin-bottom:4px;}
     .popup-meta{font-family:var(--font-m);font-size:10px;color:var(--grey3);}
 
+    /* ── REGION LABEL TOOLTIP ── */
+    .region-tip-wrap{background:transparent!important;border:none!important;box-shadow:none!important;padding:0!important;}
+    .region-tip-wrap::before{display:none!important;}
+    .region-tip{text-align:center;pointer-events:none;}
+    .rt-name{font-family:'IBM Plex Mono',monospace;font-size:10px;color:rgba(255,255,255,0.75);letter-spacing:0.08em;text-transform:uppercase;text-shadow:0 1px 3px rgba(0,0,0,0.9);white-space:nowrap;}
+    .rt-gmpi{font-family:'Bebas Neue',sans-serif;font-size:1.9rem;line-height:1.1;text-shadow:0 2px 6px rgba(0,0,0,0.9);}
+    .rt-badge{font-family:'IBM Plex Mono',monospace;font-size:9px;opacity:0.7;text-shadow:0 1px 3px rgba(0,0,0,0.9);}
+
     /* ── LOADING ── */
     .loading{text-align:center;padding:40px;color:var(--grey2);font-family:var(--font-m);font-size:13px;}
 
@@ -94,7 +111,7 @@
 
     @media(max-width:768px){
       .map-wrap{grid-template-columns:1fr;}
-      #map{height:380px;}
+      #map{height:400px;}
       .nav-links{display:none;}
       .hamburger{display:block;}
     }
@@ -137,8 +154,8 @@
 <!-- HERO -->
 <div class="hero">
   <div class="kicker"><span></span>Interactive Price Map</div>
-  <h1>Ghana Market Prices<br><span>By Location</span></h1>
-  <p class="hero-sub">Consumer goods price index across Greater Accra neighbourhoods and Ghana regions. GMPI 100 = historical average. Above 100 = more expensive than average.</p>
+  <h1>Ghana Price Index<br><span>By Region</span></h1>
+  <p class="hero-sub">Consumer goods price levels across Ghana's regions. 100 = national average. Regions above 100 are more expensive; below 100 are cheaper. Click any region for details or zoom into Greater Accra for neighbourhood-level data.</p>
 </div>
 
 <!-- REGION CARDS -->
@@ -148,18 +165,21 @@
 
 <!-- MAP + SIDEBAR -->
 <div class="map-wrap">
-  <div id="map"></div>
+  <div class="map-container">
+    <div id="map"></div>
+    <button class="map-toggle" id="map-toggle" onclick="toggleView()">Greater Accra Detail →</button>
+  </div>
 
   <div class="sidebar">
     <!-- Legend -->
     <div class="sidebar-box">
-      <div class="sidebar-title">Price Level</div>
-      <div class="legend-row"><div class="legend-dot" style="background:#22c55e"></div>Below average (&lt; 90)</div>
-      <div class="legend-row"><div class="legend-dot" style="background:#84cc16"></div>Near average (90–105)</div>
-      <div class="legend-row"><div class="legend-dot" style="background:#eab308"></div>Moderately above (105–120)</div>
-      <div class="legend-row"><div class="legend-dot" style="background:#f97316"></div>Elevated (120–140)</div>
-      <div class="legend-row"><div class="legend-dot" style="background:#ef4444"></div>Well above average (&gt; 140)</div>
-      <div style="margin-top:10px;font-size:11px;color:var(--grey3);font-family:var(--font-m);">Bubble size = number of listings</div>
+      <div class="sidebar-title">Price Level (vs National Avg)</div>
+      <div class="legend-row"><div class="legend-swatch" style="background:#22c55e"></div>Below average (&lt; 90)</div>
+      <div class="legend-row"><div class="legend-swatch" style="background:#84cc16"></div>Near average (90–105)</div>
+      <div class="legend-row"><div class="legend-swatch" style="background:#eab308"></div>Moderately above (105–120)</div>
+      <div class="legend-row"><div class="legend-swatch" style="background:#f97316"></div>Elevated (120–140)</div>
+      <div class="legend-row"><div class="legend-swatch" style="background:#ef4444"></div>Well above average (&gt; 140)</div>
+      <div style="margin-top:10px;font-size:11px;color:var(--grey3);font-family:var(--font-m);line-height:1.6;">100 = national average across all located listings. Consumer goods only — Real Estate & Vehicles excluded.</div>
     </div>
 
     <!-- Neighbourhood ranking -->
@@ -168,14 +188,14 @@
       <div class="nbhd-list" id="nbhd-list">
         <div class="loading">Loading…</div>
       </div>
-      <div style="margin-top:10px;font-size:10px;color:var(--grey3);font-family:var(--font-m);line-height:1.5;">Showing neighbourhoods with 200+ listings only. Small-sample areas are hidden to ensure reliability.</div>
+      <div style="margin-top:10px;font-size:10px;color:var(--grey3);font-family:var(--font-m);line-height:1.5;">200+ listing threshold. Click a neighbourhood name to locate it on the map.</div>
     </div>
   </div>
 </div>
 
 <footer>
   <p>© 2026 SG Datalytics · <a href="marketplace.html">Marketplace</a> · <a href="products.html">Products</a> · <a href="methodology.html">Methodology</a></p>
-  <p style="margin-top:6px;font-size:11px;">GMPI covers consumer goods only. Real estate and vehicles excluded. Base = all-time historical median per category.</p>
+  <p style="margin-top:6px;font-size:11px;">GMPI covers consumer goods only. Real estate and vehicles excluded. 100 = national average across all located listings.</p>
 </footer>
 
 <script>
@@ -189,139 +209,231 @@ function gmpiColor(v) {
   if (v < 140) return '#f97316';
   return '#ef4444';
 }
-
 function gmpiLabel(v) {
-  if (v < 90)  return 'Below average';
-  if (v < 105) return 'Near average';
-  if (v < 120) return 'Moderately above average';
+  if (v < 90)  return 'Below avg';
+  if (v < 105) return 'Near avg';
+  if (v < 120) return 'Above avg';
   if (v < 140) return 'Elevated';
-  return 'Well above average';
+  return 'High';
 }
+
+// ── Ghana region polygon shapes (simplified boundaries) ───────
+const REGION_SHAPES = {
+  'Greater Accra':  [[5.47,-0.64],[5.47,0.32],[6.05,0.32],[6.05,-0.28],[5.72,-0.64]],
+  'Central Region': [[4.88,-2.08],[4.88,-0.63],[5.72,-0.63],[6.05,-0.28],[6.45,-1.18],[6.28,-1.78],[5.82,-2.08]],
+  'Western Region': [[4.72,-3.28],[4.72,-2.05],[5.82,-2.05],[6.45,-2.05],[6.72,-2.48],[6.45,-3.02],[5.52,-3.28]],
+  'Eastern Region': [[5.72,-0.62],[5.72,0.32],[7.28,0.32],[7.28,-0.12],[6.52,-0.62]],
+  'Ashanti':        [[6.12,-2.42],[6.12,-0.62],[7.28,-0.62],[7.58,-1.52],[7.22,-2.42]],
+  'Brong Ahafo':    [[7.02,-3.02],[7.02,-0.52],[8.68,-0.52],[8.78,-1.52],[8.52,-2.52],[8.02,-3.02]],
+  'Northern Region':[[8.52,-2.78],[8.52,-0.02],[11.18,-0.02],[11.18,-0.98],[10.52,-1.98],[9.52,-2.78]],
+};
+
+// Label anchor points (visual centre of each region)
+const REGION_LABEL_POS = {
+  'Greater Accra':  [5.72, -0.18],
+  'Central Region': [5.68, -1.38],
+  'Western Region': [5.82, -2.65],
+  'Eastern Region': [6.62, -0.18],
+  'Ashanti':        [6.85, -1.52],
+  'Brong Ahafo':    [7.85, -1.75],
+  'Northern Region':[9.65, -1.25],
+};
 
 // ── Neighbourhood coordinates (Greater Accra) ─────────────────
 const COORDS = {
-  'Accra Metropolitan':       [5.5502, -0.2174],
-  'Abossey Okai':             [5.5452, -0.2374],
-  'Adabraka':                 [5.5616, -0.2071],
-  'Circle':                   [5.5567, -0.2040],
-  'Lapaz':                    [5.6149, -0.2425],
-  'Achimota':                 [5.6266, -0.2345],
-  'East Legon':               [5.6281, -0.1686],
-  'Spintex':                  [5.6281, -0.1186],
-  'Tema Metropolitan':        [5.6698, -0.0166],
-  'Adenta':                   [5.7036, -0.1886],
-  'Kokomlemle':               [5.5716, -0.2145],
-  'Madina':                   [5.6742, -0.2045],
-  'Accra New Town':           [5.5766, -0.2245],
-  'Dansoman':                 [5.5281, -0.2525],
-  'Osu':                      [5.5502, -0.1786],
-  'Darkuman':                 [5.5616, -0.2345],
-  'Airport Residential Area': [5.5997, -0.1886],
-  'Weija':                    [5.5381, -0.3225],
-  'Avenor Area':              [5.5516, -0.2271],
-  'Alajo':                    [5.5816, -0.2245],
-  'Tesano':                   [5.5966, -0.2145],
-  'Dzorwulu':                 [5.6066, -0.1986],
-  'Kasoa':                    [5.5281, -0.4086],
-  'Kaneshie':                 [5.5567, -0.2374],
-  'Pokuase':                  [5.7216, -0.2745],
-  'Ashaley Botwe':            [5.6516, -0.1545],
-  'Ablekuma':                 [5.5566, -0.2645],
-  'Awoshie':                  [5.5766, -0.2545],
-  'North Industrial Area':    [5.5516, -0.2174],
-  'Teshie':                   [5.5302, -0.1325],
-  'Mamprobi':                 [5.5302, -0.2174],
-  'Haatso':                   [5.6516, -0.2045],
-  'Abelemkpe':                [5.5866, -0.2086],
-  'Kotobabi':                 [5.5816, -0.2145],
-  'Cantonments':              [5.5697, -0.1786],
-  'Dome':                     [5.6416, -0.2445],
-  'Ga South Municipal':       [5.5081, -0.3325],
-  'Adjiriganor':              [5.6381, -0.1645],
-  'Kwashieman':               [5.5966, -0.2345],
-  'Nungua':                   [5.5302, -0.1125],
-  'Lartebiokorshie':          [5.5516, -0.2474],
-  'North Legon':              [5.6716, -0.1845],
-  'Oyarifa':                  [5.6816, -0.1545],
-  'Ga West Municipal':        [5.6081, -0.3225],
-  'Taifa-Burkina':            [5.6316, -0.2645],
-  'Labadi':                   [5.5402, -0.1625],
-  'Mataheko':                 [5.5402, -0.2174],
-  'Ashaiman Municipal':       [5.7063, -0.0325],
-  'Gbawe':                    [5.5566, -0.2945],
-  'Roman Ridge':              [5.5797, -0.1886],
-  'Ashomang Estate':          [5.6216, -0.2445],
-  'Sowutwuom':                [5.5866, -0.2545],
-  'Odorkor':                  [5.5416, -0.2645],
-  'West Legon':               [5.6481, -0.2145],
-  'Korle Gonno':              [5.5302, -0.2374],
-  'Agbogba':                  [5.6716, -0.2045],
-  'Ridge':                    [5.5697, -0.2086],
-  'Labone':                   [5.5597, -0.1686],
-  'Ga East Municipal':        [5.6581, -0.1645],
-  'Burma Camp':               [5.5597, -0.1486],
-  'Tantra Hills':             [5.6316, -0.2445],
-  'Ofankor':                  [5.6916, -0.2845],
-  'Okaishie':                 [5.5502, -0.2071],
-  'McCarthy Hill':            [5.5566, -0.3025],
-  'Dworwulu':                 [5.6066, -0.1986],
-  'Bubuashie':                [5.5566, -0.2474],
-  'Agbogbloshie':             [5.5402, -0.2374],
-  'Asylum Down':              [5.5616, -0.2145],
-  'Anyaa':                    [5.5866, -0.2745],
-  'Abokobi':                  [5.7416, -0.2045],
-  'Santa Maria':              [5.5766, -0.2645],
-  'Okponglo':                 [5.6381, -0.1845],
-  'Dodowa':                   [5.8716, -0.1345],
-  'Nii Boi Town':             [5.6266, -0.2545],
-  'South La':                 [5.5402, -0.1486],
-  'Amrahia':                  [5.7016, -0.1545],
-  'Nima':                     [5.5816, -0.2045],
-  'Ledzokuku-Krowor':         [5.5502, -0.1086],
-  'South Shiashie':           [5.6281, -0.1786],
-  'Banana Inn':               [5.5866, -0.2645],
-  'Akweteyman':               [5.5666, -0.2245],
+  'Accra Metropolitan':[5.5502,-0.2174],'Abossey Okai':[5.5452,-0.2374],
+  'Adabraka':[5.5616,-0.2071],'Circle':[5.5567,-0.2040],'Lapaz':[5.6149,-0.2425],
+  'Achimota':[5.6266,-0.2345],'East Legon':[5.6281,-0.1686],'Spintex':[5.6281,-0.1186],
+  'Tema Metropolitan':[5.6698,-0.0166],'Adenta':[5.7036,-0.1886],'Kokomlemle':[5.5716,-0.2145],
+  'Madina':[5.6742,-0.2045],'Accra New Town':[5.5766,-0.2245],'Dansoman':[5.5281,-0.2525],
+  'Osu':[5.5502,-0.1786],'Darkuman':[5.5616,-0.2345],'Airport Residential Area':[5.5997,-0.1886],
+  'Weija':[5.5381,-0.3225],'Avenor Area':[5.5516,-0.2271],'Alajo':[5.5816,-0.2245],
+  'Tesano':[5.5966,-0.2145],'Dzorwulu':[5.6066,-0.1986],'Kasoa':[5.5281,-0.4086],
+  'Kaneshie':[5.5567,-0.2374],'Pokuase':[5.7216,-0.2745],'Ashaley Botwe':[5.6516,-0.1545],
+  'Ablekuma':[5.5566,-0.2645],'Awoshie':[5.5766,-0.2545],'North Industrial Area':[5.5516,-0.2174],
+  'Teshie':[5.5302,-0.1325],'Mamprobi':[5.5302,-0.2174],'Haatso':[5.6516,-0.2045],
+  'Abelemkpe':[5.5866,-0.2086],'Kotobabi':[5.5816,-0.2145],'Cantonments':[5.5697,-0.1786],
+  'Dome':[5.6416,-0.2445],'Ga South Municipal':[5.5081,-0.3325],'Adjiriganor':[5.6381,-0.1645],
+  'Kwashieman':[5.5966,-0.2345],'Nungua':[5.5302,-0.1125],'Lartebiokorshie':[5.5516,-0.2474],
+  'North Legon':[5.6716,-0.1845],'Oyarifa':[5.6816,-0.1545],'Ga West Municipal':[5.6081,-0.3225],
+  'Taifa-Burkina':[5.6316,-0.2645],'Labadi':[5.5402,-0.1625],'Mataheko':[5.5402,-0.2174],
+  'Ashaiman Municipal':[5.7063,-0.0325],'Gbawe':[5.5566,-0.2945],'Roman Ridge':[5.5797,-0.1886],
+  'Ashomang Estate':[5.6216,-0.2445],'Sowutwuom':[5.5866,-0.2545],'Odorkor':[5.5416,-0.2645],
+  'West Legon':[5.6481,-0.2145],'Korle Gonno':[5.5302,-0.2374],'Agbogba':[5.6716,-0.2045],
+  'Ridge':[5.5697,-0.2086],'Labone':[5.5597,-0.1686],'Ga East Municipal':[5.6581,-0.1645],
+  'Burma Camp':[5.5597,-0.1486],'Tantra Hills':[5.6316,-0.2445],'Ofankor':[5.6916,-0.2845],
+  'Okaishie':[5.5502,-0.2071],'McCarthy Hill':[5.5566,-0.3025],'Bubuashie':[5.5566,-0.2474],
+  'Agbogbloshie':[5.5402,-0.2374],'Asylum Down':[5.5616,-0.2145],'Anyaa':[5.5866,-0.2745],
+  'Abokobi':[5.7416,-0.2045],'Santa Maria':[5.5766,-0.2645],'Nima':[5.5816,-0.2045],
+  'Ledzokuku-Krowor':[5.5502,-0.1086],'South Shiashie':[5.6281,-0.1786],
+  'Banana Inn':[5.5866,-0.2645],'Akweteyman':[5.5666,-0.2245],
+  'Nii Boi Town':[5.6266,-0.2545],'South La':[5.5402,-0.1486],'Amrahia':[5.7016,-0.1545],
+  'Okponglo':[5.6381,-0.1845],'Dodowa':[5.8716,-0.1345],'North Legon':[5.6716,-0.1845],
 };
 
-// ── Region centroids (for regional markers) ───────────────────
-const REGION_COORDS = {
-  'Greater Accra': [5.5502, -0.2174],
-  'Ashanti':       [6.6884, -1.6244],
-  'Western Region':[4.8975, -1.7566],
-  'Central Region':[5.1054, -1.2466],
-  'Eastern Region':[6.1054, -0.5466],
-  'Northern Region':[9.4008, -0.8393],
-  'Brong Ahafo':   [7.3359, -2.3259],
-};
-
-// ── Init map ──────────────────────────────────────────────────
+// ── Map init ──────────────────────────────────────────────────
 const map = L.map('map', { zoomControl: true, scrollWheelZoom: false })
-  .setView([5.60, -0.22], 11);
+  .setView([7.9, -1.2], 7);   // Ghana overview
 
 L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
   attribution: '© OpenStreetMap contributors © CARTO',
-  subdomains: 'abcd',
-  maxZoom: 18
+  subdomains: 'abcd', maxZoom: 18
 }).addTo(map);
 
-// ── Bubble radius scale ───────────────────────────────────────
-function bubbleRadius(records) {
-  return Math.min(32, Math.max(8, Math.sqrt(records) * 0.45));
+// ── State ─────────────────────────────────────────────────────
+let nbhdLayer = L.layerGroup();   // neighbourhood bubbles
+let regionLayer = L.layerGroup(); // region polygons + labels
+let inAccraView = false;
+let accraData = [];
+
+// ── View toggle ───────────────────────────────────────────────
+function toggleView() {
+  const btn = document.getElementById('map-toggle');
+  if (!inAccraView) {
+    // Zoom into Greater Accra
+    map.setView([5.62, -0.22], 12);
+    regionLayer.remove();
+    nbhdLayer.addTo(map);
+    btn.textContent = '← Ghana Overview';
+    inAccraView = true;
+  } else {
+    // Zoom back to Ghana
+    map.setView([7.9, -1.2], 7);
+    nbhdLayer.remove();
+    regionLayer.addTo(map);
+    btn.textContent = 'Greater Accra Detail →';
+    inAccraView = false;
+  }
 }
+
+// ── Auto-switch on zoom ───────────────────────────────────────
+map.on('zoomend', () => {
+  const z = map.getZoom();
+  const btn = document.getElementById('map-toggle');
+  if (z >= 10 && !inAccraView) {
+    regionLayer.remove();
+    nbhdLayer.addTo(map);
+    btn.textContent = '← Ghana Overview';
+    inAccraView = true;
+  } else if (z < 10 && inAccraView) {
+    nbhdLayer.remove();
+    regionLayer.addTo(map);
+    btn.textContent = 'Greater Accra Detail →';
+    inAccraView = false;
+  }
+});
 
 // ── Render region cards ───────────────────────────────────────
 function renderRegionCards(regions) {
   const bar = document.getElementById('region-bar');
-  if (!regions.length) { bar.innerHTML = '<div class="loading">No regional data available.</div>'; return; }
+  if (!regions.length) { bar.innerHTML = '<div class="loading">No regional data.</div>'; return; }
   bar.innerHTML = regions.map(r => {
-    const col = gmpiColor(parseFloat(r.gmpi));
+    const g   = parseFloat(r.gmpi);
+    const col = gmpiColor(g);
+    const lbl = gmpiLabel(g);
+    const bgAlpha = col + '22';
     return `
-      <div class="region-card">
+      <div class="region-card" onclick="focusRegion('${r.name}')">
         <div class="rc-name">${r.name}</div>
-        <div class="rc-gmpi" style="color:${col}">${parseFloat(r.gmpi).toFixed(1)}</div>
-        <div class="rc-meta">${r.records.toLocaleString()} listings · ${r.categories} categories</div>
+        <div class="rc-gmpi" style="color:${col}">${g.toFixed(1)}</div>
+        <div class="rc-badge" style="background:${col}22;color:${col}">${lbl}</div>
+        <div class="rc-meta">${r.records.toLocaleString()} listings · ${r.categories} cats</div>
       </div>`;
   }).join('');
+}
+
+// ── Click card → pan to region ────────────────────────────────
+const regionPolygons = {};
+function focusRegion(name) {
+  if (name === 'Greater Accra') {
+    map.setView([5.62, -0.22], 12);
+    if (!inAccraView) toggleView();
+  } else {
+    const poly = regionPolygons[name];
+    if (poly) { map.fitBounds(poly.getBounds(), { padding: [40, 40] }); poly.openPopup(); }
+  }
+}
+
+// ── Build choropleth region layer ─────────────────────────────
+function buildRegionLayer(regions) {
+  const regionMap = {};
+  regions.forEach(r => regionMap[r.name] = r);
+
+  Object.entries(REGION_SHAPES).forEach(([name, coords]) => {
+    const r   = regionMap[name];
+    const g   = r ? parseFloat(r.gmpi) : null;
+    const col = g !== null ? gmpiColor(g) : '#374151';
+
+    const poly = L.polygon(coords, {
+      fillColor:   col,
+      fillOpacity: 0.45,
+      color:       col,
+      weight:      1.5,
+      opacity:     0.7,
+    });
+
+    if (r) {
+      poly.bindPopup(`
+        <div class="popup-name">${name}</div>
+        <div class="popup-gmpi" style="color:${col}">${g.toFixed(1)}</div>
+        <div class="popup-meta">${gmpiLabel(g)} · ${r.records.toLocaleString()} listings</div>
+        <div class="popup-meta" style="margin-top:4px;">${r.categories} categories tracked</div>
+      `);
+      poly.on('mouseover', function(){ this.setStyle({fillOpacity:0.7}); });
+      poly.on('mouseout',  function(){ this.setStyle({fillOpacity:0.45}); });
+      poly.on('click',     function(){ this.openPopup(); });
+    }
+
+    regionLayer.addLayer(poly);
+    regionPolygons[name] = poly;
+
+    // Permanent label
+    if (REGION_LABEL_POS[name]) {
+      const labelContent = g !== null
+        ? `<div class="region-tip">
+             <div class="rt-name">${name}</div>
+             <div class="rt-gmpi" style="color:${col}">${g.toFixed(1)}</div>
+             <div class="rt-badge" style="color:${col}">${gmpiLabel(g)}</div>
+           </div>`
+        : `<div class="region-tip"><div class="rt-name" style="color:rgba(255,255,255,0.3)">${name}</div></div>`;
+
+      const label = L.marker(REGION_LABEL_POS[name], {
+        icon: L.divIcon({
+          html: labelContent,
+          className: 'region-tip-wrap',
+          iconSize: [120, 60],
+          iconAnchor: [60, 30],
+        }),
+        interactive: false,
+      });
+      regionLayer.addLayer(label);
+    }
+  });
+
+  regionLayer.addTo(map);
+}
+
+// ── Build neighbourhood layer ─────────────────────────────────
+function buildNbhdLayer(nbhds) {
+  nbhds.forEach(n => {
+    const coords = COORDS[n.name];
+    if (!coords) return;
+    const g   = parseFloat(n.gmpi);
+    const col = gmpiColor(g);
+    const r   = Math.min(32, Math.max(8, Math.sqrt(n.records) * 0.45));
+
+    const circle = L.circleMarker(coords, {
+      radius: r, fillColor: col, color: col,
+      weight: 1.5, opacity: 0.9, fillOpacity: 0.4,
+    });
+    circle.bindPopup(`
+      <div class="popup-name">${n.name}</div>
+      <div class="popup-gmpi" style="color:${col}">${g.toFixed(1)}</div>
+      <div class="popup-meta">${gmpiLabel(g)}</div>
+      <div class="popup-meta" style="margin-top:4px;">${n.records.toLocaleString()} listings · ${n.categories} categories</div>
+    `);
+    nbhdLayer.addLayer(circle);
+  });
 }
 
 // ── Render neighbourhood sidebar ──────────────────────────────
@@ -334,7 +446,7 @@ function renderNbhdList(nbhds) {
     const col = gmpiColor(g);
     const w = Math.round((g / max) * 40);
     return `
-      <div class="nbhd-row">
+      <div class="nbhd-row" style="cursor:pointer" onclick="zoomToNbhd('${n.name}')">
         <span class="nbhd-name" title="${n.name}">${n.name}</span>
         <span class="nbhd-gmpi" style="color:${col}">${g.toFixed(1)}</span>
         <div class="nbhd-bar" style="background:${col};width:${w}px;opacity:0.6;"></div>
@@ -342,80 +454,24 @@ function renderNbhdList(nbhds) {
   }).join('');
 }
 
-// ── Add markers to map ────────────────────────────────────────
-function addMarkers(nbhds, regions) {
-  // Neighbourhood bubbles (Greater Accra)
-  nbhds.forEach(n => {
-    const coords = COORDS[n.name];
-    if (!coords) return;
-    const g   = parseFloat(n.gmpi);
-    const col = gmpiColor(g);
-    const r   = bubbleRadius(n.records);
-
-    const circle = L.circleMarker(coords, {
-      radius:      r,
-      fillColor:   col,
-      color:       col,
-      weight:      1.5,
-      opacity:     0.9,
-      fillOpacity: 0.35,
-    }).addTo(map);
-
-    circle.bindPopup(`
-      <div class="popup-name">${n.name}</div>
-      <div class="popup-gmpi" style="color:${col}">${g.toFixed(1)}</div>
-      <div class="popup-meta">${gmpiLabel(g)}</div>
-      <div class="popup-meta" style="margin-top:4px;">${n.records.toLocaleString()} listings · ${n.categories} categories</div>
-    `);
-  });
-
-  // Regional markers for non-Accra regions
-  regions.filter(r => r.name !== 'Greater Accra').forEach(r => {
-    const coords = REGION_COORDS[r.name];
-    if (!coords) return;
-    const g   = parseFloat(r.gmpi);
-    const col = gmpiColor(g);
-
-    const marker = L.circleMarker(coords, {
-      radius:      14,
-      fillColor:   col,
-      color:       '#fff',
-      weight:      2,
-      opacity:     0.9,
-      fillOpacity: 0.5,
-    }).addTo(map);
-
-    marker.bindPopup(`
-      <div class="popup-name">${r.name} Region</div>
-      <div class="popup-gmpi" style="color:${col}">${g.toFixed(1)}</div>
-      <div class="popup-meta">${gmpiLabel(g)}</div>
-      <div class="popup-meta" style="margin-top:4px;">${r.records.toLocaleString()} listings · ${r.categories} categories</div>
-    `);
-  });
+function zoomToNbhd(name) {
+  const coords = COORDS[name];
+  if (!coords) return;
+  if (!inAccraView) toggleView();
+  setTimeout(() => map.setView(coords, 14), 300);
 }
-
-// ── Minimum records threshold ─────────────────────────────────
-const MIN_RECORDS = 200;
 
 // ── Main load ─────────────────────────────────────────────────
 (async function load() {
   try {
     const data = await fetch(API + '/api/gmpi/regional').then(r => r.json());
     const { regions = [], neighbourhoods = [] } = data;
-
-    // Only show neighbourhoods with enough listings to be reliable
-    const reliableNbhds = neighbourhoods.filter(n => n.records >= MIN_RECORDS);
+    const reliableNbhds = neighbourhoods.filter(n => n.records >= 200);
 
     renderRegionCards(regions);
     renderNbhdList(reliableNbhds);
-    addMarkers(reliableNbhds, regions);
-
-    // Zoom to fit all visible markers if any exist
-    const mapped = reliableNbhds.filter(n => COORDS[n.name]);
-    if (mapped.length) {
-      const bounds = L.latLngBounds(mapped.map(n => COORDS[n.name]));
-      map.fitBounds(bounds, { padding: [30, 30] });
-    }
+    buildRegionLayer(regions);
+    buildNbhdLayer(reliableNbhds);
   } catch(e) {
     console.error('Map load error:', e);
     document.getElementById('region-bar').innerHTML = '<div class="loading">Could not load price data.</div>';
@@ -426,15 +482,20 @@ const MIN_RECORDS = 200;
 // ── Mobile nav ────────────────────────────────────────────────
 document.querySelector('.hamburger').addEventListener('click', () => {
   const nl = document.querySelector('.nav-links');
-  nl.style.display = nl.style.display === 'flex' ? 'none' : 'flex';
-  nl.style.flexDirection = 'column';
-  nl.style.position = 'absolute';
-  nl.style.top = '60px';
-  nl.style.right = '24px';
-  nl.style.background = 'var(--navy2)';
-  nl.style.padding = '16px';
-  nl.style.borderRadius = '8px';
-  nl.style.border = '1px solid rgba(255,255,255,0.08)';
+  const open = nl.style.visibility === 'visible';
+  nl.style.visibility = open ? 'hidden' : 'visible';
+  nl.style.opacity    = open ? '0' : '1';
+  nl.style.pointerEvents = open ? 'none' : 'auto';
+  if (!open) {
+    nl.style.flexDirection = 'column';
+    nl.style.position = 'absolute';
+    nl.style.top = '60px';
+    nl.style.right = '24px';
+    nl.style.background = 'var(--navy2)';
+    nl.style.padding = '16px';
+    nl.style.borderRadius = '8px';
+    nl.style.border = '1px solid rgba(255,255,255,0.08)';
+  }
 });
 </script>
 </body>
