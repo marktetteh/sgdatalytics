@@ -1055,13 +1055,17 @@ def gmpi_regional():
     """
     Returns GMPI broken down by Ghana region and by Greater Accra neighbourhood.
     Consumer goods only (excludes Real Estate & Vehicles, price cap GHS 50k).
-    Base = all-time median per category.
+    Base = national median per category (100 = national average price level).
+    A region at 120 is 20%% more expensive than the national average.
+    A region at 80 is 20%% cheaper than the national average.
     Powers the interactive price map page.
     """
+
+    # Shared CTE: national median per category = the benchmark (100)
     base_cte = """
-    WITH base_medians AS (
+    WITH national_medians AS (
       SELECT product_category,
-        PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY price_ghs) AS base_median
+        PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY price_ghs) AS national_median
       FROM market_prices
       WHERE price_ghs BETWEEN 1 AND 50000
         AND product_category NOT IN ('Real Estate', 'Vehicles')
@@ -1084,7 +1088,7 @@ def gmpi_regional():
           WHEN location ILIKE 'Brong%%'         THEN 'Brong Ahafo'
         END AS region,
         product_category,
-        PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY price_ghs) AS wk_median,
+        PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY price_ghs) AS region_median,
         COUNT(*) AS n
       FROM market_prices
       WHERE price_ghs BETWEEN 1 AND 50000
@@ -1096,10 +1100,10 @@ def gmpi_regional():
     ),
     regional_cat_idx AS (
       SELECT rm.region, rm.product_category,
-        ROUND((rm.wk_median / bm.base_median * 100)::numeric, 2) AS category_index,
+        ROUND((rm.region_median / nm.national_median * 100)::numeric, 2) AS category_index,
         rm.n
       FROM regional_medians rm
-      JOIN base_medians bm USING (product_category)
+      JOIN national_medians nm USING (product_category)
       WHERE rm.region IS NOT NULL
     )
     SELECT region AS name,
@@ -1118,7 +1122,7 @@ def gmpi_regional():
       SELECT
         TRIM(SPLIT_PART(location, ', ', 2)) AS neighbourhood,
         product_category,
-        PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY price_ghs) AS wk_median,
+        PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY price_ghs) AS nbhd_median,
         COUNT(*) AS n
       FROM market_prices
       WHERE price_ghs BETWEEN 1 AND 50000
@@ -1129,10 +1133,10 @@ def gmpi_regional():
     ),
     nbhd_cat_idx AS (
       SELECT nm.neighbourhood, nm.product_category,
-        ROUND((nm.wk_median / bm.base_median * 100)::numeric, 2) AS category_index,
+        ROUND((nm.nbhd_median / nat.national_median * 100)::numeric, 2) AS category_index,
         nm.n
       FROM nbhd_medians nm
-      JOIN base_medians bm USING (product_category)
+      JOIN national_medians nat USING (product_category)
     )
     SELECT neighbourhood AS name,
       ROUND(AVG(category_index)::numeric, 2) AS gmpi,
