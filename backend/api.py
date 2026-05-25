@@ -1055,28 +1055,38 @@ def gmpi_regional():
     """
     Returns GMPI broken down by Ghana region and by Greater Accra neighbourhood.
     Consumer goods only (excludes Real Estate & Vehicles, price cap GHS 50k).
-    Base = national median per category (100 = national average price level).
+    Base = median across ALL located records per category (100 = national average).
+    Both regional and national medians are computed from the same pool of located
+    records so the comparison is apples-to-apples.
     A region at 120 is 20%% more expensive than the national average.
     A region at 80 is 20%% cheaper than the national average.
     Powers the interactive price map page.
     """
 
-    # Shared CTE: national median per category = the benchmark (100)
-    base_cte = """
-    WITH national_medians AS (
-      SELECT product_category,
-        PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY price_ghs) AS national_median
+    # ── Regional GMPI ─────────────────────────────────────────
+    # Key fix: national_medians is computed from the SAME pool as regional_medians
+    # (only records with an explicit location). This ensures 100 = national average
+    # across all located records. Previously national_medians used ALL records
+    # (including unlabelled listings) which skewed the baseline downward and
+    # produced inflated values like Greater Accra = 299.8.
+    regional_sql = """
+    WITH located_data AS (
+      SELECT product_category, price_ghs, location
       FROM market_prices
       WHERE price_ghs BETWEEN 1 AND 50000
         AND product_category NOT IN ('Real Estate', 'Vehicles')
+        AND TRIM(location) != ''
+        AND location NOT ILIKE 'Nationwide%%'
+    ),
+    national_medians AS (
+      -- Median across ALL located records = the benchmark (100)
+      SELECT product_category,
+        PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY price_ghs) AS national_median
+      FROM located_data
       GROUP BY product_category
       HAVING COUNT(*) >= 20
-    )
-    """
-
-    # ── Regional GMPI ─────────────────────────────────────────
-    regional_sql = base_cte + """
-    , regional_medians AS (
+    ),
+    regional_medians AS (
       SELECT
         CASE
           WHEN location ILIKE 'Greater Accra%%' THEN 'Greater Accra'
@@ -1090,11 +1100,7 @@ def gmpi_regional():
         product_category,
         PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY price_ghs) AS region_median,
         COUNT(*) AS n
-      FROM market_prices
-      WHERE price_ghs BETWEEN 1 AND 50000
-        AND product_category NOT IN ('Real Estate', 'Vehicles')
-        AND location NOT ILIKE 'Nationwide%%'
-        AND TRIM(location) != ''
+      FROM located_data
       GROUP BY 1, 2
       HAVING COUNT(*) >= 10
     ),
@@ -1117,17 +1123,31 @@ def gmpi_regional():
     """
 
     # ── Neighbourhood GMPI (Greater Accra only) ───────────────
-    nbhd_sql = base_cte + """
-    , nbhd_medians AS (
+    # Same fix: national benchmark uses only located records so 100 = national avg
+    nbhd_sql = """
+    WITH located_data AS (
+      SELECT product_category, price_ghs, location
+      FROM market_prices
+      WHERE price_ghs BETWEEN 1 AND 50000
+        AND product_category NOT IN ('Real Estate', 'Vehicles')
+        AND TRIM(location) != ''
+        AND location NOT ILIKE 'Nationwide%%'
+    ),
+    national_medians AS (
+      SELECT product_category,
+        PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY price_ghs) AS national_median
+      FROM located_data
+      GROUP BY product_category
+      HAVING COUNT(*) >= 20
+    ),
+    nbhd_medians AS (
       SELECT
         TRIM(SPLIT_PART(location, ', ', 2)) AS neighbourhood,
         product_category,
         PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY price_ghs) AS nbhd_median,
         COUNT(*) AS n
-      FROM market_prices
-      WHERE price_ghs BETWEEN 1 AND 50000
-        AND product_category NOT IN ('Real Estate', 'Vehicles')
-        AND location ILIKE 'Greater Accra, %%'
+      FROM located_data
+      WHERE location ILIKE 'Greater Accra, %%'
       GROUP BY 1, 2
       HAVING COUNT(*) >= 5
     ),
