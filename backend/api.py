@@ -1168,16 +1168,262 @@ def gmpi_regional():
     ORDER BY records DESC
     """
 
+    # ── Pull previous week's snapshots for change badges ─────────
+    prev_sql = """
+    SELECT scope, name, gmpi
+    FROM gmpi_regional_snapshots
+    WHERE (week_number, year) = (
+      SELECT week_number, year
+      FROM gmpi_regional_snapshots
+      ORDER BY year DESC, week_number DESC
+      LIMIT 1
+    )
+    """
+
     try:
         regional_rows = query('market_prices', regional_sql)
         nbhd_rows     = query('market_prices', nbhd_sql)
-        return jsonify({
-            'regions':        [dict(r) for r in regional_rows],
-            'neighbourhoods': [dict(r) for r in nbhd_rows],
-        })
+        try:
+            prev_rows = query('market_prices', prev_sql)
+        except Exception:
+            prev_rows = []
     except Exception as e:
         print(f"[GMPI/regional] {e}")
         return jsonify({'error': str(e)}), 500
+
+    # Build lookup: {scope|name: prev_gmpi}
+    prev_lookup = {f"{r['scope']}|{r['name']}": float(r['gmpi']) for r in prev_rows}
+
+    def enrich(rows, scope):
+        out = []
+        for r in rows:
+            d = dict(r)
+            key = f"{scope}|{r['name']}"
+            prev = prev_lookup.get(key)
+            curr = float(d['gmpi'])
+            d['prev_gmpi']  = round(prev, 2) if prev is not None else None
+            d['change']     = round(curr - prev, 2) if prev is not None else None
+            d['change_pct'] = round((curr - prev) / prev * 100, 2) if prev else None
+            out.append(d)
+        return out
+
+    return jsonify({
+        'regions':        enrich(regional_rows, 'region'),
+        'neighbourhoods': enrich(nbhd_rows, 'neighbourhood'),
+    })
+
+
+# ── Save this week's regional GMPI snapshot ──────────────────
+@app.route('/api/gmpi/regional/snapshot', methods=['POST'])
+def gmpi_regional_snapshot():
+    """
+    Compute and store the current week's regional + neighbourhood GMPI.
+    Called automatically from consolidate.js at end of weekly collection.
+    Protected by X-Admin-Key header.
+    Upserts so re-running the same week is safe.
+    """
+    key = request.headers.get('X-Admin-Key', '').strip()
+    if not key or not hmac.compare_digest(key, os.getenv('ADMIN_KEY', '')):
+        return jsonify({'error': 'Unauthorised'}), 401
+
+    now = datetime.now(timezone.utc)
+    iso = now.isocalendar()
+    week_number = iso[1]
+    year        = iso[0]
+    week_date   = str((now - timedelta(days=now.weekday())).date())
+
+    # Reuse exact same SQL as gmpi_regional()
+    regional_sql = """
+    WITH located_data AS (
+      SELECT product_category, price_ghs, location
+      FROM market_prices
+      WHERE price_ghs BETWEEN 1 AND 50000
+        AND product_category NOT IN ('Real Estate', 'Vehicles')
+        AND TRIM(location) != ''
+        AND location NOT ILIKE 'Nationwide%%'
+    ),
+    national_medians AS (
+      SELECT product_category,
+        PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY price_ghs) AS national_median
+      FROM located_data
+      GROUP BY product_category
+      HAVING COUNT(*) >= 20
+    ),
+    regional_medians AS (
+      SELECT
+        CASE
+          WHEN location ILIKE 'Greater Accra%%' THEN 'Greater Accra'
+          WHEN location ILIKE 'Ashanti%%'       THEN 'Ashanti'
+          WHEN location ILIKE 'Western%%'       THEN 'Western Region'
+          WHEN location ILIKE 'Central%%'       THEN 'Central Region'
+          WHEN location ILIKE 'Eastern%%'       THEN 'Eastern Region'
+          WHEN location ILIKE 'Northern%%'      THEN 'Northern Region'
+          WHEN location ILIKE 'Brong%%'         THEN 'Brong Ahafo'
+        END AS region,
+        product_category,
+        PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY price_ghs) AS region_median,
+        COUNT(*) AS n
+      FROM located_data
+      GROUP BY 1, 2
+      HAVING COUNT(*) >= 10
+    ),
+    regional_cat_idx AS (
+      SELECT rm.region, rm.product_category,
+        ROUND((rm.region_median / nm.national_median * 100)::numeric, 2) AS category_index,
+        rm.n
+      FROM regional_medians rm
+      JOIN national_medians nm USING (product_category)
+      WHERE rm.region IS NOT NULL
+    )
+    SELECT region AS name,
+      ROUND(AVG(category_index)::numeric, 2) AS gmpi,
+      SUM(n)::int AS records,
+      COUNT(DISTINCT product_category)::int AS categories
+    FROM regional_cat_idx
+    GROUP BY region
+    HAVING COUNT(DISTINCT product_category) >= 3
+    ORDER BY records DESC
+    """
+
+    nbhd_sql = """
+    WITH located_data AS (
+      SELECT product_category, price_ghs, location
+      FROM market_prices
+      WHERE price_ghs BETWEEN 1 AND 50000
+        AND product_category NOT IN ('Real Estate', 'Vehicles')
+        AND TRIM(location) != ''
+        AND location NOT ILIKE 'Nationwide%%'
+    ),
+    national_medians AS (
+      SELECT product_category,
+        PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY price_ghs) AS national_median
+      FROM located_data
+      GROUP BY product_category
+      HAVING COUNT(*) >= 20
+    ),
+    nbhd_medians AS (
+      SELECT
+        TRIM(SPLIT_PART(location, ', ', 2)) AS neighbourhood,
+        product_category,
+        PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY price_ghs) AS nbhd_median,
+        COUNT(*) AS n
+      FROM located_data
+      WHERE location ILIKE 'Greater Accra, %%'
+      GROUP BY 1, 2
+      HAVING COUNT(*) >= 5
+    ),
+    nbhd_cat_idx AS (
+      SELECT nm.neighbourhood, nm.product_category,
+        ROUND((nm.nbhd_median / nat.national_median * 100)::numeric, 2) AS category_index,
+        nm.n
+      FROM nbhd_medians nm
+      JOIN national_medians nat USING (product_category)
+    )
+    SELECT neighbourhood AS name,
+      ROUND(AVG(category_index)::numeric, 2) AS gmpi,
+      SUM(n)::int AS records,
+      COUNT(DISTINCT product_category)::int AS categories
+    FROM nbhd_cat_idx
+    GROUP BY neighbourhood
+    HAVING COUNT(DISTINCT product_category) >= 3
+    ORDER BY records DESC
+    """
+
+    upsert_sql = """
+    INSERT INTO gmpi_regional_snapshots
+        (week_number, year, week_date, scope, name, gmpi, records, categories)
+    VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+    ON CONFLICT (week_number, year, scope, name)
+    DO UPDATE SET
+        gmpi       = EXCLUDED.gmpi,
+        records    = EXCLUDED.records,
+        categories = EXCLUDED.categories,
+        week_date  = EXCLUDED.week_date
+    """
+
+    try:
+        regional_rows = query('market_prices', regional_sql)
+        nbhd_rows     = query('market_prices', nbhd_sql)
+    except Exception as e:
+        return jsonify({'error': f'Query failed: {e}'}), 500
+
+    inserted = 0
+    conn = None
+    try:
+        conn = get_conn('market_prices')
+        cur  = conn.cursor()
+        for scope, rows in [('region', regional_rows), ('neighbourhood', nbhd_rows)]:
+            for r in rows:
+                cur.execute(upsert_sql, (
+                    week_number, year, week_date, scope,
+                    r['name'], float(r['gmpi']), int(r['records']), int(r['categories'])
+                ))
+                inserted += 1
+        conn.commit()
+        cur.close()
+    except Exception as e:
+        if conn: conn.rollback()
+        return jsonify({'error': f'Insert failed: {e}'}), 500
+    finally:
+        if conn: conn.close()
+
+    label = f"W{week_number} {year}"
+    print(f"[GMPI/snapshot] {label} — {len(regional_rows)} regions, {len(nbhd_rows)} neighbourhoods stored")
+    return jsonify({
+        'status':          'ok',
+        'week':            label,
+        'week_date':       week_date,
+        'regions':         len(regional_rows),
+        'neighbourhoods':  len(nbhd_rows),
+        'rows_upserted':   inserted,
+    })
+
+
+# ── Regional GMPI history (trend data per region) ────────────
+@app.route('/api/gmpi/regional/history')
+@limiter.limit("60 per minute")
+def gmpi_regional_history():
+    """
+    Returns the last N weeks of stored regional GMPI snapshots.
+    Useful for building trend charts per region.
+    Query params:
+      scope  = 'region' | 'neighbourhood'  (default: region)
+      weeks  = integer 1-52                (default: 12)
+      name   = filter to a single region/neighbourhood
+    """
+    scope = request.args.get('scope', 'region')
+    if scope not in ('region', 'neighbourhood'):
+        scope = 'region'
+    try:
+        weeks = min(int(request.args.get('weeks', 12)), 52)
+    except (ValueError, TypeError):
+        weeks = 12
+    name_filter = request.args.get('name')
+
+    sql = """
+    SELECT week_number, year, week_date, scope, name,
+           gmpi, records, categories
+    FROM gmpi_regional_snapshots
+    WHERE scope = %s
+      AND (week_number, year) IN (
+        SELECT DISTINCT week_number, year
+        FROM gmpi_regional_snapshots
+        ORDER BY year DESC, week_number DESC
+        LIMIT %s
+      )
+    """
+    params = [scope, weeks]
+    if name_filter:
+        sql += " AND name = %s"
+        params.append(name_filter)
+    sql += " ORDER BY year ASC, week_number ASC, name"
+
+    try:
+        rows = query('market_prices', sql, params)
+        return jsonify([dict(r) for r in rows])
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 
 # ═══════════════════════════════════════════════════════════════
 # PART 4 — DOWNLOAD ENDPOINT
