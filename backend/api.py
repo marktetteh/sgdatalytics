@@ -1425,6 +1425,64 @@ def gmpi_regional_history():
         return jsonify({'error': str(e)}), 500
 
 
+# ── Product price trend (weekly median per product) ──────────
+@app.route('/api/prices/trend')
+@limiter.limit("60 per minute")
+def prices_trend():
+    """
+    Returns weekly median prices for specified products.
+    Query params:
+      products = comma-separated list of search_label values
+      weeks    = integer 1-52 (default: 12)
+      cap      = max price to include (default: 500000)
+    """
+    raw = request.args.get('products', '')
+    products = [p.strip() for p in raw.split(',') if p.strip()]
+    if not products:
+        return jsonify({'error': 'products param required'}), 400
+    if len(products) > 20:
+        return jsonify({'error': 'max 20 products'}), 400
+    try:
+        weeks = min(int(request.args.get('weeks', 12)), 52)
+    except ValueError:
+        weeks = 12
+    try:
+        cap = float(request.args.get('cap', 500000))
+    except ValueError:
+        cap = 500000
+
+    sql = """
+    WITH recent_weeks AS (
+      SELECT DISTINCT week_number, year
+      FROM market_prices
+      WHERE price_ghs IS NOT NULL AND price_ghs::numeric > 0
+      ORDER BY year DESC, week_number DESC
+      LIMIT %s
+    )
+    SELECT
+      mp.search_label,
+      mp.week_number,
+      mp.year,
+      ROUND(PERCENTILE_CONT(0.5) WITHIN GROUP (
+        ORDER BY mp.price_ghs::numeric
+      )::numeric, 0) AS median_price,
+      COUNT(*) AS listing_count
+    FROM market_prices mp
+    JOIN recent_weeks rw ON mp.week_number = rw.week_number AND mp.year = rw.year
+    WHERE mp.search_label = ANY(%s)
+      AND mp.price_ghs IS NOT NULL
+      AND mp.price_ghs::numeric > 0
+      AND mp.price_ghs::numeric < %s
+    GROUP BY mp.search_label, mp.week_number, mp.year
+    ORDER BY mp.search_label, mp.year, mp.week_number
+    """
+    try:
+        rows = query('market_prices', sql, (weeks, products, cap))
+        return jsonify([dict(r) for r in rows])
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
 # ═══════════════════════════════════════════════════════════════
 # PART 4 — DOWNLOAD ENDPOINT
 # ═══════════════════════════════════════════════════════════════
