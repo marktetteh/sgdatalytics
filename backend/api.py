@@ -1425,6 +1425,72 @@ def gmpi_regional_history():
         return jsonify({'error': str(e)}), 500
 
 
+# ── Top N products by listing count per category ─────────────
+@app.route('/api/prices/top-products')
+@limiter.limit("60 per minute")
+def prices_top_products():
+    """
+    Returns top N products by total listing count for a given category.
+    Query params:
+      category = product_category value (e.g. 'Electronics')
+      n        = number of products to return (default: 5, max: 20)
+      weeks    = look-back window in weeks (default: 12)
+    """
+    category = request.args.get('category', '').strip()
+    if not category:
+        return jsonify({'error': 'category param required'}), 400
+    try:
+        n = min(int(request.args.get('n', 5)), 20)
+    except ValueError:
+        n = 5
+    try:
+        weeks = min(int(request.args.get('weeks', 12)), 52)
+    except ValueError:
+        weeks = 12
+
+    sql = """
+    WITH recent_weeks AS (
+      SELECT DISTINCT week_number, year
+      FROM market_prices
+      ORDER BY year DESC, week_number DESC
+      LIMIT %s
+    )
+    SELECT mp.search_label, COUNT(*) AS listing_count
+    FROM market_prices mp
+    JOIN recent_weeks rw ON mp.week_number = rw.week_number AND mp.year = rw.year
+    WHERE mp.product_category ILIKE %s
+      AND mp.price_ghs IS NOT NULL
+      AND mp.price_ghs::numeric > 0
+    GROUP BY mp.search_label
+    ORDER BY listing_count DESC
+    LIMIT %s
+    """
+    try:
+        rows = query('market_prices', sql, (weeks, category, n))
+        return jsonify([dict(r) for r in rows])
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+# ── List all available product categories ─────────────────────
+@app.route('/api/prices/categories')
+@limiter.limit("60 per minute")
+def prices_categories():
+    """Returns all distinct product categories with listing counts."""
+    sql = """
+    SELECT product_category, COUNT(*) AS listing_count
+    FROM market_prices
+    WHERE price_ghs IS NOT NULL AND price_ghs::numeric > 0
+    GROUP BY product_category
+    ORDER BY listing_count DESC
+    """
+    try:
+        rows = query('market_prices', sql)
+        return jsonify([dict(r) for r in rows])
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
 # ── Product price trend (weekly median per product) ──────────
 @app.route('/api/prices/trend')
 @limiter.limit("60 per minute")
