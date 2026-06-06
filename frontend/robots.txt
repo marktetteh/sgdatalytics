@@ -2,3 +2,9 @@ User-agent: *
 Allow: /
 
 Sitemap: https://sgdatalytics.org/sitemap.xml
+User-agent: *
+Allow: /
+
+Disallow: /admin.html
+Disallow: /auth.html
+
