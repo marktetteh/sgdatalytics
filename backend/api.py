@@ -714,6 +714,100 @@ def market_latest():
     rows = query('market_prices', "SELECT product_category, ROUND(AVG(price_ghs),2) AS avg_price_ghs, COUNT(*) AS listings, MAX(collected_date) AS last_updated FROM market_prices GROUP BY product_category ORDER BY listings DESC")
     return jsonify([dict(r) for r in rows])
 
+@app.route('/api/market-prices/trends')
+def market_trends():
+    """
+    Weekly median prices per product group (or category fallback).
+    GET /api/market-prices/trends?group=Smartphone&weeks=12
+    GET /api/market-prices/trends?category=Electronics&weeks=12
+    Returns: [{week_number, year, product_group, median_price_ghs, listing_count}]
+    """
+    group    = request.args.get('group')
+    category = request.args.get('category')
+    weeks    = min(int(request.args.get('weeks', 12)), 52)
+
+    if group:
+        sql = """
+            WITH latest AS (
+                SELECT MAX(year * 100 + week_number) AS max_yw FROM market_prices
+            )
+            SELECT
+                week_number,
+                year,
+                product_group,
+                PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY price_ghs) AS median_price_ghs,
+                COUNT(*) AS listing_count
+            FROM market_prices, latest
+            WHERE product_group ILIKE %s
+              AND price_ghs > 0
+              AND price_ghs IS NOT NULL
+              AND (year * 100 + week_number) > (max_yw - %s)
+            GROUP BY week_number, year, product_group
+            ORDER BY year ASC, week_number ASC
+        """
+        rows = query('market_prices', sql, [f'%{group}%', weeks])
+    elif category:
+        sql = """
+            SELECT
+                week_number,
+                year,
+                product_category AS product_group,
+                PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY price_ghs) AS median_price_ghs,
+                COUNT(*) AS listing_count
+            FROM market_prices
+            WHERE product_category ILIKE %s
+              AND price_ghs > 0
+            GROUP BY week_number, year, product_category
+            ORDER BY year ASC, week_number ASC
+        """
+        rows = query('market_prices', sql, [f'%{category}%'])
+    else:
+        return jsonify({'error': 'Provide ?group= or ?category= parameter'}), 400
+
+    return jsonify([dict(r) for r in rows])
+
+
+@app.route('/api/market-prices/top-products')
+def market_top_products():
+    """
+    Top N products by listing count within a product_group, with weekly medians.
+    GET /api/market-prices/top-products?group=Smartphone&n=5&weeks=12
+    Returns: [{search_label, week_number, year, median_price_ghs, listing_count}]
+    """
+    group = request.args.get('group')
+    n     = min(int(request.args.get('n', 5)), 10)
+    weeks = min(int(request.args.get('weeks', 12)), 52)
+
+    if not group:
+        return jsonify({'error': 'Provide ?group= parameter'}), 400
+
+    sql = """
+        WITH top_labels AS (
+            SELECT search_label
+            FROM market_prices
+            WHERE product_group ILIKE %s
+              AND price_ghs > 0
+              AND search_label IS NOT NULL
+            GROUP BY search_label
+            ORDER BY COUNT(*) DESC
+            LIMIT %s
+        )
+        SELECT
+            mp.search_label,
+            mp.week_number,
+            mp.year,
+            PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY mp.price_ghs) AS median_price_ghs,
+            COUNT(*) AS listing_count
+        FROM market_prices mp
+        JOIN top_labels tl ON mp.search_label = tl.search_label
+        WHERE mp.price_ghs > 0
+        GROUP BY mp.search_label, mp.week_number, mp.year
+        ORDER BY mp.search_label, mp.year ASC, mp.week_number ASC
+    """
+    rows = query('market_prices', sql, [f'%{group}%', n])
+    return jsonify([dict(r) for r in rows])
+
+
 @app.route('/api/property')
 @limiter.limit("60 per minute")
 def property_prices():
