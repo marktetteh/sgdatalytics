@@ -728,20 +728,22 @@ def market_trends():
 
     if group:
         sql = """
-            WITH latest AS (
-                SELECT MAX(year * 100 + week_number) AS max_yw FROM market_prices
-            )
             SELECT
                 week_number,
                 year,
                 product_group,
                 PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY price_ghs) AS median_price_ghs,
                 COUNT(*) AS listing_count
-            FROM market_prices, latest
+            FROM market_prices
             WHERE product_group ILIKE %s
               AND price_ghs > 0
               AND price_ghs IS NOT NULL
-              AND (year * 100 + week_number) > (max_yw - %s)
+              AND (year * 100 + week_number) >= (
+                  SELECT (year * 100 + week_number)
+                  FROM market_prices
+                  ORDER BY year DESC, week_number DESC
+                  LIMIT 1
+              ) - %s
             GROUP BY week_number, year, product_group
             ORDER BY year ASC, week_number ASC
         """
@@ -757,6 +759,7 @@ def market_trends():
             FROM market_prices
             WHERE product_category ILIKE %s
               AND price_ghs > 0
+              AND price_ghs IS NOT NULL
             GROUP BY week_number, year, product_category
             ORDER BY year ASC, week_number ASC
         """
@@ -806,7 +809,6 @@ def market_top_products():
     """
     rows = query('market_prices', sql, [f'%{group}%', n])
     return jsonify([dict(r) for r in rows])
-
 
 @app.route('/api/property')
 @limiter.limit("60 per minute")
